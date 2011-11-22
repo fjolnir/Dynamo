@@ -20,7 +20,7 @@ Background_t *background_create()
 	out->renderable.owner = out;
 
 	if(!_backgroundShader) {
-		_backgroundShader = shader_loadFromFiles("shaders/background.vsh", "shaders/background.fsh");
+		_backgroundShader = shader_loadFromFiles("engine/shaders/background.vsh", "engine/shaders/background.fsh");
 		_backgroundShader->uniforms[kBackground_offsetUniform] = shader_getUniformLocation(_backgroundShader, "u_backgroundOffset");
 		_backgroundShader->uniforms[kBackground_layer0DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer0Depth");
 		_backgroundShader->uniforms[kBackground_layer1DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer1Depth");

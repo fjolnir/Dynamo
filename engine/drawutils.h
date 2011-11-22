@@ -3,9 +3,16 @@
 #include "GLMath/GLMath.h"
 #include "texture.h"
 #include "texture_atlas.h"
+#include "shader.h"
+#include "renderer.h"
 
 #ifndef __DRAWUTILS_H_
 #define __DRAWUTILS_H_
+
+
+// Initializes the drawing utils
+extern void draw_init(Renderer_t *aDefaultRenderer);
+extern void draw_cleanup();
 
 // Draws a textured quad on the X/Y plane
 extern void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t aTextureArea, vec4_t aColor, float aAngle, bool aFlipHorizontal, bool aFlipVertical);

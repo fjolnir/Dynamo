@@ -9,6 +9,8 @@
 #include "engine/input.h"
 #include "engine/various.h"
 #include "engine/sound.h"
+#include "engine/drawutils.h"
+
 #include "world.h"
 
 #pragma mark - Constants
@@ -20,8 +22,6 @@
 
 // The main renderer object (Defined in main.c)
 extern Renderer_t *gRenderer;
-// A basic texture mapping shader
-extern Shader_t *gBasicShader;
 // The game world
 extern World_t *gWorld;
 // The input manager

@@ -1,7 +1,23 @@
 #include "drawutils.h"
-#include "../shared.h"
 
+static Shader_t *_basicShader;
+static Renderer_t *_renderer;
 static const vec4_t kColorWhite = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+void draw_init(Renderer_t *aDefaultRenderer)
+{
+	_renderer = aDefaultRenderer;
+	_basicShader = shader_loadFromFiles("engine/shaders/basic.vsh", "engine/shaders/basic.fsh");
+	_basicShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(_basicShader, "u_color");
+}
+
+void draw_cleanup()
+{
+	shader_destroy(_basicShader);
+}
+
+
+#pragma mark -
 
 void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t aTextureArea, vec4_t aColor, float aAngle, bool aFlipHorizontal, bool aFlipVertical)
 {
@@ -22,28 +38,28 @@ void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t 
 	};
 
 	// Translate&rotate the quad into it's target location
-	matrix_stack_push(gRenderer->worldMatrixStack);
-	matrix_stack_translate(gRenderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), floorf(aCenter.z));
-	matrix_stack_rotate(gRenderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
-	matrix_stack_translate(gRenderer->worldMatrixStack, aSize.w/-2.0f, aSize.h/-2.0f, 0.0f);
+	matrix_stack_push(_renderer->worldMatrixStack);
+	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), floorf(aCenter.z));
+	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
+	matrix_stack_translate(_renderer->worldMatrixStack, aSize.w/-2.0f, aSize.h/-2.0f, 0.0f);
 
-	shader_makeActive(gBasicShader);
+	shader_makeActive(_basicShader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aTexture->id);
 
-	shader_updateMatrices(gBasicShader, gRenderer);
-	glUniform1i(gBasicShader->uniforms[kShader_colormap0Uniform], 0);
-	glUniform4fv(gBasicShader->uniforms[kShader_colorUniform], 1, aColor.f);
+	shader_updateMatrices(_basicShader, _renderer);
+	glUniform1i(_basicShader->uniforms[kShader_colormap0Uniform], 0);
+	glUniform4fv(_basicShader->uniforms[kShader_colorUniform], 1, aColor.f);
 
-	glVertexAttribPointer(gBasicShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(gBasicShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(gBasicShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
-	glEnableVertexAttribArray(gBasicShader->attributes[kShader_texCoord0Attribute]);
+	glVertexAttribPointer(_basicShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(_basicShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(_basicShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
+	glEnableVertexAttribArray(_basicShader->attributes[kShader_texCoord0Attribute]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	shader_makeInactive(gBasicShader);
-	matrix_stack_pop(gRenderer->worldMatrixStack);
+	shader_makeInactive(_basicShader);
+	matrix_stack_pop(_renderer->worldMatrixStack);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -81,26 +97,26 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 	}
 
 	// Translate&rotate the quad into it's target location
-	matrix_stack_push(gRenderer->worldMatrixStack);
+	matrix_stack_push(_renderer->worldMatrixStack);
 
-	shader_makeActive(gBasicShader);
+	shader_makeActive(_basicShader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aAtlas->texture->id);
 
-	shader_updateMatrices(gBasicShader, gRenderer);
-	glUniform1i(gBasicShader->uniforms[kShader_colormap0Uniform], 0);
+	shader_updateMatrices(_basicShader, _renderer);
+	glUniform1i(_basicShader->uniforms[kShader_colormap0Uniform], 0);
 	vec4_t white = {1.0};
-	glUniform4fv(gBasicShader->uniforms[kShader_colorUniform], 1, white.f);
+	glUniform4fv(_basicShader->uniforms[kShader_colorUniform], 1, white.f);
 
-	glVertexAttribPointer(gBasicShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(gBasicShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(gBasicShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
-	glEnableVertexAttribArray(gBasicShader->attributes[kShader_texCoord0Attribute]);
+	glVertexAttribPointer(_basicShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(_basicShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(_basicShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
+	glEnableVertexAttribArray(_basicShader->attributes[kShader_texCoord0Attribute]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, numberOfVertices);
 
-	shader_makeInactive(gBasicShader);
-	matrix_stack_pop(gRenderer->worldMatrixStack);
+	shader_makeInactive(_basicShader);
+	matrix_stack_pop(_renderer->worldMatrixStack);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	free(vertices);

@@ -13,7 +13,6 @@
 
 // Globals
 Renderer_t *gRenderer;
-Shader_t *gBasicShader;
 World_t *gWorld;
 GameTimer_t gGameTimer;
 InputManager_t *gInputManager;
@@ -151,7 +150,7 @@ static void cleanup()
 	world_destroy(gWorld);
 	renderer_destroy(gRenderer);
 	input_destroyManager(gInputManager);
-	shader_destroy(gBasicShader);
+	draw_cleanup();
 	exit(0);
 }
 
@@ -162,18 +161,16 @@ int main(int argc, char **argv)
 //	sound_play(testSound);
 
 	vec2_t viewport = { 640.0f, 480.0f };
-	gRenderer = renderer_create(viewport, kVec3_zero);
 
 	// Initialize graphics
 	glutInit(&argc, argv);
 	glutInitWindowPosition(64,64);
-	glutInitWindowSize(gRenderer->viewportSize.w, gRenderer->viewportSize.h);
+	glutInitWindowSize(viewport.w, viewport.h);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA);
 	glutCreateWindow("");
 
-
-	gBasicShader = shader_loadFromFiles("shaders/basic.vsh", "shaders/basic.fsh");
-	gBasicShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(gBasicShader, "u_color");
+	gRenderer = renderer_create(viewport, kVec3_zero);
+	draw_init(gRenderer);
 
 	gGameTimer.desiredInterval = 1000.0/(double)DESIRED_FPS;
 	gGameTimer.elapsed = timeInUsec();
