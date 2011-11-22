@@ -1,14 +1,16 @@
 #include "drawutils.h"
 
-static Shader_t *_basicShader;
-static Renderer_t *_renderer;
+static Shader_t *_basicShader = NULL;
+static Renderer_t *_renderer = NULL;
 static const vec4_t kColorWhite = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 void draw_init(Renderer_t *aDefaultRenderer)
 {
 	_renderer = aDefaultRenderer;
-	_basicShader = shader_loadFromFiles("engine/shaders/basic.vsh", "engine/shaders/basic.fsh");
-	_basicShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(_basicShader, "u_color");
+	if(!_basicShader) {
+		_basicShader = shader_loadFromFiles("engine/shaders/basic.vsh", "engine/shaders/basic.fsh");
+		_basicShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(_basicShader, "u_color");
+	}
 }
 
 void draw_cleanup()
@@ -96,7 +98,6 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 		texCoords[i+3].u = currTexRect.origin.u + currTexRect.size.u; texCoords[i+3].v = currTexRect.origin.v + currTexRect.size.v;
 	}
 
-	// Translate&rotate the quad into it's target location
 	matrix_stack_push(_renderer->worldMatrixStack);
 
 	shader_makeActive(_basicShader);
