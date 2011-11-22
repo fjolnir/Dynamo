@@ -26,7 +26,7 @@ static bool _leftMouseButtonDown, _rightMouseButtonDown;
 
 static void display()
 {
-//	gameTimer_update(&gGameTimer, timeInUsec()/1000);
+	gameTimer_update(&gGameTimer, timeInUsec()/1000);
 
 	// Update the game state as many times as we need to catch up
 	while(gGameTimer.timeSinceLastUpdate >= 0){//gGameTimer.desiredInterval) { Feels better like this, eliminates occasional chunkiness (Needs more testing)
@@ -40,7 +40,6 @@ static void display()
 	glutSwapBuffers();
 	glFlush();
 	glutPostRedisplay();
-	gameTimer_update(&gGameTimer, timeInUsec()/1000);
 }
 
 static void windowDidResize(int aWidth, int aHeight)
