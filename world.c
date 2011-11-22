@@ -73,13 +73,11 @@ World_t *world_init()
 	out->arrowLeftObserver = input_createObserver(kInputKey_arrowLeft, &leftKeyPressed, NULL, out);
 	out->arrowUpObserver = input_createObserver(kInputKey_arrowUp, &upKeyPressed, NULL, out);
 	out->arrowDownObserver = input_createObserver(kInputKey_arrowDown, &downKeyPressed, NULL, out);
-	out->leftClickObserver = input_createObserver(kInputMouse_leftClick, &mouseMoved, NULL, out);
 	out->leftDragObserver = input_createObserver(kInputMouse_leftDrag, &mouseMoved, NULL, out);
 	input_addObserver(gInputManager, out->arrowRightObserver);
 	input_addObserver(gInputManager, out->arrowLeftObserver);
 	input_addObserver(gInputManager, out->arrowUpObserver);
 	input_addObserver(gInputManager, out->arrowDownObserver);
-	input_addObserver(gInputManager, out->leftClickObserver);
 	input_addObserver(gInputManager, out->leftDragObserver);
 
 	return out;
