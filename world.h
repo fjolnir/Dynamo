@@ -2,8 +2,8 @@
 // Handles the state of the game
 
 #include "shared.h"
-#include "utils/background.h"
-#include "utils/input.h"
+#include "engine/background.h"
+#include "engine/input.h"
 
 #ifndef _WORLD_H_
 #define _WORLD_H_

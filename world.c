@@ -1,5 +1,5 @@
 #include "world.h"
-#include "utils/sprite.h"
+#include "engine/sprite.h"
 
 static Sprite_t *sprite;
 

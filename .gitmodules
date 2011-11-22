@@ -1,3 +1,4 @@
-[submodule "utils/GLMath"]
-	path = utils/GLMath
+
+[submodule "engine/GLMath"]
+	path = engine/GLMath
 	url = git://github.com/aptiva/GLMath.git

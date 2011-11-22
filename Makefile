@@ -21,7 +21,7 @@ LDFLAGS  += -framework OpenGL
 LDFLAGS  += -framework Accelerate
 LDFLAGS  += -framework OpenAL
 
-C_SOURCE   := $(wildcard *.c) $(wildcard utils/*.c) $(wildcard utils/*/*.c)
+C_SOURCE   := $(wildcard *.c) $(wildcard engine/*.c) $(wildcard engine/*/*.c)
 OBJ        := $(addprefix build/,$(C_SOURCE:.c=.o))
 BIN        := test
 

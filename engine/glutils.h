@@ -11,7 +11,7 @@
 
 	#ifdef WIN32
 		#include <windows.h>
-		#include "utils/windows/gldefs.h"
+		#include "engine/windows/gldefs.h"
 	#endif
 	#include <GL/gl.h>
 	#include <GL/glext.h>

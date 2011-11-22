@@ -1,14 +1,14 @@
 #ifndef _SHARED_H_
 #define _SHARED_H_
 
-#include "utils/glutils.h"
-#include "utils/GLMath/GLMath.h"
-#include "utils/shader.h"
-#include "utils/renderer.h"
-#include "utils/gametimer.h"
-#include "utils/input.h"
-#include "utils/various.h"
-#include "utils/sound.h"
+#include "engine/glutils.h"
+#include "engine/GLMath/GLMath.h"
+#include "engine/shader.h"
+#include "engine/renderer.h"
+#include "engine/gametimer.h"
+#include "engine/input.h"
+#include "engine/various.h"
+#include "engine/sound.h"
 #include "world.h"
 
 #pragma mark - Constants

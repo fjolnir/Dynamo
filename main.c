@@ -1,14 +1,14 @@
 // Just handles the runloop
 
 #include <stdio.h>
-#include "utils/glutils.h"
+#include "engine/glutils.h"
 #include "shared.h"
 
 #ifdef WIN32
 	#define _CRT_SECURE_NO_DEPRECATE
 	#define _WIN32_LEAN_AND_MEAN
 	#include <windows.h>
-	#include "utils/windows/gldefs.h"
+	#include "engine/windows/gldefs.h"
 #endif
 
 // Globals
