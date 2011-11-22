@@ -2,6 +2,7 @@ This is a cross platform(win/mac) library for building sprite based games.
 Started as a part of a project for school.
 
 Dependencies:
+
  * libogg
  * libvorbis
  * libpng (Comes with X11 for OS X)
