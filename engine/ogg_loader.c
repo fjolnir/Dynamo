@@ -2,6 +2,7 @@
 #include <ogg/ogg.h>
 #include <vorbis/vorbisfile.h>
 #include <stdlib.h>
+#include "various.h"
 
 static char *_oggErrorString(int aCode);
 
@@ -17,7 +18,7 @@ oggFile_t *ogg_load(char *aFilename)
 	}
 	vorbis_info *vorbisInfo = ov_info(oggStream, -1);
 	if(!vorbisInfo)
-		fprintf(stderr, "Couldn't get info about vorbis file\n");
+		debug_log("Couldn't get info about vorbis file");
 	int samples = ov_pcm_total(oggStream, -1);
 
 	int bytes = 2*samples* vorbisInfo->channels;
@@ -30,7 +31,7 @@ oggFile_t *ogg_load(char *aFilename)
 
 		long value = ov_read(oggStream, cursor, remain, 0, 2, 1, NULL);
 		if(value < 0) {
-			fprintf(stderr, "Unable to load sound from %s\n", aFilename);
+			debug_log("Unable to load sound from %s", aFilename);
 			free(data);
 			return NULL;
 		}

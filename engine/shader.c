@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "various.h"
 
 const char *kShader_UniformNames[kShader_MaxUniforms] = {
 	"u_worldMatrix",
@@ -110,7 +111,7 @@ GLint shader_getUniformLocation(Shader_t *aShader, const char *aUniformName)
 {
 	GLint location = glGetUniformLocation(aShader->program, aUniformName);
 	if(location == -1)
-		printf("Uniform lookup error: No such uniform (%s)\n", aUniformName);
+		debug_log("Uniform lookup error: No such uniform (%s)", aUniformName);
 	
 	return location;
 }
@@ -119,7 +120,7 @@ GLint shader_getAttributeLocation(Shader_t *aShader, const char *aAttributeName)
 {
 	GLint location = glGetAttribLocation(aShader->program, aAttributeName);
 	if(location == -1)
-		printf("Attribute lookup error: No such attribute (%s)\n", aAttributeName);
+		debug_log("Attribute lookup error: No such attribute (%s)", aAttributeName);
 
 	return location;
 }
@@ -144,14 +145,14 @@ static bool _shader_link(GLuint aProgramObject)
 	if(logLength > 0) {
 		GLchar *log = (GLchar *)malloc(logLength);
 		glGetProgramInfoLog(aProgramObject, logLength, &logLength, log);
-		printf(">> Program link log:\n%s\n", log);
+		debug_log(">> Program link log:\n%s", log);
 		free(log);
 	}
 	
 	bool success;
 	glGetProgramiv(aProgramObject, GL_LINK_STATUS, (GLint *)&success);
 	if(success == false)
-		printf("Failed to link shader program\n");
+		debug_log("Failed to link shader program");
 	return success;
 }
 
@@ -176,14 +177,14 @@ static GLuint _shader_compile(const char *aSrc, GLenum aType, bool *aoSucceeded)
 	if (temp > 0) {
 		GLchar *log = (GLchar *)malloc(temp);
 		glGetShaderInfoLog(shaderObject, temp, &temp, log);
-		printf(">> %s shader compile log:\n %s\n", aType == GL_FRAGMENT_SHADER ? "Fragment" : "Vertex", log);
+		debug_log(">> %s shader compile log:\n %s\n", aType == GL_FRAGMENT_SHADER ? "Fragment" : "Vertex", log);
 		free(log);
 	}
 
 	glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &temp);
 	if(temp == GL_FALSE) {
 		*aoSucceeded = false;
-		printf(">> Failed to compile shader:\n%s\n---\n", aSrc);
+		debug_log(">> Failed to compile shader:\n%s\n---", aSrc);
 	}
 	*aoSucceeded = true;
 	free(source);

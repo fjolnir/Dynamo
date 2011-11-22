@@ -19,10 +19,14 @@
 	#include <GL/glut.h>
 #endif
 
+#ifdef DEBUG
 #define glError() { \
 	GLenum err = glGetError(); \
 	while (err != GL_NO_ERROR) { \
-		printf( "glError(0x%04x): %s caught at %s:%u\n", err,(char *)gluErrorString(err), __FILE__, __LINE__); \
+		debug_log("glError(0x%04x): %s caught", err, (char *)gluErrorString(err)); \
 		err = glGetError(); \
 	} \
 }
+#else
+#define glError()
+#endif

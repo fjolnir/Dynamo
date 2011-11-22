@@ -1,5 +1,6 @@
 #include "texture.h"
 #include "png_loader.h"
+#include "various.h"
 
 const TextureRect_t kTextureRectEntire = { 0.0f, 0.0f, 1.0f, 1.0f };
 
@@ -12,7 +13,7 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
 	GLubyte *data;
 	bool success = png_load(aPath, &width, &height, &hasAlpha, &data);
 	if (!success) {
-		printf("Unable to load png file from %s\n", aPath);
+		debug_log("Unable to load png file from %s", aPath);
 		return NULL;
 	}
 	//printf("Loaded PNG from %s, %dx%d (has alpha? %d)\n", filename, width, height, hasAlpha);

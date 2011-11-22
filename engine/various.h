@@ -23,4 +23,12 @@ int gettimeofday(struct timeval *tv, struct timezone *tz);
 
 extern long timeInUsec();
 
+#pragma mark - Debug logging
+
+#ifdef DEBUG
+	#define debug_log(fmt, ...) fprintf(stderr, "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+#else
+	#define debug_log(fmt, ...)
+#endif
+
 #endif

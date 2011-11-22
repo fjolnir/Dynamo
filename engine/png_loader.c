@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <png.h>
 #include "png_loader.h"
+#include "various.h"
 
 bool png_load(const char *aPath, int *oWidth, int *oHeight, bool *oHasAlpha, unsigned char **oData) {
     png_structp png_ptr;
@@ -99,7 +100,7 @@ bool png_load(const char *aPath, int *oWidth, int *oHeight, bool *oHasAlpha, uns
             *oHasAlpha = false;
             break;
         default:
-			printf("Color type: %d not supported", color_type);
+			debug_log("Color type: %d not supported", color_type);
             png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
             fclose(fp);
             return false;

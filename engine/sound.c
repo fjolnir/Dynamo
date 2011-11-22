@@ -1,5 +1,6 @@
 #include "sound.h"
 #include "ogg_loader.h"
+#include "various.h"
 
 static char *_openAlErrorString(int aCode);
 static bool _checkForOpenAlError();
@@ -15,7 +16,7 @@ Sound_t *sound_load(char *aFilename)
 
 	oggFile_t *oggFile = ogg_load(aFilename);
 	if(!oggFile) {
-		fprintf(stderr, "Failed to load audio file\n");
+		debug_log("Failed to load audio file");
 		return NULL;
 	}
 	out->format = out->channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
@@ -156,7 +157,7 @@ static bool _checkForOpenAlError()
 {
 	int error = alGetError();
 	if(error != AL_NO_ERROR) {
-		fprintf(stderr, "OpenAL error occurred(%d): %s\n", error, _openAlErrorString(error));
+		debug_log("OpenAL error occurred(%d): %s", error, _openAlErrorString(error));
 		return true;
 	}
 	return false;
