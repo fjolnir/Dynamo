@@ -16,7 +16,6 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
 		debug_log("Unable to load png file from %s", aPath);
 		return NULL;
 	}
-	//printf("Loaded PNG from %s, %dx%d (has alpha? %d)\n", filename, width, height, hasAlpha);
 
 	glGenTextures(1, &out->id);
 	glBindTexture(GL_TEXTURE_2D, out->id);
