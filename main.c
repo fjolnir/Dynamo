@@ -63,47 +63,33 @@ static void keyWasReleased(unsigned char aKey, int aMouseX, int aMouseY)
 	input_endEvent(gInputManager, kInputKey_ascii, &aKey);
 }
 
-static void specialKeyWasPressed(int aKey, int aMouseX, int aMouseY)
+static Input_type_t _inputTypeForGlutKey(int aKey)
 {
-	Input_type_t inputType;
 	switch(aKey) {
 		case GLUT_KEY_LEFT:
-			inputType = kInputKey_arrowLeft;
-			break;
+			return kInputKey_arrowLeft;
 		case GLUT_KEY_RIGHT:
-			inputType = kInputKey_arrowRight;
-			break;
+			return kInputKey_arrowRight;
 		case GLUT_KEY_UP:
-			inputType = kInputKey_arrowUp;
-			break;
+			return kInputKey_arrowUp;
 		case GLUT_KEY_DOWN:
-			inputType = kInputKey_arrowDown;
-			break;
+			return kInputKey_arrowDown;
 		default:
-			return;
+			return -1;
 	}
+}
+
+static void specialKeyWasPressed(int aKey, int aMouseX, int aMouseY)
+{
+	Input_type_t inputType = _inputTypeForGlutKey(aKey);
+	if(inputType == -1) return;
 	vec2_t location = { (float)aMouseX, (float)aMouseY };
 	input_beginEvent(gInputManager, inputType, NULL, &location);
 }
 static void specialKeyWasReleased(int aKey, int aMouseX, int aMouseY)
 {
-	Input_type_t inputType;
-	switch(aKey) {
-		case GLUT_KEY_LEFT:
-			inputType = kInputKey_arrowLeft;
-			break;
-		case GLUT_KEY_RIGHT:
-			inputType = kInputKey_arrowRight;
-			break;
-		case GLUT_KEY_UP:
-			inputType = kInputKey_arrowUp;
-			break;
-		case GLUT_KEY_DOWN:
-			inputType = kInputKey_arrowDown;
-			break;
-		default:
-			return;
-	}
+	Input_type_t inputType = _inputTypeForGlutKey(aKey);
+	if(inputType == -1) return;
 	input_endEvent(gInputManager, inputType, NULL);
 }
 
