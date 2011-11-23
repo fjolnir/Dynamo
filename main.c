@@ -63,7 +63,7 @@ static void keyWasReleased(unsigned char aKey, int aMouseX, int aMouseY)
 	input_endEvent(gInputManager, kInputKey_ascii, &aKey);
 }
 
-static Input_type_t _inputTypeForGlutKey(int aKey)
+static Input_type_t _inputTypeForGlutSpecialKey(int aKey)
 {
 	switch(aKey) {
 		case GLUT_KEY_LEFT:
@@ -78,17 +78,16 @@ static Input_type_t _inputTypeForGlutKey(int aKey)
 			return -1;
 	}
 }
-
 static void specialKeyWasPressed(int aKey, int aMouseX, int aMouseY)
 {
-	Input_type_t inputType = _inputTypeForGlutKey(aKey);
+	Input_type_t inputType = _inputTypeForGlutSpecialKey(aKey);
 	if(inputType == -1) return;
 	vec2_t location = { (float)aMouseX, (float)aMouseY };
 	input_beginEvent(gInputManager, inputType, NULL, &location);
 }
 static void specialKeyWasReleased(int aKey, int aMouseX, int aMouseY)
 {
-	Input_type_t inputType = _inputTypeForGlutKey(aKey);
+	Input_type_t inputType = _inputTypeForGlutSpecialKey(aKey);
 	if(inputType == -1) return;
 	input_endEvent(gInputManager, inputType, NULL);
 }
