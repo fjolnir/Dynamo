@@ -15,6 +15,7 @@ LDFLAGS  += -L/usr/X11/lib
 LDFLAGS  += -L/usr/local/lib
 LDFLAGS  += -lpng
 LDFLAGS  += -logg
+LDFLAGS  += -lmxml
 LDFLAGS  += -lvorbisfile
 LDFLAGS  += -framework GLUT
 LDFLAGS  += -framework OpenGL

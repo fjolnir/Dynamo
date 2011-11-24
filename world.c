@@ -1,5 +1,6 @@
 #include "world.h"
 #include "engine/sprite.h"
+#include "engine/tmx_map.h"
 
 static Sprite_t *sprite;
 
@@ -79,6 +80,9 @@ World_t *world_init()
 	input_addObserver(gInputManager, out->arrowUpObserver);
 	input_addObserver(gInputManager, out->arrowDownObserver);
 	input_addObserver(gInputManager, out->leftDragObserver);
+
+	// Test map loading
+	TMXMap_t *map = tmx_readMapFile("levels/desert.tmx");
 
 	return out;
 }

@@ -3,8 +3,9 @@ Started as a part of a project for school.
 
 Dependencies:
 
- * libogg
- * libvorbis
+ * libogg ('libogg' in homebrew on OS X)
+ * libvorbis ('libvorbis' in homebrew on OS X) 
+ * Mini-XML ('libmxml' in homebrew on OS X)
  * libpng (Comes with X11 for OS X)
  * GLUT (Pre installed on OS X)
  * OpenAL (Pre installed on OS X)
