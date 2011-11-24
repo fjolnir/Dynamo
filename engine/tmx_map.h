@@ -6,6 +6,7 @@
 // Ignores the transparency color of images (We use the alpha channel)
 //
 // And probably some other parts. I only implemented what my project required.
+// IMPORTANT: Requires you to save your maps with the data layer as CSV (Settable in the preference window)
 
 #include <stdbool.h>
 
