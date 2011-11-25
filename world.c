@@ -60,14 +60,17 @@ World_t *world_init()
 	out->background->layers[1] = background_createLayer(texture_loadFromPng("textures/backgrounds/hills.png", true, false), 0.3);
 	out->background->layers[2] = background_createLayer(texture_loadFromPng("textures/backgrounds/castle.png", true, false), 0.1);
 	out->background->layers[3] = background_createLayer(texture_loadFromPng("textures/backgrounds/ground.png", true, false), 0.0);
-	renderer_pushRenderable(gRenderer, &out->background->renderable);
+	//renderer_pushRenderable(gRenderer, &out->background->renderable);
 
 	vec3_t spriteLoc = { 100.0f, 41.0f, 0.0f };
 	vec2_t spriteSize = { 48.0f, 48.0f };
 	TextureAtlas_t *atlas = texAtlas_create(texture_loadFromPng("textures/sonic.png", false, false), kVec2_zero, spriteSize);
 	sprite = sprite_create(spriteLoc, spriteSize, atlas, 1);
 	sprite->animations[0] = sprite_createAnimation(11);
-	renderer_pushRenderable(gRenderer, &sprite->renderable);
+	//renderer_pushRenderable(gRenderer, &sprite->renderable);
+
+	out->level = level_load("levels/desert.tmx");
+	renderer_pushRenderable(gRenderer, &out->level->renderable);
 
 	// Create&add input observers
 	out->arrowRightObserver = input_createObserver(kInputKey_arrowRight, &rightKeyPressed, NULL, out);
@@ -84,9 +87,6 @@ World_t *world_init()
 	input_addObserver(gInputManager, out->leftDragObserver);
 	input_addObserver(gInputManager, out->leftClickObserver);
 
-	// Test map loading
-	TMXMap_t *map = tmx_readMapFile("levels/desert.tmx");
-	tmx_destroyMap(map);
 	return out;
 }
 

@@ -85,7 +85,7 @@ extern TMXMap_t *tmx_readMapFile(const char *aFilename);
 extern void tmx_destroyMap(TMXMap_t *aMap);
 
 // Lookup helpers
-extern TMXProperty_t *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aPropertyName);
+extern const char *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aPropertyName);
 extern TMXLayer_t *tmx_mapGetLayerNamed(TMXMap_t *aMap, const char *aLayerName);
 extern TMXObjectGroup_t *tmx_mapGetObjectGroupNamed(TMXMap_t *aMap, const char *aGroupName);
 extern TMXObject_t *tmx_objGroupGetObjectNamed(TMXObjectGroup_t *aGroup, const char *aObjName);

@@ -4,6 +4,7 @@
 #include "shared.h"
 #include "engine/background.h"
 #include "engine/input.h"
+#include "level.h"
 
 #ifndef _WORLD_H_
 #define _WORLD_H_
@@ -11,6 +12,9 @@
 typedef struct _World {
 	long time;
 	Background_t *background;
+
+	Level_t *level;
+
 	InputObserver_t *arrowRightObserver;
 	InputObserver_t *arrowLeftObserver;
 	InputObserver_t *arrowUpObserver;
