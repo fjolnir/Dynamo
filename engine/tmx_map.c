@@ -3,15 +3,22 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <mxml.h>
+#include <string.h>
 
+const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+const unsigned FLIPPED_VERTICALLY_FLAG   = 0x40000000;
 
 // Private helpers
 static int *_parseCSV(const char *aCsvString, int aWidth, int aHeight);
 static void _mxmlElementPrintAttrs(mxml_node_t *aNode);
+static char *_mxmlElementCopyAttr(mxml_node_t *aNode, const char *aAttrName);
 static float _mxmlElementGetAttrAsFloat(mxml_node_t *aNode, const char *aAttrName, float aDefault);
 static int _mxmlElementGetAttrAsInt(mxml_node_t *aNode, const char *aAttrName, int aDefault);
 static mxml_node_t **_mxmlFindChildren(mxml_node_t *aNode, mxml_node_t *aTop, const char *aName, int *aoCount);
+static TMXProperty_t *_tmx_readPropertiesFromMxmlNode(mxml_node_t *aParentNode, mxml_node_t *aTopNode, int *aoCount);
 
+static TMXTile_t _tmx_mapCreateTileForTileGID(TMXMap_t *aMap, int aTileGID);
+static TMXTileset_t *_tmx_mapGetTilesetForTileGID(TMXMap_t *aMap, int aTileID);
 
 TMXMap_t *tmx_readMapFile(const char *aFilename)
 {
@@ -36,25 +43,15 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 
 	mxml_node_t *tempNode;
 
-	// Read the properties
-	mxml_node_t *propertiesNode = mxmlFindElement(mapNode, tree, "properties", NULL, NULL, MXML_DESCEND_FIRST);
-	if(propertiesNode) {
-		mxml_node_t **propertyNodes = _mxmlFindChildren(propertiesNode, tree, "property", &out->numberOfProperties);
-		out->properties = malloc(sizeof(TMXProperty_t)*out->numberOfProperties);
-		for(int i = 0; i < out->numberOfTilesets; ++i) {
-			tempNode = propertyNodes[i];
-			strncpy(out->properties[i].name, mxmlElementGetAttr(tempNode, "name"), TMX_MAX_STRLEN);
-			strncpy(out->properties[i].value, mxmlElementGetAttr(tempNode, "value"), TMX_MAX_STRLEN);
-			mxmlRelease(tempNode);
-		}
-	}
+	// Read the map properties
+	out->properties = _tmx_readPropertiesFromMxmlNode(mapNode, tree, &out->numberOfProperties);
 
 	// Read the tilesets
 	mxml_node_t **tilesetNodes = _mxmlFindChildren(mapNode, tree, "tileset", &out->numberOfTilesets);
 	out->tilesets = malloc(sizeof(TMXTileset_t)*out->numberOfTilesets);
 	for(int i = 0; i < out->numberOfTilesets; ++i) {
 		tempNode = tilesetNodes[i];
-		out->tilesets[i].firstTileId = _mxmlElementGetAttrAsInt(tempNode, "firstgid", 0);
+		out->tilesets[i].firstTileGid = _mxmlElementGetAttrAsInt(tempNode, "firstgid", 0);
 		out->tilesets[i].tileWidth = _mxmlElementGetAttrAsInt(tempNode, "tilewidth", 0);
 		out->tilesets[i].tileHeight = _mxmlElementGetAttrAsInt(tempNode, "tileheight", 0);
 		out->tilesets[i].spacing = _mxmlElementGetAttrAsInt(tempNode, "spacing", 0);
@@ -64,8 +61,7 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 		assert(imageNode);
 		out->tilesets[i].imageWidth = _mxmlElementGetAttrAsInt(imageNode, "width", 0);
 		out->tilesets[i].imageHeight = _mxmlElementGetAttrAsInt(imageNode, "height", 0);
-		strncpy(out->tilesets[i].imagePath, mxmlElementGetAttr(imageNode, "source"), TMX_MAX_STRLEN);
-
+		out->tilesets[i].imagePath = strdup(mxmlElementGetAttr(imageNode, "source"));
 		mxmlRelease(imageNode);
 		mxmlRelease(tempNode);
 	}
@@ -75,15 +71,25 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 	out->layers = malloc(sizeof(TMXTileset_t)*out->numberOfLayers);
 	for(int i = 0; i < out->numberOfLayers; ++i) {
 		tempNode = layerNodes[i];
+		out->layers[i].name = _mxmlElementCopyAttr(tempNode, "name");
 		out->layers[i].opacity = _mxmlElementGetAttrAsFloat(tempNode, "opacity", 1.0);
 		out->layers[i].isVisible = _mxmlElementGetAttrAsInt(tempNode, "visible", 1);
-		// Parse the tile CSV
+		out->layers[i].properties = _tmx_readPropertiesFromMxmlNode(tempNode, tree, &out->layers[i].numberOfProperties);
+		// Parse the tile CSV and resolve the global tile ids
 		mxml_node_t *dataNode = mxmlFindElement(tempNode, tree, "data", NULL, NULL, MXML_DESCEND_FIRST);
 		assert(dataNode);
 		mxml_node_t *csvNode = mxmlWalkNext(dataNode, tree, MXML_DESCEND);
 		assert(csvNode);
 		const char *tileCSV = csvNode->value.opaque;
-		out->layers[i].tileIDs = _parseCSV(tileCSV, out->width, out->height);
+		int *tileGids = _parseCSV(tileCSV, out->width, out->height);
+		if(tileGids) {
+			out->layers[i].numberOfTiles = out->width*out->height;
+			out->layers[i].tiles = malloc(sizeof(TMXTile_t)*out->layers[i].numberOfTiles);
+			for(int j = 0; j < out->layers[i].numberOfTiles; ++j) {
+				out->layers[i].tiles[j] = _tmx_mapCreateTileForTileGID(out, tileGids[j]);
+			}
+			free(tileGids);
+		}
 
 		mxmlRelease(csvNode);
 		mxmlRelease(dataNode);
@@ -95,18 +101,20 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 	out->objectGroups = malloc(sizeof(TMXObjectGroup_t)*out->numberOfObjectGroups);
 	for(int i = 0; i < out->numberOfObjectGroups; ++i) {
 		tempNode = objGroupNodes[i];
-		strncpy(out->objectGroups[i].name, mxmlElementGetAttr(tempNode, "name"), TMX_MAX_STRLEN);
+		out->objectGroups[i].name = _mxmlElementCopyAttr(tempNode, "name");
+		out->objectGroups[i].properties = _tmx_readPropertiesFromMxmlNode(tempNode, tree, &out->objectGroups[i].numberOfProperties);
 		// Read the objects in the current group
 		mxml_node_t **objNodes = _mxmlFindChildren(tempNode, tree, "object", &out->objectGroups[i].numberOfObjects);
 		out->objectGroups[i].objects = malloc(sizeof(TMXObject_t)*out->objectGroups[i].numberOfObjects);
 		for(int j = 0; j < out->objectGroups[i].numberOfObjects; ++j) {
-			strncpy(out->objectGroups[i].objects[j].name, mxmlElementGetAttr(objNodes[i], "name"), TMX_MAX_STRLEN);
-			strncpy(out->objectGroups[i].objects[j].type, mxmlElementGetAttr(objNodes[i], "type"), TMX_MAX_STRLEN); 
+			out->objectGroups[i].objects[j].name = _mxmlElementCopyAttr(objNodes[i], "name");
+			out->objectGroups[i].objects[j].type = _mxmlElementCopyAttr(objNodes[i], "type");
 			out->objectGroups[i].objects[j].x = _mxmlElementGetAttrAsInt(objNodes[i], "x", 0);
 			out->objectGroups[i].objects[j].y = _mxmlElementGetAttrAsInt(objNodes[i], "y", 0);
 			out->objectGroups[i].objects[j].width = _mxmlElementGetAttrAsInt(objNodes[i], "width", 0);
 			out->objectGroups[i].objects[j].height = _mxmlElementGetAttrAsInt(objNodes[i], "height", 0);
-			out->objectGroups[i].objects[j].tileId = _mxmlElementGetAttrAsInt(objNodes[i], "gid", -1);
+			int tileGid = _mxmlElementGetAttrAsInt(objNodes[i], "gid", -1);
+			out->objectGroups[i].objects[j].tile = _tmx_mapCreateTileForTileGID(out, tileGid);
 			
 			mxmlRelease(objNodes[i]);
 		}
@@ -122,12 +130,41 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 
 void tmx_destroyMap(TMXMap_t *aMap)
 {
-	for(int i = 0; i < aMap->numberOfLayers; ++i) free(aMap->layers[i].tileIDs);
+	for(int i = 0; i < aMap->numberOfLayers; ++i) {
+		for(int j = 0; aMap->layers[i].numberOfProperties; ++j) {
+			free(aMap->layers[i].properties[j].name);
+			free(aMap->layers[i].properties[j].value);
+		}
+		if(aMap->layers[i].properties) free(aMap->layers[i].properties);
+		free(aMap->layers[i].name);
+		free(aMap->layers[i].tiles);
+	}
 	free(aMap->layers);
-	for(int i = 0; i < aMap->numberOfObjectGroups; ++i) free(aMap->objectGroups[i].objects);
+
+	for(int i = 0; i < aMap->numberOfObjectGroups; ++i) {
+		for(int j = 0; aMap->objectGroups[i].numberOfObjects; ++j) {
+			free(aMap->objectGroups[i].objects[j].name);
+			free(aMap->objectGroups[i].objects[j].type);
+		}
+		free(aMap->objectGroups[i].objects);
+		for(int j = 0; aMap->objectGroups[i].numberOfProperties; ++j) {
+			free(aMap->objectGroups[i].properties[j].name);
+			free(aMap->objectGroups[i].properties[j].value);
+		}
+		if(aMap->objectGroups[i].properties) free(aMap->objectGroups[i].properties);
+
+		free(aMap->objectGroups[i].name);
+	}
 	free(aMap->objectGroups);
+
+	for(int i = 0; i < aMap->numberOfTilesets; ++i) free(aMap->tilesets[i].imagePath);
 	free(aMap->tilesets);	
 
+	for(int i = 0; aMap->numberOfProperties; ++i) {
+		free(aMap->properties[i].name);
+		free(aMap->properties[i].value);
+	}
+	if(aMap->properties) free(aMap->properties);
 	free(aMap);
 }
 
@@ -139,15 +176,6 @@ TMXProperty_t *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aPropertyName
 	for(int i = 0; i < aMap->numberOfProperties; ++i) {
 		if(strcmp(aMap->properties[i].name, aPropertyName) == 0)
 			return &aMap->properties[i];
-	}
-	return NULL;
-}
-
-TMXTileset_t *tmx_mapGetTilesetForTileID(TMXMap_t *aMap, int aTileID)
-{
-	for(int i = 0; i < aMap->numberOfTilesets; ++i) {
-		if(aMap->tilesets[i].firstTileId < aTileID)
-			return &aMap->tilesets[i];
 	}
 	return NULL;
 }
@@ -179,8 +207,36 @@ TMXObject_t *tmx_objGroupGetObjectNamed(TMXObjectGroup_t *aGroup, const char *aO
 	return NULL;
 }
 
+#pragma mark - Private lookup helpers
 
-#pragma mark - Private helpers
+static TMXTile_t _tmx_mapCreateTileForTileGID(TMXMap_t *aMap, int aTileGID)
+{
+	TMXTile_t out = { NULL, -1, 0, 0 };
+	if(aTileGID == -1) return out;
+	
+	out.flippedHorizontally = (aTileGID & FLIPPED_HORIZONTALLY_FLAG);
+    out.flippedVertically = (aTileGID & FLIPPED_VERTICALLY_FLAG);
+    // Clear the flags
+    aTileGID &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG);
+	TMXTileset_t *tileset = _tmx_mapGetTilesetForTileGID(aMap, aTileGID);
+	if(!tileset) return out;
+	out.tileset = tileset;
+	out.id = aTileGID - tileset->firstTileGid;
+	
+	return out;
+}
+
+static TMXTileset_t *_tmx_mapGetTilesetForTileGID(TMXMap_t *aMap, int aTileGID)
+{
+	for(int i = 0; i < aMap->numberOfTilesets; ++i) {
+		if(aMap->tilesets[i].firstTileGid < aTileGID)
+			return &aMap->tilesets[i];
+	}
+	return NULL;
+}
+
+
+#pragma mark - CSV parsing
 
 // We know the dimensions of the map beforehand so we can just load the csv into a one dimensional array
 static int *_parseCSV(const char *aCsvString, int aWidth, int aHeight)
@@ -209,6 +265,16 @@ static void _mxmlElementPrintAttrs(mxml_node_t *aNode)
 		attr = &element->attrs[i];
 		debug_log("%s: %s=%s", element->name, attr->name, attr->value);
 	}
+}
+
+
+#pragma mark - XML Parsing
+
+static char *_mxmlElementCopyAttr(mxml_node_t *aNode, const char *aAttrName)
+{
+	char *attr = mxmlElementGetAttr(aNode, aAttrName);
+	if(!attr) return NULL;
+	return strdup(attr);
 }
 
 static float _mxmlElementGetAttrAsFloat(mxml_node_t *aNode, const char *aAttrName, float aDefault)
@@ -248,4 +314,23 @@ static mxml_node_t **_mxmlFindChildren(mxml_node_t *aNode, mxml_node_t *aTop, co
 	if(aoCount != NULL) *aoCount = count;
 
 	return nodes;
+}
+
+TMXProperty_t *_tmx_readPropertiesFromMxmlNode(mxml_node_t *aParentNode, mxml_node_t *aTopNode, int *aoCount)
+{
+	mxml_node_t *propertiesNode = mxmlFindElement(aParentNode, aTopNode, "properties", NULL, NULL, MXML_DESCEND_FIRST);
+	if(propertiesNode) {
+		int numberOfProperties;
+		mxml_node_t **propertyNodes = _mxmlFindChildren(propertiesNode, aTopNode, "property", &numberOfProperties);
+		TMXProperty_t *properties = malloc(sizeof(TMXProperty_t)*numberOfProperties);
+		for(int i = 0; i < numberOfProperties; ++i) {
+			properties[i].name = _mxmlElementCopyAttr(propertyNodes[i], "name");
+			properties[i].value = _mxmlElementCopyAttr(propertyNodes[i], "value");
+			mxmlRelease(propertyNodes[i]);
+		}
+		if(aoCount) *aoCount = numberOfProperties;
+		return properties;
+	}
+	if(aoCount) *aoCount = 0;
+	return NULL;
 }

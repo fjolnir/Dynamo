@@ -1,6 +1,5 @@
 // A quick&dirty TMX map loader
 //
-// Properties are only loaded for the map
 // Doesn't support external tilesets
 // Tilesets are assumed to only have a single image
 // Ignores the transparency color of images (We use the alpha channel)
@@ -13,47 +12,58 @@
 #ifndef _TMXMAP_H_
 #define _TMXMAP_H_
 
-#define TMX_MAX_STRLEN 256
-
 typedef enum _TMXMap_orientation {
 	kTMXMap_orthogonal,
 	kTMXMap_isometric
 } TMXMap_orientation;
 
 typedef struct _TMXProperty {
-	char name[TMX_MAX_STRLEN];
-	char value[TMX_MAX_STRLEN];
+	char *name;
+	char *value;
 } TMXProperty_t;
 
 typedef struct _TMXTileset {
-	int firstTileId;
+	int firstTileGid;
 	int imageWidth, imageHeight;
 	int tileWidth, tileHeight;
 	int spacing;
 	int margin;
-	char imagePath[TMX_MAX_STRLEN];
+	char *imagePath;
 } TMXTileset_t;
 
+typedef struct _TMXTile {
+	TMXTileset_t *tileset;
+	int id;
+	bool flippedVertically;
+	bool flippedHorizontally;
+} TMXTile_t;
+
 typedef struct _TMXLayer {
-	char name[TMX_MAX_STRLEN];
+	char *name;
 	float opacity;
 	bool isVisible;
 	int numberOfTiles;
-	int *tileIDs;
+	TMXTile_t *tiles;
+	int numberOfProperties;
+	TMXProperty_t *properties; // Default NULL
 } TMXLayer_t;
 
 typedef struct _TMXObject {
-	char name[TMX_MAX_STRLEN];
-	char type[TMX_MAX_STRLEN];
+	char *name;
+	char *type;
 	int x, y; // in pixels
 	int width, height; // in pixels
-	int tileId; // Default -1
+	TMXTile_t tile; // Default -1
+	int numberOfProperties;
+	TMXProperty_t *properties; // Default NULL
 } TMXObject_t;
 
 typedef struct _TMXObjectGroup {
-	char name[TMX_MAX_STRLEN];
+	char *name;
 	int numberOfObjects;
 	TMXObject_t *objects;
+	int numberOfProperties;
+	TMXProperty_t *properties; // Default NULL
 } TMXObjectGroup_t;
 
 typedef struct _TMXMap {
@@ -76,7 +86,6 @@ extern void tmx_destroyMap(TMXMap_t *aMap);
 
 // Lookup helpers
 extern TMXProperty_t *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aPropertyName);
-extern TMXTileset_t *tmx_mapGetTilesetForTileID(TMXMap_t *aMap, int aTileID);
 extern TMXLayer_t *tmx_mapGetLayerNamed(TMXMap_t *aMap, const char *aLayerName);
 extern TMXObjectGroup_t *tmx_mapGetObjectGroupNamed(TMXMap_t *aMap, const char *aGroupName);
 extern TMXObject_t *tmx_objGroupGetObjectNamed(TMXObjectGroup_t *aGroup, const char *aObjName);
