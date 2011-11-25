@@ -44,7 +44,7 @@ static void mouseMoved(InputManager_t *aInputManager, InputObserver_t *aInputObs
 	vec2_t delta = kVec2_zero;
 	if(!shouldResetDelta) delta = vec2_sub(*aLocation, lastLoc);
 
-	world->background->offset = vec2_add(world->background->offset, delta);;
+	world->background->offset = vec2_add(world->background->offset, delta);
 
 	shouldResetDelta = (aState == kInputState_up);
 	lastLoc = *aLocation;
@@ -75,15 +75,18 @@ World_t *world_init()
 	out->arrowUpObserver = input_createObserver(kInputKey_arrowUp, &upKeyPressed, NULL, out);
 	out->arrowDownObserver = input_createObserver(kInputKey_arrowDown, &downKeyPressed, NULL, out);
 	out->leftDragObserver = input_createObserver(kInputMouse_leftDrag, &mouseMoved, NULL, out);
+	out->leftClickObserver = input_createObserver(kInputMouse_leftClick, &mouseMoved, NULL, out);
+
 	input_addObserver(gInputManager, out->arrowRightObserver);
 	input_addObserver(gInputManager, out->arrowLeftObserver);
 	input_addObserver(gInputManager, out->arrowUpObserver);
 	input_addObserver(gInputManager, out->arrowDownObserver);
 	input_addObserver(gInputManager, out->leftDragObserver);
+	input_addObserver(gInputManager, out->leftClickObserver);
 
 	// Test map loading
 	TMXMap_t *map = tmx_readMapFile("levels/desert.tmx");
-
+	tmx_destroyMap(map);
 	return out;
 }
 
