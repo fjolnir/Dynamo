@@ -272,7 +272,7 @@ static void _mxmlElementPrintAttrs(mxml_node_t *aNode)
 
 static char *_mxmlElementCopyAttr(mxml_node_t *aNode, const char *aAttrName)
 {
-	char *attr = mxmlElementGetAttr(aNode, aAttrName);
+	const char *attr = mxmlElementGetAttr(aNode, aAttrName);
 	if(!attr) return NULL;
 	return strdup(attr);
 }
