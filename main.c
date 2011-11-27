@@ -28,7 +28,7 @@ static void display()
 	gameTimer_update(&gGameTimer, timeInUsec()/1000);
 
 	// Update the game state as many times as we need to catch up
-	while(gGameTimer.timeSinceLastUpdate >= 0){//gGameTimer.desiredInterval) { Feels better like this, eliminates occasional chunkiness (Needs more testing)
+	while(gGameTimer.timeSinceLastUpdate >= gGameTimer.desiredInterval) {
 		input_postActiveEvents(gInputManager);
 		world_update(gWorld);
 		gGameTimer.timeSinceLastUpdate -= gGameTimer.desiredInterval;
