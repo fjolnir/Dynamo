@@ -10,7 +10,8 @@
 #define _WORLD_H_
 
 typedef struct _World {
-	long time;
+	double time; // Game time in seconds
+	long ticks; // Number of game updates since beginning (roughly time/FPS)
 	Background_t *background;
 
 	Level_t *level;
@@ -25,5 +26,5 @@ typedef struct _World {
 
 extern World_t *world_init();
 extern void world_destroy(World_t *aWorld);
-extern void world_update(World_t *aWorld);
+void world_update(World_t *aWorld, double aTimeDelta);
 #endif

@@ -29,7 +29,7 @@ void renderer_destroy(Renderer_t *aRenderer)
 
 #pragma mark - Display
 
-void renderer_display(Renderer_t *aRenderer)
+void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double aInterpolation)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, aRenderer->frameBufferId);
 	glViewport(0, 0, aRenderer->viewportSize.w, aRenderer->viewportSize.h);
@@ -40,7 +40,7 @@ void renderer_display(Renderer_t *aRenderer)
 	if(currentItem) {
 		do {
 			renderable = (Renderable_t *)currentItem->value;
-			renderable->displayCallback(aRenderer, renderable);
+			renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
 		} while( (currentItem = currentItem->next) );
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

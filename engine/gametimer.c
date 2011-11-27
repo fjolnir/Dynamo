@@ -1,18 +1,23 @@
 #include "gametimer.h"
-#include <float.h>
 #include "various.h"
 
-void gameTimer_update(GameTimer_t *aTimer, double aTime)
+void gameTimer_update(GameTimer_t *aTimer, double aDelta)
 {
-	double delta = aTime - aTimer->elapsed;
-//	printf("%.2f - %.2f = %.2f (%.2f: %d)", aTimer->elapsed, aTime, delta, aTimer->desiredInterval, delta>aTimer->desiredInterval);
-	aTimer->elapsed = aTime;
-	aTimer->timeSinceLastUpdate = MAX(0, aTimer->timeSinceLastUpdate+delta);
-//	printf(" TIME SINCE LAST: %.2f\n", aTimer->timeSinceLastUpdate);
+	aTimer->elapsed += aDelta;
+	aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+aDelta);
+}
 
-	
-	if(delta < FLT_EPSILON) return; // If the difference is negligible just go on 
+void gameTimer_finishedFrame(GameTimer_t *aTimer)
+{
+	aTimer->timeSinceLastUpdate -= aTimer->desiredInterval;	
+}
 
-	// Otherwise, calculate the FPS
-	aTimer->estimatedFPS = 0.9*aTimer->estimatedFPS + (0.1*1000.0)/delta;
+bool gameTimer_reachedNextFrame(GameTimer_t *aTimer)
+{
+	return !(aTimer->timeSinceLastUpdate >= aTimer->desiredInterval);
+}
+
+double gameTimer_interpolationSinceLastFrame(GameTimer_t *aTimer)
+{
+	return aTimer->timeSinceLastUpdate / aTimer->desiredInterval;
 }

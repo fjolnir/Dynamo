@@ -2,7 +2,7 @@
 #include "drawutils.h"
 #include <stdlib.h>
 
-static void _sprite_draw(Renderer_t *aRenderer, void *aOwner);
+static void _sprite_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
 
 Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity)
 {
@@ -45,7 +45,7 @@ void sprite_step(Sprite_t *aSprite)
 
 #pragma mark - Rendering
 
-static void _sprite_draw(Renderer_t *aRenderer, void *aOwner)
+static void _sprite_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation)
 {
 	Sprite_t *sprite = (Sprite_t *)aOwner;
 	SpriteAnimation_t *animation = &sprite->animations[sprite->activeAnimation];

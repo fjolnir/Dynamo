@@ -70,7 +70,7 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 	for(int i = 0; i < out->numberOfLayers; ++i) {
 		tempNode = layerNodes[i];
 		out->layers[i].name = _mxmlElementCopyAttr(tempNode, "name");
-		debug_log("%s", out->layers[i].name);
+		
 		out->layers[i].opacity = _mxmlElementGetAttrAsFloat(tempNode, "opacity", 1.0);
 		out->layers[i].isVisible = _mxmlElementGetAttrAsInt(tempNode, "visible", 1);
 		out->layers[i].properties = _tmx_readPropertiesFromMxmlNode(tempNode, tree, &out->layers[i].numberOfProperties);

@@ -1,8 +1,10 @@
 #include "background.h"
 #include "shader.h"
 
-static void _background_draw(Renderer_t *aRenderer, void *aOwner);
+static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
+
 static Shader_t *_backgroundShader;
+
 enum {
 	kBackground_offsetUniform = kShader_colorUniform, // Begin our additional uniform indices after the last color map
 	kBackground_sizeUniform,
@@ -58,7 +60,7 @@ void background_destroyLayer(BackgroundLayer_t *aLayer, bool aShouldDestroyTextu
 	free(aLayer);
 }
 
-static void _background_draw(Renderer_t *aRenderer, void *aOwner)
+static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation)
 {
 	Background_t *background = (Background_t *)aOwner;
 

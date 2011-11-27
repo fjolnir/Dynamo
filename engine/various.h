@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifndef _VARIOUS_H_
 #define _VARIOUS_H_
 
@@ -20,8 +22,6 @@ struct timezone {
 };
 int gettimeofday(struct timeval *tv, struct timezone *tz);
 #endif
-
-extern long timeInUsec();
 
 #pragma mark - Debug logging
 

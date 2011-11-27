@@ -2,7 +2,7 @@
 #include "shared.h"
 #include "engine/tmx_map.h"
 
-static void _level_draw(Renderer_t *aRenderer, void *aOwner);
+static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
 
 Level_t *level_load(const char *aFilename)
 {
@@ -70,13 +70,12 @@ void level_destroy(Level_t *aLevel)
 
 #pragma mark - Drawing
 
-static void _level_draw(Renderer_t *aRenderer, void *aOwner)
+static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation)
 {
-
 	Level_t *level = (Level_t *)aOwner;
 	// Draw the background
 	if(level->background)
-		level->background->renderable.displayCallback(aRenderer, level->background);
+		level->background->renderable.displayCallback(aRenderer, level->background, aTimeSinceLastFrame, aInterpolation);
 	
 	// Draw the tiles
 	int numberOfTiles = level->size[0]*level->size[1];

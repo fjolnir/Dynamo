@@ -46,10 +46,3 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 	return 0;
 }
 #endif
-
-long timeInUsec()
-{
-	struct timeval elapsedTime;
-	gettimeofday(&elapsedTime, NULL);
-	return elapsedTime.tv_usec;
-}

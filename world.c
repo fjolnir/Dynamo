@@ -19,20 +19,20 @@ static void rightKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInp
 {
 	World_t *world = (World_t *)metaData;
 	sprite->flippedHorizontally = false;
-	if(world->time%2 == 0) sprite_step(sprite);
+	if(world->ticks%2 == 0) sprite_step(sprite);
 
 	world->background->offset.x += 6.0;
-	world->background->offset.y = floorf(8.0f+10.0f* sinf((float)world->time*M_PI/50.0f));
+	world->background->offset.y = floorf(8.0f+10.0f* sinf((float)world->ticks*M_PI/50.0f));
 	sprite->location.y = floorf(41.0f-world->background->offset.y);
 }
 static void leftKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
 	World_t *world = (World_t *)metaData;
 	sprite->flippedHorizontally = true;
-	if(world->time%2 == 0) sprite_step(sprite);
+	if(world->ticks%2 == 0) sprite_step(sprite);
 
 	world->background->offset.x -= 6.0;
-	world->background->offset.y = floorf(8.0f+10.0f* cosf((float)world->time*M_PI/50.0f));
+	world->background->offset.y = floorf(8.0f+10.0f* cosf((float)world->ticks*M_PI/50.0f));
 	sprite->location.y = floorf(41.0f-world->background->offset.y);
 }
 
@@ -53,24 +53,25 @@ static void mouseMoved(InputManager_t *aInputManager, InputObserver_t *aInputObs
 World_t *world_init()
 {
 	World_t *out = malloc(sizeof(World_t));
-	out->time = 0;
+	out->time = 0.0;
+	out->ticks = 0;
 
 	out->background = background_create();
 	out->background->layers[0] = background_createLayer(texture_loadFromPng("textures/backgrounds/clouds.png", true, false), 0.5);
 	out->background->layers[1] = background_createLayer(texture_loadFromPng("textures/backgrounds/hills.png", true, false), 0.3);
 	out->background->layers[2] = background_createLayer(texture_loadFromPng("textures/backgrounds/castle.png", true, false), 0.1);
 	out->background->layers[3] = background_createLayer(texture_loadFromPng("textures/backgrounds/ground.png", true, false), 0.0);
-	//renderer_pushRenderable(gRenderer, &out->background->renderable);
+	renderer_pushRenderable(gRenderer, &out->background->renderable);
 
 	vec3_t spriteLoc = { 100.0f, 41.0f, 0.0f };
 	vec2_t spriteSize = { 48.0f, 48.0f };
 	TextureAtlas_t *atlas = texAtlas_create(texture_loadFromPng("textures/sonic.png", false, false), kVec2_zero, spriteSize);
 	sprite = sprite_create(spriteLoc, spriteSize, atlas, 1);
 	sprite->animations[0] = sprite_createAnimation(11);
-	//renderer_pushRenderable(gRenderer, &sprite->renderable);
+	renderer_pushRenderable(gRenderer, &sprite->renderable);
 
 	out->level = level_load("levels/desert.tmx");
-	renderer_pushRenderable(gRenderer, &out->level->renderable);
+	//renderer_pushRenderable(gRenderer, &out->level->renderable);
 
 	// Create&add input observers
 	out->arrowRightObserver = input_createObserver(kInputKey_arrowRight, &rightKeyPressed, NULL, out);
@@ -103,7 +104,8 @@ void world_destroy(World_t *aWorld)
 	free(aWorld);
 }
 
-void world_update(World_t *aWorld)
+void world_update(World_t *aWorld, double aTimeDelta)
 {
-	aWorld->time++;
+	aWorld->time += aTimeDelta;
+	++aWorld->ticks;
 }

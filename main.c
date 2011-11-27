@@ -11,6 +11,9 @@
 	#include "engine/windows/gldefs.h"
 #endif
 
+// Constants 
+#define USEC_PER_SEC (1000000)
+
 // Globals
 Renderer_t *gRenderer;
 World_t *gWorld;
@@ -20,21 +23,30 @@ SoundManager_t *gSoundManager;
 
 // Locals
 static bool _leftMouseButtonDown, _rightMouseButtonDown;
+static struct timeval lastTime;
 
 #pragma mark - Drawing
 
 static void display()
 {
-	gameTimer_update(&gGameTimer, timeInUsec()/1000);
-
-	// Update the game state as many times as we need to catch up
-	while(gGameTimer.timeSinceLastUpdate >= gGameTimer.desiredInterval) {
-		input_postActiveEvents(gInputManager);
-		world_update(gWorld);
-		gGameTimer.timeSinceLastUpdate -= gGameTimer.desiredInterval;
+	struct timeval currTime;
+	gettimeofday(&currTime, NULL);
+	double delta = 0.0;
+	if(lastTime.tv_sec > 0) {
+		// Get the delta in microseconds and then convert back to seconds
+		long delta_usec = USEC_PER_SEC*(currTime.tv_sec - lastTime.tv_sec) + (currTime.tv_usec - lastTime.tv_usec);
+		delta = (double)delta_usec/(double)USEC_PER_SEC;
+		gameTimer_update(&gGameTimer, delta);
 	}
-
-	renderer_display(gRenderer);
+	lastTime = currTime;
+	
+	// Update the game state as many times as we need to catch up
+	while(!gameTimer_reachedNextFrame(&gGameTimer)) {
+		input_postActiveEvents(gInputManager);
+		world_update(gWorld, delta);
+		gameTimer_finishedFrame(&gGameTimer);
+	}
+	renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastFrame(&gGameTimer));
 
 	glutSwapBuffers();
 	glFlush();
@@ -157,9 +169,9 @@ int main(int argc, char **argv)
 	gRenderer = renderer_create(viewport, kVec3_zero);
 	draw_init(gRenderer);
 
-	gGameTimer.desiredInterval = 1000.0/(double)DESIRED_FPS;
-	gGameTimer.elapsed = timeInUsec();
-	gGameTimer.estimatedFPS = 0.0;
+	gGameTimer.desiredInterval = 1.0/(double)DESIRED_FPS;
+	gGameTimer.elapsed = 0.0;
+	gGameTimer.timeSinceLastUpdate = 0.0;
 
 	gInputManager = input_createManager();
 
