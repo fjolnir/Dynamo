@@ -13,7 +13,7 @@ typedef struct _GameTimer {
 } GameTimer_t;
 
 extern void gameTimer_update(GameTimer_t *aTimer, double aDelta);
-extern void gameTimer_finishedFrame(GameTimer_t *aTimer);
-extern bool gameTimer_reachedNextFrame(GameTimer_t *aTimer);
-extern double gameTimer_interpolationSinceLastFrame(GameTimer_t *aTimer);
+extern void gameTimer_finishedUpdate(GameTimer_t *aTimer);
+extern bool gameTimer_reachedNextUpdate(GameTimer_t *aTimer);
+extern double gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 #endif

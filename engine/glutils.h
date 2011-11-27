@@ -3,8 +3,6 @@
 	#include <unistd.h>
 	#include <OpenGL/gl.h>
 	#include <Opengl/glext.h>
-	#include <OpenGL/glu.h>
-	#include <GLUT/glut.h>
 #else
 	#define _CRT_SECURE_NO_DEPRECATE
 	#define _WIN32_LEAN_AND_MEAN
@@ -15,8 +13,6 @@
 	#endif
 	#include <GL/gl.h>
 	#include <GL/glext.h>
-	#include <GL/glu.h>
-	#include <GL/glut.h>
 #endif
 
 #ifdef DEBUG

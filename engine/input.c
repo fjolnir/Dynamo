@@ -104,7 +104,7 @@ void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned cha
 		return;
 	_InputEvent_t *event = malloc(sizeof(_InputEvent_t));
 	event->observer = observer;
-	event->location = *aLocation;
+	if(aLocation != NULL) event->location = *aLocation;
 	event->fireCount = 0;
 	event->state = kInputState_down;
 

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "engine/glutils.h"
 #include "shared.h"
+#include <SDL/SDL.h>
 
 #ifdef WIN32
 	#define _CRT_SECURE_NO_DEPRECATE
@@ -12,7 +13,7 @@
 #endif
 
 // Constants 
-#define USEC_PER_SEC (1000000)
+#define MSEC_PER_SEC (1000)
 
 // Globals
 Renderer_t *gRenderer;
@@ -23,34 +24,32 @@ SoundManager_t *gSoundManager;
 
 // Locals
 static bool _leftMouseButtonDown, _rightMouseButtonDown;
-static struct timeval lastTime;
+static Uint32 lastTime;
+static bool _shouldExit = false;
+
+// Functions
+static void cleanup();
 
 #pragma mark - Drawing
 
 static void display()
 {
-	struct timeval currTime;
-	gettimeofday(&currTime, NULL);
 	double delta = 0.0;
-	if(lastTime.tv_sec > 0) {
-		// Get the delta in microseconds and then convert back to seconds
-		long delta_usec = USEC_PER_SEC*(currTime.tv_sec - lastTime.tv_sec) + (currTime.tv_usec - lastTime.tv_usec);
-		delta = (double)delta_usec/(double)USEC_PER_SEC;
+	Uint32 currentTime = SDL_GetTicks();
+	if(lastTime > 0) {
+		Uint32 deltaMsec = currentTime - lastTime;
+		delta = (double)deltaMsec / (double)MSEC_PER_SEC;
 		gameTimer_update(&gGameTimer, delta);
 	}
-	lastTime = currTime;
+	lastTime = currentTime;
 	
 	// Update the game state as many times as we need to catch up
-	while(!gameTimer_reachedNextFrame(&gGameTimer)) {
+	for(int i = 0; (i < MAX_FRAMESKIP) && !gameTimer_reachedNextUpdate(&gGameTimer); ++i) {
 		input_postActiveEvents(gInputManager);
 		world_update(gWorld, delta);
-		gameTimer_finishedFrame(&gGameTimer);
+		gameTimer_finishedUpdate(&gGameTimer);
 	}
-	renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastFrame(&gGameTimer));
-
-	glutSwapBuffers();
-	glFlush();
-	glutPostRedisplay();
+	renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));
 }
 
 static void windowDidResize(int aWidth, int aHeight)
@@ -65,77 +64,99 @@ static void windowDidResize(int aWidth, int aHeight)
 
 #pragma mark - Event handling
 
-static void keyWasPressed(unsigned char aKey, int aMouseX, int aMouseY)
-{
-	vec2_t location = { (float)aMouseX, gRenderer->viewportSize.h - (float)aMouseY };
-	input_beginEvent(gInputManager, kInputKey_ascii, &aKey, &location);
-}
-static void keyWasReleased(unsigned char aKey, int aMouseX, int aMouseY)
-{
-	input_endEvent(gInputManager, kInputKey_ascii, &aKey);
-}
-
-static Input_type_t _inputTypeForGlutSpecialKey(int aKey)
+static Input_type_t _inputTypeForSDLKey(SDLKey aKey)
 {
 	switch(aKey) {
-		case GLUT_KEY_LEFT:
+		case SDLK_LEFT:
 			return kInputKey_arrowLeft;
-		case GLUT_KEY_RIGHT:
+		case SDLK_RIGHT:
 			return kInputKey_arrowRight;
-		case GLUT_KEY_UP:
+		case SDLK_UP:
 			return kInputKey_arrowUp;
-		case GLUT_KEY_DOWN:
+		case SDLK_DOWN:
 			return kInputKey_arrowDown;
 		default:
 			return -1;
 	}
 }
-static void specialKeyWasPressed(int aKey, int aMouseX, int aMouseY)
-{
-	Input_type_t inputType = _inputTypeForGlutSpecialKey(aKey);
-	if(inputType == -1) return;
-	vec2_t location = { (float)aMouseX, (float)aMouseY };
-	input_beginEvent(gInputManager, inputType, NULL, &location);
-}
-static void specialKeyWasReleased(int aKey, int aMouseX, int aMouseY)
-{
-	Input_type_t inputType = _inputTypeForGlutSpecialKey(aKey);
-	if(inputType == -1) return;
-	input_endEvent(gInputManager, inputType, NULL);
-}
 
-static void mouseMoved(int aMouseX, int aMouseY)
+static void handleEvent(SDL_Event aEvent)
 {
-	vec2_t location = { (float)aMouseX, gRenderer->viewportSize.h - (float)aMouseY };
-	input_postMomentaryEvent(gInputManager, kInputMouse_move, NULL, &location, kInputState_up);
-}
-static void mouseDragged(int aMouseX, int aMouseY)
-{
-	vec2_t location = { (float)aMouseX, gRenderer->viewportSize.h - (float)aMouseY };
-	if(_leftMouseButtonDown)
-		input_postMomentaryEvent(gInputManager, kInputMouse_leftDrag, NULL, &location, kInputState_down);
-	if(_rightMouseButtonDown)
-		input_postMomentaryEvent(gInputManager, kInputMouse_rightDrag, NULL, &location, kInputState_down);
-}
+	switch(aEvent.type) {
+		case SDL_ACTIVEEVENT:
+		{
+			if (aEvent.active.gain) {
+				// Resume
+			}
+			else {
+				 // Pause
+			}
+			break;
+		}
+		case SDL_VIDEORESIZE:
+		{
+			windowDidResize(aEvent.resize.w, aEvent.resize.h);
+		}
+		case SDL_KEYDOWN:
+		{
+			if(aEvent.key.keysym.sym == 'q')
+				_shouldExit = true;
+			if(aEvent.key.keysym.sym < 127)
+				input_beginEvent(gInputManager, kInputKey_ascii, (unsigned char*)&aEvent.key.keysym.sym, NULL);
+			else {
+				Input_type_t inputType = _inputTypeForSDLKey(aEvent.key.keysym.sym);
+				if(inputType != -1)
+					input_beginEvent(gInputManager, inputType, NULL, NULL);
+			}
+			break;
+		}
+		case SDL_KEYUP:
+		{
+			if(aEvent.key.keysym.sym < 127)
+				input_endEvent(gInputManager, kInputKey_ascii, (unsigned char*)&aEvent.key.keysym.sym);
+			else {
+				Input_type_t inputType = _inputTypeForSDLKey(aEvent.key.keysym.sym);
+				if(inputType == -1) break;
+				input_endEvent(gInputManager, inputType, NULL);
+			}
+			break;
+		}
+		case SDL_MOUSEMOTION:
+		{
+			SDL_MouseMotionEvent motion = aEvent.motion;
+			vec2_t location = { (float)motion.x, gRenderer->viewportSize.h - (float)motion.y };
+			input_postMomentaryEvent(gInputManager, kInputMouse_move, NULL, &location, kInputState_up);
 
-static void mouseButtonClicked(int aButton, int aState, int aMouseX, int aMouseY)
-{
-	vec2_t location = { (float)aMouseX, gRenderer->viewportSize.h - (float)aMouseY };
-	Input_type_t inputType;
-	switch(aButton) {
-		case GLUT_LEFT_BUTTON:
-			_leftMouseButtonDown = (aState == GLUT_DOWN);
-			inputType = kInputMouse_leftClick;
+			if(_leftMouseButtonDown)
+				input_postMomentaryEvent(gInputManager, kInputMouse_leftDrag, NULL, &location, kInputState_down);
+			if(_rightMouseButtonDown)
+				input_postMomentaryEvent(gInputManager, kInputMouse_rightDrag, NULL, &location, kInputState_down);
 			break;
-		case GLUT_RIGHT_BUTTON:
-			_rightMouseButtonDown = (aState == GLUT_DOWN);
-			inputType = kInputMouse_rightClick;
+		}
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+		{
+			SDL_MouseButtonEvent buttonEvent = aEvent.button;
+			vec2_t location = { (float)buttonEvent.x, gRenderer->viewportSize.h - (float)buttonEvent.y };
+
+			Input_type_t inputType;
+			switch(buttonEvent.button) {
+				case SDL_BUTTON_LEFT:
+					_leftMouseButtonDown = (buttonEvent.state == SDL_PRESSED);
+					inputType = kInputMouse_leftClick;
+					break;
+				case SDL_BUTTON_RIGHT:
+					_rightMouseButtonDown = (buttonEvent.state == SDL_PRESSED);
+					inputType = kInputMouse_rightClick;
+					break;
+				default:
+					return;
+			}
+			input_postMomentaryEvent(gInputManager, inputType, NULL,
+									 &location, (buttonEvent.state == SDL_PRESSED) ? kInputState_down : kInputState_up);
 			break;
-		default:
-			return;
+		}
 	}
-	input_postMomentaryEvent(gInputManager, inputType, NULL,
-	                         &location, (aState == GLUT_DOWN) ? kInputState_down : kInputState_up);
 }
 
 
@@ -143,28 +164,47 @@ static void mouseButtonClicked(int aButton, int aState, int aMouseX, int aMouseY
 
 static void cleanup()
 {
+	debug_log("Quitting...");
 	soundManager_destroy(gSoundManager);
 	world_destroy(gWorld);
 	renderer_destroy(gRenderer);
 	input_destroyManager(gInputManager);
 	draw_cleanup();
-	exit(0);
+	SDL_Quit();
 }
+
+
+static SDL_Surface *_sdlSurface;
 
 int main(int argc, char **argv)
 {
-	gSoundManager = soundManager_create();
-//	Sound_t *testSound = sound_load("audio/test.ogg");
-//	sound_play(testSound);
-
-	vec2_t viewport = { 640.0f, 480.0f };
+	vec2_t viewport = { 800.0f, 600.0f };
 
 	// Initialize graphics
-	glutInit(&argc, argv);
-	glutInitWindowPosition(64,64);
-	glutInitWindowSize(viewport.w, viewport.h);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA);
-	glutCreateWindow("");
+	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+		debug_log("Couldn't initialize SDL");
+		return 1;
+	}
+	atexit(&cleanup);
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1); // VSync
+	_sdlSurface = SDL_SetVideoMode(viewport.w, viewport.h, 0, SDL_OPENGL);
+	if(!_sdlSurface) {
+		debug_log("Couldn't initialize SDL surface");
+		return 1;
+	}
+	#ifdef GL_GLEXT_PROTOTYPES
+		loadGLExtensions(); // Load GL on windows
+	#endif
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_DEPTH_TEST);
+
+	gSoundManager = soundManager_create();
+	//Sound_t *testSound = sound_load("audio/test.ogg");
+	//sound_play(testSound);
 
 	gRenderer = renderer_create(viewport, kVec3_zero);
 	draw_init(gRenderer);
@@ -177,33 +217,16 @@ int main(int argc, char **argv)
 
 	gWorld = world_init();
 
-#ifdef GL_GLEXT_PROTOTYPES
-	loadGLExtensions(); // Load GL on windows
-#endif
-
-	glutReshapeFunc(windowDidResize);
-	glutDisplayFunc(display);
-	glutKeyboardFunc(keyWasPressed);
-	glutKeyboardUpFunc(keyWasReleased);
-	glutSpecialFunc(specialKeyWasPressed);
-	glutSpecialUpFunc(specialKeyWasReleased);
-	glutMouseFunc(mouseButtonClicked);
-	glutMotionFunc(mouseDragged);
-	glutPassiveMotionFunc(mouseMoved);
-
-	// GL setup
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_DEPTH_TEST);
-
-#ifndef WIN32 // TODO: Write equivalent for windows (or cross platform)
-	// Make sure we clean up after ourselves before exiting
-	signal(SIGINT, cleanup); // While debugging
-	//atexit(cleanup);
-#endif
-
 	// Enter the runloop
-	glutMainLoop();
+	windowDidResize((int)viewport.w, (int)viewport.h);
+	while(!_shouldExit) {
+		SDL_Event event;
+		while (SDL_PollEvent(&event)) {
+			handleEvent(event);
+		}
+		display();
+		SDL_GL_SwapBuffers();
+	}
 
 	return 0;
 }

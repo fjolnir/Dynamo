@@ -1,6 +1,7 @@
 #include "sprite.h"
 #include "drawutils.h"
 #include <stdlib.h>
+#include "various.h"
 
 static void _sprite_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
 
