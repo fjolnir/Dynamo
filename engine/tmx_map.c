@@ -135,7 +135,7 @@ void tmx_destroyMap(TMXMap_t *aMap)
 	free(aMap->layers);
 
 	for(int i = 0; i < aMap->numberOfObjectGroups; ++i) {
-		for(int j = 0; aMap->objectGroups[i].numberOfObjects; ++j) {
+		for(int j = 0; j < aMap->objectGroups[i].numberOfObjects; ++j) {
 			free(aMap->objectGroups[i].objects[j].name);
 			free(aMap->objectGroups[i].objects[j].type);
 		}
