@@ -19,15 +19,24 @@ Level_t *level_load(const char *aFilename)
 	out->background = NULL;
 	const char *hasBg = tmx_mapGetPropertyNamed(map, "Has background");
 	if(hasBg && strcmp(hasBg, "true") == 0) {
+		const char *path;
 		out->background = background_create();
-		out->background->layers[0] = background_createLayer(texture_loadFromPng(tmx_mapGetPropertyNamed(map, "BG1"), true, false),
-															(float)atof(tmx_mapGetPropertyNamed(map, "BG1-depth")));
-		out->background->layers[1] = background_createLayer(texture_loadFromPng(tmx_mapGetPropertyNamed(map, "BG2"), true, false),
-															(float)atof(tmx_mapGetPropertyNamed(map, "BG2-depth")));
-		out->background->layers[2] = background_createLayer(texture_loadFromPng(tmx_mapGetPropertyNamed(map, "BG3"), true, false),
-															(float)atof(tmx_mapGetPropertyNamed(map, "BG3-depth")));
-		out->background->layers[3] = background_createLayer(texture_loadFromPng(tmx_mapGetPropertyNamed(map, "BG4"), true, false),
-															(float)atof(tmx_mapGetPropertyNamed(map, "BG4-depth")));
+		path = tmx_mapGetPropertyNamed(map, "BG1");
+		if(path != NULL)
+			out->background->layers[0] = background_createLayer(texture_loadFromPng(path, true, false),
+																(float)atof(tmx_mapGetPropertyNamed(map, "BG1-depth")));
+		path = tmx_mapGetPropertyNamed(map, "BG2");
+		if(path != NULL)
+			out->background->layers[1] = background_createLayer(texture_loadFromPng(path, true, false),
+																(float)atof(tmx_mapGetPropertyNamed(map, "BG2-depth")));
+		path = tmx_mapGetPropertyNamed(map, "BG3");
+		if(path != NULL)
+			out->background->layers[2] = background_createLayer(texture_loadFromPng(path, true, false),
+																(float)atof(tmx_mapGetPropertyNamed(map, "BG3-depth")));
+		path = tmx_mapGetPropertyNamed(map, "BG4");
+		if(path != NULL)
+			out->background->layers[3] = background_createLayer(texture_loadFromPng(path, true, false),
+																(float)atof(tmx_mapGetPropertyNamed(map, "BG4-depth")));
 	}
 
 	TMXTileset_t *tileset = &map->tilesets[0];
@@ -39,7 +48,6 @@ Level_t *level_load(const char *aFilename)
 
 	out->tileset->origin = margin;
 	out->tileset->margin = margin;
-
 
 	TMXLayer_t *layer = tmx_mapGetLayerNamed(map, "blocks");
 	assert(layer);
@@ -54,6 +62,18 @@ Level_t *level_load(const char *aFilename)
 			out->tiles[y*map->width + x].y = (rows-1) - (currTileId / tilesPerRow); // Flip the y coordinate of the tile
 		}
 	}
+
+	TMXObjectGroup_t *characterObjGroup = tmx_mapGetObjectGroupNamed(map, "character");
+	assert(characterObjGroup);
+	TMXObject_t *characterObj = &characterObjGroup->objects[0];
+	vec3_t center = { characterObj->x + characterObj->width/2.0, (map->tileHeight*map->height - 1) - (characterObj->y + characterObj->height/2.0), 0.0f };
+	
+	vec2_t spriteSize = { characterObj->width, characterObj->height };
+	TextureAtlas_t *atlas = texAtlas_create(texture_loadFromPng("textures/sonic.png", false, false), kVec2_zero, spriteSize);
+	out->character = character_create();
+
+	out->character->sprite = sprite_create(center, spriteSize, atlas, 1);
+	out->character->sprite->animations[0] = sprite_createAnimation(11);
 
 	tmx_destroyMap(map);
 	return out;
@@ -73,7 +93,10 @@ void level_destroy(Level_t *aLevel)
 static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation)
 {
 	Level_t *level = (Level_t *)aOwner;
+
 	// Draw the background
+	level->background->offset.x += 3.0;
+	level->background->offset.y = -30.0;	
 	if(level->background)
 		level->background->renderable.displayCallback(aRenderer, level->background, aTimeSinceLastFrame, aInterpolation);
 	
@@ -89,7 +112,17 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 			screenCoords[y*level->size[0] + x].y = (level->tileSize.h * (float)y) + level->tileSize.w / 2.0f;
 		}
 	}
+	matrix_stack_push(aRenderer->worldMatrixStack);
+	matrix_stack_translate(aRenderer->worldMatrixStack, -1.0*level->background->offset.x, 0.0, 0.0);
 	draw_textureAtlas(level->tileset, numberOfTiles, texOffsets, screenCoords);
+	matrix_stack_pop(aRenderer->worldMatrixStack);
 	free(texOffsets);
 	free(screenCoords);
+
+	// Draw the character
+	static int count = 0;
+	if(count++ % 2 == 0)
+		sprite_step(level->character->sprite);
+	if(level->character)
+		level->character->sprite->renderable.displayCallback(aRenderer, level->character->sprite, aTimeSinceLastFrame, aInterpolation);
 }
