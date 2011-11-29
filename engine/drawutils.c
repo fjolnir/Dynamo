@@ -1,25 +1,31 @@
 #include "drawutils.h"
+#include "various.h"
 
-static Shader_t *_basicShader = NULL;
+static Shader_t *_texturedShader = NULL;
+static Shader_t *_coloredShader = NULL;
 static Renderer_t *_renderer = NULL;
 static const vec4_t kColorWhite = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 void draw_init(Renderer_t *aDefaultRenderer)
 {
 	_renderer = aDefaultRenderer;
-	if(!_basicShader) {
-		_basicShader = shader_loadFromFiles("engine/shaders/basic.vsh", "engine/shaders/basic.fsh");
-		_basicShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(_basicShader, "u_color");
+	if(!_texturedShader) {
+		_texturedShader = shader_loadFromFiles("engine/shaders/textured.vsh", "engine/shaders/textured.fsh");
+		_texturedShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(_texturedShader, "u_color");
+	}
+	if(!_coloredShader) {
+		_coloredShader = shader_loadFromFiles("engine/shaders/colored.vsh", "engine/shaders/colored.fsh");
+		_coloredShader->attributes[kShader_colorAttribute] = shader_getAttributeLocation(_coloredShader, "a_color");
 	}
 }
 
 void draw_cleanup()
 {
-	shader_destroy(_basicShader);
+	shader_destroy(_texturedShader);
 }
 
 
-#pragma mark -
+#pragma mark - Texture drawing
 
 void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t aTextureArea, vec4_t aColor, float aAngle, bool aFlipHorizontal, bool aFlipVertical)
 {
@@ -45,22 +51,22 @@ void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t 
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
 	matrix_stack_translate(_renderer->worldMatrixStack, aSize.w/-2.0f, aSize.h/-2.0f, 0.0f);
 
-	shader_makeActive(_basicShader);
+	shader_makeActive(_texturedShader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aTexture->id);
 
-	shader_updateMatrices(_basicShader, _renderer);
-	glUniform1i(_basicShader->uniforms[kShader_colormap0Uniform], 0);
-	glUniform4fv(_basicShader->uniforms[kShader_colorUniform], 1, aColor.f);
+	shader_updateMatrices(_texturedShader, _renderer);
+	glUniform1i(_texturedShader->uniforms[kShader_colormap0Uniform], 0);
+	glUniform4fv(_texturedShader->uniforms[kShader_colorUniform], 1, aColor.f);
 
-	glVertexAttribPointer(_basicShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(_basicShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(_basicShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
-	glEnableVertexAttribArray(_basicShader->attributes[kShader_texCoord0Attribute]);
+	glVertexAttribPointer(_texturedShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(_texturedShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(_texturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
+	glEnableVertexAttribArray(_texturedShader->attributes[kShader_texCoord0Attribute]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	shader_makeInactive(_basicShader);
+	shader_makeInactive(_texturedShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -111,23 +117,23 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 
 	matrix_stack_push(_renderer->worldMatrixStack);
 
-	shader_makeActive(_basicShader);
+	shader_makeActive(_texturedShader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aAtlas->texture->id);
 
-	shader_updateMatrices(_basicShader, _renderer);
-	glUniform1i(_basicShader->uniforms[kShader_colormap0Uniform], 0);
+	shader_updateMatrices(_texturedShader, _renderer);
+	glUniform1i(_texturedShader->uniforms[kShader_colormap0Uniform], 0);
 	vec4_t white = {1.0, 1.0, 1.0, 1.0};
-	glUniform4fv(_basicShader->uniforms[kShader_colorUniform], 1, white.f);
+	glUniform4fv(_texturedShader->uniforms[kShader_colorUniform], 1, white.f);
 
-	glVertexAttribPointer(_basicShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(_basicShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(_basicShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
-	glEnableVertexAttribArray(_basicShader->attributes[kShader_texCoord0Attribute]);
+	glVertexAttribPointer(_texturedShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(_texturedShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(_texturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
+	glEnableVertexAttribArray(_texturedShader->attributes[kShader_texCoord0Attribute]);
 
 	glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, indices);
 
-	shader_makeInactive(_basicShader);
+	shader_makeInactive(_texturedShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -135,4 +141,81 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 	free(vertices);
 	free(texCoords);
 	free(indices);
+}
+
+
+#pragma mark - Primitive drawing (Debug drawing)
+
+void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill)
+{
+	GLfloat vertices[4*2] = {
+		0.0f,      0.0f,
+		0.0f,      aRect.s.h,
+		aRect.s.w, aRect.s.h,
+		aRect.s.w, 0.0f
+	};
+	vec4_t colors[4] = { aColor, aColor, aColor, aColor };
+
+	// Translate&rotate the rectangle into it's target location
+	vec2_t center = { aRect.origin.x + (aRect.size.w/2.0f),  aRect.origin.y + (aRect.size.h/2.0f) };
+
+	matrix_stack_push(_renderer->worldMatrixStack);
+	matrix_stack_translate(_renderer->worldMatrixStack, floorf(center.x), floorf(center.y), 0.0);
+	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
+	matrix_stack_translate(_renderer->worldMatrixStack, aRect.s.w/-2.0f, aRect.s.h/-2.0f, 0.0f);
+
+	shader_makeActive(_coloredShader);
+
+	shader_updateMatrices(_coloredShader, _renderer);
+
+	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(_coloredShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(_coloredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
+	glEnableVertexAttribArray(_coloredShader->attributes[kShader_colorAttribute]);
+
+	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, 4);
+
+	shader_makeInactive(_texturedShader);
+	matrix_stack_pop(_renderer->worldMatrixStack);
+
+}
+#include <float.h>
+void draw_ellipse(vec2_t aCenter, vec2_t aSize, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill)
+{
+	float vertices[aSubdivisions*2] ;
+	vec4_t colors[aSubdivisions];
+	float twoPi = 2.0f*M_PI;
+	int count = 0;
+	for(float theta = 0.0f; (twoPi - theta) > 0.001; theta += twoPi/(float)aSubdivisions) {
+		colors[count/2] = aColor;
+		vertices[count++] = cosf(theta) * aSize.w;
+		vertices[count++] = sinf(theta) * aSize.h;
+	}
+
+
+	// Translate&rotate the ellipse into it's target location
+	matrix_stack_push(_renderer->worldMatrixStack);
+	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), 0.0);
+	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
+	matrix_stack_translate(_renderer->worldMatrixStack, aSize.w/-2.0f, aSize.h/-2.0f, 0.0f);
+
+	shader_makeActive(_coloredShader);
+
+	shader_updateMatrices(_coloredShader, _renderer);
+
+	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(_coloredShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(_coloredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
+	glEnableVertexAttribArray(_coloredShader->attributes[kShader_colorAttribute]);
+
+	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, aSubdivisions);
+
+	shader_makeInactive(_texturedShader);
+	matrix_stack_pop(_renderer->worldMatrixStack);
+}
+
+void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t aColor, bool aShouldFill)
+{
+	vec2_t size = { radius*2.0f, radius*2.0f };
+	draw_ellipse(aCenter, size, aSubdivisions, 0.0f, aColor, aShouldFill);
 }
