@@ -34,6 +34,8 @@ Shader_t *shader_load(const char *aVertSrc, const char *aFragSrc)
 	Shader_t *out = malloc(sizeof(Shader_t));
 	out->activationCallback = NULL;
 	out->deactivationCallback = NULL;
+	for(int i = 0; i < kShader_MaxUniforms; ++i) out->uniforms[i] = -1;
+	for(int i = 0; i < kShader_MaxAttributes; ++i) out->attributes[i] = -1;
 	out->program = glCreateProgram();
 
 	bool success;
@@ -205,6 +207,6 @@ static void _readFile(const char *aFilePath, size_t *aoLength, char **aoOutput)
 	if(!*aoLength) return;
 	rewind(fd);
 
-	*aoOutput = calloc(*aoLength, sizeof(char));
+	*aoOutput = calloc(*aoLength+1, sizeof(char));
 	fread(*aoOutput, sizeof(char), *aoLength, fd);
 }
