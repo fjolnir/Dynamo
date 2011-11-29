@@ -22,5 +22,6 @@ extern void llist_pushValue(LinkedList_t *aList, void *aValue);
 extern void llist_popValue(LinkedList_t *aList);
 extern bool llist_insertValue(LinkedList_t *aList, void *aValueToInsert, void *aValueToShift);
 extern bool llist_deleteValue(LinkedList_t *aList, void *aValue);
+
 #endif
 
