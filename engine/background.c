@@ -16,7 +16,7 @@ enum {
 
 Background_t *background_create()
 {
-	Background_t *out = malloc(sizeof(Background_t));
+	Background_t *out = calloc(1, sizeof(Background_t));
 	out->offset = kVec2_zero;
 	out->renderable.displayCallback = &_background_draw;
 	out->renderable.owner = out;
@@ -85,18 +85,26 @@ static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSi
 	glUniform2f(_backgroundShader->uniforms[kBackground_offsetUniform], uvOffset.x, uvOffset.y);
 	glUniform2f(_backgroundShader->uniforms[kBackground_sizeUniform], textureSize.w, textureSize.h);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, background->layers[0]->texture->id);
-	glUniform1i(_backgroundShader->uniforms[kShader_colormap0Uniform], 0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, background->layers[1]->texture->id);
-	glUniform1i(_backgroundShader->uniforms[kShader_colormap1Uniform], 1);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, background->layers[2]->texture->id);
-	glUniform1i(_backgroundShader->uniforms[kShader_colormap2Uniform], 2);
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, background->layers[3]->texture->id);
-	glUniform1i(_backgroundShader->uniforms[kShader_colormap3Uniform], 3);
+	if(background->layers[0]) {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, background->layers[0]->texture->id);
+		glUniform1i(_backgroundShader->uniforms[kShader_colormap0Uniform], 0);
+	}
+	if(background->layers[1]) {
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, background->layers[1]->texture->id);
+		glUniform1i(_backgroundShader->uniforms[kShader_colormap1Uniform], 1);
+	}
+	if(background->layers[2]) {	
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, background->layers[2]->texture->id);
+		glUniform1i(_backgroundShader->uniforms[kShader_colormap2Uniform], 2);
+	}
+	if(background->layers[3]) {
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, background->layers[3]->texture->id);
+		glUniform1i(_backgroundShader->uniforms[kShader_colormap3Uniform], 3);
+	}
 
 	glUniform1f(_backgroundShader->uniforms[kBackground_layer0DepthUniform],
 	            background->layers[0] != NULL ? background->layers[0]->depth : -1.0f);
