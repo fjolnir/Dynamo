@@ -42,7 +42,7 @@ static void display()
 		gameTimer_update(&gGameTimer, delta);
 	}
 	lastTime = currentTime;
-	
+
 	// Update the game state as many times as we need to catch up
 	for(int i = 0; (i < MAX_FRAMESKIP) && !gameTimer_reachedNextUpdate(&gGameTimer); ++i) {
 		input_postActiveEvents(gInputManager);
@@ -201,6 +201,13 @@ int main(int argc, char **argv)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
+	glLineWidth(2.0);
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_POLYGON_SMOOTH);
+	glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
+	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 
 	gSoundManager = soundManager_create();
 	//Sound_t *testSound = sound_load("audio/test.ogg");
