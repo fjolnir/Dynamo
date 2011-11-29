@@ -70,8 +70,8 @@ World_t *world_init()
 	sprite->animations[0] = sprite_createAnimation(11);
 	renderer_pushRenderable(gRenderer, &sprite->renderable);
 
-	out->level = level_load("levels/desert.tmx");
-	//renderer_pushRenderable(gRenderer, &out->level->renderable);
+	out->level = level_load("levels/jungle.tmx");
+	renderer_pushRenderable(gRenderer, &out->level->renderable);
 
 	// Create&add input observers
 	out->arrowRightObserver = input_createObserver(kInputKey_arrowRight, &rightKeyPressed, NULL, out);
