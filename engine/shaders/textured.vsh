@@ -1,3 +1,5 @@
+// Simple texture mapping shader
+
 uniform mat4 u_worldMatrix;
 uniform mat4 u_projectionMatrix;
 
@@ -12,4 +14,3 @@ void main()
 	gl_Position = mvp * a_position;
 	v_texCoord0 = a_texCoord0;
 }
-

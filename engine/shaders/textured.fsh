@@ -7,4 +7,3 @@ void main()
 {
 	gl_FragColor = u_color * texture2D(u_colormap0, v_texCoord0);
 }
-
