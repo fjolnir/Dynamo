@@ -29,4 +29,3 @@ void main()
 	v_texCoord3 = a_texCoord0 + (1.0+u_layer3Depth) * u_backgroundOffset;
 
 }
-

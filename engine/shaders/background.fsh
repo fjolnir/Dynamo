@@ -16,7 +16,7 @@ void main()
 	vec4 temp;
 	temp = texture2D(u_colormap1, v_texCoord1);
 	result = mix(result, temp, temp.a);
-	
+
 	temp = texture2D(u_colormap2, v_texCoord2);
 	result = mix(result, temp, temp.a);
 
@@ -25,4 +25,3 @@ void main()
 
 	gl_FragColor = result;
 }
-
