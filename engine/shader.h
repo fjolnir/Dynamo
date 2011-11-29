@@ -28,7 +28,8 @@ enum {
 	// Indices below this point are not hooked up automatically
 	kShader_texCoord1Attribute,
 	kShader_texCoord2Attribute,
-	kShader_texCoord3Attribute
+	kShader_texCoord3Attribute,
+	kShader_colorAttribute
 };
 
 extern const char *kShader_UniformNames[kShader_MaxUniforms];
