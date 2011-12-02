@@ -112,6 +112,7 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 			int tileGid = _mxmlElementGetAttrAsInt(objNodes[i], "gid", -1);
 			out->objectGroups[i].objects[j].tile = _tmx_mapCreateTileForTileGID(out, tileGid);
 		}
+		free(objNodes);
 	}
 	free(objGroupNodes);
 
