@@ -19,18 +19,22 @@ typedef struct _SpatialHash_cell {
 } SpatialHash_cell_t;
 
 typedef struct _SpatialHash {
-	vec2_t size; // Set to a multiple of the cell size
+	vec2_t size; // Make sure to set to a multiple of the cell size
+	vec2_t sizeInCells;
 	float cellSize; // Cells are square
 	int numberOfCells;
-	SpatialHash_cell_t *cells;
+	SpatialHash_cell_t **cells;
 } SpatialHash_t;
 
 extern SpatialHash_t *spatialHash_create(vec2_t aSize, float aCellSize);
 extern void spatialHash_destroy(SpatialHash_t *aHash);
+extern SpatialHash_cell_t *spatialHash_createCell();
+extern void spatialHash_destroyCell(SpatialHash_cell_t *aCell);
+
 // Clears the hash making it ready for reuse
 extern void spatialHash_clear(SpatialHash_t *aHash);
 extern bool spatialHash_addItem(SpatialHash_t *aHash, void *aItem, rect_t aBoundingBox);
-extern int spatialHash_getCellForPoint(SpatialHash_t *aHash, vec2_t aPoint);
+extern int spatialHash_getCellForPoint(SpatialHash_t *aHash, vec2_t aPoint, bool aShouldCreate);
 // Returns an array of items in the cells matching aBoundingBox
 extern void **spatialHash_query(SpatialHash_t *aHash, rect_t aBoundingBox, int *aoCount);
 
