@@ -5,7 +5,8 @@ Array_t *array_create(int aCapacity)
 {
 	Array_t *out = calloc(1, sizeof(Array_t));
 	out->capacity = aCapacity ? aCapacity : 4;
-	out->items = malloc(sizeof(void*)*aCapacity);
+	out->items = calloc(aCapacity, sizeof(void*));
+	out->count = 0;
 
 	return out;
 }
@@ -18,9 +19,9 @@ void array_destroy(Array_t *aArray)
 
 void array_push(Array_t *aArray, void *aValue)
 {
-	if(++aArray->count >= aArray->capacity)
+	if(aArray->count+1 >= aArray->capacity)
 		array_resize(aArray, aArray->capacity*2);
-	aArray->items[aArray->count] = aValue;
+	aArray->items[aArray->count++] = aValue;
 }
 
 void array_pop(Array_t *aArray)
