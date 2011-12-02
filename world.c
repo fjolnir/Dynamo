@@ -4,6 +4,7 @@
 
 static Sprite_t *sprite;
 
+static CollisionPolyObject_t *characterApprox;
 static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
 	sprite->angle += M_PI/20;
@@ -46,6 +47,10 @@ static void mouseMoved(InputManager_t *aInputManager, InputObserver_t *aInputObs
 
 	world->background->offset = vec2_add(world->background->offset, delta);
 
+//	collision_setPolyObjectCenter(characterApprox, vec2_add(characterApprox->center, delta));
+	if(aState == kInputState_down)
+		characterApprox->velocity = vec2_scalarMul(delta, 98.0f);;
+
 	shouldResetDelta = (aState == kInputState_up);
 	lastLoc = *aLocation;
 }
@@ -71,7 +76,7 @@ World_t *world_init()
 	renderer_pushRenderable(gRenderer, &sprite->renderable);
 
 	out->level = level_load("levels/jungle.tmx");
-	renderer_pushRenderable(gRenderer, &out->level->renderable);
+	//renderer_pushRenderable(gRenderer, &out->level->renderable);
 
 	// Create&add input observers
 	out->arrowRightObserver = input_createObserver(kInputKey_arrowRight, &rightKeyPressed, NULL, out);
@@ -87,6 +92,55 @@ World_t *world_init()
 	input_addObserver(gInputManager, out->arrowDownObserver);
 	input_addObserver(gInputManager, out->leftDragObserver);
 	input_addObserver(gInputManager, out->leftClickObserver);
+
+
+	// Create a collision world and populate with a couple of debug objects
+	out->collisionWorld = collision_createWorld(vec2_create(0.0f, -1.0f), vec2_create(800, 632), 32);
+	renderer_pushRenderable(gRenderer, &out->collisionWorld->debugRenderable);
+
+	vec2_t rectVerts[4];
+	rectVerts[0] = vec2_create(340, 300);
+	rectVerts[1] = vec2_create(340, 320);
+	rectVerts[2] = vec2_create(350, 320);
+	rectVerts[3] = vec2_create(350, 300);
+
+	CollisionPolyObject_t *rectangle1 = collision_createPolyObject(4, rectVerts, 0.2, 1.0);
+	spatialHash_addItem(out->collisionWorld->spatialHash, rectangle1, rectangle1->boundingBox);
+
+	rectVerts[0] = vec2_create(350, 290);
+	rectVerts[1] = vec2_create(350, 300);
+	rectVerts[2] = vec2_create(400, 300);
+	rectVerts[3] = vec2_create(400, 290);
+
+	CollisionPolyObject_t *rectangle2 = collision_createPolyObject(4, rectVerts, 0.2, 0.3);
+	spatialHash_addItem(out->collisionWorld->spatialHash, rectangle2, rectangle2->boundingBox);
+
+	vec2_t triVerts[3];
+	triVerts[0] = vec2_create(400, 300);
+	triVerts[1] = vec2_create(455, 330);
+	triVerts[2] = vec2_create(455, 300);
+
+	CollisionPolyObject_t *triangle1 = collision_createPolyObject(3, triVerts, 0.0, 0.3);
+	spatialHash_addItem(out->collisionWorld->spatialHash, triangle1, triangle1->boundingBox);
+
+	triVerts[0] = vec2_create(0, 340);
+	triVerts[1] = vec2_create(0, 600);
+	triVerts[2] = vec2_create(333, 340);
+
+
+	CollisionPolyObject_t *triangle2 = collision_createPolyObject(3, triVerts, 0.0, 0.3);
+	spatialHash_addItem(out->collisionWorld->spatialHash, triangle2, triangle2->boundingBox);
+
+
+	rectVerts[0] = vec2_create(0, 0);
+	rectVerts[1] = vec2_create(0, 32);
+	rectVerts[2] = vec2_create(32, 32);
+	rectVerts[3] = vec2_create(32, 0);
+
+	characterApprox = collision_createPolyObject(4, rectVerts, 0.0, 0.0);
+	collision_setPolyObjectCenter(characterApprox, vec2_create(410, 528));
+
+	out->collisionWorld->character = characterApprox;
 
 	return out;
 }
@@ -108,4 +162,9 @@ void world_update(World_t *aWorld, double aTimeDelta)
 {
 	aWorld->time += aTimeDelta;
 	++aWorld->ticks;
+	
+	aWorld->collisionWorld->character->velocity.y -= 200.0f*aTimeDelta;
+	int timeSteps = 8;
+	for(int i = 0; i < timeSteps; ++i)
+		collision_step(aWorld->collisionWorld, aWorld->collisionWorld->character, aTimeDelta/(float)timeSteps);
 }
