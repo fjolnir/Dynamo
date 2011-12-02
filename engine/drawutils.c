@@ -46,10 +46,11 @@ void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t 
 	};
 
 	// Translate&rotate the quad into it's target location
+	aCenter = vec3_floor(aCenter);
 	matrix_stack_push(_renderer->worldMatrixStack);
-	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), floorf(aCenter.z));
+	matrix_stack_translate(_renderer->worldMatrixStack, aCenter.x, aCenter.y, aCenter.z);
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
-	matrix_stack_translate(_renderer->worldMatrixStack, aSize.w/-2.0f, aSize.h/-2.0f, 0.0f);
+	matrix_stack_translate(_renderer->worldMatrixStack, floor(aSize.w/-2.0f), floor(aSize.h/-2.0f), 0.0f);
 
 	shader_makeActive(_texturedShader);
 	glActiveTexture(GL_TEXTURE0);
@@ -148,6 +149,7 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 
 void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill)
 {
+	aRect.size = vec2_floor(aRect.size);
 	GLfloat vertices[4*2] = {
 		0.0f,      0.0f,
 		0.0f,      aRect.s.h,
@@ -162,7 +164,7 @@ void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill)
 	matrix_stack_push(_renderer->worldMatrixStack);
 	matrix_stack_translate(_renderer->worldMatrixStack, floorf(center.x), floorf(center.y), 0.0);
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
-	matrix_stack_translate(_renderer->worldMatrixStack, aRect.s.w/-2.0f, aRect.s.h/-2.0f, 0.0f);
+	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aRect.s.w/-2.0f), floorf(aRect.s.h/-2.0f), 0.0f);
 
 	shader_makeActive(_coloredShader);
 
@@ -175,12 +177,12 @@ void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill)
 
 	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, 4);
 
-	shader_makeInactive(_texturedShader);
+	shader_makeInactive(_coloredShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
 
 }
-#include <float.h>
-void draw_ellipse(vec2_t aCenter, vec2_t aSize, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill)
+
+void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill)
 {
 	float vertices[aSubdivisions*2] ;
 	vec4_t colors[aSubdivisions];
@@ -188,8 +190,8 @@ void draw_ellipse(vec2_t aCenter, vec2_t aSize, int aSubdivisions, float aAngle,
 	int count = 0;
 	for(float theta = 0.0f; (twoPi - theta) > 0.001; theta += twoPi/(float)aSubdivisions) {
 		colors[count/2] = aColor;
-		vertices[count++] = cosf(theta) * aSize.w;
-		vertices[count++] = sinf(theta) * aSize.h;
+		vertices[count++] = cosf(theta) * aRadii.w;
+		vertices[count++] = sinf(theta) * aRadii.h;
 	}
 
 
@@ -197,10 +199,8 @@ void draw_ellipse(vec2_t aCenter, vec2_t aSize, int aSubdivisions, float aAngle,
 	matrix_stack_push(_renderer->worldMatrixStack);
 	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), 0.0);
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
-	matrix_stack_translate(_renderer->worldMatrixStack, aSize.w/-2.0f, aSize.h/-2.0f, 0.0f);
 
 	shader_makeActive(_coloredShader);
-
 	shader_updateMatrices(_coloredShader, _renderer);
 
 	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
@@ -210,7 +210,7 @@ void draw_ellipse(vec2_t aCenter, vec2_t aSize, int aSubdivisions, float aAngle,
 
 	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, aSubdivisions);
 
-	shader_makeInactive(_texturedShader);
+	shader_makeInactive(_coloredShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
 }
 
@@ -218,4 +218,40 @@ void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t aColor,
 {
 	vec2_t size = { radius*2.0f, radius*2.0f };
 	draw_ellipse(aCenter, size, aSubdivisions, 0.0f, aColor, aShouldFill);
+}
+
+void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool aShouldFill)
+{
+	vec4_t colors[aNumberOfVertices];
+	for(int i = 0; i < aNumberOfVertices; ++i) colors[i] = aColor;
+
+	shader_makeActive(_coloredShader);
+	shader_updateMatrices(_coloredShader, _renderer);
+
+	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+	glEnableVertexAttribArray(_coloredShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(_coloredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
+	glEnableVertexAttribArray(_coloredShader->attributes[kShader_colorAttribute]);
+
+	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, aNumberOfVertices);
+
+	shader_makeInactive(_coloredShader);
+}
+
+void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor)
+{
+	vec2_t vertices[2] = { vec2_floor(aPointA), vec2_floor(aPointB) };
+	vec4_t colors[2] = { aColor, aColor };
+
+	shader_makeActive(_coloredShader);
+	shader_updateMatrices(_coloredShader, _renderer);
+
+	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(_coloredShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(_coloredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
+	glEnableVertexAttribArray(_coloredShader->attributes[kShader_colorAttribute]);
+
+	glDrawArrays(GL_LINE_STRIP, 0, 2);
+
+	shader_makeInactive(_coloredShader);
 }

@@ -31,12 +31,17 @@ extern void draw_texture(vec3_t aCenter, Texture_t *aTexture, float aScale, floa
 extern void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints);
 
 // Draws an untextured rectangle
-void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill);
+extern void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill);
 
 // Draws an untextured ellipse
-void draw_ellipse(vec2_t aCenter, vec2_t aSize, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill);
+extern void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill);
 
 // Draws an untextured circle
-void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t aColor, bool aShouldFill);
+extern void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t aColor, bool aShouldFill);
 
+// Draws an untextured polygon
+extern void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool aShouldFill);
+
+// Draws a line segment
+extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
 #endif
