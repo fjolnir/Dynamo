@@ -34,6 +34,7 @@ extern void spatialHash_destroyCell(SpatialHash_cell_t *aCell);
 // Clears the hash making it ready for reuse
 extern void spatialHash_clear(SpatialHash_t *aHash);
 extern bool spatialHash_addItem(SpatialHash_t *aHash, void *aItem, rect_t aBoundingBox);
+extern Array_t *spatialHash_cellsForBoundingBox(SpatialHash_t *aHash, rect_t aBoundingBox, bool aShouldCreate);
 extern int spatialHash_getCellForPoint(SpatialHash_t *aHash, vec2_t aPoint, bool aShouldCreate);
 // Returns an array of items in the cells matching aBoundingBox
 extern void **spatialHash_query(SpatialHash_t *aHash, rect_t aBoundingBox, int *aoCount);

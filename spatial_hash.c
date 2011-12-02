@@ -6,7 +6,7 @@ SpatialHash_t *spatialHash_create(vec2_t aSize, float aCellSize)
 	SpatialHash_t *out = malloc(sizeof(SpatialHash_t));
 	out->size = aSize;
 	out->cellSize = aCellSize;
-	out->sizeInCells = vec2_create(aSize.w/aCellSize, aSize.h/aCellSize);
+	out->sizeInCells = vec2_create(ceilf(aSize.w/aCellSize), ceilf(aSize.h/aCellSize));
 	out->numberOfCells = (int)(out->sizeInCells.w)*(int)(out->sizeInCells.h);
 	out->cells = calloc(out->numberOfCells, sizeof(SpatialHash_cell_t*));
 
@@ -44,11 +44,11 @@ void spatialHash_clear(SpatialHash_t *aHash)
 		if(aHash->cells[i] != NULL) aHash->cells[i]->objects->count = 0;
 }
 
-Array_t *_spatialHash_cellsForBoundingBox(SpatialHash_t *aHash, rect_t aBoundingBox, bool aShouldCreate)
+Array_t *spatialHash_cellsForBoundingBox(SpatialHash_t *aHash, rect_t aBoundingBox, bool aShouldCreate)
 {
 	vec2_t cellDimensions = {
-		ceilf(((int)aBoundingBox.o.x%(int)aHash->cellSize + aBoundingBox.s.w) / aHash->cellSize),
-		ceilf(((int)aBoundingBox.o.y%(int)aHash->cellSize + aBoundingBox.s.h) / aHash->cellSize)
+		ceilf(( ((int)aBoundingBox.o.x%(int)aHash->cellSize) + aBoundingBox.s.w) / aHash->cellSize),
+		ceilf(( ((int)aBoundingBox.o.y%(int)aHash->cellSize) + aBoundingBox.s.h) / aHash->cellSize)
 	};
 	int numberOfCells = cellDimensions.w*cellDimensions.h;
 	Array_t *cells = array_create(numberOfCells);
@@ -74,8 +74,7 @@ Array_t *_spatialHash_cellsForBoundingBox(SpatialHash_t *aHash, rect_t aBounding
 
 bool spatialHash_addItem(SpatialHash_t *aHash, void *aItem, rect_t aBoundingBox)
 {
-	Array_t *cells = _spatialHash_cellsForBoundingBox(aHash, aBoundingBox, true);
-	bool didAdd = (cells->count > 0);
+	Array_t *cells = spatialHash_cellsForBoundingBox(aHash, aBoundingBox, true);
 	SpatialHash_cell_t *currentCell;
 	for(int i = 0; i < cells->count; ++i) {
 		currentCell = cells->items[i];
@@ -83,7 +82,7 @@ bool spatialHash_addItem(SpatialHash_t *aHash, void *aItem, rect_t aBoundingBox)
 	}
 	array_destroy(cells);
 
-	return didAdd;
+	return (cells->count > 0);
 }
 
 int spatialHash_getCellForPoint(SpatialHash_t *aHash, vec2_t aPoint, bool aShouldCreate)
@@ -103,7 +102,7 @@ int spatialHash_getCellForPoint(SpatialHash_t *aHash, vec2_t aPoint, bool aShoul
 
 void **spatialHash_query(SpatialHash_t *aHash, rect_t aBoundingBox, int *aoCount)
 {
-	Array_t *cells = _spatialHash_cellsForBoundingBox(aHash, aBoundingBox, false);
+	Array_t *cells = spatialHash_cellsForBoundingBox(aHash, aBoundingBox, false);
 	if(!cells) return NULL;
 
 	int outLength = 0;
