@@ -3,6 +3,7 @@
 #include "engine/tmx_map.h"
 
 static Sprite_t *sprite;
+static bool charInContactWithGround = true;
 
 static CollisionPolyObject_t *characterApprox;
 static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
@@ -14,8 +15,11 @@ static void upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputO
 	static float scaleIncrementor = 0.0f;
 	scaleIncrementor += M_PI/20;
 	sprite->scale = 1.0f + 3.0*sinf(scaleIncrementor);
-	if(fabs(characterApprox->velocity.y) < 4.0f)
+//	if()
+	if(charInContactWithGround || fabs(characterApprox->velocity.y) < 4.0f) {
 		characterApprox->velocity.y = MAX(characterApprox->velocity.x, 300.0f);	
+		charInContactWithGround = false;
+	}
 }
 
 static void rightKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
@@ -27,8 +31,12 @@ static void rightKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInp
 	world->background->offset.x += 6.0;
 	world->background->offset.y = floorf(8.0f+10.0f* sinf((float)world->ticks*M_PI/50.0f));
 	sprite->location.y = floorf(41.0f-world->background->offset.y);
+	if(charInContactWithGround)
+		characterApprox->velocity.x = MAX(characterApprox->velocity.x, 100.0f);
+	else if(!characterApprox->inContact)
+		characterApprox->velocity.x += 1.0f;
 
-	characterApprox->velocity.x = MAX(characterApprox->velocity.x, 80.0f);
+	debug_log("in contact? %d", characterApprox->inContact);
 }
 static void leftKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
@@ -40,7 +48,26 @@ static void leftKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInpu
 	world->background->offset.y = floorf(8.0f+10.0f* cosf((float)world->ticks*M_PI/50.0f));
 	sprite->location.y = floorf(41.0f-world->background->offset.y);
 
-	characterApprox->velocity.x = MIN(characterApprox->velocity.x, -80.0f);
+	if(charInContactWithGround)
+		characterApprox->velocity.x = MIN(characterApprox->velocity.x, -100.0f);
+	else if(!characterApprox->inContact)
+		characterApprox->velocity.x -= 1.0f;
+}
+
+static void characterCollided(CollisionWorld_t *aWorld, Collision_t collisionInfo)
+{
+	if(collisionInfo.direction.y > M_PI/4) {
+		/*debug_log("Touched ground");*/
+		charInContactWithGround = true;
+	} else
+		charInContactWithGround = false;
+	//debug_log("CHARACTER COLLIDED!!");
+	//printf("Str: %.2f: ",collisionInfo.magnitude); printVec2(collisionInfo.direction);
+}
+
+static void worldCollisionHappened(CollisionWorld_t *aWorld, Collision_t collisionInfo)
+{
+	/*debug_log("SOMETHING COLLIDED!!");*/
 }
 
 static void mouseMoved(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
@@ -180,7 +207,8 @@ World_t *world_init()
 	collision_setPolyObjectCenter(characterApprox, vec2_create(410, 528));
 
 	out->collisionWorld->character = characterApprox;
-
+	characterApprox->collisionCallback = &characterCollided;
+	out->collisionWorld->collisionCallback = &worldCollisionHappened;
 	return out;
 }
 

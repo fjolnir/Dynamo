@@ -14,6 +14,7 @@ CollisionWorld_t *collision_createWorld(vec2_t aGravity, vec2_t aSize, float aCe
 	out->debugRenderable.owner = out;
 	out->gravity = aGravity;
 	out->spatialHash = spatialHash_create(aSize, aCellSize);
+	out->collisionCallback = NULL;
 
 	return out;
 }
@@ -31,6 +32,7 @@ CollisionPolyObject_t *collision_createPolyObject(int aNumberOfEdges, vec2_t *aV
 	out->velocity = kVec2_zero;
 	out->frictionCoef = aFriction;
 	out->bounceCoef = aBounce;
+	out->collisionCallback = NULL;
 	out->vertices = malloc(aNumberOfEdges * sizeof(vec2_t));
 	memcpy(out->vertices, aVertices, aNumberOfEdges * sizeof(vec2_t));
 	out->normals = malloc(aNumberOfEdges * sizeof(vec2_t));
@@ -191,6 +193,16 @@ bool collision_intersectObjects(CollisionPolyObject_t *aObjectA, CollisionPolyOb
 
 	return true;
 }
+
+// Checks the difference in position in the direction of the last collision, and if it's too small we assume the object
+// is in contact
+bool _collision_objectIsInContact(CollisionPolyObject_t *aObject)
+{
+	float current = vec2_mag(vec2_mul(aObject->lastCollision.direction, aObject->center));
+	float last = vec2_mag(vec2_mul(aObject->lastCollision.direction, aObject->lastCollision.objectACenter));
+	return fabs(current - last) < 2.0; // 2 is just a magic number that seems to work fine
+}
+
 bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObject, float aTimeDelta)
 {
 	vec2_t displacement = vec2_scalarMul(aInputObject->velocity, aTimeDelta);
@@ -204,8 +216,10 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 	int numberOfPotentialColliders;
 	potentialColliders = (CollisionPolyObject_t **)spatialHash_query(aWorld->spatialHash, newBoundingBox, &numberOfPotentialColliders);
 	collision_setPolyObjectCenter(aInputObject, vec2_add(aInputObject->center, displacement));
-	if(numberOfPotentialColliders == 0)
+	if(numberOfPotentialColliders == 0) {
+		aInputObject->inContact = _collision_objectIsInContact(aInputObject);
 		return false;
+	}
 
 	// A single collider can be present in multiple cells so we must keep track of which ones we have tested already
 	Array_t *testedColliders = array_create(numberOfPotentialColliders);
@@ -237,8 +251,10 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 	}
 	free(potentialColliders);
 	array_destroy(testedColliders);
-	if(!didCollide)
+	if(!didCollide) {
+		aInputObject->inContact = _collision_objectIsInContact(aInputObject);
 		return false;
+	}
 
 	// Separate the objects
 	collision_setPolyObjectCenter(aInputObject, vec2_add(aInputObject->center, vec2_scalarMul(overlapAxis, overlap)));
@@ -258,6 +274,27 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 		// Convert back to to px/s
 		aInputObject->velocity = vec2_scalarDiv(newVel, aTimeDelta);
 	}
+
+	// Let interested parties know a collision occurred
+	aInputObject->inContact = true;
+	Collision_t collisionInfo = {
+		aInputObject,    aInputObject->velocity,    aInputObject->center,
+		nearestCollider, nearestCollider->velocity, nearestCollider->center,
+		overlapAxis, overlap
+	};
+	if(aInputObject->collisionCallback)
+		aInputObject->collisionCallback(aWorld, collisionInfo);
+	aInputObject->lastCollision = collisionInfo;
+
+	if(aWorld->collisionCallback)
+		aWorld->collisionCallback(aWorld, collisionInfo);
+
+	collisionInfo.objectA = nearestCollider;
+	collisionInfo.objectB = aInputObject;
+	if(nearestCollider->collisionCallback) 
+		nearestCollider->collisionCallback(aWorld, collisionInfo);
+	nearestCollider->lastCollision = collisionInfo;
+
 	return true;
 }
 

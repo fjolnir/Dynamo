@@ -10,7 +10,23 @@
 #ifndef _COLLISION_H_
 #define _COLLISION_H_
 
+typedef struct _Collision Collision_t;
 typedef struct _CollisionPolyObject CollisionPolyObject_t;
+typedef struct _CollisionWorld CollisionWorld_t;
+
+typedef void (*CollisionCallback_t)(CollisionWorld_t *aWorld, Collision_t collisionInfo);
+
+struct _Collision {
+	CollisionPolyObject_t *objectA;
+	vec2_t objectAVelocity; // Velocity of object A at the time of collision
+	vec2_t objectACenter; // Center of object A at the time of collision
+	CollisionPolyObject_t *objectB;
+	vec2_t objectBCenter; // Center of object B at the time of collision
+	vec2_t objectBVelocity; // Velocity of object B at the time of collision
+	vec2_t direction; // Unit vector in the direction of the collision
+	float magnitude; // Scalar indicating the strength of the collision
+};
+
 struct _CollisionPolyObject {
 	vec2_t center;
 	int numberOfEdges;
@@ -19,15 +35,23 @@ struct _CollisionPolyObject {
 	rect_t boundingBox;
 	float frictionCoef; // Friction coefficient: 0-1
 	float bounceCoef; // Bounciness: 0-1
-	vec2_t velocity;	
+	vec2_t velocity;
+
+	CollisionCallback_t collisionCallback; // Called for every collision this object is in. This object will always be objectA
+	Collision_t lastCollision;
+	bool inContact; // True if the object was in contact with any other object during the last cycle
+
+	void *info; // An arbitrary pointer you can use to identify objects
 };
 
-typedef struct _CollisionWorld {
+struct _CollisionWorld {
 	Renderable_t debugRenderable;
 	vec2_t gravity;
 	SpatialHash_t *spatialHash;
 	CollisionPolyObject_t *character;
-} CollisionWorld_t;
+
+	CollisionCallback_t collisionCallback; // Called for every collision in the world
+};
 
 
 extern CollisionWorld_t *collision_createWorld(vec2_t aGravity, vec2_t aSize, float aCellSize);
