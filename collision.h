@@ -29,6 +29,9 @@ struct _Collision {
 
 struct _CollisionPolyObject {
 	vec2_t center;
+	float orientation; // Don't change directly, instead use angular velocity. (to change velocity, you must also update the quaternion)
+	quat_t quat; // Cached quaternion (recalculated when the angle changes)
+	float angularVelocity;
 	int numberOfEdges;
 	vec2_t *vertices; // Vertices relative to the center
 	vec2_t *normals;
@@ -62,9 +65,12 @@ extern CollisionPolyObject_t *collision_createPolyObject(int aNumberOfEdges, vec
 extern void collision_setPolyObjectCenter(CollisionPolyObject_t *aObject, vec2_t aCenter);
 // Returns true & sets aPointA&aPointB for edge indices in the valid range
 extern bool collision_getPolyObjectEdges(CollisionPolyObject_t *aObject, int aEdgeIndex,
-                                  vec2_t *aoPointA, vec2_t *aoPointB, vec2_t *aoNormal);
+                                         vec2_t *aoPointA, vec2_t *aoPointB, vec2_t *aoNormal);
 
 // Tests the input shape against all the objects in the passed world and performs collisions where appropriate
+// Applies the orientation angle if appropriate
 extern bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObject, float aTimeDelta);
-
+// Checks if object A intersects B, and if so, by how much and on what edge
+bool collision_intersectObjects(CollisionPolyObject_t *aObjectA, CollisionPolyObject_t *aObjectB,
+                                float *aoOverlap, vec2_t *aoOverlapAxis);
 #endif
