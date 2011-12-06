@@ -305,16 +305,26 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 		vec2_t newVel = vec2_add(vec2_scalarMul(normalVelocity, -bounceCoef), vec2_scalarMul(tangentVelocity, frictionCoef));
 		// Convert back to to px/s
 		aInputObject->velocity = vec2_scalarDiv(newVel, aTimeDelta);
-
-		// Rotate the object
-		// (very much a hack, doesn't even work well. TODO: Do this in a nice way)
-		float angle = (atan2(overlapAxis.y, overlapAxis.x)) - M_PI_2;
-		float dSin =  fabs(sinf(angle)) - fabs(sinf(aInputObject->orientation));
-		float dAngle = angle - aInputObject->orientation;
-		if(fabs(dSin) > 0.01 && dSin < 0.99) // just a naive check to see if the collision was perpendicular
-			aInputObject->angularVelocity = MAX(1.0f, overlap)*4.0f*dAngle;
-		else 
-			aInputObject->angularVelocity = 0.0f;
+		
+		// Determine the contact edge on the input object by casting a ray from its center
+		// in the direction opposite to the overlap on to each of it's edges
+		vec2_t pointA, pointB, normal;
+		vec2_t rayDir = vec2_negate(overlapAxis);
+		float t, smallestT = FLT_MAX;
+		vec2_t collisionEdge, collisionEdgeNormal;
+		int side = 0;
+		while(collision_getPolyObjectEdges(aInputObject, side++, &pointA, &pointB, &normal)) {
+			t = _collision_intersectLine(kVec2_zero, rayDir, pointA, normal);
+			if(t >= 0.0f && t < smallestT) {
+				smallestT = t;
+				collisionEdge = vec2_sub(pointB, pointA);
+				collisionEdgeNormal = vec2_negate(normal);
+			}
+		}
+		// Rotate the object so that the contact edge matches the collision angle
+		float edgeAngle = atan2(collisionEdgeNormal.y, collisionEdgeNormal.x);
+		float overlapAngle = atan2(overlapAxis.y, overlapAxis.x);
+		aInputObject->angularVelocity = MAX(1.0f, overlap)*4.0f*(overlapAngle- edgeAngle);
 	}
 
 	// Let interested parties know a collision occurred
