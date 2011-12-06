@@ -9,7 +9,7 @@
 // The cell index of an object is calculated with p.x/cellSize + (p.y/cellSize) * (sceneWidth/cellSize))
 
 #include "engine/GLMath/GLMath.h"
-#include "array.h"
+#include "engine/array.h"
 
 #ifndef _SPATIALHASH_H
 #define _SPATIALHASH_H
