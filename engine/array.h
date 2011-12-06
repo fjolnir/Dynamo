@@ -1,4 +1,4 @@
-// Basic resizable array
+// Basic resizable pointer array
 
 #include <stdbool.h>
 
