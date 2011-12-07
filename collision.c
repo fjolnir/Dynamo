@@ -224,7 +224,7 @@ static bool _collision_objectIsInContact(CollisionPolyObject_t *aObject)
 {
 	float current = vec2_mag(vec2_mul(aObject->lastCollision.direction, aObject->center));
 	float last = vec2_mag(vec2_mul(aObject->lastCollision.direction, aObject->lastCollision.objectACenter));
-	return fabs(current - last) < 2.0; // 2 is just a magic number that seems to work fine
+	return fabs(current - last) < 4.0; // 2 is just a magic number that seems to work fine
 }
 
 bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObject, float aTimeDelta)
@@ -233,11 +233,14 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 	float distanceToTravel = vec2_mag(displacement);
 	float orientationChange = aInputObject->angularVelocity * aTimeDelta;
 
-	//if(distanceToTravel < FLT_EPSILON)
-		//return false;
+	if(distanceToTravel < FLT_EPSILON)
+		return false;
 
 	collision_setPolyObjectCenter(aInputObject, vec2_add(aInputObject->center, displacement));
-	aInputObject->orientation += orientationChange;
+	if(aInputObject->inContact)
+		aInputObject->orientation += orientationChange;
+	else
+		aInputObject->orientation = atan2(aWorld->gravity.y, aWorld->gravity.x) + M_PI_2;
 
 	if(aInputObject->orientation > 2.0f*M_PI)
 		aInputObject->orientation -= 2.0f*M_PI;
@@ -321,6 +324,21 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 				collisionEdgeNormal = vec2_negate(normal);
 			}
 		}
+		//// Using the collision edge info, find the corresponding edge on the collider
+		//side = 0;
+		//float maxDot = FLT_MIN, dot;
+		//vec2_t colliderA = kVec2_zero, colliderB = kVec2_zero, colliderNormal;
+		//while(collision_getPolyObjectEdges(nearestCollider, side++, &pointA, &pointB, &normal)) {
+			//dot = vec2_dot(normal, collisionEdgeNormal);
+			////debug_log("dot: %f", dot);
+			//if(dot > maxDot) {
+				//maxDot = dot;
+				//colliderA = pointA;
+				//colliderB = pointB;
+				////colliderNormal = normal;
+			//}
+		//}
+
 		// Rotate the object so that the contact edge matches the collision angle
 		float edgeAngle = atan2(collisionEdgeNormal.y, collisionEdgeNormal.x);
 		float overlapAngle = atan2(overlapAxis.y, overlapAxis.x);
