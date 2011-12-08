@@ -235,11 +235,15 @@ static TMXTileset_t *_tmx_mapGetTilesetForTileGID(TMXMap_t *aMap, int aTileGID)
 // We know the dimensions of the map beforehand so we can just load the csv into a one dimensional array
 static int *_parseCSV(const char *aCsvString, int aWidth, int aHeight)
 {
+	// Copy the input (because strtok mutates)
+	char csvCopy[strlen(aCsvString)+1];
+	strcpy(csvCopy, aCsvString);
+
 	int *out = malloc(sizeof(int)*aWidth*aHeight);
 	int i = 0;
-	char *separators = ",\n";
+	const char *separators = ",\n";
 	char *value, *state;
-	for(value = strtok_r(aCsvString, separators, &state); value != NULL; value = strtok_r(NULL, separators, &state)) {
+	for(value = strtok_r(csvCopy, separators, &state); value != NULL; value = strtok_r(NULL, separators, &state)) {
 		sscanf(value, "%d", &out[i++]);
 	}
 	return out;
