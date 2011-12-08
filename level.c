@@ -8,6 +8,7 @@ Level_t *level_load(const char *aFilename)
 {
 	Level_t *out = malloc(sizeof(Level_t));
 	out->renderable.displayCallback = &_level_draw;
+	out->character = NULL;
 
 	// Load the level file
 	TMXMap_t *map = tmx_readMapFile(aFilename);
@@ -23,19 +24,19 @@ Level_t *level_load(const char *aFilename)
 		out->background = background_create();
 		path = tmx_mapGetPropertyNamed(map, "BG1");
 		if(path != NULL)
-			out->background->layers[0] = background_createLayer(texture_loadFromPng(path, true, false),
+			out->background->layers[0] = background_createLayer(texture_loadFromPng(path, true, true),
 																(float)atof(tmx_mapGetPropertyNamed(map, "BG1-depth")));
 		path = tmx_mapGetPropertyNamed(map, "BG2");
 		if(path != NULL)
-			out->background->layers[1] = background_createLayer(texture_loadFromPng(path, true, false),
+			out->background->layers[1] = background_createLayer(texture_loadFromPng(path, true, true),
 																(float)atof(tmx_mapGetPropertyNamed(map, "BG2-depth")));
 		path = tmx_mapGetPropertyNamed(map, "BG3");
 		if(path != NULL)
-			out->background->layers[2] = background_createLayer(texture_loadFromPng(path, true, false),
+			out->background->layers[2] = background_createLayer(texture_loadFromPng(path, true, true),
 																(float)atof(tmx_mapGetPropertyNamed(map, "BG3-depth")));
 		path = tmx_mapGetPropertyNamed(map, "BG4");
 		if(path != NULL)
-			out->background->layers[3] = background_createLayer(texture_loadFromPng(path, true, false),
+			out->background->layers[3] = background_createLayer(texture_loadFromPng(path, true, true),
 																(float)atof(tmx_mapGetPropertyNamed(map, "BG4-depth")));
 	}
 
@@ -64,17 +65,17 @@ Level_t *level_load(const char *aFilename)
 	}
 
 	TMXObjectGroup_t *characterObjGroup = tmx_mapGetObjectGroupNamed(map, "character");
-	assert(characterObjGroup);
-	TMXObject_t *characterObj = &characterObjGroup->objects[0];
-	vec3_t center = { characterObj->x + characterObj->width/2.0, (map->tileHeight*map->height - 1) - (characterObj->y + characterObj->height/2.0), 0.0f };
-	
-	vec2_t spriteSize = { characterObj->width, characterObj->height };
-	TextureAtlas_t *atlas = texAtlas_create(texture_loadFromPng("textures/sonic.png", false, false), kVec2_zero, spriteSize);
-	out->character = character_create();
+	if(characterObjGroup) {
+		TMXObject_t *characterObj = &characterObjGroup->objects[0];
+		vec3_t center = { characterObj->x + characterObj->width/2.0, (map->tileHeight*map->height - 1) - (characterObj->y + characterObj->height/2.0), 0.0f };
+		
+		vec2_t spriteSize = { characterObj->width, characterObj->height };
+		TextureAtlas_t *atlas = texAtlas_create(texture_loadFromPng("textures/sonic.png", false, false), kVec2_zero, spriteSize);
+		out->character = character_create();
 
-	out->character->sprite = sprite_create(center, spriteSize, atlas, 1);
-	out->character->sprite->animations[0] = sprite_createAnimation(11);
-
+		out->character->sprite = sprite_create(center, spriteSize, atlas, 1);
+		out->character->sprite->animations[0] = sprite_createAnimation(11);
+	}
 	tmx_destroyMap(map);
 	return out;
 }
@@ -96,7 +97,7 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 
 	// Draw the background
 	level->background->offset.x += 3.0;
-	level->background->offset.y = -30.0;	
+	//level->background->offset.y = -30.0;	
 	if(level->background)
 		level->background->renderable.displayCallback(aRenderer, level->background, aTimeSinceLastFrame, aInterpolation);
 	
@@ -121,8 +122,9 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 
 	// Draw the character
 	static int count = 0;
-	if(count++ % 2 == 0)
-		sprite_step(level->character->sprite);
-	if(level->character)
+	if(level->character) {
+		if(count++ % 2 == 0)
+			sprite_step(level->character->sprite);
 		level->character->sprite->renderable.displayCallback(aRenderer, level->character->sprite, aTimeSinceLastFrame, aInterpolation);
+	}
 }
