@@ -146,10 +146,10 @@ static void handleEvent(SDL_Event aEvent)
 static void cleanup()
 {
 	debug_log("Quitting...");
-	soundManager_destroy(gSoundManager);
-	world_destroy(gWorld);
-	renderer_destroy(gRenderer);
-	input_destroyManager(gInputManager);
+	if(gSoundManager) soundManager_destroy(gSoundManager);
+	if(gWorld) world_destroy(gWorld);
+	if(gRenderer) renderer_destroy(gRenderer);
+	if(gInputManager) input_destroyManager(gInputManager);
 	draw_cleanup();
 	SDL_Quit();
 }
@@ -159,6 +159,8 @@ static SDL_Surface *_sdlSurface;
 
 int main(int argc, char **argv)
 {
+	bool shouldFullscreen = (argc == 2 && strcmp(argv[1], "-f") == 0);
+	
 	vec2_t viewport = { 800.0f, 600.0f };
 
 	// Initialize graphics
@@ -168,11 +170,23 @@ int main(int argc, char **argv)
 	}
 	atexit(&cleanup);
 
+	SDL_VideoInfo* info = SDL_GetVideoInfo();
+	if(!info) {
+		debug_log("Failed to get information about graphics hardware");
+		return 1;
+	}
+
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1); // VSync
-	_sdlSurface = SDL_SetVideoMode(viewport.w, viewport.h, 0, SDL_OPENGL);
+	int videoFlags = SDL_OPENGL;
+	if(shouldFullscreen){ 
+		videoFlags |= SDL_FULLSCREEN;
+		SDL_ShowCursor(SDL_DISABLE);
+	}
+	_sdlSurface = SDL_SetVideoMode(viewport.w, viewport.h, 16, videoFlags);
 	if(!_sdlSurface) {
 		debug_log("Couldn't initialize SDL surface");
+		debug_log("%s", SDL_GetError());
 		return 1;
 	}
 	#ifdef GL_GLEXT_PROTOTYPES
@@ -191,8 +205,6 @@ int main(int argc, char **argv)
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 
 	gSoundManager = soundManager_create();
-	//Sound_t *testSound = sound_load("audio/test.ogg");
-	//sound_play(testSound);
 
 	gRenderer = renderer_create(viewport, kVec3_zero);
 	draw_init(gRenderer);
