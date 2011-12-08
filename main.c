@@ -170,7 +170,7 @@ int main(int argc, char **argv)
 	}
 	atexit(&cleanup);
 
-	SDL_VideoInfo* info = SDL_GetVideoInfo();
+	const SDL_VideoInfo *info = SDL_GetVideoInfo();
 	if(!info) {
 		debug_log("Failed to get information about graphics hardware");
 		return 1;
