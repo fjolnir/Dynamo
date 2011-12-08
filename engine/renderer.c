@@ -33,7 +33,10 @@ void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double 
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, aRenderer->frameBufferId);
 	glViewport(0, 0, aRenderer->viewportSize.w, aRenderer->viewportSize.h);
-
+	
+	//glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT);
+	
 	// Render each of the renderer's entities
 	LinkedListItem_t *currentItem = aRenderer->renderables->head;
 	Renderable_t *renderable;
