@@ -2,13 +2,13 @@
 <map version="1.0" orientation="orthogonal" width="100" height="20" tilewidth="32" tileheight="32">
  <properties>
   <property name="BG1" value="textures/backgrounds/stars1.png"/>
-  <property name="BG1-depth" value="1.0"/>
+  <property name="BG1-depth" value="0.4"/>
   <property name="BG2" value="textures/backgrounds/stars2.png"/>
   <property name="BG2-depth" value="0.7"/>
   <property name="BG3" value="textures/backgrounds/stars3.png"/>
-  <property name="BG3-depth" value="0.4"/>
+  <property name="BG3-depth" value="0.5"/>
   <property name="BG4" value="textures/backgrounds/stars4.png"/>
-  <property name="BG4-depth" value="0.2"/>
+  <property name="BG4-depth" value="0.4"/>
   <property name="Has background" value="true"/>
  </properties>
  <tileset firstgid="1" name="level-tileset" tilewidth="32" tileheight="32">
