@@ -134,7 +134,7 @@ static void handleEvent(SDL_Event aEvent)
 					return;
 			}
 			input_postMomentaryEvent(gInputManager, inputType, NULL,
-									 &location, (buttonEvent.state == SDL_PRESSED) ? kInputState_down : kInputState_up);
+			                         &location, (buttonEvent.state == SDL_PRESSED) ? kInputState_down : kInputState_up);
 			break;
 		}
 	}

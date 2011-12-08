@@ -13,6 +13,8 @@ static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInpu
 		gWorld->collisionWorld->gravity.y *= -1.0f;
 		charInContactWithGround = false;
 	}
+	World_t *world = (World_t *)metaData;
+	world->level->background->offset.y -= 4.0;
 }
 static void upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
@@ -25,6 +27,8 @@ static void upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputO
 //		characterApprox->velocity.y = MAX(characterApprox->velocity.x, 300.0f);	
 		charInContactWithGround = false;
 	}
+	World_t *world = (World_t *)metaData;
+	world->level->background->offset.y += 4.0;
 }
 
 static void rightKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
@@ -113,6 +117,10 @@ World_t *world_init()
 	out->time = 0.0;
 	out->ticks = 0;
 
+	// Play a little track
+	Sound_t *testSound = sound_load("audio/missilecommand.ogg");
+	sound_play(testSound);
+
 	out->background = background_create();
 	//out->background->layers[0] = background_createLayer(texture_loadFromPng("textures/backgrounds/clouds.png", true, false), 0.5);
 	//out->background->layers[1] = background_createLayer(texture_loadFromPng("textures/backgrounds/hills.png", true, false), 0.3);
@@ -152,7 +160,7 @@ World_t *world_init()
 
 	// Create a collision world and populate with a couple of debug objects
 	out->collisionWorld = collision_createWorld(vec2_create(0.0f, -980.0f), vec2_create(800, 632), 32);
-	//renderer_pushRenderable(gRenderer, &out->collisionWorld->debugRenderable);
+	/*renderer_pushRenderable(gRenderer, &out->collisionWorld->debugRenderable);*/
 
 	vec2_t rectVerts[4];
 	rectVerts[0] = vec2_create(340, 300);
@@ -260,7 +268,10 @@ void world_update(World_t *aWorld, double aTimeDelta)
 	aWorld->collisionWorld->character->velocity = vec2_add(aWorld->collisionWorld->character->velocity, vec2_scalarMul(gWorld->collisionWorld->gravity, aTimeDelta));
 	
 	aWorld->level->background->offset.x += 1.0;
-	aWorld->level->background->offset.y = 5.0*sinf(gGameTimer.elapsed);	
+	//if(fabs(aWorld->level->background->offset.y) <= 5.0f)
+	//	aWorld->level->background->offset.y = 5.0*sinf(gGameTimer.elapsed);	
+	if(aWorld->ticks % 2 == 0)
+		aWorld->level->background->offset.y += 1.0f;
 
 	int timeSteps = 8;
 	for(int i = 0; i < timeSteps; ++i)
