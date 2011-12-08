@@ -236,18 +236,12 @@ static TMXTileset_t *_tmx_mapGetTilesetForTileGID(TMXMap_t *aMap, int aTileGID)
 static int *_parseCSV(const char *aCsvString, int aWidth, int aHeight)
 {
 	int *out = malloc(sizeof(int)*aWidth*aHeight);
-	int i = 0; // Offset in output array
-	int lastOffset = 0, currentOffset = 0; // Offset in CSV string
-	do {
-		currentOffset++;
-		if(*(aCsvString+currentOffset) == '\n')
-			lastOffset++;
-		else if(*(aCsvString+currentOffset) == ',' || *(aCsvString+currentOffset) == '\0') {
-			sscanf((aCsvString+lastOffset), "%d", &out[i++]);
-			lastOffset = currentOffset+1;
-		}
-	} while(*(aCsvString+currentOffset) != '\0' && i < aWidth*aHeight);
-
+	int i = 0;
+	char *separators = ",\n";
+	char *value, *state;
+	for(value = strtok_r(aCsvString, separators, &state); value != NULL; value = strtok_r(NULL, separators, &state)) {
+		sscanf(value, "%d", &out[i++]);
+	}
 	return out;
 }
 
