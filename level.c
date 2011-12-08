@@ -96,8 +96,6 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 	Level_t *level = (Level_t *)aOwner;
 
 	// Draw the background
-	level->background->offset.x += 3.0;
-	//level->background->offset.y = -30.0;	
 	if(level->background)
 		level->background->renderable.displayCallback(aRenderer, level->background, aTimeSinceLastFrame, aInterpolation);
 	
