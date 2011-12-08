@@ -24,6 +24,8 @@
 extern Renderer_t *gRenderer;
 // The game world
 extern World_t *gWorld;
+// The game timer
+extern GameTimer_t gGameTimer;
 // The input manager
 extern InputManager_t *gInputManager;
 // The sound manager
