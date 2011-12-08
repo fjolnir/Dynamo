@@ -32,25 +32,6 @@ static void cleanup();
 
 #pragma mark - Drawing
 
-static void display()
-{
-	double delta = 0.0;
-	Uint32 currentTime = SDL_GetTicks();
-	if(lastTime > 0) {
-		Uint32 deltaMsec = currentTime - lastTime;
-		delta = (double)deltaMsec / (double)MSEC_PER_SEC;
-		gameTimer_update(&gGameTimer, delta);
-	}
-	lastTime = currentTime;
-
-	// Update the game state as many times as we need to catch up
-	for(int i = 0; (i < MAX_FRAMESKIP) && !gameTimer_reachedNextUpdate(&gGameTimer); ++i) {
-		input_postActiveEvents(gInputManager);
-		world_update(gWorld, delta);
-		gameTimer_finishedUpdate(&gGameTimer);
-	}
-	renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));
-}
 
 static void windowDidResize(int aWidth, int aHeight)
 {
@@ -231,7 +212,24 @@ int main(int argc, char **argv)
 		while (SDL_PollEvent(&event)) {
 			handleEvent(event);
 		}
-		display();
+
+		double delta = 0.0;
+		Uint32 currentTime = SDL_GetTicks();
+		if(lastTime > 0) {
+			Uint32 deltaMsec = currentTime - lastTime;
+			delta = (double)deltaMsec / (double)MSEC_PER_SEC;
+			gameTimer_update(&gGameTimer, delta);
+		}
+		lastTime = currentTime;
+
+		// Update the game state as many times as we need to catch up
+		for(int i = 0; (i < MAX_FRAMESKIP) && !gameTimer_reachedNextUpdate(&gGameTimer); ++i) {
+			input_postActiveEvents(gInputManager);
+			world_update(gWorld, delta);
+			gameTimer_finishedUpdate(&gGameTimer);
+		}
+		
+		renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));		
 		SDL_GL_SwapBuffers();
 	}
 
