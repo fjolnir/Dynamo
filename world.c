@@ -4,8 +4,8 @@
 
 static Sprite_t *sprite;
 static bool charInContactWithGround = true;
-
 static CollisionPolyObject_t *characterApprox;
+
 static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
 	sprite->angle += M_PI/20;
@@ -40,6 +40,8 @@ static void rightKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInp
 		characterApprox->velocity.x = MAX(characterApprox->velocity.x, 300.0f);
 	else if(!characterApprox->inContact)
 		characterApprox->velocity.x += 5.0f;
+
+	world->level->background->offset.x += 4.0;	
 }
 static void leftKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
@@ -55,6 +57,8 @@ static void leftKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInpu
 		characterApprox->velocity.x = MIN(characterApprox->velocity.x, -300.0f);
 	else if(!characterApprox->inContact)
 		characterApprox->velocity.x -= 5.0f;
+
+	world->level->background->offset.x -= 4.0;	
 }
 
 static void characterCollided(CollisionWorld_t *aWorld, Collision_t collisionInfo)
@@ -85,18 +89,18 @@ static void mouseMoved(InputManager_t *aInputManager, InputObserver_t *aInputObs
 
 	world->background->offset = vec2_add(world->background->offset, delta);
 
-	//collision_setPolyObjectCenter(characterApprox, vec2_add(characterApprox->center, delta));
+	collision_setPolyObjectCenter(characterApprox, vec2_add(characterApprox->center, delta));
 	if(aState == kInputState_up) {
 		gWorld->collisionWorld->gravity = lastGravity;
 		inDrag = false;
 	}
 	else if(aState == kInputState_down) {
-		//characterApprox->velocity = kVec2_zero;
+		characterApprox->velocity = kVec2_zero;
 		if(!inDrag)
 			lastGravity = gWorld->collisionWorld->gravity;
 		inDrag = true;
 		gWorld->collisionWorld->gravity = kVec2_zero;
-		characterApprox->velocity = vec2_scalarMul(delta, 98.0f);
+		//characterApprox->velocity = vec2_scalarMul(delta, 98.0f);
 	}
 
 	shouldResetDelta = (aState == kInputState_up);
@@ -110,10 +114,14 @@ World_t *world_init()
 	out->ticks = 0;
 
 	out->background = background_create();
-	out->background->layers[0] = background_createLayer(texture_loadFromPng("textures/backgrounds/clouds.png", true, false), 0.5);
-	out->background->layers[1] = background_createLayer(texture_loadFromPng("textures/backgrounds/hills.png", true, false), 0.3);
-	out->background->layers[2] = background_createLayer(texture_loadFromPng("textures/backgrounds/castle.png", true, false), 0.1);
-	out->background->layers[3] = background_createLayer(texture_loadFromPng("textures/backgrounds/ground.png", true, false), 0.0);
+	//out->background->layers[0] = background_createLayer(texture_loadFromPng("textures/backgrounds/clouds.png", true, false), 0.5);
+	//out->background->layers[1] = background_createLayer(texture_loadFromPng("textures/backgrounds/hills.png", true, false), 0.3);
+	//out->background->layers[2] = background_createLayer(texture_loadFromPng("textures/backgrounds/castle.png", true, false), 0.1);
+	//out->background->layers[3] = background_createLayer(texture_loadFromPng("textures/backgrounds/ground.png", true, false), 0.0);
+	out->background->layers[0] = background_createLayer(texture_loadFromPng("textures/backgrounds/stars1.png", true, true), 1.0);
+	out->background->layers[1] = background_createLayer(texture_loadFromPng("textures/backgrounds/stars2.png", true, true), 0.7);
+	out->background->layers[2] = background_createLayer(texture_loadFromPng("textures/backgrounds/stars3.png", true, true), 0.4);
+	out->background->layers[3] = background_createLayer(texture_loadFromPng("textures/backgrounds/stars4.png", true, true), 0.2);
 	//renderer_pushRenderable(gRenderer, &out->background->renderable);
 
 	vec3_t spriteLoc = { 100.0f, 41.0f, 0.0f };
@@ -123,8 +131,8 @@ World_t *world_init()
 	sprite->animations[0] = sprite_createAnimation(11);
 	//renderer_pushRenderable(gRenderer, &sprite->renderable);
 
-	out->level = level_load("levels/jungle.tmx");
-	//renderer_pushRenderable(gRenderer, &out->level->renderable);
+	out->level = level_load("levels/spacetest.tmx");
+	renderer_pushRenderable(gRenderer, &out->level->renderable);
 
 	// Create&add input observers
 	out->arrowRightObserver = input_createObserver(kInputKey_arrowRight, &rightKeyPressed, NULL, out);
@@ -144,7 +152,7 @@ World_t *world_init()
 
 	// Create a collision world and populate with a couple of debug objects
 	out->collisionWorld = collision_createWorld(vec2_create(0.0f, -980.0f), vec2_create(800, 632), 32);
-	renderer_pushRenderable(gRenderer, &out->collisionWorld->debugRenderable);
+	//renderer_pushRenderable(gRenderer, &out->collisionWorld->debugRenderable);
 
 	vec2_t rectVerts[4];
 	rectVerts[0] = vec2_create(340, 300);
@@ -201,7 +209,7 @@ World_t *world_init()
 	triVerts[1] = vec2_create(455, 330);
 	triVerts[2] = vec2_create(455, 300);
 
-	CollisionPolyObject_t *triangle1 = collision_createPolyObject(3, triVerts, 0.0, 0.3);
+	CollisionPolyObject_t *triangle1 = collision_createPolyObject(3, triVerts, 0.4, 0.3);
 	spatialHash_addItem(out->collisionWorld->spatialHash, triangle1, triangle1->boundingBox);
 
 	triVerts[0] = vec2_create(0, 0);
@@ -251,6 +259,9 @@ void world_update(World_t *aWorld, double aTimeDelta)
 	//aWorld->collisionWorld->character->velocity.y -= 300.0f*aTimeDelta;
 	aWorld->collisionWorld->character->velocity = vec2_add(aWorld->collisionWorld->character->velocity, vec2_scalarMul(gWorld->collisionWorld->gravity, aTimeDelta));
 	
+	aWorld->level->background->offset.x += 1.0;
+	aWorld->level->background->offset.y = 5.0*sinf(gGameTimer.elapsed);	
+
 	int timeSteps = 8;
 	for(int i = 0; i < timeSteps; ++i)
 		collision_step(aWorld->collisionWorld, aWorld->collisionWorld->character, aTimeDelta/(float)timeSteps);
