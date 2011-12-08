@@ -21,7 +21,8 @@ void draw_init(Renderer_t *aDefaultRenderer)
 
 void draw_cleanup()
 {
-	shader_destroy(_texturedShader);
+	if(_texturedShader) shader_destroy(_texturedShader);
+	if(_coloredShader) shader_destroy(_coloredShader);
 }
 
 
