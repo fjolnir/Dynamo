@@ -112,7 +112,6 @@ Level_t *level_load(const char *aFilename)
 		};
 
 		out->character->collisionObject = collision_createPolyObject(4, characterVerts, 0.0f, 0.0f);
-		printVec2(out->character->collisionObject->center);
 	}
 	tmx_destroyMap(map);
 	return out;
