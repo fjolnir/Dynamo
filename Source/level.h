@@ -25,6 +25,11 @@ typedef struct _Level {
 	vec2_t tileSize; // In pixels
 	Character_t *character;
 	Sound_t *bgm;
+
+	int numberOfMeshIndices;
+	GLuint vertexVBO;
+	GLuint texCoordVBO;
+	GLuint indexVBO;
 } Level_t;
 
 extern Level_t *level_load(const char *aFilename);

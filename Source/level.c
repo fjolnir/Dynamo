@@ -114,6 +114,49 @@ Level_t *level_load(const char *aFilename)
 		out->character->collisionObject = collision_createPolyObject(4, characterVerts, 0.0f, 0.0f);
 	}
 	tmx_destroyMap(map);
+
+
+	// Generate & store the tile mesh
+	int numberOfTiles = out->size[0]*out->size[1];
+	vec2_t *texOffsets = malloc(sizeof(vec2_t)*numberOfTiles);
+	vec2_t *screenCoords = malloc(sizeof(vec2_t)*numberOfTiles);
+	for(int y = 0; y < out->size[1]; ++y) {
+		for(int x = 0; x < out->size[0]; ++x) {
+			texOffsets[y*out->size[0] + x].x   = out->tiles[y*out->size[0] + x].x;
+			texOffsets[y*out->size[0] + x].y   = out->tiles[y*out->size[0] + x].y;
+			screenCoords[y*out->size[0] + x].x = (out->tileSize.w * (float)x) + out->tileSize.w / 2.0f;
+			screenCoords[y*out->size[0] + x].y = (out->tileSize.h * (float)y) + out->tileSize.w / 2.0f;
+		}
+	}
+
+	int numberOfVertices;
+	int numberOfIndices;
+	vec2_t *vertices;
+	vec2_t *texCoords;
+	GLuint *indices;
+
+	draw_textureAtlas_getVertices(out->tileset, numberOfTiles, texOffsets, screenCoords, &vertices, &texCoords, &numberOfVertices, &indices, &numberOfIndices);
+
+	glGenBuffers(1, &out->vertexVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, out->vertexVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vec2_t)*numberOfVertices, vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &out->texCoordVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, out->texCoordVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vec2_t)*numberOfVertices, texCoords, GL_STATIC_DRAW);
+
+	out->numberOfMeshIndices = numberOfIndices;
+	glGenBuffers(1, &out->indexVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, out->indexVBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*numberOfIndices, indices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	free(vertices);
+	free(texCoords);
+	free(indices);
+
 	return out;
 }
 
@@ -123,6 +166,10 @@ void level_destroy(Level_t *aLevel)
 	texAtlas_destroy(aLevel->tileset, true);
 	character_destroy(aLevel->character);
 	if(aLevel->bgm) sound_destroy(aLevel->bgm);
+
+	glDeleteBuffers(1, &aLevel->vertexVBO);
+	glDeleteBuffers(1, &aLevel->texCoordVBO);
+	glDeleteBuffers(1, &aLevel->indexVBO);
 
 	free(aLevel);
 }
@@ -147,20 +194,31 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 	matrix_stack_translate(aRenderer->worldMatrixStack, center.x*-1.0f + 100.0f, -1.0f*center.y + 100.0f, 0.0f);
 
 	// Draw the tiles
-	int numberOfTiles = level->size[0]*level->size[1];
-	vec2_t *texOffsets = malloc(sizeof(vec2_t)*numberOfTiles);
-	vec2_t *screenCoords = malloc(sizeof(vec2_t)*numberOfTiles);
-	for(int y = 0; y < level->size[1]; ++y) {
-		for(int x = 0; x < level->size[0]; ++x) {
-			texOffsets[y*level->size[0] + x].x = level->tiles[y*level->size[0] + x].x;
-			texOffsets[y*level->size[0] + x].y = level->tiles[y*level->size[0] + x].y;
-			screenCoords[y*level->size[0] + x].x = (level->tileSize.w * (float)x) + level->tileSize.w / 2.0f;
-			screenCoords[y*level->size[0] + x].y = (level->tileSize.h * (float)y) + level->tileSize.w / 2.0f;
-		}
-	}
-	draw_textureAtlas(level->tileset, numberOfTiles, texOffsets, screenCoords);
-	free(texOffsets);
-	free(screenCoords);
+	shader_makeActive(gTexturedShader);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, level->tileset->texture->id);
+
+	shader_updateMatrices(gTexturedShader, aRenderer);
+	glUniform1i(gTexturedShader->uniforms[kShader_colormap0Uniform], 0);
+	vec4_t white = {1.0, 1.0, 1.0, 1.0};
+	glUniform4fv(gTexturedShader->uniforms[kShader_colorUniform], 1, white.f);
+
+	glBindBuffer(GL_ARRAY_BUFFER, level->vertexVBO);
+	glVertexAttribPointer(gTexturedShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_positionAttribute]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, level->texCoordVBO);
+	glVertexAttribPointer(gTexturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, level->indexVBO);
+	glDrawElements(GL_TRIANGLES, level->numberOfMeshIndices, GL_UNSIGNED_INT, 0);
+
+	shader_makeInactive(gTexturedShader);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 
 	// Draw the character
 	static int count = 0;
