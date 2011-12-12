@@ -30,7 +30,7 @@ typedef struct _SoundManager {
 	ALCcontext *context;
 } SoundManager_t;
 
-extern Sound_t *sound_load(char *aFilename); // Only supports OGG at the moment
+extern Sound_t *sound_load(const char *aFilename); // Only supports OGG at the moment
 extern void sound_destroy(Sound_t *aSound);
 
 extern void sound_play(Sound_t *aSound);

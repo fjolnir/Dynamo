@@ -10,7 +10,7 @@ static bool _sound_update(Sound_t *aSound);
 
 #pragma mark - Sound loading
 
-Sound_t *sound_load(char *aFilename)
+Sound_t *sound_load(const char *aFilename)
 {
 	Sound_t *out = malloc(sizeof(Sound_t));
 

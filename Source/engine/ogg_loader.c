@@ -6,7 +6,7 @@
 
 static char *_oggErrorString(int aCode);
 
-oggFile_t *ogg_load(char *aFilename)
+oggFile_t *ogg_load(const char *aFilename)
 {
 	FILE *handle = fopen(aFilename, "rb");
 	if(!handle) return NULL;

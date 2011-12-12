@@ -10,7 +10,7 @@ typedef struct _oggFile {
 	int size;
 } oggFile_t;
 
-extern oggFile_t *ogg_load(char *aFilename);
+extern oggFile_t *ogg_load(const char *aFilename);
 extern void ogg_destroy(oggFile_t *aFile);
 
 #endif
