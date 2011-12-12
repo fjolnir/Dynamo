@@ -10,6 +10,7 @@ Level_t *level_load(const char *aFilename)
 	Level_t *out = malloc(sizeof(Level_t));
 	out->renderable.displayCallback = &_level_draw;
 	out->character = NULL;
+	out->bgm = NULL;
 
 	// Load the level file
 	TMXMap_t *map = tmx_readMapFile(aFilename);
@@ -38,6 +39,11 @@ Level_t *level_load(const char *aFilename)
 		if(path != NULL)
 			out->background->layers[3] = background_createLayer(texture_loadFromPng(path, true, true),
 			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG4-depth")));
+	}
+
+	const char *bgmPath = tmx_mapGetPropertyNamed(map, "BGM");
+	if(bgmPath) {
+		out->bgm = sound_load(bgmPath);
 	}
 
 	TMXTileset_t *tileset = &map->tilesets[0];
@@ -117,6 +123,8 @@ void level_destroy(Level_t *aLevel)
 	background_destroy(aLevel->background, true);
 	texAtlas_destroy(aLevel->tileset, true);
 	character_destroy(aLevel->character);
+	if(aLevel->bgm) sound_destroy(aLevel->bgm);
+
 	free(aLevel);
 }
 

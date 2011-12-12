@@ -1,5 +1,6 @@
 #include "engine/background.h"
 #include "engine/texture_atlas.h"
+#include "engine/sound.h"
 #include "collision.h"
 #include "character.h"
 
@@ -23,6 +24,7 @@ typedef struct _Level {
 	int size[2]; // In tiles
 	vec2_t tileSize; // In pixels
 	Character_t *character;
+	Sound_t *bgm;
 } Level_t;
 
 extern Level_t *level_load(const char *aFilename);
