@@ -232,7 +232,11 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 {
 	aWorld->lastCollisionObject = aInputObject; // For drawing the debug view
 
+	// Add gravity
 	aInputObject->velocity = vec2_add(aInputObject->velocity, vec2_scalarMul(aWorld->gravity, aTimeDelta));
+	// Apply air resistance
+	aInputObject->velocity = vec2_sub(aInputObject->velocity, vec2_scalarMul(aInputObject->velocity, aTimeDelta*0.4));
+
 
 	vec2_t displacement = vec2_scalarMul(aInputObject->velocity, aTimeDelta);
 	float distanceToTravel = vec2_mag(displacement);
