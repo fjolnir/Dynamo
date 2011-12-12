@@ -158,9 +158,9 @@ int main(int argc, char **argv)
 {
 	#if defined(WIN32) && defined(TWODEEDENG_DEBUG)
 	// Redirect back to console (SDL redirects standard outputs to log files by default on windows)
-    freopen("CON", "w", stdout);
-    freopen("CON", "w", stderr);
-    #endif
+	freopen("CON", "w", stdout);
+	freopen("CON", "w", stderr);
+	#endif
 
 	bool shouldFullscreen = (argc == 2 && strcmp(argv[1], "-f") == 0);
 
