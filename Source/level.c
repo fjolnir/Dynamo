@@ -135,6 +135,8 @@ Level_t *level_load(const char *aFilename)
 	GLuint *indices;
 
 	draw_textureAtlas_getVertices(out->tileset, numberOfTiles, texOffsets, screenCoords, &vertices, &texCoords, &numberOfVertices, &indices, &numberOfIndices);
+	free(texOffsets);
+	free(screenCoords);
 
 	glGenBuffers(1, &out->vertexVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, out->vertexVBO);
