@@ -1,0 +1,1387 @@
+# depslib dependency file v1.0
+1322199665 source:c:\users\fyolnish\desktop\source\character.c
+	"character.h"
+
+1322908260 c:\users\fyolnish\desktop\source\character.h
+	"engine/sprite.h"
+
+1321823910 c:\users\fyolnish\desktop\source\engine\sprite.h
+	"renderer.h"
+	"texture_atlas.h"
+
+1322420008 c:\users\fyolnish\desktop\source\engine\renderer.h
+	"glutils.h"
+	"GLMath/GLMath.h"
+	"linkedlist.h"
+
+1323406875 c:\users\fyolnish\desktop\source\engine\glutils.h
+	<sys/time.h>
+	<unistd.h>
+	<OpenGL/gl.h>
+	<Opengl/glext.h>
+	<windows.h>
+	"windows/GLee.h"
+
+1322445481 c:\users\fyolnish\desktop\source\engine\glmath\glmath.h
+	"GLMathTypes.h"
+	"GLMathVector.h"
+	"GLMathMatrix.h"
+	"GLMathQuaternion.h"
+	"GLMathRectangle.h"
+	"GLMathMatrixStack.h"
+	"GLMathUtilities.h"
+
+1322445242 c:\users\fyolnish\desktop\source\engine\glmath\glmathtypes.h
+
+1323358005 c:\users\fyolnish\desktop\source\engine\glmath\glmathvector.h
+	"GLMathTypes.h"
+	<math.h>
+
+1323396608 c:\users\fyolnish\desktop\source\engine\glmath\glmathmatrix.h
+	"GLMathTypes.h"
+	<Accelerate/Accelerate.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+
+1323396822 c:\users\fyolnish\desktop\source\engine\glmath\glmathquaternion.h
+	"GLMathTypes.h"
+	<assert.h>
+
+1323358442 c:\users\fyolnish\desktop\source\engine\glmath\glmathrectangle.h
+	"GLMathTypes.h"
+	"GLMathVector.h"
+	<math.h>
+	<stdbool.h>
+
+1319418213 c:\users\fyolnish\desktop\source\engine\glmath\glmathmatrixstack.h
+	"GLMathTypes.h"
+	"GLMathTransforms.h"
+	<assert.h>
+
+1319418455 c:\users\fyolnish\desktop\source\engine\glmath\glmathtransforms.h
+	"GLMathTypes.h"
+
+1323397071 c:\users\fyolnish\desktop\source\engine\glmath\glmathutilities.h
+	"GLMathTypes.h"
+	<stdio.h>
+	<stdbool.h>
+
+1322453443 c:\users\fyolnish\desktop\source\engine\linkedlist.h
+	<stdbool.h>
+
+1321823918 c:\users\fyolnish\desktop\source\engine\texture_atlas.h
+	"texture.h"
+
+1321945452 c:\users\fyolnish\desktop\source\engine\texture.h
+	"glutils.h"
+	"GLMath/GLMath.h"
+
+1323266548 source:c:\users\fyolnish\desktop\source\collision.c
+	"collision.h"
+	<float.h>
+	"engine/various.h"
+	"engine/drawutils.h"
+	"engine/GLMath/GLMath.h"
+
+1323175661 c:\users\fyolnish\desktop\source\collision.h
+	<stdbool.h>
+	"engine/GLMath/GLMath.h"
+	"spatial_hash.h"
+	"engine/renderer.h"
+
+1323065472 c:\users\fyolnish\desktop\source\spatial_hash.h
+	"engine/GLMath/GLMath.h"
+	"engine/array.h"
+
+1323066223 c:\users\fyolnish\desktop\source\engine\array.h
+	<stdbool.h>
+
+1323432679 c:\users\fyolnish\desktop\source\engine\various.h
+	<stdio.h>
+	<time.h>
+
+1322649069 c:\users\fyolnish\desktop\source\engine\drawutils.h
+	"GLMath/GLMath.h"
+	"texture.h"
+	"texture_atlas.h"
+	"shader.h"
+	"renderer.h"
+
+1322624382 c:\users\fyolnish\desktop\source\engine\shader.h
+	"glutils.h"
+	"renderer.h"
+
+1318839233 source:c:\users\fyolnish\desktop\source\engine\glmath\glmath.c
+	"GLMath.h"
+
+1322644892 source:c:\users\fyolnish\desktop\source\engine\array.c
+	"array.h"
+	<stdlib.h>
+
+1323406271 source:c:\users\fyolnish\desktop\source\engine\background.c
+	"background.h"
+	"shader.h"
+	"glutils.h"
+
+1323311084 c:\users\fyolnish\desktop\source\engine\background.h
+	"renderer.h"
+	"texture.h"
+
+1323340038 source:c:\users\fyolnish\desktop\source\engine\drawutils.c
+	"drawutils.h"
+	"various.h"
+
+1323318275 source:c:\users\fyolnish\desktop\source\engine\gametimer.c
+	"gametimer.h"
+	"various.h"
+
+1322431194 c:\users\fyolnish\desktop\source\engine\gametimer.h
+	<stdbool.h>
+
+1322429198 source:c:\users\fyolnish\desktop\source\engine\input.c
+	"input.h"
+
+1321823886 c:\users\fyolnish\desktop\source\engine\input.h
+	"linkedlist.h"
+	"GLMath/GLMath.h"
+
+1322450931 source:c:\users\fyolnish\desktop\source\engine\linkedlist.c
+	"linkedlist.h"
+	<stdlib.h>
+
+1321946648 source:c:\users\fyolnish\desktop\source\engine\ogg_loader.c
+	"ogg_loader.h"
+	<ogg/ogg.h>
+	<vorbis/vorbisfile.h>
+	<stdlib.h>
+	"various.h"
+
+1321822174 c:\users\fyolnish\desktop\source\engine\ogg_loader.h
+
+1312420062 c:\users\fyolnish\desktop\runner\libs\include\ogg\ogg.h
+	<stddef.h>
+	<ogg/os_types.h>
+
+1312420062 c:\users\fyolnish\desktop\runner\libs\include\ogg\os_types.h
+	<stdint.h>
+	<sys/types.h>
+	<sys/types.h>
+	<inttypes.h>
+	<sys/types.h>
+	<inttypes.h>
+	<ogg/config_types.h>
+
+1272466116 c:\users\fyolnish\desktop\runner\libs\include\vorbis\vorbisfile.h
+	<stdio.h>
+	"codec.h"
+
+1269451740 c:\users\fyolnish\desktop\runner\libs\include\vorbis\codec.h
+	<ogg/ogg.h>
+
+1321945894 source:c:\users\fyolnish\desktop\source\engine\png_loader.c
+	<stdlib.h>
+	<stdio.h>
+	<stdbool.h>
+	<png.h>
+	"png_loader.h"
+	"various.h"
+
+1244122812 c:\users\fyolnish\desktop\runner\libs\include\png.h
+	"zlib.h"
+	"pngconf.h"
+	<crtdbg.h>
+
+1271689968 c:\users\fyolnish\desktop\runner\libs\include\zlib.h
+	"zconf.h"
+
+1271566686 c:\users\fyolnish\desktop\runner\libs\include\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1244122812 c:\users\fyolnish\desktop\runner\libs\include\pngconf.h
+	"pngusr.h"
+	"config.h"
+	<windows.h>
+	<stdio.h>
+	<stdio.h>
+	<sys/types.h>
+	<setjmp.h>
+	<strings.h>
+	<string.h>
+	<stdlib.h>
+	<fp.h>
+	<math.h>
+	<m68881.h>
+	<mem.h>
+	<alloc.h>
+	<malloc.h>
+	<time.h>
+	<dos.h>
+
+1321820160 c:\users\fyolnish\desktop\source\engine\png_loader.h
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_opengl.h
+	"SDL_config.h"
+	<windows.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<gl.h>
+	<glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<windows.h>
+	<stddef.h>
+
+1255800464 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_config.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_platform.h
+
+1323405656 source:c:\users\fyolnish\desktop\source\engine\renderer.c
+	"renderer.h"
+	"glutils.h"
+
+1323408257 source:c:\users\fyolnish\desktop\source\engine\shader.c
+	"shader.h"
+	<stdbool.h>
+	<assert.h>
+	<stdlib.h>
+	<stdio.h>
+	"various.h"
+	"glutils.h"
+
+1321946658 source:c:\users\fyolnish\desktop\source\engine\sound.c
+	"sound.h"
+	"ogg_loader.h"
+	"various.h"
+
+1321917420 c:\users\fyolnish\desktop\source\engine\sound.h
+	<OpenAL/AL.h>
+	<OpenAL/alc.h>
+	"GLMath/GLMath.h"
+
+1165563058 c:\users\fyolnish\desktop\runner\libs\include\openal\al.h
+
+1176447768 c:\users\fyolnish\desktop\runner\libs\include\openal\alc.h
+
+1322429352 source:c:\users\fyolnish\desktop\source\engine\sprite.c
+	"sprite.h"
+	"drawutils.h"
+	<stdlib.h>
+	"various.h"
+
+1321946878 source:c:\users\fyolnish\desktop\source\engine\texture.c
+	"texture.h"
+	"png_loader.h"
+	"various.h"
+
+1322245246 source:c:\users\fyolnish\desktop\source\engine\texture_atlas.c
+	"texture_atlas.h"
+
+1323404399 source:c:\users\fyolnish\desktop\source\engine\tmx_map.c
+	"tmx_map.h"
+	"various.h"
+	<stdlib.h>
+	<assert.h>
+	<mxml.h>
+	<string.h>
+
+1322200818 c:\users\fyolnish\desktop\source\engine\tmx_map.h
+	<stdbool.h>
+
+1237441132 c:\users\fyolnish\desktop\runner\libs\include\mxml.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<errno.h>
+
+1323402657 source:c:\users\fyolnish\desktop\source\engine\various.c
+	"various.h"
+	<sys/time.h>
+	<time.h>
+	<windows.h>
+
+1323336772 source:c:\users\fyolnish\desktop\source\level.c
+	"level.h"
+	"shared.h"
+	"engine/tmx_map.h"
+
+1322204602 c:\users\fyolnish\desktop\source\level.h
+	"engine/background.h"
+	"engine/texture_atlas.h"
+	"character.h"
+
+1323432788 c:\users\fyolnish\desktop\source\shared.h
+	"engine/glutils.h"
+	"engine/GLMath/GLMath.h"
+	"engine/shader.h"
+	"engine/renderer.h"
+	"engine/gametimer.h"
+	"engine/input.h"
+	"engine/various.h"
+	"engine/sound.h"
+	"engine/drawutils.h"
+	"world.h"
+
+1322628789 c:\users\fyolnish\desktop\source\world.h
+	"shared.h"
+	"engine/background.h"
+	"engine/input.h"
+	"level.h"
+	"collision.h"
+
+1323408561 source:c:\users\fyolnish\desktop\source\main.c
+	<stdio.h>
+	"engine/glutils.h"
+	"shared.h"
+	<SDL/SDL.h>
+	<windows.h>
+	"engine/windows/gldefs.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\begin_code.h
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\close_code.h
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_endian.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_keysym.h
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\sdl\sdl-1.2.14\include\sdl\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1323406663 c:\users\fyolnish\desktop\source\engine\windows\gldefs.h
+
+1322843448 source:c:\users\fyolnish\desktop\source\spatial_hash.c
+	"spatial_hash.h"
+	"engine/various.h"
+
+1323432508 source:c:\users\fyolnish\desktop\source\world.c
+	"world.h"
+	"engine/sprite.h"
+	"engine/tmx_map.h"
+
+1314231474 c:\users\fyolnish\desktop\runner\libs\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1323405835 c:\users\fyolnish\desktop\runner\libs\include\gl\wglext.h
+	<windows.h>
+
+1323405858 c:\users\fyolnish\desktop\runner\libs\include\gl\glext.h
+	<windows.h>
+	<stddef.h>
+	<inttypes.h>
+	<inttypes.h>
+	<inttypes.h>
+	<stdint.h>
+	<stdint.h>
+	<inttypes.h>
+
+1234003582 c:\users\fyolnish\desktop\runner\libs\include\glee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1234003582 c:\users\fyolnish\desktop\source\engine\windows\glee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1234003582 source:c:\users\fyolnish\desktop\source\engine\windows\glee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"GLee.h"
+	<Carbon/Carbon.h>
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1255800464 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_config.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_platform.h
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\begin_code.h
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\close_code.h
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_endian.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_keysym.h
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\libs\include\sdl\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1189886696 source:c:\users\fyolnish\desktop\runner\minixml\mxml-attr.c
+	"config.h"
+	"mxml.h"
+
+1240074352 c:\users\fyolnish\desktop\runner\minixml\config.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdarg.h>
+	<ctype.h>
+	<io.h>
+
+1237441132 source:c:\users\fyolnish\desktop\runner\minixml\mxml-entity.c
+	"mxml-private.h"
+
+1190349962 c:\users\fyolnish\desktop\runner\minixml\mxml-private.h
+	"config.h"
+	"mxml.h"
+
+1323432188 source:c:\users\fyolnish\desktop\runner\minixml\mxml-file.c
+	<unistd.h>
+	"mxml-private.h"
+
+1106983304 source:c:\users\fyolnish\desktop\runner\minixml\mxml-index.c
+	"config.h"
+	"mxml.h"
+
+1225045686 source:c:\users\fyolnish\desktop\runner\minixml\mxml-node.c
+	"config.h"
+	"mxml.h"
+
+1195754512 source:c:\users\fyolnish\desktop\runner\minixml\mxml-private.c
+	"mxml-private.h"
+	<pthread.h>
+	<windows.h>
+
+1189322212 source:c:\users\fyolnish\desktop\runner\minixml\mxml-search.c
+	"config.h"
+	"mxml.h"
+
+1177364884 source:c:\users\fyolnish\desktop\runner\minixml\mxml-set.c
+	"config.h"
+	"mxml.h"
+
+1240074352 source:c:\users\fyolnish\desktop\runner\minixml\mxml-string.c
+	"config.h"
+
+1241530680 source:c:\users\fyolnish\desktop\runner\minixml\mxmldoc.c
+	"config.h"
+	"mxml.h"
+	<time.h>
+	<sys/stat.h>
+	<dirent.h>
+	<unistd.h>
+	<spawn.h>
+	<sys/wait.h>
+
+1322199665 source:c:\users\fyolnish\desktop\runner\source\character.c
+	"character.h"
+
+1322908260 c:\users\fyolnish\desktop\runner\source\character.h
+	"engine/sprite.h"
+
+1321823910 c:\users\fyolnish\desktop\runner\source\engine\sprite.h
+	"renderer.h"
+	"texture_atlas.h"
+
+1322420008 c:\users\fyolnish\desktop\runner\source\engine\renderer.h
+	"glutils.h"
+	"GLMath/GLMath.h"
+	"linkedlist.h"
+
+1323406875 c:\users\fyolnish\desktop\runner\source\engine\glutils.h
+	<sys/time.h>
+	<unistd.h>
+	<OpenGL/gl.h>
+	<Opengl/glext.h>
+	<windows.h>
+	"windows/GLee.h"
+
+1234003582 c:\users\fyolnish\desktop\runner\source\engine\windows\glee.h
+	<windows.h>
+	<GL/gl.h>
+	<OpenGL/gl.h>
+	<GL/gl.h>
+	<GL/glx.h>
+	<stddef.h>
+
+1322445481 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmath.h
+	"GLMathTypes.h"
+	"GLMathVector.h"
+	"GLMathMatrix.h"
+	"GLMathQuaternion.h"
+	"GLMathRectangle.h"
+	"GLMathMatrixStack.h"
+	"GLMathUtilities.h"
+
+1322445242 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmathtypes.h
+
+1323358005 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmathvector.h
+	"GLMathTypes.h"
+	<math.h>
+
+1323396608 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmathmatrix.h
+	"GLMathTypes.h"
+	<Accelerate/Accelerate.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+
+1323396822 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmathquaternion.h
+	"GLMathTypes.h"
+	<assert.h>
+
+1323358442 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmathrectangle.h
+	"GLMathTypes.h"
+	"GLMathVector.h"
+	<math.h>
+	<stdbool.h>
+
+1319418213 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmathmatrixstack.h
+	"GLMathTypes.h"
+	"GLMathTransforms.h"
+	<assert.h>
+
+1319418455 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmathtransforms.h
+	"GLMathTypes.h"
+
+1323397071 c:\users\fyolnish\desktop\runner\source\engine\glmath\glmathutilities.h
+	"GLMathTypes.h"
+	<stdio.h>
+	<stdbool.h>
+
+1322453443 c:\users\fyolnish\desktop\runner\source\engine\linkedlist.h
+	<stdbool.h>
+
+1321823918 c:\users\fyolnish\desktop\runner\source\engine\texture_atlas.h
+	"texture.h"
+
+1321945452 c:\users\fyolnish\desktop\runner\source\engine\texture.h
+	"glutils.h"
+	"GLMath/GLMath.h"
+
+1323266548 source:c:\users\fyolnish\desktop\runner\source\collision.c
+	"collision.h"
+	<float.h>
+	"engine/various.h"
+	"engine/drawutils.h"
+	"engine/GLMath/GLMath.h"
+
+1323175661 c:\users\fyolnish\desktop\runner\source\collision.h
+	<stdbool.h>
+	"engine/GLMath/GLMath.h"
+	"spatial_hash.h"
+	"engine/renderer.h"
+
+1323065472 c:\users\fyolnish\desktop\runner\source\spatial_hash.h
+	"engine/GLMath/GLMath.h"
+	"engine/array.h"
+
+1323066223 c:\users\fyolnish\desktop\runner\source\engine\array.h
+	<stdbool.h>
+
+1323651725 c:\users\fyolnish\desktop\runner\source\engine\various.h
+	<stdio.h>
+	<time.h>
+
+1322649069 c:\users\fyolnish\desktop\runner\source\engine\drawutils.h
+	"GLMath/GLMath.h"
+	"texture.h"
+	"texture_atlas.h"
+	"shader.h"
+	"renderer.h"
+
+1322624382 c:\users\fyolnish\desktop\runner\source\engine\shader.h
+	"glutils.h"
+	"renderer.h"
+
+1318839233 source:c:\users\fyolnish\desktop\runner\source\engine\glmath\glmath.c
+	"GLMath.h"
+
+1322644892 source:c:\users\fyolnish\desktop\runner\source\engine\array.c
+	"array.h"
+	<stdlib.h>
+
+1323406271 source:c:\users\fyolnish\desktop\runner\source\engine\background.c
+	"background.h"
+	"shader.h"
+	"glutils.h"
+
+1323311084 c:\users\fyolnish\desktop\runner\source\engine\background.h
+	"renderer.h"
+	"texture.h"
+
+1323340038 source:c:\users\fyolnish\desktop\runner\source\engine\drawutils.c
+	"drawutils.h"
+	"various.h"
+
+1323318275 source:c:\users\fyolnish\desktop\runner\source\engine\gametimer.c
+	"gametimer.h"
+	"various.h"
+
+1322431194 c:\users\fyolnish\desktop\runner\source\engine\gametimer.h
+	<stdbool.h>
+
+1322429198 source:c:\users\fyolnish\desktop\runner\source\engine\input.c
+	"input.h"
+
+1321823886 c:\users\fyolnish\desktop\runner\source\engine\input.h
+	"linkedlist.h"
+	"GLMath/GLMath.h"
+
+1322450931 source:c:\users\fyolnish\desktop\runner\source\engine\linkedlist.c
+	"linkedlist.h"
+	<stdlib.h>
+
+1321946648 source:c:\users\fyolnish\desktop\runner\source\engine\ogg_loader.c
+	"ogg_loader.h"
+	<ogg/ogg.h>
+	<vorbis/vorbisfile.h>
+	<stdlib.h>
+	"various.h"
+
+1321822174 c:\users\fyolnish\desktop\runner\source\engine\ogg_loader.h
+
+1312420062 c:\users\fyolnish\desktop\runner\winproject\libs\include\ogg\ogg.h
+	<stddef.h>
+	<ogg/os_types.h>
+
+1312420062 c:\users\fyolnish\desktop\runner\winproject\libs\include\ogg\os_types.h
+	<stdint.h>
+	<sys/types.h>
+	<sys/types.h>
+	<inttypes.h>
+	<sys/types.h>
+	<inttypes.h>
+	<ogg/config_types.h>
+
+1272466116 c:\users\fyolnish\desktop\runner\winproject\libs\include\vorbis\vorbisfile.h
+	<stdio.h>
+	"codec.h"
+
+1269451740 c:\users\fyolnish\desktop\runner\winproject\libs\include\vorbis\codec.h
+	<ogg/ogg.h>
+
+1321945894 source:c:\users\fyolnish\desktop\runner\source\engine\png_loader.c
+	<stdlib.h>
+	<stdio.h>
+	<stdbool.h>
+	<png.h>
+	"png_loader.h"
+	"various.h"
+
+1244122812 c:\users\fyolnish\desktop\runner\winproject\libs\include\png.h
+	"zlib.h"
+	"pngconf.h"
+	<crtdbg.h>
+
+1271689968 c:\users\fyolnish\desktop\runner\winproject\libs\include\zlib.h
+	"zconf.h"
+
+1271566686 c:\users\fyolnish\desktop\runner\winproject\libs\include\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1244122812 c:\users\fyolnish\desktop\runner\winproject\libs\include\pngconf.h
+	"pngusr.h"
+	"config.h"
+	<windows.h>
+	<stdio.h>
+	<stdio.h>
+	<sys/types.h>
+	<setjmp.h>
+	<strings.h>
+	<string.h>
+	<stdlib.h>
+	<fp.h>
+	<math.h>
+	<m68881.h>
+	<mem.h>
+	<alloc.h>
+	<malloc.h>
+	<time.h>
+	<dos.h>
+
+1321820160 c:\users\fyolnish\desktop\runner\source\engine\png_loader.h
+
+1323405656 source:c:\users\fyolnish\desktop\runner\source\engine\renderer.c
+	"renderer.h"
+	"glutils.h"
+
+1323408257 source:c:\users\fyolnish\desktop\runner\source\engine\shader.c
+	"shader.h"
+	<stdbool.h>
+	<assert.h>
+	<stdlib.h>
+	<stdio.h>
+	"various.h"
+	"glutils.h"
+
+1321946658 source:c:\users\fyolnish\desktop\runner\source\engine\sound.c
+	"sound.h"
+	"ogg_loader.h"
+	"various.h"
+
+1321917420 c:\users\fyolnish\desktop\runner\source\engine\sound.h
+	<OpenAL/AL.h>
+	<OpenAL/alc.h>
+	"GLMath/GLMath.h"
+
+1165563058 c:\users\fyolnish\desktop\runner\winproject\libs\include\openal\al.h
+
+1176447768 c:\users\fyolnish\desktop\runner\winproject\libs\include\openal\alc.h
+
+1322429352 source:c:\users\fyolnish\desktop\runner\source\engine\sprite.c
+	"sprite.h"
+	"drawutils.h"
+	<stdlib.h>
+	"various.h"
+
+1321946878 source:c:\users\fyolnish\desktop\runner\source\engine\texture.c
+	"texture.h"
+	"png_loader.h"
+	"various.h"
+
+1322245246 source:c:\users\fyolnish\desktop\runner\source\engine\texture_atlas.c
+	"texture_atlas.h"
+
+1323404399 source:c:\users\fyolnish\desktop\runner\source\engine\tmx_map.c
+	"tmx_map.h"
+	"various.h"
+	<stdlib.h>
+	<assert.h>
+	<mxml.h>
+	<string.h>
+
+1322200818 c:\users\fyolnish\desktop\runner\source\engine\tmx_map.h
+	<stdbool.h>
+
+1237441132 c:\users\fyolnish\desktop\runner\winproject\libs\include\mxml.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<errno.h>
+
+1323651748 source:c:\users\fyolnish\desktop\runner\source\engine\various.c
+
+1234003582 source:c:\users\fyolnish\desktop\runner\source\engine\windows\glee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"GLee.h"
+	<Carbon/Carbon.h>
+
+1323336772 source:c:\users\fyolnish\desktop\runner\source\level.c
+	"level.h"
+	"shared.h"
+	"engine/tmx_map.h"
+
+1322204602 c:\users\fyolnish\desktop\runner\source\level.h
+	"engine/background.h"
+	"engine/texture_atlas.h"
+	"character.h"
+
+1323432788 c:\users\fyolnish\desktop\runner\source\shared.h
+	"engine/glutils.h"
+	"engine/GLMath/GLMath.h"
+	"engine/shader.h"
+	"engine/renderer.h"
+	"engine/gametimer.h"
+	"engine/input.h"
+	"engine/various.h"
+	"engine/sound.h"
+	"engine/drawutils.h"
+	"world.h"
+
+1322628789 c:\users\fyolnish\desktop\runner\source\world.h
+	"shared.h"
+	"engine/background.h"
+	"engine/input.h"
+	"level.h"
+	"collision.h"
+
+1323654024 source:c:\users\fyolnish\desktop\runner\source\main.c
+	<windows.h>
+	<stdio.h>
+	"engine/glutils.h"
+	"shared.h"
+	<SDL/SDL.h>
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_audio.h"
+	"SDL_cdrom.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1255800464 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_config.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_platform.h
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\begin_code.h
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\close_code.h
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_endian.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_cdrom.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_active.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_active.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_keysym.h
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1255800450 c:\users\fyolnish\desktop\runner\winproject\libs\include\sdl\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1323406663 c:\users\fyolnish\desktop\runner\source\engine\windows\gldefs.h
+
+1322843448 source:c:\users\fyolnish\desktop\runner\source\spatial_hash.c
+	"spatial_hash.h"
+	"engine/various.h"
+
+1323653109 source:c:\users\fyolnish\desktop\runner\source\world.c
+	"world.h"
+	"engine/sprite.h"
+	"engine/tmx_map.h"
+
+1189886696 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-attr.c
+	"config.h"
+	"mxml.h"
+
+1240074352 c:\users\fyolnish\desktop\runner\winproject\minixml\config.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdarg.h>
+	<ctype.h>
+	<io.h>
+
+1237441132 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-entity.c
+	"mxml-private.h"
+
+1190349962 c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-private.h
+	"config.h"
+	"mxml.h"
+
+1323432188 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-file.c
+	<unistd.h>
+	"mxml-private.h"
+
+1106983304 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-index.c
+	"config.h"
+	"mxml.h"
+
+1225045686 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-node.c
+	"config.h"
+	"mxml.h"
+
+1195754512 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-private.c
+	"mxml-private.h"
+	<pthread.h>
+	<windows.h>
+
+1189322212 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-search.c
+	"config.h"
+	"mxml.h"
+
+1177364884 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-set.c
+	"config.h"
+	"mxml.h"
+
+1240074352 source:c:\users\fyolnish\desktop\runner\winproject\minixml\mxml-string.c
+	"config.h"
+
