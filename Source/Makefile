@@ -8,7 +8,7 @@ C_FLAGS    += -I"/usr/local/include"
 C_FLAGS    += -DGLEW_STATIC
 C_FLAGS    += -ggdb
 C_FLAGS    += -O0
-C_FLAGS    += -DDEBUG
+C_FLAGS    += -DTWODEEDENG_DEBUG
 
 LDFLAGS  += -lc
 LDFLAGS  += -L/usr/X11/lib

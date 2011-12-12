@@ -22,6 +22,7 @@ CollisionWorld_t *collision_createWorld(vec2_t aGravity, vec2_t aSize, float aCe
 	out->gravity = aGravity;
 	out->spatialHash = spatialHash_create(aSize, aCellSize);
 	out->collisionCallback = NULL;
+	out->lastCollisionObject = NULL;
 
 	return out;
 }
@@ -229,6 +230,10 @@ static bool _collision_objectIsInContact(CollisionPolyObject_t *aObject)
 
 bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObject, float aTimeDelta)
 {
+	aWorld->lastCollisionObject = aInputObject; // For drawing the debug view
+
+	aInputObject->velocity = vec2_add(aInputObject->velocity, vec2_scalarMul(aWorld->gravity, aTimeDelta));
+
 	vec2_t displacement = vec2_scalarMul(aInputObject->velocity, aTimeDelta);
 	float distanceToTravel = vec2_mag(displacement);
 	float orientationChange = aInputObject->angularVelocity * aTimeDelta;
@@ -237,7 +242,7 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 		return false;
 
 	collision_setPolyObjectCenter(aInputObject, vec2_add(aInputObject->center, displacement));
-	if(aInputObject->inContact)
+/*	if(aInputObject->inContact)
 		aInputObject->orientation += orientationChange;
 	else
 		aInputObject->orientation = atan2(aWorld->gravity.y, aWorld->gravity.x) + M_PI_2;
@@ -246,7 +251,7 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 		aInputObject->orientation -= 2.0f*M_PI;
 	else if(aInputObject->orientation < -2.0f*M_PI)
 		aInputObject->orientation += 2.0f*M_PI;
-	aInputObject->quat = quat_makef(0.0f, 0.0f, 1.0f, aInputObject->orientation);
+	aInputObject->quat = quat_makef(0.0f, 0.0f, 1.0f, aInputObject->orientation);*/
 	rect_t newBoundingBox = rect_translate(aInputObject->boundingBox, displacement);
 	CollisionPolyObject_t **potentialColliders;
 	int numberOfPotentialColliders;
@@ -338,11 +343,15 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 				////colliderNormal = normal;
 			//}
 		//}
-
+		if(vec2_dot(overlapAxis, aWorld->gravity) < 0.0f) {
+		float overlapAngle = atan2(overlapAxis.y, overlapAxis.x) - M_PI_2;
+		aInputObject->orientation = overlapAngle;
+		aInputObject->quat = quat_makef(0.0f, 0.0f, 1.0f, aInputObject->orientation);
+			
 		// Rotate the object so that the contact edge matches the collision angle
-		float edgeAngle = atan2(collisionEdgeNormal.y, collisionEdgeNormal.x);
-		float overlapAngle = atan2(overlapAxis.y, overlapAxis.x);
-		aInputObject->angularVelocity = MAX(1.0f, overlap)*4.0f*(overlapAngle- edgeAngle);
+		//float edgeAngle = atan2(collisionEdgeNormal.y, collisionEdgeNormal.x);
+		//aInputObject->angularVelocity = MAX(1.0f, overlap)*4.0f*(overlapAngle- edgeAngle);
+		}
 	}
 
 	// Let interested parties know a collision occurred
@@ -386,7 +395,7 @@ static void _collision_drawDebugView(Renderer_t *aRenderer, void *aOwner, double
 	rect_t cellRect = { 0.0f, 0.0f, world->spatialHash->cellSize, world->spatialHash->cellSize };
 	SpatialHash_cell_t *currCell;
 	CollisionPolyObject_t *currPoly;
-
+	
 	// Draw the grid
 	for(int y = 0; y < (int)world->spatialHash->sizeInCells.h; ++y) {
 		cellRect.origin.y = y*world->spatialHash->cellSize;
@@ -430,20 +439,20 @@ static void _collision_drawDebugView(Renderer_t *aRenderer, void *aOwner, double
 		}
 	}
 
-	// Draw the character
-	if(world->character) {
-		//draw_rect(world->character->boundingBox, 0.0f, blueColor, false);
-		draw_circle(world->character->center, 1.0f, 3.0, greenColor, true);			
+	// Draw the lastCollisionObject
+	if(world->lastCollisionObject) {
+		//draw_rect(world->lastCollisionObject->boundingBox, 0.0f, blueColor, false);
+		draw_circle(world->lastCollisionObject->center, 1.0f, 3.0, greenColor, true);			
 		matrix_stack_push(aRenderer->worldMatrixStack);
-		matrix_stack_translate(aRenderer->worldMatrixStack, world->character->center.x, world->character->center.y, 0.0f);
-		matrix_stack_push_item(aRenderer->worldMatrixStack, mat4_mul(matrix_stack_get_mat4(aRenderer->worldMatrixStack), quat_to_ortho(world->character->quat)));
-			draw_polygon(world->character->numberOfEdges, world->character->vertices, world->character->inContact ? yellowColor : redColor, false);
+		matrix_stack_translate(aRenderer->worldMatrixStack, world->lastCollisionObject->center.x, world->lastCollisionObject->center.y, 0.0f);
+		matrix_stack_push_item(aRenderer->worldMatrixStack, mat4_mul(matrix_stack_get_mat4(aRenderer->worldMatrixStack), quat_to_ortho(world->lastCollisionObject->quat)));
+			draw_polygon(world->lastCollisionObject->numberOfEdges, world->lastCollisionObject->vertices, world->lastCollisionObject->inContact ? yellowColor : redColor, false);
 		matrix_stack_pop(aRenderer->worldMatrixStack);
 		// Draw the polygon's edge normals
 		int currEdge = 0;
 		vec2_t normal;
 		vec2_t pointA, pointB;
-		while(collision_getPolyObjectEdges(world->character, currEdge++, &pointA, &pointB, &normal)) {
+		while(collision_getPolyObjectEdges(world->lastCollisionObject, currEdge++, &pointA, &pointB, &normal)) {
 			draw_circle(pointA, 1.0f, 3.0, greenColor, true);
 			// Find the edge midpoint
 			vec2_t lineSeg = vec2_scalarDiv(vec2_sub(pointB, pointA), 2.0f);
@@ -452,7 +461,7 @@ static void _collision_drawDebugView(Renderer_t *aRenderer, void *aOwner, double
 			draw_lineSeg(lineSeg, normal, currEdge == 2 ? whiteColor : greenColor);
 		}
 		// Draw the velocity
-		draw_lineSeg(kVec2_zero, vec2_scalarDiv(world->character->velocity, 20.0f), greenColor);
+		draw_lineSeg(kVec2_zero, vec2_scalarDiv(world->lastCollisionObject->velocity, 20.0f), greenColor);
 		matrix_stack_pop(aRenderer->worldMatrixStack);
 	}
 }

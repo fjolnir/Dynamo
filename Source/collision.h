@@ -51,13 +51,14 @@ struct _CollisionWorld {
 	Renderable_t debugRenderable;
 	vec2_t gravity;
 	SpatialHash_t *spatialHash;
-	CollisionPolyObject_t *character;
+
+	CollisionPolyObject_t *lastCollisionObject;
 
 	CollisionCallback_t collisionCallback; // Called for every collision in the world
 };
 
 
-extern CollisionWorld_t *collision_createWorld(vec2_t aGravity, vec2_t aSize, float aCellSize);
+extern CollisionWorld_t *collision_createWorld(vec2_t aGravity, vec2_t aSize, float aCellSize); // aSize is in whatever unit aCellSize is
 extern void collision_destroyWorld(CollisionWorld_t *aWorld);
 
 // Create a poly objects from a set of vertices with a clockwise winding

@@ -15,12 +15,8 @@ typedef struct _World World_t;
 struct _World {
 	double time; // Game time in seconds
 	long ticks; // Number of game updates since beginning (roughly time/FPS)
-	Background_t *background;
 
 	Level_t *level;
-	CollisionWorld_t *collisionWorld;
-
-	vec2_t gravity;
 
 	InputObserver_t *arrowRightObserver;
 	InputObserver_t *arrowLeftObserver;

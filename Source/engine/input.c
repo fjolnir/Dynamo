@@ -115,7 +115,7 @@ void input_endEvent(InputManager_t *aManager, Input_type_t aType, unsigned char 
 	_InputEvent_t *event;
 	if(!_input_eventIsActive(aManager, aType, aCode, &event))
 		return;
-	input_postMomentaryEvent(aManager, aType, aCode, &event->location, event->state);
+	input_postMomentaryEvent(aManager, aType, aCode, &event->location, event->state == kInputState_down ? kInputState_up : kInputState_down);
 	llist_deleteValue(aManager->activeEvents, event);
 	free(event);
 }
