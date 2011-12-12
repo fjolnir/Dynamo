@@ -192,7 +192,7 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 
 	// Translate to the location of the player
 	matrix_stack_push(aRenderer->worldMatrixStack);
-	matrix_stack_translate(aRenderer->worldMatrixStack, center.x*-1.0f + 100.0f, -1.0f*center.y + 100.0f, 0.0f);
+	matrix_stack_translate(aRenderer->worldMatrixStack, center.x*-1.0f + 200.0f, -1.0f*center.y + 180.0f, 0.0f);
 
 	// Draw the tiles
 	shader_makeActive(gTexturedShader);
