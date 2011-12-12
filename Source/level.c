@@ -42,9 +42,8 @@ Level_t *level_load(const char *aFilename)
 	}
 
 	const char *bgmPath = tmx_mapGetPropertyNamed(map, "BGM");
-	if(bgmPath) {
+	if(bgmPath)
 		out->bgm = sound_load(bgmPath);
-	}
 
 	TMXTileset_t *tileset = &map->tilesets[0];
 	Texture_t *tilesetTexture = texture_loadFromPng(tileset->imagePath, true, true);
@@ -312,7 +311,6 @@ static CollisionPolyObject_t *_level_generateCollisionObjForTile(LevelTile_t aTi
 		vertices[2] = br;
 		return collision_createPolyObject(3, vertices, friction, bounce);
 	}
-
 
 
 	return NULL;
