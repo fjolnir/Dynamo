@@ -1,18 +1,15 @@
 // Just handles the runloop
 
+#ifdef WIN32
+	#include <windows.h>
+#endif
+
 #include <stdio.h>
 #include "engine/glutils.h"
 #include "shared.h"
 #include <SDL/SDL.h>
 
-#ifdef WIN32
-	#define _CRT_SECURE_NO_DEPRECATE
-	#define _WIN32_LEAN_AND_MEAN
-	#include <windows.h>
-	#include "engine/windows/gldefs.h"
-#endif
-
-// Constants 
+// Constants
 #define MSEC_PER_SEC (1000)
 
 // Globals
@@ -159,8 +156,14 @@ static SDL_Surface *_sdlSurface;
 
 int main(int argc, char **argv)
 {
+	#if defined(WIN32) && defined(TWODEEDENG_DEBUG)
+	// Redirect back to console (SDL redirects standard outputs to log files by default on windows)
+    freopen("CON", "w", stdout);
+    freopen("CON", "w", stderr);
+    #endif
+
 	bool shouldFullscreen = (argc == 2 && strcmp(argv[1], "-f") == 0);
-	
+
 	vec2_t viewport = { 800.0f, 600.0f };
 
 	// Initialize graphics
@@ -175,23 +178,21 @@ int main(int argc, char **argv)
 		debug_log("Failed to get information about graphics hardware");
 		return 1;
 	}
-
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1); // VSync
+
 	int videoFlags = SDL_OPENGL;
-	if(shouldFullscreen){ 
+	if(shouldFullscreen) {
 		videoFlags |= SDL_FULLSCREEN;
 		SDL_ShowCursor(SDL_DISABLE);
 	}
+
 	_sdlSurface = SDL_SetVideoMode(viewport.w, viewport.h, 16, videoFlags);
 	if(!_sdlSurface) {
 		debug_log("Couldn't initialize SDL surface");
 		debug_log("%s", SDL_GetError());
 		return 1;
 	}
-	#ifdef GL_GLEXT_PROTOTYPES
-		loadGLExtensions(); // Load GL on windows
-	#endif
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -240,8 +241,8 @@ int main(int argc, char **argv)
 			world_update(gWorld, delta);
 			gameTimer_finishedUpdate(&gGameTimer);
 		}
-		
-		renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));		
+
+		renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));
 		SDL_GL_SwapBuffers();
 	}
 

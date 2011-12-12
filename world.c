@@ -160,7 +160,7 @@ World_t *world_init()
 
 	// Create a collision world and populate with a couple of debug objects
 	out->collisionWorld = collision_createWorld(vec2_create(0.0f, -980.0f), vec2_create(800, 632), 32);
-	/*renderer_pushRenderable(gRenderer, &out->collisionWorld->debugRenderable);*/
+//	renderer_pushRenderable(gRenderer, &out->collisionWorld->debugRenderable);
 
 	vec2_t rectVerts[4];
 	rectVerts[0] = vec2_create(340, 300);

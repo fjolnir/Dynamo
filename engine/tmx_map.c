@@ -168,7 +168,7 @@ void tmx_destroyMap(TMXMap_t *aMap)
 const char *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aPropertyName)
 {
 	for(int i = 0; i < aMap->numberOfProperties; ++i) {
-		if(strcmp(aMap->properties[i].name, aPropertyName) == 0) 
+		if(strcmp(aMap->properties[i].name, aPropertyName) == 0)
 			return aMap->properties[i].value;
 	}
 	return NULL;
@@ -207,7 +207,7 @@ static TMXTile_t _tmx_mapCreateTileForTileGID(TMXMap_t *aMap, int aTileGID)
 {
 	TMXTile_t out = { NULL, -1, 0, 0 };
 	if(aTileGID == -1) return out;
-	
+
 	out.flippedHorizontally = (aTileGID & FLIPPED_HORIZONTALLY_FLAG);
     out.flippedVertically = (aTileGID & FLIPPED_VERTICALLY_FLAG);
     // Clear the flags
@@ -216,7 +216,7 @@ static TMXTile_t _tmx_mapCreateTileForTileGID(TMXMap_t *aMap, int aTileGID)
 	if(!tileset) return out;
 	out.tileset = tileset;
 	out.id = aTileGID - tileset->firstTileGid;
-	
+
 	return out;
 }
 
@@ -242,8 +242,8 @@ static int *_parseCSV(const char *aCsvString, int aWidth, int aHeight)
 	int *out = malloc(sizeof(int)*aWidth*aHeight);
 	int i = 0;
 	const char *separators = ",\n";
-	char *value, *state;
-	for(value = strtok_r(csvCopy, separators, &state); value != NULL; value = strtok_r(NULL, separators, &state)) {
+	char *value;
+	for(value = strtok(csvCopy, separators); value != NULL; value = strtok(NULL, separators)) {
 		sscanf(value, "%d", &out[i++]);
 	}
 	return out;
@@ -317,7 +317,7 @@ TMXProperty_t *_tmx_readPropertiesFromMxmlNode(mxml_node_t *aParentNode, mxml_no
 		for(int i = 0; i < *aoCount; ++i) {
 			properties[i].name = _mxmlElementCopyAttr(propertyNodes[i], "name");
 			properties[i].value = _mxmlElementCopyAttr(propertyNodes[i], "value");
-			mxmlRelease(propertyNodes[i]);	
+			mxmlRelease(propertyNodes[i]);
 		}
 		free(propertyNodes);
 		if(*aoCount == 0) {

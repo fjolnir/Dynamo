@@ -1,18 +1,12 @@
+#include "glee/glee.h"
+
 #if defined(__APPLE__)
 	#include <sys/time.h>
 	#include <unistd.h>
-	#include <OpenGL/gl.h>
-	#include <Opengl/glext.h>
 #else
-	#define _CRT_SECURE_NO_DEPRECATE
-	#define _WIN32_LEAN_AND_MEAN
-
 	#ifdef WIN32
 		#include <windows.h>
-		#include "engine/windows/gldefs.h"
-	#endif
-	#include <GL/gl.h>
-	#include <GL/glext.h>
+    #endif
 #endif
 
 #ifdef DEBUG
