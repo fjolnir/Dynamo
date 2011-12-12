@@ -30,6 +30,12 @@ extern void draw_texture(vec3_t aCenter, Texture_t *aTexture, float aScale, floa
 // aCenterPoints: an array of points to draw the tiles at
 extern void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints);
 
+// Generates the vertices used by the above function (use this if you want to store your vertices in a VBO when handling
+// larger meshes
+extern void draw_textureAtlas_getVertices(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints,
+	vec2_t **aoVertices, vec2_t **aoTexCoords, int *aoNumberOfVertices, GLuint **aoIndices, int *aoNumberOfIndices)
+
+
 // Draws an untextured rectangle
 extern void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill);
 

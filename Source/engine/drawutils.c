@@ -86,13 +86,14 @@ void draw_texture(vec3_t aCenter, Texture_t *aTexture, float aScale, float aAngl
 	draw_texturePortion(aCenter, aTexture, kTextureRectEntire, aScale, aAngle, aFlipHorizontal, aFlipVertical);
 }
 
-void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints)
+void draw_textureAtlas_getVertices(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints,
+	vec2_t **aoVertices, vec2_t **aoTexCoords, int *aoNumberOfVertices, GLuint **aoIndices, int *aoNumberOfIndices)
 {
 	int numberOfVertices = 4*aNumberOfTiles;
 	int numberOfIndices = 6*aNumberOfTiles;
 	vec2_t *vertices = calloc(numberOfVertices, sizeof(vec3_t));
 	vec2_t *texCoords = calloc(numberOfVertices, sizeof(vec2_t));
-	GLushort *indices = calloc(numberOfIndices, sizeof(GLushort));
+	GLuint *indices = calloc(numberOfIndices, sizeof(GLuint));
 	
 	int lastIndex = 0;
 	TextureRect_t currTexRect;
@@ -116,6 +117,23 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 		indices[lastIndex++] = (4*i)+2;
 		indices[lastIndex++] = (4*i)+3;
 	}
+	
+	if(aoVertices) *aoVertices = vertices;
+	if(aoTexCoords) *aoTexCoords = texCoords;
+	if(aoNumberOfVertices) *aoNumberOfVertices = numberOfVertices;
+	if(aoIndices) *aoIndices = indices;
+	if(aoNumberOfIndices) *aoNumberOfIndices = numberOfIndices;
+}
+
+void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints)
+{
+	int numberOfVertices;
+	int numberOfIndices;
+	vec2_t *vertices;
+	vec2_t *texCoords;
+	GLuint *indices;
+
+	draw_textureAtlas_getVertices(aAtlas, aNumberOfTiles, aOffsets, aCenterPoints, &vertices, &texCoords, &numberOfVertices, &indices, &numberOfIndices);
 
 	matrix_stack_push(_renderer->worldMatrixStack);
 
@@ -133,7 +151,7 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 	glVertexAttribPointer(_texturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
 	glEnableVertexAttribArray(_texturedShader->attributes[kShader_texCoord0Attribute]);
 
-	glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, indices);
+	glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, indices);
 
 	shader_makeInactive(_texturedShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
