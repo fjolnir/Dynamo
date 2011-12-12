@@ -11,6 +11,9 @@
 
 #define kDraw_defaultEllipseSubDivs 25
 
+extern  Shader_t *gTexturedShader;
+extern Shader_t *gColoredShader;
+
 // Initializes the drawing utils
 extern void draw_init(Renderer_t *aDefaultRenderer);
 extern void draw_cleanup();

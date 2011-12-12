@@ -1,28 +1,28 @@
 #include "drawutils.h"
 #include "various.h"
 
-static Shader_t *_texturedShader = NULL;
-static Shader_t *_coloredShader = NULL;
+Shader_t *gTexturedShader = NULL;
+Shader_t *gColoredShader = NULL;
 static Renderer_t *_renderer = NULL;
 static const vec4_t kColorWhite = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 void draw_init(Renderer_t *aDefaultRenderer)
 {
 	_renderer = aDefaultRenderer;
-	if(!_texturedShader) {
-		_texturedShader = shader_loadFromFiles("engine/shaders/textured.vsh", "engine/shaders/textured.fsh");
-		_texturedShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(_texturedShader, "u_color");
+	if(!gTexturedShader) {
+		gTexturedShader = shader_loadFromFiles("engine/shaders/textured.vsh", "engine/shaders/textured.fsh");
+		gTexturedShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(gTexturedShader, "u_color");
 	}
-	if(!_coloredShader) {
-		_coloredShader = shader_loadFromFiles("engine/shaders/colored.vsh", "engine/shaders/colored.fsh");
-		_coloredShader->attributes[kShader_colorAttribute] = shader_getAttributeLocation(_coloredShader, "a_color");
+	if(!gColoredShader) {
+		gColoredShader = shader_loadFromFiles("engine/shaders/colored.vsh", "engine/shaders/colored.fsh");
+		gColoredShader->attributes[kShader_colorAttribute] = shader_getAttributeLocation(gColoredShader, "a_color");
 	}
 }
 
 void draw_cleanup()
 {
-	if(_texturedShader) shader_destroy(_texturedShader);
-	if(_coloredShader) shader_destroy(_coloredShader);
+	if(gTexturedShader) shader_destroy(gTexturedShader);
+	if(gColoredShader) shader_destroy(gColoredShader);
 }
 
 
@@ -53,22 +53,22 @@ void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t 
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
 	matrix_stack_translate(_renderer->worldMatrixStack, floor(aSize.w/-2.0f), floor(aSize.h/-2.0f), 0.0f);
 
-	shader_makeActive(_texturedShader);
+	shader_makeActive(gTexturedShader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aTexture->id);
 
-	shader_updateMatrices(_texturedShader, _renderer);
-	glUniform1i(_texturedShader->uniforms[kShader_colormap0Uniform], 0);
-	glUniform4fv(_texturedShader->uniforms[kShader_colorUniform], 1, aColor.f);
+	shader_updateMatrices(gTexturedShader, _renderer);
+	glUniform1i(gTexturedShader->uniforms[kShader_colormap0Uniform], 0);
+	glUniform4fv(gTexturedShader->uniforms[kShader_colorUniform], 1, aColor.f);
 
-	glVertexAttribPointer(_texturedShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(_texturedShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(_texturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
-	glEnableVertexAttribArray(_texturedShader->attributes[kShader_texCoord0Attribute]);
+	glVertexAttribPointer(gTexturedShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(gTexturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
+	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	shader_makeInactive(_texturedShader);
+	shader_makeInactive(gTexturedShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -137,23 +137,23 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 
 	matrix_stack_push(_renderer->worldMatrixStack);
 
-	shader_makeActive(_texturedShader);
+	shader_makeActive(gTexturedShader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aAtlas->texture->id);
 
-	shader_updateMatrices(_texturedShader, _renderer);
-	glUniform1i(_texturedShader->uniforms[kShader_colormap0Uniform], 0);
+	shader_updateMatrices(gTexturedShader, _renderer);
+	glUniform1i(gTexturedShader->uniforms[kShader_colormap0Uniform], 0);
 	vec4_t white = {1.0, 1.0, 1.0, 1.0};
-	glUniform4fv(_texturedShader->uniforms[kShader_colorUniform], 1, white.f);
+	glUniform4fv(gTexturedShader->uniforms[kShader_colorUniform], 1, white.f);
 
-	glVertexAttribPointer(_texturedShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(_texturedShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(_texturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
-	glEnableVertexAttribArray(_texturedShader->attributes[kShader_texCoord0Attribute]);
+	glVertexAttribPointer(gTexturedShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(gTexturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
+	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
 
 	glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, indices);
 
-	shader_makeInactive(_texturedShader);
+	shader_makeInactive(gTexturedShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -185,18 +185,18 @@ void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill)
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
 	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aRect.s.w/-2.0f), floorf(aRect.s.h/-2.0f), 0.0f);
 
-	shader_makeActive(_coloredShader);
+	shader_makeActive(gColoredShader);
 
-	shader_updateMatrices(_coloredShader, _renderer);
+	shader_updateMatrices(gColoredShader, _renderer);
 
-	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(_coloredShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(_coloredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
-	glEnableVertexAttribArray(_coloredShader->attributes[kShader_colorAttribute]);
+	glVertexAttribPointer(gColoredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(gColoredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
+	glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
 
 	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, 4);
 
-	shader_makeInactive(_coloredShader);
+	shader_makeInactive(gColoredShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
 
 }
@@ -219,17 +219,17 @@ void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle
 	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), 0.0);
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
 
-	shader_makeActive(_coloredShader);
-	shader_updateMatrices(_coloredShader, _renderer);
+	shader_makeActive(gColoredShader);
+	shader_updateMatrices(gColoredShader, _renderer);
 
-	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(_coloredShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(_coloredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
-	glEnableVertexAttribArray(_coloredShader->attributes[kShader_colorAttribute]);
+	glVertexAttribPointer(gColoredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(gColoredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
+	glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
 
 	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, aSubdivisions);
 
-	shader_makeInactive(_coloredShader);
+	shader_makeInactive(gColoredShader);
 	matrix_stack_pop(_renderer->worldMatrixStack);
 }
 
@@ -244,17 +244,17 @@ void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool 
 	vec4_t colors[aNumberOfVertices];
 	for(int i = 0; i < aNumberOfVertices; ++i) colors[i] = aColor;
 
-	shader_makeActive(_coloredShader);
-	shader_updateMatrices(_coloredShader, _renderer);
+	shader_makeActive(gColoredShader);
+	shader_updateMatrices(gColoredShader, _renderer);
 
-	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-	glEnableVertexAttribArray(_coloredShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(_coloredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
-	glEnableVertexAttribArray(_coloredShader->attributes[kShader_colorAttribute]);
+	glVertexAttribPointer(gColoredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, aVertices);
+	glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(gColoredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
+	glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
 
 	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, aNumberOfVertices);
 
-	shader_makeInactive(_coloredShader);
+	shader_makeInactive(gColoredShader);
 }
 
 void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor)
@@ -262,15 +262,15 @@ void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor)
 	vec2_t vertices[2] = { vec2_floor(aPointA), vec2_floor(aPointB) };
 	vec4_t colors[2] = { aColor, aColor };
 
-	shader_makeActive(_coloredShader);
-	shader_updateMatrices(_coloredShader, _renderer);
+	shader_makeActive(gColoredShader);
+	shader_updateMatrices(gColoredShader, _renderer);
 
-	glVertexAttribPointer(_coloredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(_coloredShader->attributes[kShader_positionAttribute]);
-	glVertexAttribPointer(_coloredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
-	glEnableVertexAttribArray(_coloredShader->attributes[kShader_colorAttribute]);
+	glVertexAttribPointer(gColoredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
+	glVertexAttribPointer(gColoredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
+	glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
 
 	glDrawArrays(GL_LINE_STRIP, 0, 2);
 
-	shader_makeInactive(_coloredShader);
+	shader_makeInactive(gColoredShader);
 }
