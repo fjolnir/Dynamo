@@ -12,7 +12,7 @@
   <property name="Has background" value="true"/>
  </properties>
  <tileset firstgid="127" name="level-tileset" tilewidth="32" tileheight="32" spacing="1" margin="1">
-  <image source="levels/level-tileset.png" trans="ec00ec" width="331" height="232"/>
+  <image source="levels/level-tileset.png" width="331" height="232"/>
  </tileset>
 
  <tileset firstgid="71" name="character" tilewidth="32" tileheight="32">
