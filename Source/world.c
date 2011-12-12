@@ -66,6 +66,7 @@ World_t *world_init()
 	out->ticks = 0;
 
 	out->level = level_load("levels/spacetest.tmx");
+	if(out->level->bgm) sound_play(out->level->bgm);
 	renderer_pushRenderable(gRenderer, &out->level->renderable);
 
 	// Create&add input observers
