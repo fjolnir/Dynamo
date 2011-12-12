@@ -102,6 +102,8 @@ void world_destroy(World_t *aWorld)
 
 void world_update(World_t *aWorld, double aTimeDelta)
 {
+	aTimeDelta = MIN(aTimeDelta, 1.0f); // Cap the max collision timestep
+
 	aWorld->time += aTimeDelta;
 	++aWorld->ticks;
 
