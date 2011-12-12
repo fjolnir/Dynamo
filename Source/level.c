@@ -183,7 +183,7 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 static CollisionPolyObject_t *_level_generateCollisionObjForTile(LevelTile_t aTile)
 {
 	float bounce = 0.2f;
-	float friction = 0.05f;
+	float friction = 0.1f;
 	vec2_t bl = { -16.0f, -16.0f };
 	vec2_t tl = { -16.0f,  16.0f };
 	vec2_t tr = {  16.0f,  16.0f };
