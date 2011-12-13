@@ -112,8 +112,8 @@ void shader_makeInactive(Shader_t *aShader)
 GLint shader_getUniformLocation(Shader_t *aShader, const char *aUniformName)
 {
 	GLint location = glGetUniformLocation(aShader->program, aUniformName);
-	if(location == -1)
-		debug_log("Uniform lookup error: No such uniform (%s)", aUniformName);
+	//if(location == -1)
+		//debug_log("Uniform lookup error: No such uniform (%s)", aUniformName);
 	
 	return location;
 }
@@ -121,8 +121,8 @@ GLint shader_getUniformLocation(Shader_t *aShader, const char *aUniformName)
 GLint shader_getAttributeLocation(Shader_t *aShader, const char *aAttributeName)
 {
 	GLint location = glGetAttribLocation(aShader->program, aAttributeName);
-	if(location == -1)
-		debug_log("Attribute lookup error: No such attribute (%s)", aAttributeName);
+	//if(location == -1)
+		//debug_log("Attribute lookup error: No such attribute (%s)", aAttributeName);
 
 	return location;
 }
