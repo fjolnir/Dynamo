@@ -5,6 +5,8 @@
 
 static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
+	if(aState != kInputState_down) return;
+
 	World_t *world = (World_t *)metaData;
 	Character_t *character = world->level->character;
 	world->level->collisionWorld->gravity.y *= -1.0f;
@@ -15,10 +17,12 @@ static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInpu
 }
 static void upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
+	if(aState != kInputState_down) return;
+
 	World_t *world = (World_t *)metaData;
 	Character_t *character = world->level->character;
-	character->collisionObject->velocity.y = -0.5f * world->level->collisionWorld->gravity.y;
 	if(character->collisionObject->inContact) {
+	character->collisionObject->velocity.y = -0.6f * world->level->collisionWorld->gravity.y;
 		character->sprite->animations[5].currentFrame = 0;
 		character->sprite->activeAnimation = 5;
 	}
@@ -135,12 +139,28 @@ void world_update(World_t *aWorld, double aTimeDelta)
 	aWorld->time += aTimeDelta;
 	++aWorld->ticks;
 
-	if(aWorld->level->character) {
-		if(aWorld->ticks % 2 == 0)
-			sprite_step(aWorld->level->character->sprite);
-
-		int timeSteps = 8;
-		for(int i = 0; i < timeSteps; ++i)
-			collision_step(aWorld->level->collisionWorld, aWorld->level->character->collisionObject, aTimeDelta/(double)timeSteps);
+	if(!aWorld->level->character) return;
+	// Make the character stick his hands out when he's been sliding for a few frames
+	CollisionPolyObject_t *collisionObj = aWorld->level->character->collisionObject;
+	static int slideCounter = 0;
+	bool running = aWorld->arrowRightObserver->lastKnownState == kInputState_down
+		|| aWorld->arrowLeftObserver->lastKnownState == kInputState_down;
+	if(!running && collisionObj->inContact) {
+		if(fabs(collisionObj->velocity.x) >= 10.0f || fabs(collisionObj->velocity.y) >= 10.0) {
+			if(slideCounter >= 5) aWorld->level->character->sprite->activeAnimation = 1;
+			++slideCounter;
+		} else {
+			aWorld->level->character->sprite->activeAnimation = 7;
+			slideCounter = 0;
+		}
 	}
+
+	// Animate the sprite
+	if(aWorld->ticks % 2 == 0)
+		sprite_step(aWorld->level->character->sprite);
+
+	// Step the collision world
+	int timeSteps = 8;
+	for(int i = 0; i < timeSteps; ++i)
+		collision_step(aWorld->level->collisionWorld, aWorld->level->character->collisionObject, aTimeDelta/(double)timeSteps);
 }
