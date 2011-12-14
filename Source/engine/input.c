@@ -21,6 +21,7 @@ InputObserver_t *input_createObserver(Input_type_t aObservedType, Input_handler_
 	out->type = aObservedType;
 	out->handlerCallback = aHandlerCallback;
 	out->metaData = aMetaData;
+	out->lastKnownState = kInputState_up;
 	if(aCode) out->code = *aCode;
 
 	return out;
@@ -55,7 +56,10 @@ static InputObserver_t *_input_observerForEvent(InputManager_t *aManager, Input_
 void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation, Input_state_t aState)
 {
 	InputObserver_t *observer = _input_observerForEvent(aManager, aType, aCode);
-	if(observer) observer->handlerCallback(aManager, observer, aLocation, aState, observer->metaData);
+	if(observer) {
+		observer->handlerCallback(aManager, observer, aLocation, aState, observer->metaData);
+		observer->lastKnownState = aState;
+	}
 }
 
 typedef struct _InputEvent {
@@ -74,6 +78,7 @@ void input_postActiveEvents(InputManager_t *aManager)
 			event = (_InputEvent_t *)item->value;
 			event->observer->handlerCallback(aManager, event->observer, &event->location, event->state, event->observer->metaData);
 			event->fireCount++;
+			event->observer->lastKnownState = event->state;
 		} while( (item = item->next) );
 	}
 }
@@ -115,7 +120,8 @@ void input_endEvent(InputManager_t *aManager, Input_type_t aType, unsigned char 
 	_InputEvent_t *event;
 	if(!_input_eventIsActive(aManager, aType, aCode, &event))
 		return;
-	input_postMomentaryEvent(aManager, aType, aCode, &event->location, event->state == kInputState_down ? kInputState_up : kInputState_down);
+	Input_type_t state = event->state == kInputState_down ? kInputState_up : kInputState_down;
+	input_postMomentaryEvent(aManager, aType, aCode, &event->location, state);
 	llist_deleteValue(aManager->activeEvents, event);
 	free(event);
 }

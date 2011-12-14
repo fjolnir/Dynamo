@@ -37,6 +37,8 @@ struct _InputObserver {
 	Input_type_t type;
 	unsigned char code; // Used for ASCII keys
 	void *metaData; // Arbitrary pointer for providing context
+
+	Input_state_t lastKnownState;
 };
 struct _InputManager {
 	LinkedList_t *observers;
