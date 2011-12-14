@@ -257,6 +257,9 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 		aInputObject->orientation += 2.0f*M_PI;
 	aInputObject->quat = quat_makef(0.0f, 0.0f, 1.0f, aInputObject->orientation);*/
 	rect_t newBoundingBox = rect_translate(aInputObject->boundingBox, displacement);
+	// Expand the bounding box a bit in order to catch adjacent tiles as well
+	newBoundingBox = rect_scale(newBoundingBox, vec2_create(1.5f, 1.5f));
+
 	CollisionPolyObject_t **potentialColliders;
 	int numberOfPotentialColliders;
 	potentialColliders = (CollisionPolyObject_t **)spatialHash_query(aWorld->spatialHash, newBoundingBox, &numberOfPotentialColliders);
@@ -445,8 +448,10 @@ static void _collision_drawDebugView(Renderer_t *aRenderer, void *aOwner, double
 
 	// Draw the lastCollisionObject
 	if(world->lastCollisionObject) {
-		//draw_rect(world->lastCollisionObject->boundingBox, 0.0f, blueColor, false);
-		draw_circle(world->lastCollisionObject->center, 1.0f, 3.0, greenColor, true);			
+		rect_t bb = rect_scale(world->lastCollisionObject->boundingBox, vec2_create(1.5f, 1.5f));
+		
+		draw_rect(bb, 0.0f, blueColor, false);
+		draw_circle(world->lastCollisionObject->center, 1.0f, 3.0, greenColor, true);
 		matrix_stack_push(aRenderer->worldMatrixStack);
 		matrix_stack_translate(aRenderer->worldMatrixStack, world->lastCollisionObject->center.x, world->lastCollisionObject->center.y, 0.0f);
 		matrix_stack_push_item(aRenderer->worldMatrixStack, mat4_mul(matrix_stack_get_mat4(aRenderer->worldMatrixStack), quat_to_ortho(world->lastCollisionObject->quat)));
