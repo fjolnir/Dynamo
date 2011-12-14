@@ -15,8 +15,8 @@
 
 #pragma mark - Constants
 
-#define DESIRED_FPS 60 // The update interval. Actual screen updates are done as fast as possible.
-#define MAX_FRAMESKIP 3
+#define DESIRED_FPS 30 // The update interval. Actual screen updates are done as fast as possible.
+#define MAX_FRAMESKIP 5
 
 #pragma mark - Globals
 
