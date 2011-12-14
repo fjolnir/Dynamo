@@ -6,31 +6,58 @@
 static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
 	World_t *world = (World_t *)metaData;
+	Character_t *character = world->level->character;
+	world->level->collisionWorld->gravity.y *= -1.0f;
+	if(character->collisionObject->inContact) {
+		character->sprite->animations[5].currentFrame = 0;
+		character->sprite->activeAnimation = 5;
+	}
 }
 static void upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
 	World_t *world = (World_t *)metaData;
-	world->level->character->collisionObject->velocity.y = -0.5f * world->level->collisionWorld->gravity.y;
+	Character_t *character = world->level->character;
+	character->collisionObject->velocity.y = -0.5f * world->level->collisionWorld->gravity.y;
+	if(character->collisionObject->inContact) {
+		character->sprite->animations[5].currentFrame = 0;
+		character->sprite->activeAnimation = 5;
+	}
 }
 
 static void rightKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
 	World_t *world = (World_t *)metaData;
-	world->level->character->sprite->flippedHorizontally = false;
-	world->level->character->sprite->activeAnimation = aState == kInputState_down ? 5 : 6;
-	world->level->character->collisionObject->velocity.x = 280.0f;
+	vec2_t grav = world->level->collisionWorld->gravity;
+	world->level->character->sprite->flippedHorizontally = grav.y > 0.0f;
+	CollisionPolyObject_t *collObj = world->level->character->collisionObject;
+	if(world->level->character->collisionObject->inContact) {
+		world->level->character->sprite->activeAnimation = aState == kInputState_down ? 6 : 7;
+		collObj->velocity.x = 280.0f;
+	} else
+		collObj->velocity.x += 20.0f;
 }
+
 static void leftKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
 	World_t *world = (World_t *)metaData;
-	world->level->character->sprite->flippedHorizontally = true;
-	world->level->character->sprite->activeAnimation = aState == kInputState_down ? 5 : 6;
-	world->level->character->collisionObject->velocity.x = -280.0f;
+	vec2_t grav = world->level->collisionWorld->gravity;
+	world->level->character->sprite->flippedHorizontally = grav.y < 0.0f;
+	CollisionPolyObject_t *collObj = world->level->character->collisionObject;
+	if(world->level->character->collisionObject->inContact) {
+		world->level->character->sprite->activeAnimation = aState == kInputState_down ? 6 : 7;
+		collObj->velocity.x = -280.0f;
+	} else
+		collObj->velocity.x -= 20.0f;
+
 }
 
 static void characterCollided(CollisionWorld_t *aWorld, Collision_t collisionInfo)
 {
-	//debug_log("Character collided");
+	Character_t *character = (Character_t *)collisionInfo.objectA->info;
+	if(character->sprite->activeAnimation == 5) {
+		character->sprite->animations[4].currentFrame = 0;
+		character->sprite->activeAnimation = 4;
+	}
 }
 
 static void worldCollisionHappened(CollisionWorld_t *aWorld, Collision_t collisionInfo)
@@ -66,6 +93,7 @@ World_t *world_init()
 	out->ticks = 0;
 
 	out->level = level_load("levels/spacetest.tmx");
+	if(out->level->character) out->level->character->collisionObject->collisionCallback = characterCollided;
 	if(out->level->bgm) sound_play(out->level->bgm);
 	renderer_pushRenderable(gRenderer, &out->level->renderable);
 
@@ -108,8 +136,11 @@ void world_update(World_t *aWorld, double aTimeDelta)
 	++aWorld->ticks;
 
 	if(aWorld->level->character) {
+		if(aWorld->ticks % 2 == 0)
+			sprite_step(aWorld->level->character->sprite);
+
 		int timeSteps = 8;
 		for(int i = 0; i < timeSteps; ++i)
-			collision_step(aWorld->level->collisionWorld, aWorld->level->character->collisionObject, aTimeDelta/(float)timeSteps);
+			collision_step(aWorld->level->collisionWorld, aWorld->level->character->collisionObject, aTimeDelta/(double)timeSteps);
 	}
 }
