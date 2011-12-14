@@ -23,6 +23,13 @@ SoundManager_t *gSoundManager;
 static bool _leftMouseButtonDown, _rightMouseButtonDown;
 static Uint32 lastTime;
 static bool _shouldExit = false;
+static SDL_Thread *gameThread;
+static SDL_Surface *_sdlSurface;
+// SDL only allows event polling on the main thread => we need to collect them for the game thread
+#define MAX_WAITING_EVENTS 32
+static SDL_Event eventStack[MAX_WAITING_EVENTS];
+static int waitingEventCount = 0;
+
 
 // Functions
 static void cleanup();
@@ -151,8 +158,32 @@ static void cleanup()
 	SDL_Quit();
 }
 
+static int gameLoop(void *unused)
+{
+	while(!_shouldExit) {
+		while(waitingEventCount > 0) {
+			handleEvent(eventStack[waitingEventCount-1]);
+			--waitingEventCount;
+		}
+		double delta = 0.0;
+		Uint32 currentTime = SDL_GetTicks();
+		if(lastTime > 0) {
+			Uint32 deltaMsec = currentTime - lastTime;
+			delta = (double)deltaMsec / (double)MSEC_PER_SEC;
+			gameTimer_update(&gGameTimer, delta);
+		}
+		lastTime = currentTime;
 
-static SDL_Surface *_sdlSurface;
+		// Update the game state as many times as we need to catch up
+		for(int i = 0; (i < MAX_FRAMESKIP) && !gameTimer_reachedNextUpdate(&gGameTimer); ++i) {
+			input_postActiveEvents(gInputManager);
+			world_update(gWorld, gGameTimer.desiredInterval);
+			gameTimer_finishedUpdate(&gGameTimer);
+		}
+		SDL_Delay(5);
+	}
+	return 0;
+}
 
 int main(int argc, char **argv)
 {
@@ -167,7 +198,7 @@ int main(int argc, char **argv)
 	vec2_t viewport = { 800.0f, 600.0f };
 
 	// Initialize graphics
-	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
 		debug_log("Couldn't initialize SDL");
 		return 1;
 	}
@@ -218,33 +249,25 @@ int main(int argc, char **argv)
 
 	gWorld = world_init();
 
-	// Enter the runloop
+	// Get started!
+	// Game loop runs on a separate thread
+	// Render loop runs on main thread
+	gameThread = SDL_CreateThread(gameLoop, NULL);
+	if(!gameThread) {
+		debug_log("Couldn't create game logic thread");
+		return 1;
+	}
+
 	windowDidResize((int)viewport.w, (int)viewport.h);
 	while(!_shouldExit) {
+		// Feed events to the game thread
 		SDL_Event event;
-		while (SDL_PollEvent(&event)) {
-			handleEvent(event);
-		}
-
-		double delta = 0.0;
-		Uint32 currentTime = SDL_GetTicks();
-		if(lastTime > 0) {
-			Uint32 deltaMsec = currentTime - lastTime;
-			delta = (double)deltaMsec / (double)MSEC_PER_SEC;
-			gameTimer_update(&gGameTimer, delta);
-		}
-		lastTime = currentTime;
-
-		// Update the game state as many times as we need to catch up
-		for(int i = 0; (i < MAX_FRAMESKIP) && !gameTimer_reachedNextUpdate(&gGameTimer); ++i) {
-			input_postActiveEvents(gInputManager);
-			world_update(gWorld, delta);
-			gameTimer_finishedUpdate(&gGameTimer);
-		}
-
+		while (SDL_PollEvent(&event) && waitingEventCount < MAX_WAITING_EVENTS)
+			eventStack[waitingEventCount++] = event;
 		renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));
 		SDL_GL_SwapBuffers();
 	}
+	SDL_WaitThread(gameThread, NULL);
 
 	return 0;
 }
