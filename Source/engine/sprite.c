@@ -30,7 +30,7 @@ void sprite_destroy(Sprite_t *aSprite, bool aShouldDestroyAtlas, bool shouldDest
 
 SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames)
 {
-	SpriteAnimation_t out = { aNumberOfFrames, 0 };
+	SpriteAnimation_t out = { aNumberOfFrames, 0, true };
 	return out;
 }
 
@@ -41,7 +41,12 @@ void sprite_step(Sprite_t *aSprite)
 {
 	SpriteAnimation_t *animation = &aSprite->animations[aSprite->activeAnimation];
 	animation->currentFrame += 1;
-	if(animation->currentFrame >= animation->numberOfFrames) animation->currentFrame = 0;
+	if(animation->currentFrame >= animation->numberOfFrames) {
+		if(animation->loops)
+			animation->currentFrame = 0;
+		else
+			animation->currentFrame -= 1;
+	}
 }
 
 #pragma mark - Rendering

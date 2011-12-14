@@ -10,6 +10,7 @@
 typedef struct _SpriteAnimation {
 	int numberOfFrames;
 	int currentFrame;
+	bool loops;
 } SpriteAnimation_t;
 
 typedef struct _Sprite {
