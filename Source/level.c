@@ -57,7 +57,7 @@ Level_t *level_load(const char *aFilename)
 
 	// Create the collision world
 	vec2_t collisionWorldSize = { (float)out->size[0] * out->tileSize.w, (float)out->size[1] * out->tileSize.h };
-	out->collisionWorld = collision_createWorld(vec2_create(0.0f, -980.0f), collisionWorldSize, out->tileSize.w);
+	out->collisionWorld = collision_createWorld(vec2_create(0.0f, -1280.0f), collisionWorldSize, out->tileSize.w);
 
 	TMXLayer_t *layer = tmx_mapGetLayerNamed(map, "blocks");
 	assert(layer);
@@ -188,6 +188,7 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 	Character_t *character = level->character;
 
 	vec2_t characterLocation = character->collisionObject->center;
+	// Extrapolate the current location using the velocity and time since the last game update
 	characterLocation = vec2_floor(vec2_add(characterLocation, vec2_scalarMul(character->collisionObject->velocity, aTimeSinceLastFrame)));
 
 	vec2_t center = vec2_sub(characterLocation, vec2_scalarDiv(aRenderer->viewportSize, 2.0));
