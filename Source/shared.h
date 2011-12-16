@@ -30,4 +30,8 @@ extern GameTimer_t gGameTimer;
 extern InputManager_t *gInputManager;
 // The sound manager
 extern SoundManager_t *gSoundManager;
+
+// Quits the game
+extern void quitGame();
+
 #endif

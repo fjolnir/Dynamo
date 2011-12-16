@@ -68,6 +68,9 @@ static Input_type_t _inputTypeForSDLKey(SDLKey aKey)
 static void handleEvent(SDL_Event aEvent)
 {
 	switch(aEvent.type) {
+		case SDL_QUIT:
+			_shouldExit = true;
+			break;
 		case SDL_ACTIVEEVENT:
 		{
 			if (aEvent.active.gain) {
@@ -86,7 +89,9 @@ static void handleEvent(SDL_Event aEvent)
 		{
 			if(aEvent.key.keysym.sym == 'q')
 				_shouldExit = true;
-			if(aEvent.key.keysym.sym < 127)
+			if(aEvent.key.keysym.sym == SDLK_RETURN)
+				input_beginEvent(gInputManager, kInputKey_ascii, (unsigned char*)"\n", NULL);
+			else if(aEvent.key.keysym.sym < 127)
 				input_beginEvent(gInputManager, kInputKey_ascii, (unsigned char*)&aEvent.key.keysym.sym, NULL);
 			else {
 				Input_type_t inputType = _inputTypeForSDLKey(aEvent.key.keysym.sym);
@@ -97,7 +102,9 @@ static void handleEvent(SDL_Event aEvent)
 		}
 		case SDL_KEYUP:
 		{
-			if(aEvent.key.keysym.sym < 127)
+			if(aEvent.key.keysym.sym == SDLK_RETURN)
+				input_endEvent(gInputManager, kInputKey_ascii, (unsigned char*)"\n");
+			else if(aEvent.key.keysym.sym < 127)
 				input_endEvent(gInputManager, kInputKey_ascii, (unsigned char*)&aEvent.key.keysym.sym);
 			else {
 				Input_type_t inputType = _inputTypeForSDLKey(aEvent.key.keysym.sym);
@@ -145,7 +152,12 @@ static void handleEvent(SDL_Event aEvent)
 }
 
 
-#pragma mark - Initialization
+#pragma mark - Initialization & Cleanup
+
+void quitGame()
+{
+	_shouldExit = true;
+}
 
 static void cleanup()
 {
@@ -252,11 +264,11 @@ int main(int argc, char **argv)
 	// Get started!
 	// Game loop runs on a separate thread
 	// Render loop runs on main thread
-	gameThread = SDL_CreateThread(gameLoop, NULL);
-	if(!gameThread) {
-		debug_log("Couldn't create game logic thread");
-		return 1;
-	}
+	//gameThread = SDL_CreateThread(gameLoop, NULL);
+	//if(!gameThread) {
+		//debug_log("Couldn't create game logic thread");
+		//return 1;
+	//}
 
 	windowDidResize((int)viewport.w, (int)viewport.h);
 	while(!_shouldExit) {
@@ -264,10 +276,33 @@ int main(int argc, char **argv)
 		SDL_Event event;
 		while (SDL_PollEvent(&event) && waitingEventCount < MAX_WAITING_EVENTS)
 			eventStack[waitingEventCount++] = event;
+
+			while(waitingEventCount > 0) {
+			handleEvent(eventStack[waitingEventCount-1]);
+			--waitingEventCount;
+		}
+		double delta = 0.0;
+		Uint32 currentTime = SDL_GetTicks();
+		if(lastTime > 0) {
+			Uint32 deltaMsec = currentTime - lastTime;
+			delta = (double)deltaMsec / (double)MSEC_PER_SEC;
+			gameTimer_update(&gGameTimer, delta);
+		}
+		lastTime = currentTime;
+
+		// Update the game state as many times as we need to catch up
+		for(int i = 0; (i < MAX_FRAMESKIP) && !gameTimer_reachedNextUpdate(&gGameTimer); ++i) {
+			input_postActiveEvents(gInputManager);
+			world_update(gWorld, gGameTimer.desiredInterval);
+			gameTimer_finishedUpdate(&gGameTimer);
+		}
+
+
+		glClear(GL_COLOR_BUFFER_BIT);
 		renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));
 		SDL_GL_SwapBuffers();
 	}
-	SDL_WaitThread(gameThread, NULL);
+//	SDL_WaitThread(gameThread, NULL);
 
 	return 0;
 }
