@@ -9,6 +9,9 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
+// Maximum number of observers for a single event
+#define MAX_SIMUL_OBSERVERS 8
+
 typedef enum {
 	kInputKey_arrowLeft,
 	kInputKey_arrowRight,

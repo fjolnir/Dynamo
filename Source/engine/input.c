@@ -1,4 +1,5 @@
 #include "input.h"
+#include "various.h"
 
 InputManager_t *input_createManager()
 {
@@ -40,45 +41,62 @@ bool input_removeObserver(InputManager_t *aManager, InputObserver_t *aObserver)
 	return llist_deleteValue(aManager->observers, aObserver);
 }
 
-static InputObserver_t *_input_observerForEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode)
+static InputObserver_t **_input_observersForEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, int *aoCount)
 {
+	InputObserver_t **out = malloc(sizeof(InputObserver_t *)*MAX_SIMUL_OBSERVERS);
+	int count = 0;
 	LinkedListItem_t *item = aManager->observers->head;
 	if(item) {
 		InputObserver_t *observer;
 		do {
 			observer = (InputObserver_t *)item->value;
 			if(observer->type == aType && (!aCode || (observer->code == *aCode)))
-				return observer;
-		} while( (item = item->next) );
+				out[count++] = observer;
+		} while( (item = item->next) && count < MAX_SIMUL_OBSERVERS);
 	}
-	return NULL;
+	if(aoCount) *aoCount = count;
+	if(count == 0) {
+		free(out);
+		return NULL;
+	}
+
+	return out;
 }
 void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation, Input_state_t aState)
 {
-	InputObserver_t *observer = _input_observerForEvent(aManager, aType, aCode);
-	if(observer) {
-		observer->handlerCallback(aManager, observer, aLocation, aState, observer->metaData);
-		observer->lastKnownState = aState;
+	int count;
+	InputObserver_t **observers = _input_observersForEvent(aManager, aType, aCode, &count);
+	for(int i = 0; i < count; ++i) {
+		observers[i]->handlerCallback(aManager, observers[i], aLocation, aState, observers[i]->metaData);
+		observers[i]->lastKnownState = aState;
 	}
+	free(observers);
 }
 
 typedef struct _InputEvent {
-	InputObserver_t *observer;
+	int observerCount;
+	InputObserver_t *observers[MAX_SIMUL_OBSERVERS];
 	vec2_t location;
 	int fireCount;
 	Input_state_t state;
+	Input_type_t type;
+	unsigned char code;
 } _InputEvent_t;
 
 void input_postActiveEvents(InputManager_t *aManager)
 {
 	LinkedListItem_t *item = aManager->activeEvents->head;
+	InputObserver_t *obs;
 	if(item) {
 		_InputEvent_t *event;
 		do {
 			event = (_InputEvent_t *)item->value;
-			event->observer->handlerCallback(aManager, event->observer, &event->location, event->state, event->observer->metaData);
+			for(int i = 0; i < event->observerCount; ++i) {
+				obs = event->observers[i];
+				obs->handlerCallback(aManager, obs, &event->location, event->state, obs->metaData);
+				obs->lastKnownState = event->state;
+			}
 			event->fireCount++;
-			event->observer->lastKnownState = event->state;
 		} while( (item = item->next) );
 	}
 }
@@ -89,7 +107,7 @@ static bool _input_eventIsActive(InputManager_t *aManager, Input_type_t aType, u
 		_InputEvent_t *event;
 		do {
 			event = (_InputEvent_t *)item->value;
-			if(event->observer->type == aType && (!aCode || (event->observer->code == *aCode)) ) {
+			if(event->type == aType && (!aCode || (event->code == *aCode)) ) {
 				if(aoEvent) *aoEvent = event;
 				return true;
 			}
@@ -99,16 +117,24 @@ static bool _input_eventIsActive(InputManager_t *aManager, Input_type_t aType, u
 }
 void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation)
 {
-	InputObserver_t *observer = _input_observerForEvent(aManager, aType, aCode);
+	int observerCount;
+	InputObserver_t **observers = _input_observersForEvent(aManager, aType, aCode, &observerCount);
 	_InputEvent_t *existingEvent;
 	bool isActive = _input_eventIsActive(aManager, aType, aCode, &existingEvent);
 	// Keep the location up to date if the event is already active
 	if(isActive && aLocation) existingEvent->location = *aLocation;
-	
-	if(!observer || isActive)
+
+	if(!observers || isActive)
 		return;
+
 	_InputEvent_t *event = malloc(sizeof(_InputEvent_t));
-	event->observer = observer;
+	event->observerCount = observerCount;
+	event->type = aType;
+	if(aCode) event->code = *aCode;
+	for(int i = 0; i < observerCount; ++i) {
+		event->observers[i] = observers[i];
+	}
+	free(observers);
 	if(aLocation != NULL) event->location = *aLocation;
 	event->fireCount = 0;
 	event->state = kInputState_down;
