@@ -7,6 +7,7 @@
 typedef struct _Character {
 	Sprite_t *sprite;
 	CollisionPolyObject_t *collisionObject;
+	vec2_t spriteOffset;
 } Character_t;
 
 extern Character_t *character_create();
