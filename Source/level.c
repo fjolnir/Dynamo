@@ -42,8 +42,8 @@ Level_t *level_load(const char *aFilename)
 	}
 
 	const char *bgmPath = tmx_mapGetPropertyNamed(map, "BGM");
-	//if(bgmPath)
-		//out->bgm = sound_load(bgmPath);
+	if(bgmPath)
+		out->bgm = sound_load(bgmPath);
 
 	TMXTileset_t *tileset = &map->tilesets[0];
 	Texture_t *tilesetTexture = texture_loadFromPng(tileset->imagePath, true, true);
@@ -105,15 +105,17 @@ Level_t *level_load(const char *aFilename)
 		out->character->sprite->animations[6] = sprite_createAnimation(8);
 		out->character->sprite->animations[7] = sprite_createAnimation(1);
 		out->character->sprite->activeAnimation = 7;
+		out->character->spriteOffset = vec2_create(0.0f, 2.0f);
 
 		vec2_t characterVerts[4] = {
-			{ center.x - 16.0f, center.y - 16.0f },
-			{ center.x - 16.0f, center.y + 16.0f },
-			{ center.x + 16.0f, center.y + 16.0f },
-			{ center.x + 16.0f, center.y - 16.0f }
+			{ center.x - 12.0f, center.y - 16.0f },
+			{ center.x - 12.0f, center.y + 10.0f },
+			{ center.x + 12.0f, center.y + 10.0f },
+			{ center.x + 12.0f, center.y - 16.0f }
 		};
 
 		out->character->collisionObject = collision_createPolyObject(4, characterVerts, 0.0f, 0.0f);
+//		collision_setPolyObjectCenter(out->character->collisionObject, vec2_create(center.x, center.y));
 		out->character->collisionObject->info = out->character;
 	}
 	tmx_destroyMap(map);
@@ -235,9 +237,19 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 
 	// Draw the character
 	if(level->character) {
-		level->character->sprite->location = vec3_create(characterLocation.x, characterLocation.y, 0.0f);
+		vec2_t gravDir = vec2_negate(vec2_normalize(level->collisionWorld->gravity));
+		vec2_t spriteOffs = vec2_mul(level->character->spriteOffset, gravDir);
+		level->character->sprite->location = vec3_create(characterLocation.x+spriteOffs.x, characterLocation.y+spriteOffs.y, 0.0f);
 		level->character->sprite->angle = level->character->collisionObject->orientation;
 		level->character->sprite->renderable.displayCallback(aRenderer, level->character->sprite, aTimeSinceLastFrame, aInterpolation);
+
+		//vec4_t red = {1.0f, 0.0, 0.0, 1.0f};
+		//CollisionPolyObject_t *obj = level->character->collisionObject;
+		//matrix_stack_push(aRenderer->worldMatrixStack);
+		//matrix_stack_translate(aRenderer->worldMatrixStack, obj->center.x, obj->center.y, 0.0f);
+		//matrix_stack_rotate(aRenderer->worldMatrixStack, obj->orientation, 0.0, 0.0, 1.0);
+		//draw_polygon(obj->numberOfEdges, obj->vertices, red,false);
+		//matrix_stack_pop(aRenderer->worldMatrixStack);
 	}
 	//level->collisionWorld->debugRenderable.displayCallback(aRenderer, level->collisionWorld, aTimeSinceLastFrame, aInterpolation);
 	matrix_stack_pop(aRenderer->worldMatrixStack);
@@ -250,7 +262,7 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 // TODO: Make this use a resource file instead
 static CollisionPolyObject_t *_level_generateCollisionObjForTile(LevelTile_t aTile)
 {
-	float bounce = 0.2f;
+	float bounce = 0.1f;
 	float friction = 0.1f;
 	vec2_t bl = { -16.0f, -16.0f };
 	vec2_t tl = { -16.0f,  16.0f };
