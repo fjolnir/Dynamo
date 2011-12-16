@@ -54,9 +54,12 @@ void llist_popValue(LinkedList_t *aList)
 {
 	LinkedListItem_t *tail = aList->tail;
 	if(!tail) return;
-
-	tail->previous->next = NULL;
+	if(tail->previous)
+		tail->previous->next = NULL;
 	aList->tail = tail->previous;
+
+	if(aList->head == tail)
+		aList->head = NULL;
 	free(tail);
 }
 
