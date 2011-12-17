@@ -10,7 +10,6 @@ C_FLAGS    += -Wall -Wno-missing-braces -Wno-unused-function
 C_FLAGS    += -std=gnu99
 C_FLAGS    += -I"/opt/X11/include"
 C_FLAGS    += -I"/usr/local/include"
-C_FLAGS    += -DGLEW_STATIC
 C_FLAGS    += -ggdb
 C_FLAGS    += -O0
 C_FLAGS    += -DTWODEEDENG_DEBUG
