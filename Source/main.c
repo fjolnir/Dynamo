@@ -253,7 +253,6 @@ int main(int argc, char **argv)
 			gameTimer_finishedUpdate(&gGameTimer);
 		}
 
-
 		glClear(GL_COLOR_BUFFER_BIT);
 		renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));
 		SDL_GL_SwapBuffers();
