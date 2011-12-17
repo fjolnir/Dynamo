@@ -6,9 +6,9 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="build/bin/Debug/Runner" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="../Source" />
-				<Option object_output="build/obj/Debug/" />
+				<Option output="build\bin\Debug\Runner" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="..\Source" />
+				<Option object_output="build\obj\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -17,8 +17,8 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="build/bin/Release/Runner" prefix_auto="1" extension_auto="1" />
-				<Option object_output="build/obj/Release/" />
+				<Option output="build\bin\Release\Runner" prefix_auto="1" extension_auto="1" />
+				<Option object_output="build\obj\Release\" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -35,8 +35,8 @@
 			<Add option="-Wno-unknown-pragmas" />
 			<Add option="-Wno-missing-braces" />
 			<Add option="-Wno-unused" />
-			<Add directory="libs/include" />
-			<Add directory="minixml/include" />
+			<Add directory="libs\include" />
+			<Add directory="minixml\include" />
 		</Compiler>
 		<Linker>
 			<Add library="mingw32" />
@@ -49,149 +49,153 @@
 			<Add library="libSDL.dll" />
 			<Add library="libpng12" />
 			<Add library="zdll" />
-			<Add library="libs/lib/libogg.a" />
-			<Add library="libs/lib/libvorbis.a" />
-			<Add library="libs/lib/libvorbisfile.a" />
+			<Add library="libs\lib\libogg.a" />
+			<Add library="libs\lib\libvorbis.a" />
+			<Add library="libs\lib\libvorbisfile.a" />
 			<Add library="OpenAL32" />
-			<Add directory="libs/lib" />
+			<Add directory="libs\lib" />
 		</Linker>
-		<Unit filename="../Source/character.c">
+		<Unit filename="..\Source\character.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/character.h" />
-		<Unit filename="../Source/collision.c">
+		<Unit filename="..\Source\character.h" />
+		<Unit filename="..\Source\collision.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/collision.h" />
-		<Unit filename="../Source/engine/GLMath/GLMath.c">
+		<Unit filename="..\Source\collision.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMath.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/GLMath/GLMath.h" />
-		<Unit filename="../Source/engine/GLMath/GLMathMatrix.h" />
-		<Unit filename="../Source/engine/GLMath/GLMathMatrixStack.h" />
-		<Unit filename="../Source/engine/GLMath/GLMathQuaternion.h" />
-		<Unit filename="../Source/engine/GLMath/GLMathRectangle.h" />
-		<Unit filename="../Source/engine/GLMath/GLMathTransforms.h" />
-		<Unit filename="../Source/engine/GLMath/GLMathTypes.h" />
-		<Unit filename="../Source/engine/GLMath/GLMathUtilities.h" />
-		<Unit filename="../Source/engine/GLMath/GLMathVector.h" />
-		<Unit filename="../Source/engine/array.c">
+		<Unit filename="..\Source\engine\GLMath\GLMath.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMathMatrix.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMathMatrixStack.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMathQuaternion.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMathRectangle.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMathTransforms.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMathTypes.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMathUtilities.h" />
+		<Unit filename="..\Source\engine\GLMath\GLMathVector.h" />
+		<Unit filename="..\Source\engine\array.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/array.h" />
-		<Unit filename="../Source/engine/background.c">
+		<Unit filename="..\Source\engine\array.h" />
+		<Unit filename="..\Source\engine\background.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/background.h" />
-		<Unit filename="../Source/engine/drawutils.c">
+		<Unit filename="..\Source\engine\background.h" />
+		<Unit filename="..\Source\engine\drawutils.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/drawutils.h" />
-		<Unit filename="../Source/engine/gametimer.c">
+		<Unit filename="..\Source\engine\drawutils.h" />
+		<Unit filename="..\Source\engine\gametimer.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/gametimer.h" />
-		<Unit filename="../Source/engine/glee/GLee.c">
+		<Unit filename="..\Source\engine\gametimer.h" />
+		<Unit filename="..\Source\engine\glee\GLee.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/glee/GLee.h" />
-		<Unit filename="../Source/engine/glutils.h" />
-		<Unit filename="../Source/engine/input.c">
+		<Unit filename="..\Source\engine\glee\GLee.h" />
+		<Unit filename="..\Source\engine\glutils.h" />
+		<Unit filename="..\Source\engine\input.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/input.h" />
-		<Unit filename="../Source/engine/linkedlist.c">
+		<Unit filename="..\Source\engine\input.h" />
+		<Unit filename="..\Source\engine\linkedlist.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/linkedlist.h" />
-		<Unit filename="../Source/engine/ogg_loader.c">
+		<Unit filename="..\Source\engine\linkedlist.h" />
+		<Unit filename="..\Source\engine\ogg_loader.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/ogg_loader.h" />
-		<Unit filename="../Source/engine/png_loader.c">
+		<Unit filename="..\Source\engine\ogg_loader.h" />
+		<Unit filename="..\Source\engine\png_loader.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/png_loader.h" />
-		<Unit filename="../Source/engine/renderer.c">
+		<Unit filename="..\Source\engine\png_loader.h" />
+		<Unit filename="..\Source\engine\renderer.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/renderer.h" />
-		<Unit filename="../Source/engine/shader.c">
+		<Unit filename="..\Source\engine\renderer.h" />
+		<Unit filename="..\Source\engine\shader.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/shader.h" />
-		<Unit filename="../Source/engine/shaders/background.fsh" />
-		<Unit filename="../Source/engine/shaders/background.vsh" />
-		<Unit filename="../Source/engine/shaders/colored.fsh" />
-		<Unit filename="../Source/engine/shaders/colored.vsh" />
-		<Unit filename="../Source/engine/shaders/textured.fsh" />
-		<Unit filename="../Source/engine/shaders/textured.vsh" />
-		<Unit filename="../Source/engine/sound.c">
+		<Unit filename="..\Source\engine\shader.h" />
+		<Unit filename="..\Source\engine\shaders\background.fsh" />
+		<Unit filename="..\Source\engine\shaders\background.vsh" />
+		<Unit filename="..\Source\engine\shaders\colored.fsh" />
+		<Unit filename="..\Source\engine\shaders\colored.vsh" />
+		<Unit filename="..\Source\engine\shaders\textured.fsh" />
+		<Unit filename="..\Source\engine\shaders\textured.vsh" />
+		<Unit filename="..\Source\engine\sound.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/sound.h" />
-		<Unit filename="../Source/engine/sprite.c">
+		<Unit filename="..\Source\engine\sound.h" />
+		<Unit filename="..\Source\engine\sprite.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/sprite.h" />
-		<Unit filename="../Source/engine/texture.c">
+		<Unit filename="..\Source\engine\sprite.h" />
+		<Unit filename="..\Source\engine\texture.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/texture.h" />
-		<Unit filename="../Source/engine/texture_atlas.c">
+		<Unit filename="..\Source\engine\texture.h" />
+		<Unit filename="..\Source\engine\texture_atlas.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/texture_atlas.h" />
-		<Unit filename="../Source/engine/tmx_map.c">
+		<Unit filename="..\Source\engine\texture_atlas.h" />
+		<Unit filename="..\Source\engine\tmx_map.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/engine/tmx_map.h" />
-		<Unit filename="../Source/engine/various.h" />
-		<Unit filename="../Source/level.c">
+		<Unit filename="..\Source\engine\tmx_map.h" />
+		<Unit filename="..\Source\engine\various.h" />
+		<Unit filename="..\Source\level.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/level.h" />
-		<Unit filename="../Source/main.c">
+		<Unit filename="..\Source\level.h" />
+		<Unit filename="..\Source\main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/shared.h" />
-		<Unit filename="../Source/spatial_hash.c">
+		<Unit filename="..\Source\menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/spatial_hash.h" />
-		<Unit filename="../Source/world.c">
+		<Unit filename="..\Source\menu.h" />
+		<Unit filename="..\Source\shared.h" />
+		<Unit filename="..\Source\spatial_hash.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Source/world.h" />
+		<Unit filename="..\Source\spatial_hash.h" />
+		<Unit filename="..\Source\world.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\Source\world.h" />
 		<Unit filename="cb.bmp" />
-		<Unit filename="minixml/config.h" />
-		<Unit filename="minixml/include/mxml.h" />
-		<Unit filename="minixml/mxml-attr.c">
+		<Unit filename="minixml\config.h" />
+		<Unit filename="minixml\include\mxml.h" />
+		<Unit filename="minixml\mxml-attr.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="minixml/mxml-entity.c">
+		<Unit filename="minixml\mxml-entity.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="minixml/mxml-file.c">
+		<Unit filename="minixml\mxml-file.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="minixml/mxml-index.c">
+		<Unit filename="minixml\mxml-index.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="minixml/mxml-node.c">
+		<Unit filename="minixml\mxml-node.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="minixml/mxml-private.c">
+		<Unit filename="minixml\mxml-private.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="minixml/mxml-private.h" />
-		<Unit filename="minixml/mxml-search.c">
+		<Unit filename="minixml\mxml-private.h" />
+		<Unit filename="minixml\mxml-search.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="minixml/mxml-set.c">
+		<Unit filename="minixml\mxml-set.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="minixml/mxml-string.c">
+		<Unit filename="minixml\mxml-string.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

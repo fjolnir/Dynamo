@@ -22,7 +22,7 @@
 	<File name="..\Source\engine\drawutils.c" open="0" top="0" tabpos="0">
 		<Cursor position="2455" topLine="67" />
 	</File>
-	<File name="..\Source\engine\drawutils.h" open="1" top="0" tabpos="3">
+	<File name="..\Source\engine\drawutils.h" open="0" top="0" tabpos="3">
 		<Cursor position="1081" topLine="21" />
 	</File>
 	<File name="..\Source\engine\glutils.h" open="0" top="0" tabpos="1">
@@ -34,7 +34,7 @@
 	<File name="..\Source\engine\renderer.c" open="0" top="0" tabpos="0">
 		<Cursor position="813" topLine="42" />
 	</File>
-	<File name="..\Source\engine\renderer.h" open="1" top="0" tabpos="6">
+	<File name="..\Source\engine\renderer.h" open="0" top="0" tabpos="6">
 		<Cursor position="1310" topLine="11" />
 	</File>
 	<File name="..\Source\engine\shader.c" open="0" top="0" tabpos="3">
@@ -49,13 +49,13 @@
 	<File name="..\Source\engine\sprite.c" open="0" top="0" tabpos="0">
 		<Cursor position="305" topLine="0" />
 	</File>
-	<File name="..\Source\engine\sprite.h" open="1" top="0" tabpos="2">
+	<File name="..\Source\engine\sprite.h" open="0" top="0" tabpos="2">
 		<Cursor position="864" topLine="3" />
 	</File>
-	<File name="..\Source\engine\texture.h" open="1" top="0" tabpos="4">
+	<File name="..\Source\engine\texture.h" open="0" top="0" tabpos="4">
 		<Cursor position="494" topLine="0" />
 	</File>
-	<File name="..\Source\engine\texture_atlas.h" open="1" top="0" tabpos="5">
+	<File name="..\Source\engine\texture_atlas.h" open="0" top="0" tabpos="5">
 		<Cursor position="682" topLine="0" />
 	</File>
 	<File name="..\Source\engine\tmx_map.c" open="0" top="0" tabpos="6">
@@ -70,8 +70,8 @@
 	<File name="..\Source\level.h" open="0" top="0" tabpos="0">
 		<Cursor position="545" topLine="0" />
 	</File>
-	<File name="..\Source\main.c" open="1" top="1" tabpos="1">
-		<Cursor position="4885" topLine="172" />
+	<File name="..\Source\main.c" open="1" top="1" tabpos="0">
+		<Cursor position="4206" topLine="157" />
 	</File>
 	<File name="..\Source\shared.h" open="0" top="0" tabpos="4">
 		<Cursor position="505" topLine="7" />
@@ -80,7 +80,7 @@
 		<Cursor position="25" topLine="0" />
 	</File>
 	<File name="..\Source\world.c" open="0" top="0" tabpos="1">
-		<Cursor position="2534" topLine="64" />
+		<Cursor position="1830" topLine="22" />
 	</File>
 	<File name="minixml\mxml-attr.c" open="0" top="0" tabpos="0">
 		<Cursor position="5121" topLine="207" />
