@@ -14,6 +14,8 @@ static void characterCollided(CollisionWorld_t *aWorld, Collision_t collisionInf
 static void mainMenu_selectionChanged(MainMenu_t *aMenu, int aSelection, void *metaData);
 static void mainMenu_didFadeOut(MainMenu_t *aMenu, void *metaData);
 
+static int upKeyHeldFrameCount = 0;
+
 #pragma mark - Initialization
 
 World_t *world_init()
@@ -110,6 +112,7 @@ static void characterCollided(CollisionWorld_t *aWorld, Collision_t collisionInf
 	if(character->sprite->activeAnimation == 5 && _characterInContactWithGround) {
 		character->sprite->animations[4].currentFrame = 0;
 		character->sprite->activeAnimation = 4;
+		upKeyHeldFrameCount = 0;
 	}
 }
 
@@ -131,7 +134,6 @@ static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInpu
 }
 static void upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData)
 {
-	static int upKeyHeldFrameCount = 0;
 	if(aState != kInputState_down) {
 		upKeyHeldFrameCount = 0;
 		return;
@@ -146,7 +148,7 @@ static void upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputO
 		character->sprite->animations[5].currentFrame = 0;
 		character->sprite->activeAnimation = 5;
 		_characterInContactWithGround = false;
-	} else if(upKeyHeldFrameCount > 0 && upKeyHeldFrameCount < 15) 
+	} else if(upKeyHeldFrameCount > 0 && upKeyHeldFrameCount < 15)
 		collObj->velocity.y -= 0.025f * world->level->collisionWorld->gravity.y;
 
 	++upKeyHeldFrameCount;
