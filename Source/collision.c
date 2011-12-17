@@ -225,7 +225,7 @@ static bool _collision_objectIsInContact(CollisionPolyObject_t *aObject)
 {
 	float current = vec2_mag(vec2_mul(aObject->lastCollision.direction, aObject->center));
 	float last = vec2_mag(vec2_mul(aObject->lastCollision.direction, aObject->lastCollision.objectACenter));
-	return fabs(current - last) < 4.0; // 2 is just a magic number that seems to work fine
+	return fabs(current - last) < 6.0; // just a magic number that seems to work fine
 }
 
 bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObject, float aTimeDelta)
