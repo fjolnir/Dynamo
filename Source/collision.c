@@ -169,6 +169,7 @@ static float _collision_overlapOfProjections(vec2_t aLeft, vec2_t aRight)
 	else
 		return aLeft.y - aLeft.x;
 }
+
 static bool _collision_doProjectionsOverlap(vec2_t aLeft, vec2_t aRight)
 {
 	float total = MAX(aLeft.y, aLeft.y) - MIN(aLeft.x, aRight.x);
