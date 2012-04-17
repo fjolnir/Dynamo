@@ -1,4 +1,5 @@
 // Shader loading
+#include "object.h"
 #include "glutils.h"
 #include "renderer.h"
 
@@ -37,6 +38,7 @@ extern const char *kShader_AttributeNames[kShader_MaxAttributes];
 
 typedef struct _Shader Shader_t;
 struct _Shader {
+	OBJ_GUTS
 	GLuint program, vertexShader, fragmentShader;
 	GLint uniforms[kShader_MaxUniforms];
 	GLint attributes[kShader_MaxAttributes];
@@ -47,7 +49,6 @@ struct _Shader {
 
 extern Shader_t *shader_load(const char *aVertSrc, const char *aFragSrc);
 extern Shader_t *shader_loadFromFiles(const char *aVertShaderPath, const char *aFragShaderPath);
-extern void shader_destroy(Shader_t *aShader);
 
 extern void shader_makeActive(Shader_t *aShader);
 extern void shader_makeInactive(Shader_t *aShader);

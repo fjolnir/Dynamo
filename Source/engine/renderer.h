@@ -5,6 +5,7 @@
 // The actual drawing of objects is handled by Renderables, whose display callbacks
 // are implemented in their appropriate files.
 
+#include "object.h"
 #include "glutils.h"
 #include "GLMath/GLMath.h"
 #include "linkedlist.h"
@@ -17,11 +18,12 @@ typedef struct _Renderer Renderer_t;
 // For defining an object you wish to have rendered
 typedef struct _Renderable {
 	void (*displayCallback)(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
-	void *owner;
+	Obj_t *owner;
 } Renderable_t;
 
 // The renderer object
 struct _Renderer {
+	OBJ_GUTS
 	GLuint frameBufferId; // The FBO the renderer should draw to
 	vec2_t viewportSize;
 	vec3_t cameraOffset;
@@ -32,7 +34,6 @@ struct _Renderer {
 
 // Renderer creation
 extern Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset);
-extern void renderer_destroy(Renderer_t *aRenderer);
 
 // Display
 extern void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double aInterpolation);

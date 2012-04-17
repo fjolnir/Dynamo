@@ -1,3 +1,4 @@
+#include "object.h"
 #include <stdbool.h>
 
 #ifndef _GAMETIMER_H_
@@ -5,11 +6,10 @@
 
 // All values are in seconds
 typedef struct _GameTimer {
+	OBJ_GUTS
 	double elapsed;
 	double timeSinceLastUpdate;
 	double desiredInterval; // The minimum interval between updates
-
-	double lastAbsoluteTime;
 } GameTimer_t;
 
 extern void gameTimer_update(GameTimer_t *aTimer, double aDelta);

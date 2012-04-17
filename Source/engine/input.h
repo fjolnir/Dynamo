@@ -3,6 +3,7 @@
 // Rather you would pipe events from whatever middleware framework or library you are using
 // on your platform
 
+#include "object.h"
 #include "linkedlist.h"
 #include "GLMath/GLMath.h"
 
@@ -36,6 +37,7 @@ typedef struct _InputObserver InputObserver_t;
 typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *aMetaData);
 
 struct _InputObserver {
+	OBJ_GUTS
 	Input_handler_t handlerCallback;
 	Input_type_t type;
 	unsigned char code; // Used for ASCII keys
@@ -44,14 +46,13 @@ struct _InputObserver {
 	Input_state_t lastKnownState;
 };
 struct _InputManager {
+	OBJ_GUTS
 	LinkedList_t *observers;
 	LinkedList_t *activeEvents;
 };
 
 extern InputManager_t *input_createManager();
-extern void input_destroyManager(InputManager_t *aManager);
 extern InputObserver_t *input_createObserver(Input_type_t aObservedType, Input_handler_t aHandlerCallback, char *aCode, void *aMetaData);
-extern void input_destroyObserver(InputObserver_t *aObserver);
 
 extern void input_addObserver(InputManager_t *aManager, InputObserver_t *aObserver);
 extern bool input_removeObserver(InputManager_t *aManager, InputObserver_t *aObserver);

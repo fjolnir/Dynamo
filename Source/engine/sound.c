@@ -2,6 +2,7 @@
 #include "ogg_loader.h"
 #include "various.h"
 
+static void sound_destroy(Sound_t *aSound);
 static char *_openAlErrorString(int aCode);
 static bool _checkForOpenAlError();
 static bool _sound_buf_stream(Sound_t *aSound, ALuint aBuffer);
@@ -12,7 +13,7 @@ static bool _sound_update(Sound_t *aSound);
 
 Sound_t *sound_load(const char *aFilename)
 {
-	Sound_t *out = malloc(sizeof(Sound_t));
+	Sound_t *out = obj_create_autoreleased(sizeof(Sound_t), (Obj_destructor_t)&sound_destroy);
 
 	oggFile_t *oggFile = ogg_load(aFilename);
 	if(!oggFile) {
@@ -40,7 +41,6 @@ Sound_t *sound_load(const char *aFilename)
 	out->rate = oggFile->rate;
 	out->samples = oggFile->samples;
 
-	ogg_destroy(oggFile);
 	return out;
 }
 
@@ -52,7 +52,6 @@ void sound_destroy(Sound_t *aSound)
 	}
 	if(alIsSource(aSound->source))
 		alDeleteSources(1, &aSound->source);
-	free(aSound);
 }
 
 void sound_setPosition(Sound_t *aSound, vec3_t aPos)

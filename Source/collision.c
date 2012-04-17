@@ -298,7 +298,6 @@ bool collision_step(CollisionWorld_t *aWorld, CollisionPolyObject_t *aInputObjec
 		}
 	}
 	free(potentialColliders);
-	array_destroy(testedColliders);
 	if(!didCollide) {
 		aInputObject->inContact = _collision_objectIsInContact(aInputObject);
 		return false;

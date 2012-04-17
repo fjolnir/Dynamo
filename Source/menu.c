@@ -4,6 +4,8 @@
 #include "engine/texture.h"
 #include "engine/drawutils.h"
 
+static void mainMenu_destroy(MainMenu_t *aMenu);
+
 static void _mainMenu_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
 static void _upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData);
 static void _downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData);
@@ -12,7 +14,7 @@ static void _enterKeyPressed(InputManager_t *aInputManager, InputObserver_t *aIn
 
 MainMenu_t *mainMenu_create()
 {
-	MainMenu_t *out = malloc(sizeof(MainMenu_t));
+	MainMenu_t *out = obj_create_autoreleased(sizeof(MainMenu_t), (Obj_destructor_t)&mainMenu_destroy);
 	out->numberOfItems = 2;
 	out->selectedItem = 1;
 	out->selectionCallback = NULL;
@@ -25,21 +27,21 @@ MainMenu_t *mainMenu_create()
 	out->renderable.owner = out;
 
 	// Load the menu texture
-	Texture_t *itemTexture = texture_loadFromPng("textures/mainmenu.png", false, false);
-	out->itemAtlas = texAtlas_create(itemTexture, kVec2_zero, vec2_create(54.0f, 10.0f));
+	Texture_t *itemTexture = obj_retain(texture_loadFromPng("textures/mainmenu.png", false, false));
+	out->itemAtlas = obj_retain(texAtlas_create(itemTexture, kVec2_zero, vec2_create(54.0f, 10.0f)));
 
 	// Load the background
-	out->background = background_create();
+	out->background = obj_retain(background_create());
 	out->backgroundVelocity = vec2_create(15.0f, -28.0f);
 	char *path;
 	path = "textures/backgrounds/stars1.png";
-	out->background->layers[0] = background_createLayer(texture_loadFromPng(path, true, true), 0.4f);
+	background_setLayer(out->background, 0, background_createLayer(texture_loadFromPng(path, true, true), 0.4f));
 	path = "textures/backgrounds/stars2.png";
-		out->background->layers[1] = background_createLayer(texture_loadFromPng(path, true, true), 0.7f);
+	background_setLayer(out->background, 1, background_createLayer(texture_loadFromPng(path, true, true), 0.7f));
 	path = "textures/backgrounds/stars3.png";
-	out->background->layers[2] = background_createLayer(texture_loadFromPng(path, true, true), 0.5);
+	background_setLayer(out->background, 2, background_createLayer(texture_loadFromPng(path, true, true), 0.5));
 	path = "textures/backgrounds/stars4.png";
-	out->background->layers[3] = background_createLayer(texture_loadFromPng(path, true, true), 0.4);
+	background_setLayer(out->background, 3, background_createLayer(texture_loadFromPng(path, true, true), 0.4));
 
 	// Subscribe to keypresses
 	out->arrowUpObserver = input_createObserver(kInputKey_arrowUp, &_upKeyPressed, NULL, out);
@@ -49,19 +51,21 @@ MainMenu_t *mainMenu_create()
 	input_addObserver(gInputManager, out->arrowDownObserver);
 	input_addObserver(gInputManager, out->enterObserver);
 
-
 	return out;
 }
 
 void mainMenu_destroy(MainMenu_t *aMenu)
 {
 	input_removeObserver(gInputManager, aMenu->arrowUpObserver);
-	input_destroyObserver(aMenu->arrowUpObserver);
+	aMenu->arrowUpObserver = NULL;
 	input_removeObserver(gInputManager, aMenu->arrowDownObserver);
-	input_destroyObserver(aMenu->arrowDownObserver);
-	texAtlas_destroy(aMenu->itemAtlas, true);
-	background_destroy(aMenu->background, true);
-	free(aMenu);
+	aMenu->arrowDownObserver = NULL;
+	input_removeObserver(gInputManager, aMenu->enterObserver);
+	aMenu->enterObserver = NULL;
+	obj_release(aMenu->itemAtlas);
+	aMenu->itemAtlas = NULL;
+	obj_release(aMenu->background);
+	aMenu->background = NULL;
 }
 
 void mainMenu_fadeOut(MainMenu_t *aMenu)

@@ -7,8 +7,9 @@ static CollisionPolyObject_t *_level_generateCollisionObjForTile(LevelTile_t aTi
 
 Level_t *level_load(const char *aFilename)
 {
-	Level_t *out = malloc(sizeof(Level_t));
+	Level_t *out = obj_create_autoreleased(sizeof(Level_t), (Obj_destructor_t)&level_destroy);
 	out->renderable.displayCallback = &_level_draw;
+	out->renderable.owner = out;
 	out->character = NULL;
 	out->bgm = NULL;
 
@@ -25,20 +26,20 @@ Level_t *level_load(const char *aFilename)
 		out->background = background_create();
 		path = tmx_mapGetPropertyNamed(map, "BG1");
 		if(path != NULL)
-			out->background->layers[0] = background_createLayer(texture_loadFromPng(path, true, true),
-			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG1-depth")));
+			background_setLayer(out->background, 0, background_createLayer(texture_loadFromPng(path, true, true),
+			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG1-depth"))));
 		path = tmx_mapGetPropertyNamed(map, "BG2");
 		if(path != NULL)
-			out->background->layers[1] = background_createLayer(texture_loadFromPng(path, true, true),
-			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG2-depth")));
+			background_setLayer(out->background, 1, background_createLayer(texture_loadFromPng(path, true, true),
+			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG2-depth"))));
 		path = tmx_mapGetPropertyNamed(map, "BG3");
 		if(path != NULL)
-			out->background->layers[2] = background_createLayer(texture_loadFromPng(path, true, true),
-			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG3-depth")));
+			background_setLayer(out->background, 2, background_createLayer(texture_loadFromPng(path, true, true),
+			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG3-depth"))));
 		path = tmx_mapGetPropertyNamed(map, "BG4");
 		if(path != NULL)
-			out->background->layers[3] = background_createLayer(texture_loadFromPng(path, true, true),
-			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG4-depth")));
+			background_setLayer(out->background, 3, background_createLayer(texture_loadFromPng(path, true, true),
+			                                                    (float)atof(tmx_mapGetPropertyNamed(map, "BG4-depth"))));
 	}
 
 	const char *bgmPath = tmx_mapGetPropertyNamed(map, "BGM");
@@ -49,7 +50,7 @@ Level_t *level_load(const char *aFilename)
 	Texture_t *tilesetTexture = texture_loadFromPng(tileset->imagePath, true, true);
 	out->tileSize.w = (float)tileset->tileWidth;
 	out->tileSize.h = (float)tileset->tileHeight;
-	out->tileset = texAtlas_create(tilesetTexture, kVec2_zero, out->tileSize);
+	out->tileset = obj_retain(texAtlas_create(tilesetTexture, kVec2_zero, out->tileSize));
 	vec2_t margin = { (float)tileset->spacing, (float)tileset->spacing };
 
 	out->tileset->origin = margin;
@@ -91,9 +92,9 @@ Level_t *level_load(const char *aFilename)
 		};
 		vec2_t spriteSize = { characterObj->width, characterObj->height };
 		TextureAtlas_t *atlas = texAtlas_create(texture_loadFromPng("levels/character.png", false, false), kVec2_zero, spriteSize);
-		out->character = character_create();
+		out->character = obj_retain(character_create());
 
-		out->character->sprite = sprite_create(center, spriteSize, atlas, 8);
+		out->character->sprite = obj_retain(sprite_create(center, spriteSize, atlas, 8));
 		out->character->sprite->animations[0] = sprite_createAnimation(3);
 		out->character->sprite->animations[1] = sprite_createAnimation(1);
 		out->character->sprite->animations[2] = sprite_createAnimation(1);
@@ -118,7 +119,6 @@ Level_t *level_load(const char *aFilename)
 //		collision_setPolyObjectCenter(out->character->collisionObject, vec2_create(center.x, center.y));
 		out->character->collisionObject->info = out->character;
 	}
-	tmx_destroyMap(map);
 
 
 	// Generate & store the tile mesh
@@ -169,16 +169,14 @@ Level_t *level_load(const char *aFilename)
 
 void level_destroy(Level_t *aLevel)
 {
-	background_destroy(aLevel->background, true);
-	texAtlas_destroy(aLevel->tileset, true);
-	character_destroy(aLevel->character);
-	if(aLevel->bgm) sound_destroy(aLevel->bgm);
+	obj_release(aLevel->background);
+	obj_release(aLevel->tileset);
+	obj_release(aLevel->character);
+	if(aLevel->bgm) obj_release(aLevel->bgm);
 
 	glDeleteBuffers(1, &aLevel->vertexVBO);
 	glDeleteBuffers(1, &aLevel->texCoordVBO);
 	glDeleteBuffers(1, &aLevel->indexVBO);
-
-	free(aLevel);
 }
 
 
@@ -208,7 +206,7 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 	matrix_stack_push(aRenderer->worldMatrixStack);
 	matrix_stack_translate(aRenderer->worldMatrixStack, center.x*-1.0f, -1.0f*center.y, 0.0f);
 
-	// Draw the tiles
+	//// Draw the tiles
 	shader_makeActive(gTexturedShader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, level->tileset->texture->id);
@@ -242,14 +240,6 @@ static void _level_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLa
 		level->character->sprite->location = vec3_create(characterLocation.x+spriteOffs.x, characterLocation.y+spriteOffs.y, 0.0f);
 		level->character->sprite->angle = level->character->collisionObject->orientation;
 		level->character->sprite->renderable.displayCallback(aRenderer, level->character->sprite, aTimeSinceLastFrame, aInterpolation);
-
-		//vec4_t red = {1.0f, 0.0, 0.0, 1.0f};
-		//CollisionPolyObject_t *obj = level->character->collisionObject;
-		//matrix_stack_push(aRenderer->worldMatrixStack);
-		//matrix_stack_translate(aRenderer->worldMatrixStack, obj->center.x, obj->center.y, 0.0f);
-		//matrix_stack_rotate(aRenderer->worldMatrixStack, obj->orientation, 0.0, 0.0, 1.0);
-		//draw_polygon(obj->numberOfEdges, obj->vertices, red,false);
-		//matrix_stack_pop(aRenderer->worldMatrixStack);
 	}
 	//level->collisionWorld->debugRenderable.displayCallback(aRenderer, level->collisionWorld, aTimeSinceLastFrame, aInterpolation);
 	matrix_stack_pop(aRenderer->worldMatrixStack);

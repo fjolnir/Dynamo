@@ -1,24 +1,29 @@
 #include "input.h"
 #include "various.h"
 
+static void input_destroyManager(InputManager_t *aManager);
+
 InputManager_t *input_createManager()
 {
-	InputManager_t *out = malloc(sizeof(InputManager_t));
-	out->observers = llist_create();
-	out->activeEvents = llist_create();
+	InputManager_t *out = obj_create_autoreleased(sizeof(InputManager_t), (Obj_destructor_t)&input_destroyManager);
+	out->observers = obj_retain(llist_create());
+	out->activeEvents = obj_retain(llist_create());
 
 	return out;
 }
 
 void input_destroyManager(InputManager_t *aManager)
 {
-	llist_destroy(aManager->observers, true);
-	free(aManager);
+	llist_apply(aManager->observers, &obj_release);
+	obj_release(aManager->observers);
+	aManager->observers = NULL;
+	obj_release(aManager->activeEvents);
+	aManager->activeEvents = NULL;
 }
 
 InputObserver_t *input_createObserver(Input_type_t aObservedType, Input_handler_t aHandlerCallback, char *aCode, void *aMetaData)
 {
-	InputObserver_t *out = malloc(sizeof(InputObserver_t));
+	InputObserver_t *out = obj_create_autoreleased(sizeof(InputObserver_t), NULL);
 	out->type = aObservedType;
 	out->handlerCallback = aHandlerCallback;
 	out->metaData = aMetaData;
@@ -27,17 +32,15 @@ InputObserver_t *input_createObserver(Input_type_t aObservedType, Input_handler_
 
 	return out;
 }
-void input_destroyObserver(InputObserver_t *aObserver)
-{
-	free(aObserver);
-}
 
 void input_addObserver(InputManager_t *aManager, InputObserver_t *aObserver)
 {
+	obj_retain(aObserver);
 	llist_pushValue(aManager->observers, aObserver);
 }
 bool input_removeObserver(InputManager_t *aManager, InputObserver_t *aObserver)
 {
+	obj_release(aObserver);
 	return llist_deleteValue(aManager->observers, aObserver);
 }
 

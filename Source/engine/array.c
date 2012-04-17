@@ -1,9 +1,11 @@
 #include "array.h"
 #include <stdlib.h>
 
+static void array_destroy(Array_t *aArray);
+
 Array_t *array_create(int aCapacity)
 {
-	Array_t *out = calloc(1, sizeof(Array_t));
+	Array_t *out = obj_create_autoreleased(sizeof(Array_t), (Obj_destructor_t)&array_destroy);
 	out->capacity = aCapacity ? aCapacity : 4;
 	out->items = calloc(aCapacity, sizeof(void*));
 	out->count = 0;
@@ -14,7 +16,6 @@ Array_t *array_create(int aCapacity)
 void array_destroy(Array_t *aArray)
 {
 	free(aArray->items);
-	free(aArray);
 }
 
 void array_push(Array_t *aArray, void *aValue)

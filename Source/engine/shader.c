@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include "various.h"
 
+static void shader_destroy(Shader_t *aShader);
+
 const char *kShader_UniformNames[kShader_MaxUniforms] = {
 	"u_worldMatrix",
 	"u_projectionMatrix",
@@ -31,7 +33,7 @@ static void _readFile(const char *aFilePath, size_t *aoLength, char **aoOutput);
 
 Shader_t *shader_load(const char *aVertSrc, const char *aFragSrc)
 {
-	Shader_t *out = malloc(sizeof(Shader_t));
+	Shader_t *out = obj_create_autoreleased(sizeof(Shader_t), (Obj_destructor_t)&shader_destroy);
 	out->activationCallback = NULL;
 	out->deactivationCallback = NULL;
 	for(int i = 0; i < kShader_MaxUniforms; ++i) out->uniforms[i] = -1;
@@ -89,7 +91,6 @@ void shader_destroy(Shader_t *aShader)
 	glDeleteShader(aShader->vertexShader);
 	glDeleteShader(aShader->fragmentShader);
 	glDeleteProgram(aShader->program);
-	free(aShader);
 }
 
 #pragma mark - Usage

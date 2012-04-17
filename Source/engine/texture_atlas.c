@@ -1,19 +1,22 @@
 #include "texture_atlas.h"
+#include "various.h"
+
+static void texAtlas_destroy(TextureAtlas_t *aAtlas);
 
 TextureAtlas_t *texAtlas_create(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize)
 {
-	TextureAtlas_t *out = malloc(sizeof(TextureAtlas_t));
-	out->texture = aTexture;
+	TextureAtlas_t *out = obj_create_autoreleased(sizeof(TextureAtlas_t), (Obj_destructor_t)&texAtlas_destroy);
+	out->texture = obj_retain(aTexture);
 	out->origin = aOrigin;
 	out->size = aSize;
 	out->margin = kVec2_zero;
 
 	return out;
 }
-void texAtlas_destroy(TextureAtlas_t *aAtlas, bool aShouldDestroyTexture)
+void texAtlas_destroy(TextureAtlas_t *aAtlas)
 {
-	if(aShouldDestroyTexture) texture_destroy(aAtlas->texture);
-	free(aAtlas);
+	obj_release(aAtlas->texture);
+	aAtlas->texture = NULL;
 }
 
 TextureRect_t texAtlas_getTextureRect(TextureAtlas_t *aAtlas, int aX, int aY)

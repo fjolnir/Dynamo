@@ -1,12 +1,15 @@
 #include "renderer.h"
 #include "glutils.h"
+#include "various.h"
+
+static void renderer_destroy(Renderer_t *aRenderer);
 
 #pragma mark - Creation
 
 Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 {
-	Renderer_t *out = malloc(sizeof(Renderer_t));
-	out->renderables = llist_create();
+	Renderer_t *out = obj_create_autoreleased(sizeof(Renderer_t), (Obj_destructor_t)&renderer_destroy);
+	out->renderables = obj_retain(llist_create());
 	out->frameBufferId = 0;
 	out->viewportSize = aViewPortSize;
 	out->cameraOffset = aCameraOffset;
@@ -22,8 +25,8 @@ Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 
 void renderer_destroy(Renderer_t *aRenderer)
 {
-	llist_destroy(aRenderer->renderables, false);
-	free(aRenderer);
+	obj_release(aRenderer->renderables);
+	aRenderer->renderables = NULL;
 }
 
 
@@ -43,7 +46,7 @@ void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double 
 	if(currentItem) {
 		do {
 			renderable = (Renderable_t *)currentItem->value;
-			renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
+			renderable->displayCallback(aRenderer, renderable->owner, aTimeSinceLastFrame, aInterpolation);
 		} while( (currentItem = currentItem->next) );
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -54,12 +57,14 @@ void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double 
 
 void renderer_pushRenderable(Renderer_t *aRenderer, Renderable_t *aRenderable)
 {
+	if(aRenderable->owner) obj_retain(aRenderable->owner);
 	llist_pushValue(aRenderer->renderables, aRenderable);
 }
 
 void renderer_popRenderable(Renderer_t *aRenderer)
 {
-	llist_popValue(aRenderer->renderables);
+	Renderable_t *renderable = llist_popValue(aRenderer->renderables);
+	if(renderable->owner) obj_release(renderable->owner);
 }
 
 bool renderer_insertRenderable(Renderer_t *aRenderer, Renderable_t *aRenderableToInsert, Renderable_t *aRenderableToShift)
@@ -69,5 +74,8 @@ bool renderer_insertRenderable(Renderer_t *aRenderer, Renderable_t *aRenderableT
 
 bool renderer_deleteRenderable(Renderer_t *aRenderer, Renderable_t *aRenderable)
 {
-	return llist_deleteValue(aRenderer->renderables, aRenderable);
+	bool didDelete = llist_deleteValue(aRenderer->renderables, aRenderable);
+	if(didDelete && aRenderable->owner)
+		obj_release(aRenderable->owner);
+	return didDelete;
 }

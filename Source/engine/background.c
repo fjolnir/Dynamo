@@ -1,8 +1,12 @@
 #include "background.h"
 #include "shader.h"
+#include "various.h"
 
 static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
+static void background_destroy(Background_t *aBackground);
+static void background_destroyLayer(BackgroundLayer_t *aLayer);
 
+// Shared amongst all background objects
 static Shader_t *_backgroundShader;
 
 enum {
@@ -16,13 +20,13 @@ enum {
 
 Background_t *background_create()
 {
-	Background_t *out = calloc(1, sizeof(Background_t));
+	Background_t *out = obj_create_autoreleased(sizeof(Background_t), (Obj_destructor_t)&background_destroy);
 	out->offset = kVec2_zero;
 	out->renderable.displayCallback = &_background_draw;
 	out->renderable.owner = out;
 
 	if(!_backgroundShader) {
-		_backgroundShader = shader_loadFromFiles("engine/shaders/background.vsh", "engine/shaders/background.fsh");
+		_backgroundShader = obj_retain(shader_loadFromFiles("engine/shaders/background.vsh", "engine/shaders/background.fsh"));
 		_backgroundShader->uniforms[kBackground_offsetUniform] = shader_getUniformLocation(_backgroundShader, "u_backgroundOffset");
 		_backgroundShader->uniforms[kBackground_layer0DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer0Depth");
 		_backgroundShader->uniforms[kBackground_layer1DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer1Depth");
@@ -36,33 +40,40 @@ Background_t *background_create()
 	return out;
 }
 
-void background_destroy(Background_t *aBackground, bool aShouldDestroyLayersAndTextures)
+static void background_destroy(Background_t *aBackground)
 {
-	if(aShouldDestroyLayersAndTextures) {
-		for(int i = 0; i < kBackground_maxLayers; ++i)
-			background_destroyLayer(aBackground->layers[i], true);
+	for(int i = 0; i < kBackground_maxLayers; ++i) {
+		obj_release(aBackground->layers[i]);
+		aBackground->layers[i] = NULL;
 	}
-	free(aBackground);
+}
+
+void background_setLayer(Background_t *aBackground, unsigned int aIndex, BackgroundLayer_t *aLayer) {
+	assert(aIndex < kBackground_maxLayers);
+	aBackground->layers[aIndex] = obj_retain(aLayer);
 }
 
 BackgroundLayer_t *background_createLayer(Texture_t *aTexture, float aDepth)
 {
-	BackgroundLayer_t *out = malloc(sizeof(BackgroundLayer_t));
-	out->texture = aTexture;
+	BackgroundLayer_t *out = obj_create_autoreleased(sizeof(BackgroundLayer_t), (Obj_destructor_t)&background_destroyLayer);
+	out->texture = obj_retain(aTexture);
 	out->depth = aDepth;
 
 	return out;
 }
 
-void background_destroyLayer(BackgroundLayer_t *aLayer, bool aShouldDestroyTexture)
+static void background_destroyLayer(BackgroundLayer_t *aLayer)
 {
-	if(aShouldDestroyTexture) texture_destroy(aLayer->texture);
-	free(aLayer);
+	obj_release(aLayer->texture);
+	aLayer->texture = NULL;
 }
 
 static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation)
 {
 	Background_t *background = (Background_t *)aOwner;
+
+	if(!background->layers[0])
+		return;
 
 	GLfloat vertices[4*2] = {
 		-1.0f, -1.0f,
@@ -95,7 +106,7 @@ static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSi
 		glBindTexture(GL_TEXTURE_2D, background->layers[1]->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap1Uniform], 1);
 	}
-	if(background->layers[2]) {	
+	if(background->layers[2]) {
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, background->layers[2]->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap2Uniform], 2);
@@ -119,8 +130,9 @@ static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSi
 	glEnableVertexAttribArray(_backgroundShader->attributes[kShader_positionAttribute]);
 	glVertexAttribPointer(_backgroundShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
 	glEnableVertexAttribArray(_backgroundShader->attributes[kShader_texCoord0Attribute]);
-
+CHECK_GL_ERR()
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+CHECK_GL_ERR()
 
 	shader_makeInactive(_backgroundShader);
 }

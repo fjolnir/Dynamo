@@ -8,7 +8,7 @@ ARCH = -arch x86_64
 CC         =  gcc
 C_FLAGS    += -Wall -Wno-missing-braces -Wno-unused-function
 C_FLAGS    += -std=gnu99
-C_FLAGS    += -I"/opt/X11/include"
+C_FLAGS    += -I"/usr/X11/include"
 C_FLAGS    += -I"/usr/local/include"
 C_FLAGS    += -ggdb
 C_FLAGS    += -O0
@@ -31,13 +31,17 @@ DYNAMICLIBS := -logg -lmxml -lvorbis -lvorbisfile -lpng
 STATICLIBPNG = ../MacSpecific/libpng.a
 STATICLIBS := -logg -lmxml -lvorbis -lvorbisfile
 
-C_SOURCE   := $(wildcard *.c) $(wildcard engine/*.c) $(wildcard engine/*/*.c)
+ENGINE_SOURCE := $(wildcard engine/*.c) $(wildcard engine/*/*.c)
+ENGINE_OBJ := $(addprefix build/,$(ENGINE_SOURCE:.c=.o))
+C_SOURCE   := $(wildcard *.c) $(C_SOURCE)
 OBJ        := $(addprefix build/,$(C_SOURCE:.c=.o))
 BIN        := test
+DYLIB      := dynamo.dylib
 
 override CFLAGS := $(CFLAGS) $(C_FLAGS)
 
 all: build_and_run
+lib: build_dylib
 
 build/%.o : %.c
 	@echo Building $<
@@ -56,8 +60,9 @@ run:
 	@./$(BIN)
 
 clean:
-	@rm $(BIN) $(OBJ)
+	@rm $(BIN) $(OBJ) $(DYLIB)
 
 build_and_run: link run
 
-
+build_dylib: $(ENGINE_OBJ)
+	@$(CC) -o $(DYLIB) -dynamiclib $(DYNAMICLIBS) $(LDFLAGS) $^

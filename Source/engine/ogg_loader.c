@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "various.h"
 
+static void ogg_destroy(oggFile_t *aFile);
 static char *_oggErrorString(int aCode);
 
 oggFile_t *ogg_load(const char *aFilename)
@@ -38,7 +39,7 @@ oggFile_t *ogg_load(const char *aFilename)
 		bytes_read += value;
 	}
 
-	oggFile_t *out = malloc(sizeof(oggFile_t));
+	oggFile_t *out = obj_create_autoreleased(sizeof(oggFile_t), (Obj_destructor_t)&ogg_destroy);
 	out->fileHandle = oggStream;
 	out->samples = samples;
 	out->rate = vorbisInfo->rate;
@@ -48,12 +49,12 @@ oggFile_t *ogg_load(const char *aFilename)
 
 	return out;
 }
-extern void ogg_destroy(oggFile_t *aFile)
+void ogg_destroy(oggFile_t *aFile)
 {
 	ov_clear((OggVorbis_File *)aFile->fileHandle);
 	free(aFile->data);
-	free(aFile);
 }
+
 static char *_oggErrorString(int aCode)
 {
 	switch(aCode) {

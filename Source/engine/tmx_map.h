@@ -7,6 +7,7 @@
 // And probably some other parts. I only implemented what my project required.
 // IMPORTANT: Requires you to save your maps with the data layer as CSV (Settable in the preference window)
 
+#include "object.h"
 #include <stdbool.h>
 
 #ifndef _TMXMAP_H_
@@ -67,6 +68,7 @@ typedef struct _TMXObjectGroup {
 } TMXObjectGroup_t;
 
 typedef struct _TMXMap {
+	OBJ_GUTS
 	TMXMap_orientation orientation;
 	int width, height; // Dimensions in tiles
 	int tileWidth, tileHeight; // Dimensions of tiles in pixels
@@ -82,7 +84,6 @@ typedef struct _TMXMap {
 } TMXMap_t;
 
 extern TMXMap_t *tmx_readMapFile(const char *aFilename);
-extern void tmx_destroyMap(TMXMap_t *aMap);
 
 // Lookup helpers
 extern const char *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aPropertyName);

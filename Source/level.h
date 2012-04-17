@@ -3,6 +3,7 @@
 #include "engine/sound.h"
 #include "collision.h"
 #include "character.h"
+#include "engine/object.h"
 
 #ifndef _LEVEL_H_
 #define _LEVEL_H_
@@ -16,6 +17,7 @@ typedef struct _LevelTile {
 } LevelTile_t;
 
 typedef struct _Level {
+	OBJ_GUTS
 	Renderable_t renderable;
 	CollisionWorld_t *collisionWorld;
 	Background_t *background;

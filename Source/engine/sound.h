@@ -3,12 +3,14 @@
 #include <OpenAL/AL.h>
 #include <OpenAL/alc.h>
 #include "GLMath/GLMath.h"
+#include "object.h"
 
 #ifndef _SOUND_H_
 #define _SOUND_H_
 
 // Encapsulates an OpenAL buffer
 typedef struct _Sound {
+	OBJ_GUTS
 	int samples;
 	int rate;
 	int channels;
@@ -31,7 +33,6 @@ typedef struct _SoundManager {
 } SoundManager_t;
 
 extern Sound_t *sound_load(const char *aFilename); // Only supports OGG at the moment
-extern void sound_destroy(Sound_t *aSound);
 
 extern void sound_play(Sound_t *aSound);
 extern void sound_stop(Sound_t *aSound);

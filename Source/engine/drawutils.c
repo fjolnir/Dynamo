@@ -10,19 +10,19 @@ void draw_init(Renderer_t *aDefaultRenderer)
 {
 	_renderer = aDefaultRenderer;
 	if(!gTexturedShader) {
-		gTexturedShader = shader_loadFromFiles("engine/shaders/textured.vsh", "engine/shaders/textured.fsh");
+		gTexturedShader = obj_retain(shader_loadFromFiles("engine/shaders/textured.vsh", "engine/shaders/textured.fsh"));
 		gTexturedShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(gTexturedShader, "u_color");
 	}
 	if(!gColoredShader) {
-		gColoredShader = shader_loadFromFiles("engine/shaders/colored.vsh", "engine/shaders/colored.fsh");
+		gColoredShader = obj_retain(shader_loadFromFiles("engine/shaders/colored.vsh", "engine/shaders/colored.fsh"));
 		gColoredShader->attributes[kShader_colorAttribute] = shader_getAttributeLocation(gColoredShader, "a_color");
 	}
 }
 
 void draw_cleanup()
 {
-	if(gTexturedShader) shader_destroy(gTexturedShader);
-	if(gColoredShader) shader_destroy(gColoredShader);
+	if(gTexturedShader) obj_release(gTexturedShader);
+	if(gColoredShader) obj_release(gColoredShader);
 }
 
 

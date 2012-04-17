@@ -5,6 +5,7 @@
 
 #include "renderer.h"
 #include "texture.h"
+#include "object.h"
 
 #ifndef _BACKGROUND_H_
 #define _BACKGROUND_H_
@@ -12,19 +13,20 @@
 #define kBackground_maxLayers (4)
 
 typedef struct _BackgroundLayer {
+	OBJ_GUTS
 	Texture_t *texture;
 	float depth;
 } BackgroundLayer_t;
 
 typedef struct _Background {
+	OBJ_GUTS
 	Renderable_t renderable;
 	BackgroundLayer_t *layers[kBackground_maxLayers];
 	vec2_t offset;
 } Background_t;
 
 extern Background_t *background_create();
-extern void background_destroy(Background_t *aBackground, bool aShouldDestroyLayersAndTextures);
 
+extern void background_setLayer(Background_t *aBackground, unsigned int aIndex, BackgroundLayer_t *aLayer);
 extern BackgroundLayer_t *background_createLayer(Texture_t *aTexture, float aDepth);
-extern void background_destroyLayer(BackgroundLayer_t *aLayer, bool aShouldDestroyTexture);
 #endif

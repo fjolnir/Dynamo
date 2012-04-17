@@ -2,11 +2,13 @@
 #include "png_loader.h"
 #include "various.h"
 
+static void texture_destroy(Texture_t *aTexture);
+
 const TextureRect_t kTextureRectEntire = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical)
 {
-	Texture_t *out  = malloc(sizeof(Texture_t));
+	Texture_t *out  = obj_create_autoreleased(sizeof(Texture_t), (Obj_destructor_t)&texture_destroy);
 
 	int width, height;
 	bool hasAlpha;
@@ -37,7 +39,7 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
 void texture_destroy(Texture_t *aTexture)
 {
 	glDeleteTextures(1, &aTexture->id);
-	free(aTexture);
+	aTexture->id = 0;
 }
 
 TextureRect_t textureRectangle_createWithPixelCoordinates(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize)

@@ -1,3 +1,4 @@
+#include "object.h"
 #include "glutils.h"
 #include "GLMath/GLMath.h"
 
@@ -5,6 +6,7 @@
 #define _TEXTURE_H_
 
 typedef struct _Texture {
+	OBJ_GUTS
 	GLuint id;
 	vec2_t size;
 } Texture_t;
@@ -26,7 +28,6 @@ typedef union _TextureRect {
 extern const TextureRect_t kTextureRectEntire;
 
 extern Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical);
-extern void texture_destroy(Texture_t *aTexture);
 // Generates a UV texture rectangle from pixel coordinates
 extern TextureRect_t textureRectangle_createWithPixelCoordinates(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize);
 extern TextureRect_t textureRectangle_createWithSizeInPixels(Texture_t *aTexture, vec2_t aSize);

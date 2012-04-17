@@ -3,6 +3,8 @@
 #include "engine/sprite.h"
 #include "engine/tmx_map.h"
 
+static void world_destroy(World_t *aWorld);
+
 static bool _characterInContactWithGround = true;
 static void downKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData);
 static void upKeyPressed(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *metaData);
@@ -20,7 +22,7 @@ static int upKeyHeldFrameCount = 0;
 
 World_t *world_init()
 {
-	World_t *out = malloc(sizeof(World_t));
+	World_t *out = obj_create_autoreleased(sizeof(World_t), (Obj_destructor_t)&world_destroy);
 	out->time = 0.0;
 	out->ticks = 0;
 	out->level = NULL;
@@ -37,7 +39,7 @@ World_t *world_init()
 	input_addObserver(gInputManager, out->arrowUpObserver);
 	input_addObserver(gInputManager, out->arrowDownObserver);
 
-	out->menu = mainMenu_create();
+	out->menu = obj_retain(mainMenu_create());
 	out->menu->metaData = out;
 	out->menu->selectionCallback = &mainMenu_selectionChanged;
 	out->menu->fadeCallback = &mainMenu_didFadeOut;
@@ -49,18 +51,22 @@ World_t *world_init()
 
 void world_destroy(World_t *aWorld)
 {
-	if(aWorld->menu) mainMenu_destroy(aWorld->menu);
-	if(aWorld->level) level_destroy(aWorld->level);
+	if(aWorld->menu) obj_release(aWorld->menu);
+	aWorld->menu = NULL;
+	if(aWorld->level) obj_release(aWorld->level);
+	aWorld->level = NULL;
 	input_removeObserver(gInputManager, aWorld->arrowRightObserver);
-	input_destroyObserver(aWorld->arrowRightObserver);
+	obj_release(aWorld->arrowRightObserver);
+	aWorld->arrowRightObserver = NULL;
 	input_removeObserver(gInputManager, aWorld->arrowLeftObserver);
-	input_destroyObserver(aWorld->arrowLeftObserver);
+	obj_release(aWorld->arrowLeftObserver);
+	aWorld->arrowLeftObserver = NULL;
 	input_removeObserver(gInputManager, aWorld->arrowUpObserver);
-	input_destroyObserver(aWorld->arrowUpObserver);
+	obj_release(aWorld->arrowUpObserver);
+	aWorld->arrowUpObserver = NULL;
 	input_removeObserver(gInputManager, aWorld->arrowDownObserver);
-	input_destroyObserver(aWorld->arrowDownObserver);
-
-	free(aWorld);
+	obj_release(aWorld->arrowDownObserver);
+	aWorld->arrowDownObserver = NULL;
 }
 
 
@@ -198,7 +204,7 @@ static void mainMenu_didFadeOut(MainMenu_t *aMenu, void *metaData)
 	if(selection == 0)
 		quitGame();
 	else if(selection == 1) {
-		world->level = level_load("levels/spacetest.tmx");
+		world->level = obj_retain(level_load("levels/spacetest.tmx"));
 		if(world->level->character) world->level->character->collisionObject->collisionCallback = characterCollided;
 		if(world->level->bgm) sound_play(world->level->bgm);
 		renderer_popRenderable(gRenderer); // Remove the menu from the render stack

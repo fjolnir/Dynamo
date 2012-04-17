@@ -157,10 +157,10 @@ void quitGame()
 static void cleanup()
 {
 	debug_log("Quitting...");
-	if(gSoundManager) soundManager_destroy(gSoundManager);
-	if(gWorld) world_destroy(gWorld);
-	if(gRenderer) renderer_destroy(gRenderer);
-	if(gInputManager) input_destroyManager(gInputManager);
+	if(gSoundManager) obj_release(gSoundManager);
+	if(gWorld) obj_release(gWorld);
+	if(gRenderer) obj_release(gRenderer);
+	if(gInputManager) obj_release(gInputManager);
 	draw_cleanup();
 	SDL_Quit();
 }
@@ -216,25 +216,25 @@ int main(int argc, char **argv)
 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 */
-	gSoundManager = soundManager_create();
+	gSoundManager = obj_retain(soundManager_create());
 
-	gRenderer = renderer_create(viewport, kVec3_zero);
+	gRenderer = obj_retain(renderer_create(viewport, kVec3_zero));
 	draw_init(gRenderer);
 
 	gGameTimer.desiredInterval = 1.0/(double)DESIRED_FPS;
 	gGameTimer.elapsed = 0.0;
 	gGameTimer.timeSinceLastUpdate = 0.0;
 
-	gInputManager = input_createManager();
+	gInputManager = obj_retain(input_createManager());
 
-	gWorld = world_init();
+	gWorld = obj_retain(world_init());
 
 	// Get started!
 	windowDidResize((int)viewport.w, (int)viewport.h);
 	while(!_shouldExit) {
 		// Feed events to the game thread
 		SDL_Event event;
-		while (SDL_PollEvent(&event))
+		while(SDL_PollEvent(&event))
 			handleEvent(event);
 
 		double delta = 0.0;
@@ -256,6 +256,8 @@ int main(int argc, char **argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		renderer_display(gRenderer, gGameTimer.timeSinceLastUpdate, gameTimer_interpolationSinceLastUpdate(&gGameTimer));
 		SDL_GL_SwapBuffers();
+
+		autoReleasePool_drain(autoReleasePool_getGlobal());
 	}
 
 	return 0;

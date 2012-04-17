@@ -1,6 +1,7 @@
 // Sprite class supporting atlases with multiple animations consisting of multiple frames
 // Y Offset: Animations, X Offset: Frames
 
+#include "object.h"
 #include "renderer.h"
 #include "texture_atlas.h"
 
@@ -14,6 +15,7 @@ typedef struct _SpriteAnimation {
 } SpriteAnimation_t;
 
 typedef struct _Sprite {
+	OBJ_GUTS
 	Renderable_t renderable;
 	TextureAtlas_t *atlas;
 	vec3_t location;
@@ -26,7 +28,6 @@ typedef struct _Sprite {
 } Sprite_t;
 
 extern Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity);
-extern void sprite_destroy(Sprite_t *aSprite, bool aShouldDestroyAtlas, bool shouldDestroyTexture);
 extern SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames);
 
 extern void sprite_step(Sprite_t *aSprite);

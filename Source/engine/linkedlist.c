@@ -1,28 +1,26 @@
 #include "linkedlist.h"
 #include <stdlib.h>
 
+static void llist_destroy(LinkedList_t *aList);
 
 #pragma mark -
 
 LinkedList_t *llist_create()
 {
-	return calloc(1, sizeof(LinkedList_t));
+	return obj_create_autoreleased(sizeof(LinkedList_t), (Obj_destructor_t)&llist_destroy);
 }
 
-void llist_destroy(LinkedList_t *aList, bool aShouldFreeValues)
+void llist_destroy(LinkedList_t *aList)
 {
 	LinkedListItem_t *currentItem = aList->head;
 	if(currentItem) {
 		LinkedListItem_t *temp;
 		do {
-			if(aShouldFreeValues) free(currentItem->value);
-
 			temp = currentItem;
 			currentItem = temp->next;
 			free(temp);
 		} while(currentItem);
 	}
-	free(aList);
 }
 
 
@@ -50,10 +48,11 @@ void llist_pushValue(LinkedList_t *aList, void *aValue)
 	if(!item->previous) aList->head = item;
 }
 
-void llist_popValue(LinkedList_t *aList)
+void *llist_popValue(LinkedList_t *aList)
 {
 	LinkedListItem_t *tail = aList->tail;
-	if(!tail) return;
+	if(!tail) return NULL;
+	void *val = tail->value;
 	if(tail->previous)
 		tail->previous->next = NULL;
 	aList->tail = tail->previous;
@@ -61,6 +60,8 @@ void llist_popValue(LinkedList_t *aList)
 	if(aList->head == tail)
 		aList->head = NULL;
 	free(tail);
+
+	return val;
 }
 
 bool llist_insertValue(LinkedList_t *aList, void *aValueToInsert, void *aValueToShift)
@@ -98,4 +99,19 @@ bool llist_deleteValue(LinkedList_t *aList, void *aValue)
 		return true;
 	}
 	return false;
+}
+
+void llist_empty(LinkedList_t *aList)
+{
+	while(llist_popValue(aList));
+}
+
+void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier)
+{
+	LinkedListItem_t *item = aList->head;
+	if(item) {
+		do {
+			aApplier(item->value);
+		} while( (item = item->next));
+	}
 }

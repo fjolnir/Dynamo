@@ -24,7 +24,7 @@ void spatialHash_destroy(SpatialHash_t *aHash)
 SpatialHash_cell_t *spatialHash_createCell()
 {
 	SpatialHash_cell_t *out = malloc(sizeof(SpatialHash_cell_t));
-	out->objects = array_create(8);
+	out->objects = obj_retain(array_create(8));
 
 	return out;
 }
@@ -32,7 +32,7 @@ SpatialHash_cell_t *spatialHash_createCell()
 void spatialHash_destroyCell(SpatialHash_cell_t *aCell)
 {
 	if(aCell) {
-		array_destroy(aCell->objects);
+		obj_release(aCell->objects);
 		free(aCell);
 	}
 }
@@ -80,7 +80,6 @@ bool spatialHash_addItem(SpatialHash_t *aHash, void *aItem, rect_t aBoundingBox)
 		currentCell = cells->items[i];
 		array_push(currentCell->objects, aItem);
 	}
-	array_destroy(cells);
 
 	return (cells->count > 0);
 }
@@ -113,7 +112,6 @@ void **spatialHash_query(SpatialHash_t *aHash, rect_t aBoundingBox, int *aoCount
 	}
 	if(outLength == 0) {
 		if(aoCount) *aoCount = 0;
-		array_destroy(cells);
 		return NULL;
 	}
 	void **out = malloc(sizeof(void*)*outLength);
@@ -124,7 +122,6 @@ void **spatialHash_query(SpatialHash_t *aHash, rect_t aBoundingBox, int *aoCount
 		for(int j = 0; j < cell->objects->count; ++j)
 			out[currIdx++] = cell->objects->items[j];
 	}
-	array_destroy(cells);
 	if(aoCount) *aoCount = currIdx;
 
 	return out;

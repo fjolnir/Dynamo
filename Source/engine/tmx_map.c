@@ -8,6 +8,8 @@
 const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
 const unsigned FLIPPED_VERTICALLY_FLAG   = 0x40000000;
 
+static void tmx_destroyMap(TMXMap_t *aMap);
+
 // Private helpers
 static int *_parseCSV(const char *aCsvString, int aWidth, int aHeight);
 static void _mxmlElementPrintAttrs(mxml_node_t *aNode);
@@ -28,7 +30,7 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 	assert(tree != NULL);
 	fclose(fp);
 
-	TMXMap_t *out = malloc(sizeof(TMXMap_t));
+	TMXMap_t *out = obj_create_autoreleased(sizeof(TMXMap_t), (Obj_destructor_t)&tmx_destroyMap);
 	// Start walking through the file
 	mxml_node_t *mapNode = mxmlFindElement(tree, tree, "map", NULL, NULL, MXML_DESCEND);
 

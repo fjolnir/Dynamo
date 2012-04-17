@@ -1,6 +1,7 @@
 // The game world
 // Handles the state of the game
 
+#include "engine/object.h"
 #include "engine/background.h"
 #include "engine/input.h"
 #include "level.h"
@@ -13,6 +14,7 @@
 typedef struct _World World_t;
 
 struct _World {
+	OBJ_GUTS
 	double time; // Game time in seconds
 	long ticks; // Number of game updates since beginning (roughly time/FPS)
 
@@ -27,6 +29,5 @@ struct _World {
 };
 
 extern World_t *world_init();
-extern void world_destroy(World_t *aWorld);
 void world_update(World_t *aWorld, double aTimeDelta);
 #endif
