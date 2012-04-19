@@ -4,3 +4,7 @@ WinProject/build
 WinProject/Runner.cbp.cbTemp
 dynamo.dylib
 libdynamo.dylib
+DerivedData
+Dynamo.xcodeproj/xcuserdata
+mxml-2.7
+Dynamo.xcodeproj/project.xcworkspace/xcuserdata

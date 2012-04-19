@@ -1,0 +1,491 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C75AFD5A153FAB3900FE8623 /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD20153FAB3900FE8623 /* array.c */; };
+		C75AFD5B153FAB3900FE8623 /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD21153FAB3900FE8623 /* array.h */; };
+		C75AFD5C153FAB3900FE8623 /* background.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD22153FAB3900FE8623 /* background.c */; };
+		C75AFD5D153FAB3900FE8623 /* background.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD23153FAB3900FE8623 /* background.h */; };
+		C75AFD5E153FAB3900FE8623 /* drawutils.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD24153FAB3900FE8623 /* drawutils.c */; };
+		C75AFD5F153FAB3900FE8623 /* drawutils.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD25153FAB3900FE8623 /* drawutils.h */; };
+		C75AFD60153FAB3900FE8623 /* dynamo.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD26153FAB3900FE8623 /* dynamo.h */; };
+		C75AFD61153FAB3900FE8623 /* gametimer.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD27153FAB3900FE8623 /* gametimer.c */; };
+		C75AFD62153FAB3900FE8623 /* gametimer.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD28153FAB3900FE8623 /* gametimer.h */; };
+		C75AFD63153FAB3900FE8623 /* glutils.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD29153FAB3900FE8623 /* glutils.h */; };
+		C75AFD64153FAB3900FE8623 /* input.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD2A153FAB3900FE8623 /* input.c */; };
+		C75AFD65153FAB3900FE8623 /* input.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD2B153FAB3900FE8623 /* input.h */; };
+		C75AFD66153FAB3900FE8623 /* linkedlist.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD2C153FAB3900FE8623 /* linkedlist.c */; };
+		C75AFD67153FAB3900FE8623 /* linkedlist.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD2D153FAB3900FE8623 /* linkedlist.h */; };
+		C75AFD68153FAB3900FE8623 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD2E153FAB3900FE8623 /* object.c */; };
+		C75AFD69153FAB3900FE8623 /* object.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD2F153FAB3900FE8623 /* object.h */; };
+		C75AFD6C153FAB3900FE8623 /* png_loader.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD32153FAB3900FE8623 /* png_loader.c */; };
+		C75AFD6D153FAB3900FE8623 /* png_loader.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD33153FAB3900FE8623 /* png_loader.h */; };
+		C75AFD6E153FAB3900FE8623 /* renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD34153FAB3900FE8623 /* renderer.c */; };
+		C75AFD6F153FAB3900FE8623 /* renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD35153FAB3900FE8623 /* renderer.h */; };
+		C75AFD70153FAB3900FE8623 /* shader.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD36153FAB3900FE8623 /* shader.c */; };
+		C75AFD71153FAB3900FE8623 /* shader.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD37153FAB3900FE8623 /* shader.h */; };
+		C75AFD72153FAB3900FE8623 /* sound.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD38153FAB3900FE8623 /* sound.c */; };
+		C75AFD73153FAB3900FE8623 /* sound.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD39153FAB3900FE8623 /* sound.h */; };
+		C75AFD74153FAB3900FE8623 /* sprite.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD3A153FAB3900FE8623 /* sprite.c */; };
+		C75AFD75153FAB3900FE8623 /* sprite.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD3B153FAB3900FE8623 /* sprite.h */; };
+		C75AFD76153FAB3900FE8623 /* texture_atlas.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD3C153FAB3900FE8623 /* texture_atlas.c */; };
+		C75AFD77153FAB3900FE8623 /* texture_atlas.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD3D153FAB3900FE8623 /* texture_atlas.h */; };
+		C75AFD78153FAB3900FE8623 /* texture.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD3E153FAB3900FE8623 /* texture.c */; };
+		C75AFD79153FAB3900FE8623 /* texture.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD3F153FAB3900FE8623 /* texture.h */; };
+		C75AFD7A153FAB3900FE8623 /* tmx_map.c in Sources */ = {isa = PBXBuildFile; fileRef = C75AFD40153FAB3900FE8623 /* tmx_map.c */; };
+		C75AFD7B153FAB3900FE8623 /* tmx_map.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD41153FAB3900FE8623 /* tmx_map.h */; };
+		C75AFD7C153FAB3900FE8623 /* various.h in Headers */ = {isa = PBXBuildFile; fileRef = C75AFD42153FAB3900FE8623 /* various.h */; };
+		C75AFDA2153FABC600FE8623 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C75AFDA1153FABC600FE8623 /* OpenGLES.framework */; };
+		C7ECFDDF153FB4420066EA9B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */; };
+		C7ECFDEF153FB57D0066EA9B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7ECFDEE153FB57D0066EA9B /* CoreFoundation.framework */; };
+		C7ECFDFD153FBA340066EA9B /* mxml-attr.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDF1153FBA340066EA9B /* mxml-attr.c */; };
+		C7ECFDFE153FBA340066EA9B /* mxml-entity.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDF2153FBA340066EA9B /* mxml-entity.c */; };
+		C7ECFDFF153FBA340066EA9B /* mxml-file.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDF3153FBA340066EA9B /* mxml-file.c */; };
+		C7ECFE00153FBA340066EA9B /* mxml-get.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDF4153FBA340066EA9B /* mxml-get.c */; };
+		C7ECFE01153FBA340066EA9B /* mxml-index.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDF5153FBA340066EA9B /* mxml-index.c */; };
+		C7ECFE02153FBA340066EA9B /* mxml-node.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDF6153FBA340066EA9B /* mxml-node.c */; };
+		C7ECFE03153FBA340066EA9B /* mxml-private.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDF7153FBA340066EA9B /* mxml-private.c */; };
+		C7ECFE04153FBA340066EA9B /* mxml-private.h in Headers */ = {isa = PBXBuildFile; fileRef = C7ECFDF8153FBA340066EA9B /* mxml-private.h */; };
+		C7ECFE05153FBA340066EA9B /* mxml-search.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDF9153FBA340066EA9B /* mxml-search.c */; };
+		C7ECFE06153FBA340066EA9B /* mxml-set.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDFA153FBA340066EA9B /* mxml-set.c */; };
+		C7ECFE07153FBA340066EA9B /* mxml-string.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDFB153FBA340066EA9B /* mxml-string.c */; };
+		C7ECFE08153FBA340066EA9B /* mxml.h in Headers */ = {isa = PBXBuildFile; fileRef = C7ECFDFC153FBA340066EA9B /* mxml.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C75AFD8D153FAB5400FE8623 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C75AFD84153FAB5400FE8623 /* GLMath.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C70EA30314AC9780009D29C6;
+			remoteInfo = "Static Library";
+		};
+		C75AFD8F153FAB5400FE8623 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C75AFD84153FAB5400FE8623 /* GLMath.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C7622AF714D085B60093DDD0;
+			remoteInfo = Framework;
+		};
+		C75AFDA3153FAC8A00FE8623 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C75AFD84153FAB5400FE8623 /* GLMath.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C70EA30214AC9780009D29C6;
+			remoteInfo = "Static Library";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C75AFCF0153FA9F500FE8623 /* libDynamo - iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libDynamo - iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C75AFCF7153FA9F500FE8623 /* Dynamo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dynamo-Prefix.pch"; sourceTree = "<group>"; };
+		C75AFD20153FAB3900FE8623 /* array.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = array.c; path = Source/engine/array.c; sourceTree = SOURCE_ROOT; };
+		C75AFD21153FAB3900FE8623 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = array.h; path = Source/engine/array.h; sourceTree = SOURCE_ROOT; };
+		C75AFD22153FAB3900FE8623 /* background.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = background.c; path = Source/engine/background.c; sourceTree = SOURCE_ROOT; };
+		C75AFD23153FAB3900FE8623 /* background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = background.h; path = Source/engine/background.h; sourceTree = SOURCE_ROOT; };
+		C75AFD24153FAB3900FE8623 /* drawutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = drawutils.c; path = Source/engine/drawutils.c; sourceTree = SOURCE_ROOT; };
+		C75AFD25153FAB3900FE8623 /* drawutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = drawutils.h; path = Source/engine/drawutils.h; sourceTree = SOURCE_ROOT; };
+		C75AFD26153FAB3900FE8623 /* dynamo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dynamo.h; path = Source/engine/dynamo.h; sourceTree = SOURCE_ROOT; };
+		C75AFD27153FAB3900FE8623 /* gametimer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gametimer.c; path = Source/engine/gametimer.c; sourceTree = SOURCE_ROOT; };
+		C75AFD28153FAB3900FE8623 /* gametimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gametimer.h; path = Source/engine/gametimer.h; sourceTree = SOURCE_ROOT; };
+		C75AFD29153FAB3900FE8623 /* glutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glutils.h; path = Source/engine/glutils.h; sourceTree = SOURCE_ROOT; };
+		C75AFD2A153FAB3900FE8623 /* input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = input.c; path = Source/engine/input.c; sourceTree = SOURCE_ROOT; };
+		C75AFD2B153FAB3900FE8623 /* input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = input.h; path = Source/engine/input.h; sourceTree = SOURCE_ROOT; };
+		C75AFD2C153FAB3900FE8623 /* linkedlist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linkedlist.c; path = Source/engine/linkedlist.c; sourceTree = SOURCE_ROOT; };
+		C75AFD2D153FAB3900FE8623 /* linkedlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linkedlist.h; path = Source/engine/linkedlist.h; sourceTree = SOURCE_ROOT; };
+		C75AFD2E153FAB3900FE8623 /* object.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = object.c; path = Source/engine/object.c; sourceTree = SOURCE_ROOT; };
+		C75AFD2F153FAB3900FE8623 /* object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = object.h; path = Source/engine/object.h; sourceTree = SOURCE_ROOT; };
+		C75AFD32153FAB3900FE8623 /* png_loader.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = png_loader.c; path = Source/engine/png_loader.c; sourceTree = SOURCE_ROOT; };
+		C75AFD33153FAB3900FE8623 /* png_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = png_loader.h; path = Source/engine/png_loader.h; sourceTree = SOURCE_ROOT; };
+		C75AFD34153FAB3900FE8623 /* renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = renderer.c; path = Source/engine/renderer.c; sourceTree = SOURCE_ROOT; };
+		C75AFD35153FAB3900FE8623 /* renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = renderer.h; path = Source/engine/renderer.h; sourceTree = SOURCE_ROOT; };
+		C75AFD36153FAB3900FE8623 /* shader.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shader.c; path = Source/engine/shader.c; sourceTree = SOURCE_ROOT; };
+		C75AFD37153FAB3900FE8623 /* shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shader.h; path = Source/engine/shader.h; sourceTree = SOURCE_ROOT; };
+		C75AFD38153FAB3900FE8623 /* sound.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sound.c; path = Source/engine/sound.c; sourceTree = SOURCE_ROOT; };
+		C75AFD39153FAB3900FE8623 /* sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sound.h; path = Source/engine/sound.h; sourceTree = SOURCE_ROOT; };
+		C75AFD3A153FAB3900FE8623 /* sprite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sprite.c; path = Source/engine/sprite.c; sourceTree = SOURCE_ROOT; };
+		C75AFD3B153FAB3900FE8623 /* sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sprite.h; path = Source/engine/sprite.h; sourceTree = SOURCE_ROOT; };
+		C75AFD3C153FAB3900FE8623 /* texture_atlas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = texture_atlas.c; path = Source/engine/texture_atlas.c; sourceTree = SOURCE_ROOT; };
+		C75AFD3D153FAB3900FE8623 /* texture_atlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = texture_atlas.h; path = Source/engine/texture_atlas.h; sourceTree = SOURCE_ROOT; };
+		C75AFD3E153FAB3900FE8623 /* texture.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = texture.c; path = Source/engine/texture.c; sourceTree = SOURCE_ROOT; };
+		C75AFD3F153FAB3900FE8623 /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = texture.h; path = Source/engine/texture.h; sourceTree = SOURCE_ROOT; };
+		C75AFD40153FAB3900FE8623 /* tmx_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tmx_map.c; path = Source/engine/tmx_map.c; sourceTree = SOURCE_ROOT; };
+		C75AFD41153FAB3900FE8623 /* tmx_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tmx_map.h; path = Source/engine/tmx_map.h; sourceTree = SOURCE_ROOT; };
+		C75AFD42153FAB3900FE8623 /* various.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = various.h; path = Source/engine/various.h; sourceTree = SOURCE_ROOT; };
+		C75AFD84153FAB5400FE8623 /* GLMath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLMath.xcodeproj; path = Source/engine/GLMath/GLMath.xcodeproj; sourceTree = "<group>"; };
+		C75AFD91153FAB6400FE8623 /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = Source/engine/shaders; sourceTree = SOURCE_ROOT; };
+		C75AFDA1153FABC600FE8623 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
+		C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		C7ECFDEE153FB57D0066EA9B /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		C7ECFDF1153FBA340066EA9B /* mxml-attr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-attr.c"; path = "mxml-2.7/mxml-attr.c"; sourceTree = "<group>"; };
+		C7ECFDF2153FBA340066EA9B /* mxml-entity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-entity.c"; path = "mxml-2.7/mxml-entity.c"; sourceTree = "<group>"; };
+		C7ECFDF3153FBA340066EA9B /* mxml-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-file.c"; path = "mxml-2.7/mxml-file.c"; sourceTree = "<group>"; };
+		C7ECFDF4153FBA340066EA9B /* mxml-get.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-get.c"; path = "mxml-2.7/mxml-get.c"; sourceTree = "<group>"; };
+		C7ECFDF5153FBA340066EA9B /* mxml-index.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-index.c"; path = "mxml-2.7/mxml-index.c"; sourceTree = "<group>"; };
+		C7ECFDF6153FBA340066EA9B /* mxml-node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-node.c"; path = "mxml-2.7/mxml-node.c"; sourceTree = "<group>"; };
+		C7ECFDF7153FBA340066EA9B /* mxml-private.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-private.c"; path = "mxml-2.7/mxml-private.c"; sourceTree = "<group>"; };
+		C7ECFDF8153FBA340066EA9B /* mxml-private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "mxml-private.h"; path = "mxml-2.7/mxml-private.h"; sourceTree = "<group>"; };
+		C7ECFDF9153FBA340066EA9B /* mxml-search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-search.c"; path = "mxml-2.7/mxml-search.c"; sourceTree = "<group>"; };
+		C7ECFDFA153FBA340066EA9B /* mxml-set.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-set.c"; path = "mxml-2.7/mxml-set.c"; sourceTree = "<group>"; };
+		C7ECFDFB153FBA340066EA9B /* mxml-string.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "mxml-string.c"; path = "mxml-2.7/mxml-string.c"; sourceTree = "<group>"; };
+		C7ECFDFC153FBA340066EA9B /* mxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mxml.h; path = "mxml-2.7/mxml.h"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C75AFCED153FA9F500FE8623 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7ECFDEF153FB57D0066EA9B /* CoreFoundation.framework in Frameworks */,
+				C7ECFDDF153FB4420066EA9B /* CoreGraphics.framework in Frameworks */,
+				C75AFDA2153FABC600FE8623 /* OpenGLES.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C75AFCE0153FA9D800FE8623 = {
+			isa = PBXGroup;
+			children = (
+				C75AFD84153FAB5400FE8623 /* GLMath.xcodeproj */,
+				C75AFCF5153FA9F500FE8623 /* Dynamo */,
+				C7ECFDF0153FBA1E0066EA9B /* Mini-XML */,
+				C75AFCF2153FA9F500FE8623 /* Frameworks */,
+				C75AFCF1153FA9F500FE8623 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C75AFCF1153FA9F500FE8623 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C75AFCF0153FA9F500FE8623 /* libDynamo - iOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C75AFCF2153FA9F500FE8623 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C7ECFDEE153FB57D0066EA9B /* CoreFoundation.framework */,
+				C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */,
+				C75AFDA1153FABC600FE8623 /* OpenGLES.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C75AFCF5153FA9F500FE8623 /* Dynamo */ = {
+			isa = PBXGroup;
+			children = (
+				C75AFD91153FAB6400FE8623 /* shaders */,
+				C75AFD20153FAB3900FE8623 /* array.c */,
+				C75AFD21153FAB3900FE8623 /* array.h */,
+				C75AFD22153FAB3900FE8623 /* background.c */,
+				C75AFD23153FAB3900FE8623 /* background.h */,
+				C75AFD24153FAB3900FE8623 /* drawutils.c */,
+				C75AFD25153FAB3900FE8623 /* drawutils.h */,
+				C75AFD26153FAB3900FE8623 /* dynamo.h */,
+				C75AFD27153FAB3900FE8623 /* gametimer.c */,
+				C75AFD28153FAB3900FE8623 /* gametimer.h */,
+				C75AFD29153FAB3900FE8623 /* glutils.h */,
+				C75AFD2A153FAB3900FE8623 /* input.c */,
+				C75AFD2B153FAB3900FE8623 /* input.h */,
+				C75AFD2C153FAB3900FE8623 /* linkedlist.c */,
+				C75AFD2D153FAB3900FE8623 /* linkedlist.h */,
+				C75AFD2E153FAB3900FE8623 /* object.c */,
+				C75AFD2F153FAB3900FE8623 /* object.h */,
+				C75AFD32153FAB3900FE8623 /* png_loader.c */,
+				C75AFD33153FAB3900FE8623 /* png_loader.h */,
+				C75AFD34153FAB3900FE8623 /* renderer.c */,
+				C75AFD35153FAB3900FE8623 /* renderer.h */,
+				C75AFD36153FAB3900FE8623 /* shader.c */,
+				C75AFD37153FAB3900FE8623 /* shader.h */,
+				C75AFD38153FAB3900FE8623 /* sound.c */,
+				C75AFD39153FAB3900FE8623 /* sound.h */,
+				C75AFD3A153FAB3900FE8623 /* sprite.c */,
+				C75AFD3B153FAB3900FE8623 /* sprite.h */,
+				C75AFD3C153FAB3900FE8623 /* texture_atlas.c */,
+				C75AFD3D153FAB3900FE8623 /* texture_atlas.h */,
+				C75AFD3E153FAB3900FE8623 /* texture.c */,
+				C75AFD3F153FAB3900FE8623 /* texture.h */,
+				C75AFD40153FAB3900FE8623 /* tmx_map.c */,
+				C75AFD41153FAB3900FE8623 /* tmx_map.h */,
+				C75AFD42153FAB3900FE8623 /* various.h */,
+				C75AFCF7153FA9F500FE8623 /* Dynamo-Prefix.pch */,
+			);
+			path = Dynamo;
+			sourceTree = "<group>";
+		};
+		C75AFD85153FAB5400FE8623 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C75AFD8E153FAB5400FE8623 /* libglmath.a */,
+				C75AFD90153FAB5400FE8623 /* GLMath.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C7ECFDF0153FBA1E0066EA9B /* Mini-XML */ = {
+			isa = PBXGroup;
+			children = (
+				C7ECFDF1153FBA340066EA9B /* mxml-attr.c */,
+				C7ECFDF2153FBA340066EA9B /* mxml-entity.c */,
+				C7ECFDF3153FBA340066EA9B /* mxml-file.c */,
+				C7ECFDF4153FBA340066EA9B /* mxml-get.c */,
+				C7ECFDF5153FBA340066EA9B /* mxml-index.c */,
+				C7ECFDF6153FBA340066EA9B /* mxml-node.c */,
+				C7ECFDF7153FBA340066EA9B /* mxml-private.c */,
+				C7ECFDF8153FBA340066EA9B /* mxml-private.h */,
+				C7ECFDF9153FBA340066EA9B /* mxml-search.c */,
+				C7ECFDFA153FBA340066EA9B /* mxml-set.c */,
+				C7ECFDFB153FBA340066EA9B /* mxml-string.c */,
+				C7ECFDFC153FBA340066EA9B /* mxml.h */,
+			);
+			name = "Mini-XML";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		C75AFCEE153FA9F500FE8623 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C75AFD5B153FAB3900FE8623 /* array.h in Headers */,
+				C75AFD5D153FAB3900FE8623 /* background.h in Headers */,
+				C75AFD5F153FAB3900FE8623 /* drawutils.h in Headers */,
+				C75AFD60153FAB3900FE8623 /* dynamo.h in Headers */,
+				C75AFD62153FAB3900FE8623 /* gametimer.h in Headers */,
+				C75AFD63153FAB3900FE8623 /* glutils.h in Headers */,
+				C75AFD65153FAB3900FE8623 /* input.h in Headers */,
+				C75AFD67153FAB3900FE8623 /* linkedlist.h in Headers */,
+				C75AFD69153FAB3900FE8623 /* object.h in Headers */,
+				C75AFD6D153FAB3900FE8623 /* png_loader.h in Headers */,
+				C75AFD6F153FAB3900FE8623 /* renderer.h in Headers */,
+				C75AFD71153FAB3900FE8623 /* shader.h in Headers */,
+				C75AFD73153FAB3900FE8623 /* sound.h in Headers */,
+				C75AFD75153FAB3900FE8623 /* sprite.h in Headers */,
+				C75AFD77153FAB3900FE8623 /* texture_atlas.h in Headers */,
+				C75AFD79153FAB3900FE8623 /* texture.h in Headers */,
+				C75AFD7B153FAB3900FE8623 /* tmx_map.h in Headers */,
+				C75AFD7C153FAB3900FE8623 /* various.h in Headers */,
+				C7ECFE04153FBA340066EA9B /* mxml-private.h in Headers */,
+				C7ECFE08153FBA340066EA9B /* mxml.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		C75AFCEF153FA9F500FE8623 /* Dynamo - iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C75AFCFD153FA9F500FE8623 /* Build configuration list for PBXNativeTarget "Dynamo - iOS" */;
+			buildPhases = (
+				C75AFCEC153FA9F500FE8623 /* Sources */,
+				C75AFCED153FA9F500FE8623 /* Frameworks */,
+				C75AFCEE153FA9F500FE8623 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C75AFDA4153FAC8A00FE8623 /* PBXTargetDependency */,
+			);
+			name = "Dynamo - iOS";
+			productName = Dynamo;
+			productReference = C75AFCF0153FA9F500FE8623 /* libDynamo - iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C75AFCE2153FA9D800FE8623 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = C75AFCE5153FA9D800FE8623 /* Build configuration list for PBXProject "Dynamo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C75AFCE0153FA9D800FE8623;
+			productRefGroup = C75AFCF1153FA9F500FE8623 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C75AFD85153FAB5400FE8623 /* Products */;
+					ProjectRef = C75AFD84153FAB5400FE8623 /* GLMath.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				C75AFCEF153FA9F500FE8623 /* Dynamo - iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		C75AFD8E153FAB5400FE8623 /* libglmath.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libglmath.a;
+			remoteRef = C75AFD8D153FAB5400FE8623 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C75AFD90153FAB5400FE8623 /* GLMath.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GLMath.framework;
+			remoteRef = C75AFD8F153FAB5400FE8623 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C75AFCEC153FA9F500FE8623 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C75AFD5A153FAB3900FE8623 /* array.c in Sources */,
+				C75AFD5C153FAB3900FE8623 /* background.c in Sources */,
+				C75AFD5E153FAB3900FE8623 /* drawutils.c in Sources */,
+				C75AFD61153FAB3900FE8623 /* gametimer.c in Sources */,
+				C75AFD64153FAB3900FE8623 /* input.c in Sources */,
+				C75AFD66153FAB3900FE8623 /* linkedlist.c in Sources */,
+				C75AFD68153FAB3900FE8623 /* object.c in Sources */,
+				C75AFD6C153FAB3900FE8623 /* png_loader.c in Sources */,
+				C75AFD6E153FAB3900FE8623 /* renderer.c in Sources */,
+				C75AFD70153FAB3900FE8623 /* shader.c in Sources */,
+				C75AFD72153FAB3900FE8623 /* sound.c in Sources */,
+				C75AFD74153FAB3900FE8623 /* sprite.c in Sources */,
+				C75AFD76153FAB3900FE8623 /* texture_atlas.c in Sources */,
+				C75AFD78153FAB3900FE8623 /* texture.c in Sources */,
+				C75AFD7A153FAB3900FE8623 /* tmx_map.c in Sources */,
+				C7ECFDFD153FBA340066EA9B /* mxml-attr.c in Sources */,
+				C7ECFDFE153FBA340066EA9B /* mxml-entity.c in Sources */,
+				C7ECFDFF153FBA340066EA9B /* mxml-file.c in Sources */,
+				C7ECFE00153FBA340066EA9B /* mxml-get.c in Sources */,
+				C7ECFE01153FBA340066EA9B /* mxml-index.c in Sources */,
+				C7ECFE02153FBA340066EA9B /* mxml-node.c in Sources */,
+				C7ECFE03153FBA340066EA9B /* mxml-private.c in Sources */,
+				C7ECFE05153FBA340066EA9B /* mxml-search.c in Sources */,
+				C7ECFE06153FBA340066EA9B /* mxml-set.c in Sources */,
+				C7ECFE07153FBA340066EA9B /* mxml-string.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C75AFDA4153FAC8A00FE8623 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Static Library";
+			targetProxy = C75AFDA3153FAC8A00FE8623 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		C75AFCE7153FA9D800FE8623 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		C75AFCE8153FA9D800FE8623 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		C75AFCFB153FA9F500FE8623 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/Dynamo.dst;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Dynamo-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"Source/Engine/**",
+					"mxml-2.7",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C75AFCFC153FA9F500FE8623 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/Dynamo.dst;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Dynamo-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"Source/Engine/**",
+					"mxml-2.7",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C75AFCE5153FA9D800FE8623 /* Build configuration list for PBXProject "Dynamo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C75AFCE7153FA9D800FE8623 /* Debug */,
+				C75AFCE8153FA9D800FE8623 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C75AFCFD153FA9F500FE8623 /* Build configuration list for PBXNativeTarget "Dynamo - iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C75AFCFB153FA9F500FE8623 /* Debug */,
+				C75AFCFC153FA9F500FE8623 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C75AFCE2153FA9D800FE8623 /* Project object */;
+}

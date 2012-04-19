@@ -13,7 +13,7 @@ typedef struct _Texture {
 
 // A  structure to specify areas to sample from a texture (in UV coordinates)
 typedef union _TextureRect {
-	vec4_t v;
+	vec4_t vec;
 	float *f;
 	struct {
 		vec2_t origin;

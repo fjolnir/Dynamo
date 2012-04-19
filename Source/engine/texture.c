@@ -10,11 +10,8 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
 {
 	Texture_t *out  = obj_create_autoreleased(sizeof(Texture_t), (Obj_destructor_t)&texture_destroy);
 
-	int width, height;
-	bool hasAlpha;
-	GLubyte *data;
-	bool success = png_load(aPath, &width, &height, &hasAlpha, &data);
-	if (!success) {
+	Png_t *png = png_load(aPath);
+	if (!png) {
 		debug_log("Unable to load png file from %s", aPath);
 		return NULL;
 	}
@@ -22,16 +19,15 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
 	glGenTextures(1, &out->id);
 	glBindTexture(GL_TEXTURE_2D, out->id);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, hasAlpha ? 4 : 3, width, height,
-	             0, hasAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, aRepeatHorizontal ? GL_REPEAT : GL_CLAMP);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, aRepeatVertical   ? GL_REPEAT : GL_CLAMP);
+	glTexImage2D(GL_TEXTURE_2D, 0, png->hasAlpha ? 4 : 3, png->width, png->height,
+	             0, png->hasAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, png->data);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, aRepeatHorizontal ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, aRepeatVertical   ? GL_REPEAT : GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	free(data);
-	out->size.w = (float)width;
-	out->size.h = (float)height;
+	out->size.w = (float)png->width;
+	out->size.h = (float)png->height;
 
 	return out;
 }

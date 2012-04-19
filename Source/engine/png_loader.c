@@ -1,11 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <png.h>
 #include "png_loader.h"
 #include "various.h"
 
-bool png_load(const char *aPath, int *oWidth, int *oHeight, bool *oHasAlpha, unsigned char **oData) {
+#ifndef TARGET_OS_IPHONE
+    #include <png.h>
+#else
+    #include <CoreGraphics/CoreGraphics.h>
+#endif
+
+static void png_destroy(Png_t *self);
+
+Png_t *png_load(const char *aPath) {
+    Png_t *self = obj_create_autoreleased(sizeof(Png_t), (Obj_destructor_t)&png_destroy);
+#ifndef TARGET_OS_EMBEDDED
     png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;
@@ -89,15 +98,15 @@ bool png_load(const char *aPath, int *oWidth, int *oHeight, bool *oHasAlpha, uns
      *  expand a palette into RGB
      */
     png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_EXPAND, (png_voidp)NULL);
-    *oWidth = png_get_image_width(png_ptr, info_ptr);
-    *oHeight = png_get_image_height(png_ptr, info_ptr);
+    self->width = png_get_image_width(png_ptr, info_ptr);
+    self->height = png_get_image_height(png_ptr, info_ptr);
 	color_type = png_get_color_type(png_ptr, info_ptr);
     switch (color_type) {
         case PNG_COLOR_TYPE_RGBA:
-            *oHasAlpha = true;
+            self->hasAlpha = true;
             break;
         case PNG_COLOR_TYPE_RGB:
-            *oHasAlpha = false;
+            self->hasAlpha = false;
             break;
         default:
 			debug_log("Color type: %d not supported", color_type);
@@ -106,15 +115,15 @@ bool png_load(const char *aPath, int *oWidth, int *oHeight, bool *oHasAlpha, uns
             return false;
     }
     unsigned int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-    *oData = (unsigned char*) malloc(row_bytes * (*oHeight));
+    self->data = (unsigned char*) malloc(row_bytes * (self->height));
 
     png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 
-    for (int i = 0; i < *oHeight; i++) {
+    for (int i = 0; i < self->height; i++) {
         // note that png is ordered top to
         // bottom, but OpenGL expect it bottom to top
         // so the order or swapped
-        memcpy(*oData+(row_bytes * ((*oHeight) - 1-i)), row_pointers[i], row_bytes);
+        memcpy(self->data+(row_bytes * ((self->height) - 1-i)), row_pointers[i], row_bytes);
     }
 
     /* Clean up after the read,
@@ -123,7 +132,33 @@ bool png_load(const char *aPath, int *oWidth, int *oHeight, bool *oHasAlpha, uns
 
     /* Close the file */
     fclose(fp);
+#else
+    // We're on iOS, so let's use CG
+    CGDataProviderRef provider = CGDataProviderCreateWithFilename(aPath);
+    if(!provider)
+        return false;
+    CGImageRef cgImg = CGImageCreateWithPNGDataProvider(provider,
+                                                        NULL,
+                                                        false,
+                                                        kCGRenderingIntentDefault);
+    CGDataProviderRelease(provider);
+    if(!cgImg)
+        return false;
 
-    /* That's it */
-    return true;
+    self->width    = CGImageGetWidth(cgImg);
+    self->height   = CGImageGetHeight(cgImg);
+    self->hasAlpha = CGImageGetAlphaInfo(cgImg) != kCGImageAlphaNone;
+    self->cfData   = CGDataProviderCopyData(CGImageGetDataProvider(cgImg));
+    self->data     = CFDataGetBytePtr(self->cfData);
+#endif
+    return self;
+}
+
+void png_destroy(Png_t *self)
+{
+#ifdef TARGET_OS_EMBEDDED
+    CFRelease(self->cfData);
+#else
+    free(self->data);
+#endif
 }
