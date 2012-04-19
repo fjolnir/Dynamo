@@ -23,7 +23,19 @@ typedef enum {
 	kInputMouse_rightClick,
 	kInputMouse_leftDrag,
 	kInputMouse_rightDrag,
-	kInputMouse_move
+	kInputMouse_move,
+
+	// Touch events
+	kInputTouch_tap1,
+	kInputTouch_tap2,
+	kInputTouch_tap3,
+	kInputTouch_tap4,
+	kInputTouch_tap5,
+	kInputTouch_pan1,
+	kInputTouch_pan2,
+	kInputTouch_pan3,
+	kInputTouch_pan4,
+	kInputTouch_pan5
 } Input_type_t;
 
 typedef enum {

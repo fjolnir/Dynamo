@@ -10,6 +10,7 @@ Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, 
 {
 	Sprite_t *out = (Sprite_t*)obj_create_autoreleased(sizeof(Sprite_t), (Obj_destructor_t)&sprite_destroy);
 	out->renderable.displayCallback = &_sprite_draw;
+	out->renderable.owner = out;
 	out->location = aLocation;
 	out->size = aSize;
 	out->scale = 1.0f;

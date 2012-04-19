@@ -9,6 +9,14 @@
 #ifndef __DRAWUTILS_H_
 #define __DRAWUTILS_H_
 
+// Rectangles (Origin: bottom left)
+union _rect_t {
+	float f[4];
+	struct { vec2_t o; vec2_t s; };
+	struct { vec2_t origin; vec2_t size; };
+};
+typedef union _rect_t rect_t;
+
 #define kDraw_defaultEllipseSubDivs 25
 
 extern  Shader_t *gTexturedShader;

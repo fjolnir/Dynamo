@@ -9,7 +9,7 @@ TextureAtlas_t *texAtlas_create(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSiz
 	out->texture = obj_retain(aTexture);
 	out->origin = aOrigin;
 	out->size = aSize;
-	out->margin = kVec2_zero;
+	out->margin = GLMVec2_zero;
 
 	return out;
 }

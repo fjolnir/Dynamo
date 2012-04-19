@@ -21,7 +21,7 @@ enum {
 Background_t *background_create()
 {
 	Background_t *out = obj_create_autoreleased(sizeof(Background_t), (Obj_destructor_t)&background_destroy);
-	out->offset = kVec2_zero;
+	out->offset = GLMVec2_zero;
 	out->renderable.displayCallback = &_background_draw;
 	out->renderable.owner = out;
 
@@ -130,9 +130,7 @@ static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSi
 	glEnableVertexAttribArray(_backgroundShader->attributes[kShader_positionAttribute]);
 	glVertexAttribPointer(_backgroundShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
 	glEnableVertexAttribArray(_backgroundShader->attributes[kShader_texCoord0Attribute]);
-CHECK_GL_ERR()
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-CHECK_GL_ERR()
 
 	shader_makeInactive(_backgroundShader);
 }

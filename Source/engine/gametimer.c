@@ -1,20 +1,25 @@
 #include "gametimer.h"
 #include "various.h"
 
-void gameTimer_update(GameTimer_t *aTimer, double aDelta)
+GameTimer_t *gameTimer_create(double aFps, GameTimer_updateCallback_t aUpdateCallback)
 {
-	aTimer->elapsed += aDelta;
-	aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+aDelta);
+	GameTimer_t *out = obj_create_autoreleased(sizeof(GameTimer_t), NULL);
+	out->desiredInterval = 1.0/(aFps > 0.0 ? aFps : 60.0);
+	out->updateCallback = aUpdateCallback;
+
+	return out;
 }
 
-void gameTimer_finishedUpdate(GameTimer_t *aTimer)
+extern void gameTimer_step(GameTimer_t *aTimer, double aElapsed)
 {
-	aTimer->timeSinceLastUpdate -= aTimer->desiredInterval;	
-}
+	double delta = aElapsed - aTimer->elapsed;
+	aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+delta);
+	aTimer->elapsed = aElapsed;
 
-bool gameTimer_reachedNextUpdate(GameTimer_t *aTimer)
-{
-	return !(aTimer->timeSinceLastUpdate >= aTimer->desiredInterval);
+	for(; aTimer->timeSinceLastUpdate > aTimer->desiredInterval; aTimer->timeSinceLastUpdate -= aTimer->desiredInterval) {
+		if(aTimer->updateCallback)
+			aTimer->updateCallback(aTimer);
+	}
 }
 
 double gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer)

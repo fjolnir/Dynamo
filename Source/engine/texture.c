@@ -49,7 +49,7 @@ TextureRect_t textureRectangle_createWithPixelCoordinates(Texture_t *aTexture, v
 }
 TextureRect_t textureRectangle_createWithSizeInPixels(Texture_t *aTexture, vec2_t aSize)
 {
-	return textureRectangle_createWithPixelCoordinates(aTexture, kVec2_zero, aSize);
+	return textureRectangle_createWithPixelCoordinates(aTexture, GLMVec2_zero, aSize);
 }
 
 TextureRect_t textureRectangle_create(float aX, float aY, float aWidth, float aHeight)

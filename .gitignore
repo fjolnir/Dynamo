@@ -3,3 +3,4 @@ Source/test
 WinProject/build
 WinProject/Runner.cbp.cbTemp
 dynamo.dylib
+libdynamo.dylib

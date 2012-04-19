@@ -28,7 +28,7 @@ Sound_t *sound_load(const char *aFilename)
 	_checkForOpenAlError();
 
 	alSourcei(out->source, AL_BUFFER,  out->buffer);
-	sound_setPosition(out, kVec3_zero);
+	sound_setPosition(out, GLMVec3_zero);
 	sound_setLooping(out, false);
 	sound_setPitch(out, 1.0f);
 	sound_setGain(out, 1.0f);

@@ -4,16 +4,22 @@
 #ifndef _GAMETIMER_H_
 #define _GAMETIMER_H_
 
+typedef struct _GameTimer GameTimer_t;
+typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
+
 // All values are in seconds
-typedef struct _GameTimer {
+struct _GameTimer {
 	OBJ_GUTS
 	double elapsed;
 	double timeSinceLastUpdate;
 	double desiredInterval; // The minimum interval between updates
-} GameTimer_t;
+	GameTimer_updateCallback_t updateCallback;
+};
 
-extern void gameTimer_update(GameTimer_t *aTimer, double aDelta);
-extern void gameTimer_finishedUpdate(GameTimer_t *aTimer);
-extern bool gameTimer_reachedNextUpdate(GameTimer_t *aTimer);
+extern GameTimer_t *gameTimer_create(double aFps, GameTimer_updateCallback_t aUpdateCallback);
+
+// Updates the timer and calls the update callback as many times as required to progress up until elapsed
+extern void gameTimer_step(GameTimer_t *aTimer, double elapsed);
+
 extern double gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 #endif
