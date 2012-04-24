@@ -2,7 +2,7 @@
 #include <ogg/ogg.h>
 #include <vorbis/vorbisfile.h>
 #include <stdlib.h>
-#include "various.h"
+#include "util.h"
 
 static void ogg_destroy(oggFile_t *aFile);
 static char *_oggErrorString(int aCode);

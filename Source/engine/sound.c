@@ -1,6 +1,6 @@
 #include "sound.h"
 #include "ogg_loader.h"
-#include "various.h"
+#include "util.h"
 
 static void sound_destroy(Sound_t *aSound);
 static char *_openAlErrorString(int aCode);
@@ -13,6 +13,7 @@ static bool _sound_update(Sound_t *aSound);
 
 Sound_t *sound_load(const char *aFilename)
 {
+#ifndef TARGET_OS_EMBEDDED
 	Sound_t *out = obj_create_autoreleased(sizeof(Sound_t), (Obj_destructor_t)&sound_destroy);
 
 	oggFile_t *oggFile = ogg_load(aFilename);
@@ -42,6 +43,8 @@ Sound_t *sound_load(const char *aFilename)
 	out->samples = oggFile->samples;
 
 	return out;
+#endif
+    return NULL;
 }
 
 void sound_destroy(Sound_t *aSound)

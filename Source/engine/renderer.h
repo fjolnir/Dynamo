@@ -14,12 +14,17 @@
 #define _RENDERER_H_
 
 typedef struct _Renderer Renderer_t;
+typedef struct _Renderable Renderable_t;
+
+typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, Renderable_t *aRenderable, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
 // For defining an object you wish to have rendered
-typedef struct _Renderable {
-	void (*displayCallback)(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
-	Obj_t *owner;
-} Renderable_t;
+// (You usually wouldn't use this directly, rather you'd simply add your display callback
+//  function pointer as the first field after the guts of the object you wish to render)
+struct _Renderable {
+    OBJ_GUTS
+    RenderableDisplayCallback_t displayCallback;
+};
 
 // The renderer object
 struct _Renderer {
@@ -36,12 +41,12 @@ struct _Renderer {
 extern Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset);
 
 // Display
-extern void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double aInterpolation);
+extern void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
-// Renderable list management
-extern void renderer_pushRenderable(Renderer_t *aRenderer, Renderable_t *aRenderable);
+// Renderable list management (Renderables need to conform to the layout of Renderable_t). Retains
+extern void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable);
 extern void renderer_popRenderable(Renderer_t *aRenderer);
-extern bool renderer_insertRenderable(Renderer_t *aRenderer, Renderable_t *aRenderableToInsert, Renderable_t *aRenderableToShift);
-extern bool renderer_deleteRenderable(Renderer_t *aRenderer, Renderable_t *aRenderable);
+extern bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift);
+extern bool renderer_deleteRenderable(Renderer_t *aRenderer, void *aRenderable);
 
 #endif

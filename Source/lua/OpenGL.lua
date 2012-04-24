@@ -11,7 +11,7 @@ local libs = ffi_OpenGL_libs or {
 
 local lib  = ffi_OpenGL_lib or libs[ ffi.os ][ ffi.arch ]
 
-local gl   = ffi.load( lib )
+local gl   = ffi.C --ffi.load( lib )
 
 ffi.cdef[[
 enum {

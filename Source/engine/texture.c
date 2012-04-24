@@ -1,6 +1,6 @@
 #include "texture.h"
 #include "png_loader.h"
-#include "various.h"
+#include "util.h"
 
 static void texture_destroy(Texture_t *aTexture);
 
@@ -19,8 +19,10 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
 	glGenTextures(1, &out->id);
 	glBindTexture(GL_TEXTURE_2D, out->id);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, png->hasAlpha ? 4 : 3, png->width, png->height,
+
+	glTexImage2D(GL_TEXTURE_2D, 0, png->hasAlpha ? GL_RGBA : GL_RGB, png->width, png->height,
 	             0, png->hasAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, png->data);
+    glError()
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, aRepeatHorizontal ? GL_REPEAT : GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, aRepeatVertical   ? GL_REPEAT : GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

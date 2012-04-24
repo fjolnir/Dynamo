@@ -1,13 +1,15 @@
 -- There's a crasher bug in JIT that I haven't figured out a way to work around
-jit.off()
+--jit.off()
 
 local ffi = require("ffi")
-local lib = ffi.load("./libdynamo.dylib", true)
+local lib = ffi.C --ffi.load("./libdynamo.dylib", true)
 local gl = require("OpenGL")
 
 local dynamo = setmetatable({}, { __index = lib })
 
 ffi.cdef[[
+typedef float GLMFloat;
+
 // ----- Object
 typedef void (*Obj_destructor_t)(void *aSelf);
 typedef struct {
@@ -50,11 +52,12 @@ extern void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier);
 
 // ----- Renderer
 typedef struct _Renderer Renderer_t;
+typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, void *aOwner, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
 // For defining an object you wish to have rendered
 typedef struct _Renderable {
-	void (*displayCallback)(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
-	Obj_t *owner;
+	_Obj_guts _guts;
+    RenderableDisplayCallback_t displayCallback;
 } Renderable_t;
 
 // The renderer object
@@ -72,14 +75,30 @@ struct _Renderer {
 extern Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset);
 
 // Display
-extern void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double aInterpolation);
+extern void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
 // Renderable list management
-extern void renderer_pushRenderable(Renderer_t *aRenderer, Renderable_t *aRenderable);
+extern void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable);
 extern void renderer_popRenderable(Renderer_t *aRenderer);
-extern bool renderer_insertRenderable(Renderer_t *aRenderer, Renderable_t *aRenderableToInsert, Renderable_t *aRenderableToShift);
-extern bool renderer_deleteRenderable(Renderer_t *aRenderer, Renderable_t *aRenderable);
+extern bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift);
+extern bool renderer_deleteRenderable(Renderer_t *aRenderer, void *aRenderable);
 
+// ----- Scene
+
+typedef struct _Scene {
+	_Obj_guts _guts;
+	RenderableDisplayCallback_t displayCallback;
+	LinkedList_t *renderables;
+	mat4_t transform;
+} Scene_t;
+
+extern Scene_t *scene_create();
+
+// Scene object list management (Objects need to conform to the layout of Renderable_t)
+extern void scene_pushRenderable(Scene_t *aScene, void *aRenderable);
+extern void scene_popRenderable(Scene_t *aScene);
+extern bool scene_insertRenderable(Scene_t *aScene, void *aRenderableToInsert, void *aRenderableToShift);
+extern bool scene_deleteRenderable(Scene_t *aScene, void *aRenderable);
 
 // ----- Game timer
 typedef struct _GameTimer GameTimer_t;
@@ -88,18 +107,18 @@ typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
 // All values are in seconds
 struct _GameTimer {
 	_Obj_guts _guts;
-	double elapsed;
-	double timeSinceLastUpdate;
-	double desiredInterval; // The minimum interval between updates
+	GLMFloat elapsed;
+	GLMFloat timeSinceLastUpdate;
+	GLMFloat desiredInterval; // The minimum interval between updates
 	GameTimer_updateCallback_t updateCallback;
 };
 
-extern GameTimer_t *gameTimer_create(double aFps, GameTimer_updateCallback_t aUpdateCallback);
+extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 
 // Updates the timer and calls the update callback as many times as required to progress up until elapsed
-extern void gameTimer_step(GameTimer_t *aTimer, double elapsed);
+extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 
-extern double gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
+extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 
 // ----- Texture
 typedef struct _Texture {
@@ -200,7 +219,7 @@ typedef struct _SpriteAnimation {
 
 typedef struct _Sprite {
 	_Obj_guts _guts;
-	Renderable_t renderable;
+	RenderableDisplayCallback_t displayCallback;
 	TextureAtlas_t *atlas;
 	vec3_t location;
 	vec2_t size;
@@ -225,7 +244,7 @@ typedef struct _BackgroundLayer {
 
 typedef struct _Background {
 	_Obj_guts _guts;
-	Renderable_t renderable;
+	RenderableDisplayCallback_t displayCallback;
 	BackgroundLayer_t *layers[4];
 	vec2_t offset;
 } Background_t;
@@ -301,9 +320,107 @@ extern void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aTyp
 // Activates an event so it gets posted once per cycle
 extern void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation);
 extern void input_endEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode);
+
+// ---- Maps
+typedef enum _TMXMap_orientation {
+	kTMXMap_orthogonal,
+	kTMXMap_isometric
+} TMXMap_orientation;
+
+typedef struct _TMXProperty {
+	char *name;
+	char *value;
+} TMXProperty_t;
+
+typedef struct _TMXTileset {
+	int firstTileGid;
+	int imageWidth, imageHeight;
+	int tileWidth, tileHeight;
+	int spacing;
+	int margin;
+	char *imagePath;
+} TMXTileset_t;
+
+typedef struct _TMXTile {
+	TMXTileset_t *tileset;
+	int id;
+	bool flippedVertically;
+	bool flippedHorizontally;
+} TMXTile_t;
+
+typedef struct _TMXLayer {
+	char *name;
+	float opacity;
+	bool isVisible;
+	int numberOfTiles;
+	TMXTile_t *tiles;
+	int numberOfProperties;
+	TMXProperty_t *properties; // Default NULL
+} TMXLayer_t;
+
+typedef struct _TMXObject {
+	char *name;
+	char *type;
+	int x, y; // in pixels
+	int width, height; // in pixels
+	TMXTile_t tile; // Default -1
+	int numberOfProperties;
+	TMXProperty_t *properties; // Default NULL
+} TMXObject_t;
+
+typedef struct _TMXObjectGroup {
+	char *name;
+	int numberOfObjects;
+	TMXObject_t *objects;
+	int numberOfProperties;
+	TMXProperty_t *properties; // Default NULL
+} TMXObjectGroup_t;
+
+typedef struct _TMXMap {
+	_Obj_guts _guts;
+	TMXMap_orientation orientation;
+	int width, height; // Dimensions in tiles
+	int tileWidth, tileHeight; // Dimensions of tiles in pixels
+	
+	int numberOfLayers;
+	TMXLayer_t *layers;
+	int numberOfTilesets;
+	TMXTileset_t *tilesets;
+	int numberOfObjectGroups;
+	TMXObjectGroup_t *objectGroups;
+	int numberOfProperties;
+	TMXProperty_t *properties;
+} TMXMap_t;
+
+extern TMXMap_t *tmx_readMapFile(const char *aFilename);
+
+// A renderable that manages a vbo for drawing a layer
+typedef struct _TMXLayerRenderable {
+	_Obj_guts _guts;
+	RenderableDisplayCallback_t displayCallback;
+	TMXLayer_t *layer;
+	TMXMap_t *map; // Reference required so that we can retain it
+	TextureAtlas_t *atlas;
+	GLuint posVBO, texCoordVBO, indexVBO;
+	int indexCount;
+} TMXLayerRenderable_t;
+
+extern TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int aLayerIdx);
+
+// Lookup helpers
+extern const char *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aPropertyName);
+extern TMXLayer_t *tmx_mapGetLayerNamed(TMXMap_t *aMap, const char *aLayerName);
+extern TMXObjectGroup_t *tmx_mapGetObjectGroupNamed(TMXMap_t *aMap, const char *aGroupName);
+extern TMXObject_t *tmx_objGroupGetObjectNamed(TMXObjectGroup_t *aGroup, const char *aObjName);
+
+
+extern bool util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen);
 ]]
 
 dynamo.kBackground_maxLayers = 4
+
+--
+-- Utilities
 
 -- Retains an object and tells the gc to release it when it's no longer referenced
 local function _obj_addToGC(obj)
@@ -312,10 +429,27 @@ local function _obj_addToGC(obj)
 	return obj
 end
 
+function dynamo.pathForResource(name, type, directory)
+	type = type or nil
+	directory = directory or nil
+	local maxLen = 1024
+	local strPtr = ffi.new("char[?]", maxLen)
+	local exists = lib.util_pathForResource(name, type, directory, strPtr, maxLen)
+	if exists then
+		return ffi.string(strPtr)
+	else
+		return nil
+	end
+end
+
 --
 -- Textures
 function dynamo.loadTexture(path)
 	local tex = lib.texture_loadFromPng(path, false, false)
+	if tex == nil then
+		print("Couldn't find texture at path", path)
+		return nil
+	end
 	return _obj_addToGC(tex)
 end
 
@@ -368,19 +502,13 @@ end
 ffi.metatype("Renderer_t", {
 	__index = {
 		display = lib.renderer_display,
-		pushRenderable = function(self, object)
-			lib.renderer_pushRenderable(self, object.renderable)
-		end,
+		pushRenderable = lib.renderer_pushRenderable,
 		popRenderable = lib.renderer_popRenderable,
-		insertRenderable = function(self, object, before)
-			lib.renderer_pushRenderable(self, object.renderable, before.renderable)
-		end,
-		deleteRenderable = function(self, object)
-			lib.renderer_deleteRenderable(self, object.renderable)
-		end,
+		insertRenderable = lib.renderer_pushRenderable,
+		deleteRenderable = lib.renderer_deleteRenderable,
 		handleResize = function(self, viewport)
 			self.viewportSize = viewport
-			self.projectionMatrixStack:pushItem(mat4_ortho(0, viewport.w, 0, viewport.h, -1, 1));
+			self.projectionMatrixStack:pushItem(mat4_ortho(0, viewport.w, viewport.h, 0, -1, 1));
 		end
 	}
 })
@@ -388,6 +516,41 @@ ffi.metatype("Renderer_t", {
 local function _createRenderer(viewportSize)
 	local renderer = lib.renderer_create(viewportSize, {{0,0,0}})
 	return _obj_addToGC(renderer)
+end
+
+
+--
+-- Scenes
+
+ffi.metatype("Scene_t", {
+	__index = {
+		pushRenderable = lib.scene_pushRenderable,
+		popRenderable = lib.scene_popRenderable,
+		insertRenderable = lib.scene_pushRenderable,
+		deleteRenderable = lib.scene_deleteRenderable,
+		rotate = function(self, angle)
+			self.transform = mat4_rotate(self.transform, angle, 0, 0, 1)
+		end,
+		scale = function(self, x, y)
+			self.transform = mat4_scale(self.transform, x, y, 0)
+		end,
+		translate = function(self, x, y)
+			self.transform = mat4_translate(self.transform, x, y, 0)
+		end
+	}
+})
+
+function dynamo.createScene(renderables, initialTransform)
+	objects = objects or {}
+	initialTransform = initialTransform or mat4_identity
+
+	local scene = lib.scene_create()
+	for i,renderable in pairs(renderables) do
+		scene:pushRenderable(renderable)
+	end
+	scene.transform = initialTransform
+
+	return _obj_addToGC(scene)
 end
 
 --
@@ -431,12 +594,24 @@ end
 
 -- Time function (IOS/MacOS only! for now)
 ffi.cdef[[
+struct mach_timebase_info {
+	uint32_t	numer;
+	uint32_t	denom;
+};
+typedef struct mach_timebase_info *mach_timebase_info_t;
+typedef struct mach_timebase_info	mach_timebase_info_data_t;
+
+void mach_timebase_info(mach_timebase_info_t info);
 uint64_t mach_absolute_time(void);
-uint64_t AbsoluteToNanoseconds(uint64_t absoluteTime);
 ]]
 local C = ffi.C
 function dynamo.globalTime()
-	return tonumber(C.AbsoluteToNanoseconds(C.mach_absolute_time()))/1000000000
+	local timebase = ffi.new("mach_timebase_info_data_t[1]")
+	C.mach_timebase_info(timebase)
+	local absolute = C.mach_absolute_time()
+	local nanosec = (absolute * timebase[0].numer) / timebase[0].denom
+
+	return tonumber(nanosec)/1000000000
 end
 
 dynamo.startTime = dynamo.globalTime()
@@ -444,41 +619,88 @@ function dynamo.time()
     return dynamo.globalTime() - dynamo.startTime
 end
 
---
--- Custom drawables (Quick wrapper to allow passing arbitrary lua functions as renderables)
 
-ffi.cdef[[
-typedef struct {
-	_Obj_guts _guts;
-	Renderable_t renderable;
-} DrawableObject_t;
-]]
 function dynamo.renderable(lambda)
-	local drawable = ffi.cast("DrawableObject_t*", lib.obj_create_autoreleased(ffi.sizeof("DrawableObject_t"), nil))
-	drawable.renderable = {
-		displayCallback = lambda,
-		owner = drawable
-	}
+	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.sizeof("Renderable_t"), nil))
+	drawable.displayCallback = lambda
 	return drawable
 end
-	
+
+
+--
+-- Maps
+ffi.metatype("TMXMap_t", {
+	__index = {
+		getProperty = lib.tmx_mapGetPropertyNamed,
+		getLayer = tmx_mapGetLayerNamed,
+		getObjectGroup = tmx_mapGetObjectGroupNamed,
+		createLayerRenderable = lib.tmx_createRenderableForLayer
+	}
+})
+
+ffi.metatype("TMXLayer_t", {
+	__index = {
+		-- Generates the texture offsets and screen coordinates to draw each tile
+		generateAtlasDrawInfo = function(self, map)
+			local texOffsets = ffi.new("vec2_t[?]", self.numberOfTiles)
+			local screenCoords = ffi.new("vec2_t[?]", self.numberOfTiles)
+			
+			for y=0, map.height-1 do
+				for x=0, map.width-1 do
+					local idx = y*map.width + x
+					local tile = self.tiles[idx]
+					texOffsets[idx] = tile.tileset:texCoordForID(tile.id)
+					screenCoords[idx] = vec2(math.floor(map.tileWidth*x + map.tileWidth/2), math.floor(map.tileHeight*y + map.tileHeight/2))
+				end
+			end
+			return screenCoords, texOffsets
+		end
+
+	}
+})
+
+ffi.metatype("TMXObjectGroup_t", {
+	__index = function(self, key)
+		return lib.tmx_objGroupGetObjectNamed(self, key)
+	end
+})
+
+function math.round(num)
+	return math.floor(num+0.5)
+end
+
+ffi.metatype("TMXTileset_t", {
+	__index = {
+		loadAtlas = function(self)
+			local fullPath = dynamo.pathForResource(self.imagePath)
+			assert(fullPath ~= nil)
+			local tex = dynamo.loadTexture(fullPath)
+			assert(tex ~= nil)
+			local atlas = dynamo.createTextureAtlas(tex, vec2(self.margin, self.margin), vec2(self.tileWidth, self.tileHeight))
+			atlas.margin = vec2(self.spacing, self.spacing)
+			return atlas
+		end,
+		texCoordForID = function(self, id)
+			local tilesPerRow = math.floor((self.imageWidth - self.spacing) / (self.tileWidth + self.spacing))
+			local u = id % tilesPerRow
+			local rows = math.floor((self.imageHeight - self.spacing) / (self.tileHeight + self.spacing))
+			local v = math.floor(id / tilesPerRow)
+			return vec2(u,v)
+		end
+	}
+})
+
+dynamo.loadMap = lib.tmx_readMapFile
+
 
 --
 -- Lifecycle/HighLevelInterface functions
 
 dynamo.initialized = false
-
-function _setupGL()
-	gl.glEnable( gl.GL_BLEND )
-	gl.glBlendFunc( gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA )
-	gl.glDisable( gl.GL_CULL_FACE)
-end
-
 function dynamo.init(viewport, desiredFPS, updateCallback)
 	assert(dynamo.initialized == false)
 	dynamo.initialized = true
 
-	_setupGL()
 	dynamo.renderer = _createRenderer(viewport)
 	lib.draw_init(dynamo.renderer)
 	dynamo.renderer:handleResize(viewport)
@@ -514,17 +736,15 @@ function dynamo.postPanEvent(finger, isDown, x, y)
 	finger = finger or 0
 	local pos = vec2(x or 0, y or 0)
 	local state = lib.kInputState_up
-	if isDown == true then 
+	if isDown == 1 or isDown == true then
 		state = lib.kInputState_down
 	end
-	dynamo.inputManager:postMomentaryEvent(lib.kInputTouch_pan1+finger, nil, pos, lib.kInputState_down)
+	dynamo.inputManager:postMomentaryEvent(lib.kInputTouch_pan1+finger, nil, pos, state)
 end
 
 function dynamo.cycle()
-	assert(dynamo.initialized)
 	dynamo.inputManager:postActiveEvents()
 	dynamo.timer:step(dynamo.time())
-	gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 	dynamo.renderer:display(dynamo.timer.timeSinceLastUpdate, dynamo.timer:interpolation())
 end
 

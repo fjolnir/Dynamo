@@ -1,5 +1,6 @@
 #include "object.h"
 #include <stdbool.h>
+#include <GLMath.h>
 
 #ifndef _GAMETIMER_H_
 #define _GAMETIMER_H_
@@ -10,16 +11,16 @@ typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
 // All values are in seconds
 struct _GameTimer {
 	OBJ_GUTS
-	double elapsed;
-	double timeSinceLastUpdate;
-	double desiredInterval; // The minimum interval between updates
+	GLMFloat elapsed;
+	GLMFloat timeSinceLastUpdate;
+	GLMFloat desiredInterval; // The minimum interval between updates
 	GameTimer_updateCallback_t updateCallback;
 };
 
-extern GameTimer_t *gameTimer_create(double aFps, GameTimer_updateCallback_t aUpdateCallback);
+extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 
 // Updates the timer and calls the update callback as many times as required to progress up until elapsed
-extern void gameTimer_step(GameTimer_t *aTimer, double elapsed);
+extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 
-extern double gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
+extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 #endif

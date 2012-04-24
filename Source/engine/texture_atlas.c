@@ -1,5 +1,5 @@
 #include "texture_atlas.h"
-#include "various.h"
+#include "util.h"
 
 static void texAtlas_destroy(TextureAtlas_t *aAtlas);
 

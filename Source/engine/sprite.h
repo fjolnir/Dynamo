@@ -16,7 +16,7 @@ typedef struct _SpriteAnimation {
 
 typedef struct _Sprite {
 	OBJ_GUTS
-	Renderable_t renderable;
+    RenderableDisplayCallback_t displayCallback;
 	TextureAtlas_t *atlas;
 	vec3_t location;
 	vec2_t size;

@@ -1,7 +1,7 @@
 #include "gametimer.h"
-#include "various.h"
+#include "util.h"
 
-GameTimer_t *gameTimer_create(double aFps, GameTimer_updateCallback_t aUpdateCallback)
+GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback)
 {
 	GameTimer_t *out = obj_create_autoreleased(sizeof(GameTimer_t), NULL);
 	out->desiredInterval = 1.0/(aFps > 0.0 ? aFps : 60.0);
@@ -10,9 +10,9 @@ GameTimer_t *gameTimer_create(double aFps, GameTimer_updateCallback_t aUpdateCal
 	return out;
 }
 
-extern void gameTimer_step(GameTimer_t *aTimer, double aElapsed)
+extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
 {
-	double delta = aElapsed - aTimer->elapsed;
+	GLMFloat delta = aElapsed - aTimer->elapsed;
 	aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+delta);
 	aTimer->elapsed = aElapsed;
 
@@ -22,7 +22,7 @@ extern void gameTimer_step(GameTimer_t *aTimer, double aElapsed)
 	}
 }
 
-double gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer)
+GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer)
 {
 	return aTimer->timeSinceLastUpdate / aTimer->desiredInterval;
 }

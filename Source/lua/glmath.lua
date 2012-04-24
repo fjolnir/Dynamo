@@ -1,5 +1,4 @@
 -- Load GLMath
-
 local ffi = require("ffi")
 local C = ffi.C
 ffi.cdef[[
@@ -178,6 +177,15 @@ mat3_t matrix_stack_get_mat3(matrix_stack_t *stack);
 void matrix_stack_translate(matrix_stack_t *stack, GLMFloat x, GLMFloat y, GLMFloat z);
 void matrix_stack_rotate(matrix_stack_t *stack, GLMFloat angle, GLMFloat x, GLMFloat y, GLMFloat z);
 void matrix_stack_scale(matrix_stack_t *stack, GLMFloat x, GLMFloat y, GLMFloat z);
+
+extern const vec2_t GLMVec2_zero;
+extern const vec3_t GLMVec3_zero;
+extern const vec4_t GLMVec4_zero;
+
+extern const mat3_t GLMMat3_identity;
+extern const mat3_t GLMMat3_zero;
+extern const mat4_t GLMMat4_identity;
+extern const mat4_t GLMMat4_zero;
 ]]
 
 mat4_create_translation = C.mat4_create_translation
@@ -379,13 +387,25 @@ vec4 = C.vec4_create
 rgba = vec4
 quat = C.quat_createf
 
+-- There's some weirdness with luajit ffi and vec2_create, the other create functions work fine though
+-- I need to figure this out (Only an issue in the iOS simulator(i386). Not necessary on arm)
+vec2 = function(x,y)
+    return vec3(x,y,0).xy
+end
+
 function rgb(r,g,b,a)
 	a = a or 1
 	return rgba(r,g,b,a)
 end
 
-vec2_zero = vec2(0,0)
-vec3_zero = vec3(0,0,0)
-vec4_zero = vec4(0,0,0,0)
+vec2_zero = C.GLMVec2_zero
+vec3_zero = C.GLMVec3_zero
+vec4_zero = C.GLMVec4_zero
+
+mat3_identity = C.GLMMat3_identity
+mat4_identity = C.GLMMat4_identity
+mat3_zero = C.GLMMat3_zero
+mat4_zero = C.GLMMat4_zero
+
 
 PI=math.pi

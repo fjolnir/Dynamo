@@ -1,9 +1,10 @@
 #include "tmx_map.h"
-#include "various.h"
+#include "util.h"
 #include <stdlib.h>
 #include <assert.h>
 #include <mxml.h>
 #include <string.h>
+#include "drawutils.h"
 
 const unsigned FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
 const unsigned FLIPPED_VERTICALLY_FLAG   = 0x40000000;
@@ -11,7 +12,6 @@ const unsigned FLIPPED_VERTICALLY_FLAG   = 0x40000000;
 static void tmx_destroyMap(TMXMap_t *aMap);
 
 // Private helpers
-static int *_parseCSV(const char *aCsvString, int aWidth, int aHeight);
 static void _mxmlElementPrintAttrs(mxml_node_t *aNode);
 static char *_mxmlElementCopyAttr(mxml_node_t *aNode, const char *aAttrName);
 static float _mxmlElementGetAttrAsFloat(mxml_node_t *aNode, const char *aAttrName, float aDefault);
@@ -76,21 +76,18 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 		out->layers[i].isVisible = _mxmlElementGetAttrAsInt(tempNode, "visible", 1);
 		out->layers[i].properties = _tmx_readPropertiesFromMxmlNode(tempNode, tree, &out->layers[i].numberOfProperties);
 
-		// Parse the tile CSV and resolve the global tile ids
+		// Parse the tiles and resolve the global tile ids
 		mxml_node_t *dataNode = mxmlFindElement(tempNode, tree, "data", NULL, NULL, MXML_DESCEND_FIRST);
 		assert(dataNode);
-		mxml_node_t *csvNode = mxmlWalkNext(dataNode, tree, MXML_DESCEND);
-		assert(csvNode);
-		const char *tileCSV = csvNode->value.opaque;
-		int *tileGids = _parseCSV(tileCSV, out->width, out->height);
-		if(tileGids) {
-			out->layers[i].numberOfTiles = out->width*out->height;
-			out->layers[i].tiles = malloc(sizeof(TMXTile_t)*out->layers[i].numberOfTiles);
-			for(int j = 0; j < out->layers[i].numberOfTiles; ++j) {
-				out->layers[i].tiles[j] = _tmx_mapCreateTileForTileGID(out, tileGids[j]);
-			}
-			free(tileGids);
-		}
+        mxml_node_t **tileNodes = _mxmlFindChildren(dataNode, tree, "tile", &out->layers[i].numberOfTiles);
+        assert(out->layers[i].numberOfTiles == out->width*out->height);
+
+        out->layers[i].tiles = malloc(sizeof(TMXTile_t)*out->layers[i].numberOfTiles);
+        for(int j = 0; j < out->layers[i].numberOfTiles; ++j) {
+            int gid = _mxmlElementGetAttrAsInt(tileNodes[j], "gid", 0);
+            out->layers[i].tiles[j] = _tmx_mapCreateTileForTileGID(out, gid);
+        }
+        free(tileNodes);
 	}
 	free(layerNodes);
 
@@ -231,26 +228,6 @@ static TMXTileset_t *_tmx_mapGetTilesetForTileGID(TMXMap_t *aMap, int aTileGID)
 	return NULL;
 }
 
-
-#pragma mark - CSV parsing
-
-// We know the dimensions of the map beforehand so we can just load the csv into a one dimensional array
-static int *_parseCSV(const char *aCsvString, int aWidth, int aHeight)
-{
-	// Copy the input (because strtok mutates)
-	char csvCopy[strlen(aCsvString)+1];
-	strcpy(csvCopy, aCsvString);
-
-	int *out = malloc(sizeof(int)*aWidth*aHeight);
-	int i = 0;
-	const char *separators = ",\n";
-	char *value;
-	for(value = strtok(csvCopy, separators); value != NULL; value = strtok(NULL, separators)) {
-		sscanf(value, "%d", &out[i++]);
-	}
-	return out;
-}
-
 static void _mxmlElementPrintAttrs(mxml_node_t *aNode)
 {
 	mxml_element_t *element = &aNode->value.element;
@@ -332,4 +309,124 @@ TMXProperty_t *_tmx_readPropertiesFromMxmlNode(mxml_node_t *aParentNode, mxml_no
 		*aoCount = 0;
 
 	return NULL;
+}
+
+static void tmx_destroyLayerRenderable(TMXLayerRenderable_t *aRenderable)
+{
+    glDeleteBuffers(1, &aRenderable->posVBO);
+    glDeleteBuffers(1, &aRenderable->texCoordVBO);
+    glDeleteBuffers(1, &aRenderable->indexVBO);
+    obj_release(aRenderable->map);
+}
+
+static void tmx_drawLayerRenderable(Renderer_t *aRenderer, TMXLayerRenderable_t *aRenderable, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
+{
+   shader_makeActive(gTexturedShader);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, aRenderable->atlas->texture->id);
+    
+	shader_updateMatrices(gTexturedShader, aRenderer);
+	glUniform1i(gTexturedShader->uniforms[kShader_colormap0Uniform], 0);
+	vec4_t white = {1.0, 1.0, 1.0, 1.0};
+	glUniform4fv(gTexturedShader->uniforms[kShader_colorUniform], 1, white.f);
+    
+	glBindBuffer(GL_ARRAY_BUFFER, aRenderable->posVBO);
+	glVertexAttribPointer(gTexturedShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_positionAttribute]);
+    
+	glBindBuffer(GL_ARRAY_BUFFER, aRenderable->texCoordVBO);
+	glVertexAttribPointer(gTexturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
+    
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, aRenderable->indexVBO);
+	glDrawElements(GL_TRIANGLES, aRenderable->indexCount, GL_UNSIGNED_INT, 0);
+    
+	shader_makeInactive(gTexturedShader);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+#pragma mark -
+
+vec2_t tmx_tileset_texCoordFromId(TMXTileset_t *aTileset, int id)
+{
+    int tilesPerRow = (aTileset->imageWidth - aTileset->spacing) / (aTileset->tileWidth + aTileset->spacing);
+    int u = id % tilesPerRow;
+    int v = id / tilesPerRow;
+    return vec2_create(u, v);
+}
+
+TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int aLayerIdx)
+{
+    assert(aMap != NULL);
+    assert(aLayerIdx < aMap->numberOfLayers);
+    obj_retain(aMap);
+    
+    TMXLayerRenderable_t *out = obj_create_autoreleased(sizeof(TMXLayerRenderable_t), (Obj_destructor_t)&tmx_destroyLayerRenderable);
+    out->map = aMap;
+    out->layer = &aMap->layers[aLayerIdx];
+    out->displayCallback = (RenderableDisplayCallback_t)&tmx_drawLayerRenderable;
+    
+    // Find the first used tile and use its tileset
+    TMXTileset_t *tileset = NULL; 
+    for(int i = 0; i < out->layer->numberOfTiles && tileset == NULL; ++i) {
+        tileset = out->layer->tiles[i].tileset;
+    }
+    assert(tileset != NULL);
+    
+    // Open a texture atlas for the tileset
+    vec2_t tileSize = vec2_create(out->map->tileWidth, out->map->tileHeight);
+    char texPath[512];
+    util_pathForResource(tileset->imagePath, NULL, NULL, texPath, 512);
+    Texture_t *tex = texture_loadFromPng((const char*)texPath, false, false);
+    assert(tex != NULL);
+    TextureAtlas_t *atlas = texAtlas_create(tex, vec2_create(tileset->margin, tileset->margin), tileSize);
+    atlas->margin = vec2_create(tileset->spacing, tileset->spacing);
+    assert(atlas != NULL);
+    out->atlas = obj_retain(atlas);
+    
+    // Generate & store the tile mesh
+	vec2_t *texOffsets = malloc(sizeof(vec2_t)*out->layer->numberOfTiles);
+	vec2_t *screenCoords = malloc(sizeof(vec2_t)*out->layer->numberOfTiles);
+	for(int y = 0; y < out->map->height; ++y) {
+		for(int x = 0; x < out->map->width; ++x) {
+            int idx = y*out->map->width + x;
+            TMXTile_t *tile = &out->layer->tiles[idx];
+            texOffsets[idx] = tmx_tileset_texCoordFromId(tileset, tile->id);
+			screenCoords[idx].x = (out->map->tileWidth * (float)x) + out->map->tileWidth / 2.0f;
+			screenCoords[idx].y = (out->map->tileHeight * (float)y) + out->map->tileWidth / 2.0f;
+		}
+	}
+
+    int numberOfVertices;
+	int numberOfIndices;
+	vec2_t *vertices;
+	vec2_t *texCoords;
+	GLuint *indices;
+    draw_textureAtlas_getVertices(atlas, out->layer->numberOfTiles, texOffsets, screenCoords, &vertices, &texCoords, &numberOfVertices, &indices, &numberOfIndices);
+    free(texOffsets);
+	free(screenCoords);
+    
+    glGenBuffers(1, &out->posVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, out->posVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vec2_t)*numberOfVertices, vertices, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &out->texCoordVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, out->texCoordVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vec2_t)*numberOfVertices, texCoords, GL_STATIC_DRAW);
+    
+	out->indexCount = numberOfIndices;
+	glGenBuffers(1, &out->indexVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, out->indexVBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*numberOfIndices, indices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    
+	free(vertices);
+	free(texCoords);
+	free(indices);
+    
+    return out;
 }

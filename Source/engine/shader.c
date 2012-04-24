@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "various.h"
+#include "util.h"
 
 static void shader_destroy(Shader_t *aShader);
 
@@ -54,6 +54,7 @@ Shader_t *shader_load(const char *aVertSrc, const char *aFragSrc)
 	out->fragmentShader = fragmentShader;
 
 	success = _shader_link(out->program);
+    glError()
 	assert(success);
 
 	// Hook up the default uniforms&attributes if available
@@ -77,7 +78,6 @@ Shader_t *shader_loadFromFiles(const char *aVertShaderPath, const char *aFragSha
 
 	_readFile(aFragShaderPath, &fragShaderLength, &fragShaderSource);
 	assert(fragShaderLength > 0 && fragShaderSource != NULL);
-
 	Shader_t *out = shader_load(vertShaderSource, fragShaderSource);
 
 	free(vertShaderSource);
@@ -198,6 +198,7 @@ static GLuint _shader_compile(const char *aSrc, GLenum aType, bool *aoSucceeded)
 
 #pragma mark - Utilities
 
+// TODO: Add graceful error handling (Was failing with a mysterious sigsegv on missing files on android)
 static void _readFile(const char *aFilePath, size_t *aoLength, char **aoOutput)
 {
 	FILE *fd = fopen(aFilePath, "r");

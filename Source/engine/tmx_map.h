@@ -5,13 +5,15 @@
 // Ignores the transparency color of images (We use the alpha channel)
 //
 // And probably some other parts. I only implemented what my project required.
-// IMPORTANT: Requires you to save your maps with the data layer as CSV (Settable in the preference window)
-
-#include "object.h"
-#include <stdbool.h>
+// IMPORTANT: Requires you to save your maps with the data layer as XML (Settable in the preference window)
 
 #ifndef _TMXMAP_H_
 #define _TMXMAP_H_
+
+#include "object.h"
+#include "renderer.h"
+#include "texture_atlas.h"
+#include <stdbool.h>
 
 typedef enum _TMXMap_orientation {
 	kTMXMap_orthogonal,
@@ -83,6 +85,17 @@ typedef struct _TMXMap {
 	TMXProperty_t *properties;
 } TMXMap_t;
 
+// A renderable that manages a vbo for drawing a layer
+typedef struct _TMXLayerRenderable {
+    OBJ_GUTS
+    RenderableDisplayCallback_t displayCallback;
+    TMXLayer_t *layer;
+    TMXMap_t *map; // Reference required so that we can retain it
+    TextureAtlas_t *atlas;
+    GLuint posVBO, texCoordVBO, indexVBO;
+    int indexCount;
+} TMXLayerRenderable_t;
+
 extern TMXMap_t *tmx_readMapFile(const char *aFilename);
 
 // Lookup helpers
@@ -90,4 +103,7 @@ extern const char *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aProperty
 extern TMXLayer_t *tmx_mapGetLayerNamed(TMXMap_t *aMap, const char *aLayerName);
 extern TMXObjectGroup_t *tmx_mapGetObjectGroupNamed(TMXMap_t *aMap, const char *aGroupName);
 extern TMXObject_t *tmx_objGroupGetObjectNamed(TMXObjectGroup_t *aGroup, const char *aObjName);
+
+// Note: only supports one tileset per layer, uses the tileset set for the first tile which has one.
+extern TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int aLayerIdx);
 #endif

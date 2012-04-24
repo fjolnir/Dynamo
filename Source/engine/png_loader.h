@@ -1,6 +1,6 @@
 #ifndef _PNGLOADER_H_
 #define _PNGLOADER_H_
-#import "object.h"
+#include "object.h"
 
 typedef struct {
     OBJ_GUTS

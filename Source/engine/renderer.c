@@ -1,6 +1,6 @@
 #include "renderer.h"
 #include "glutils.h"
-#include "various.h"
+#include "util.h"
 
 static void renderer_destroy(Renderer_t *aRenderer);
 
@@ -25,20 +25,15 @@ Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 
 void renderer_destroy(Renderer_t *aRenderer)
 {
-	obj_release(aRenderer->renderables);
-	aRenderer->renderables = NULL;
+	obj_release(aRenderer->renderables), aRenderer->renderables = NULL;
 }
 
 
 #pragma mark - Display
 
-void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double aInterpolation)
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, aRenderer->frameBufferId);
-	glViewport(0, 0, aRenderer->viewportSize.w, aRenderer->viewportSize.h);
-	
-	//glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-	//glClear(GL_COLOR_BUFFER_BIT);
+void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
+{	
+	glClear(GL_COLOR_BUFFER_BIT);
 	
 	// Render each of the renderer's entities
 	LinkedListItem_t *currentItem = aRenderer->renderables->head;
@@ -46,36 +41,35 @@ void renderer_display(Renderer_t *aRenderer, double aTimeSinceLastFrame, double 
 	if(currentItem) {
 		do {
 			renderable = (Renderable_t *)currentItem->value;
-			renderable->displayCallback(aRenderer, renderable->owner, aTimeSinceLastFrame, aInterpolation);
+			renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
 		} while( (currentItem = currentItem->next) );
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
 #pragma mark - Entity list
 
-void renderer_pushRenderable(Renderer_t *aRenderer, Renderable_t *aRenderable)
+void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable)
 {
-	if(aRenderable->owner) obj_retain(aRenderable->owner);
+    obj_retain(aRenderable);
 	llist_pushValue(aRenderer->renderables, aRenderable);
 }
 
 void renderer_popRenderable(Renderer_t *aRenderer)
 {
 	Renderable_t *renderable = llist_popValue(aRenderer->renderables);
-	if(renderable->owner) obj_release(renderable->owner);
+    obj_release(renderable);
 }
 
-bool renderer_insertRenderable(Renderer_t *aRenderer, Renderable_t *aRenderableToInsert, Renderable_t *aRenderableToShift)
+bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift)
 {
 	return llist_insertValue(aRenderer->renderables, aRenderableToInsert, aRenderableToShift);
 }
 
-bool renderer_deleteRenderable(Renderer_t *aRenderer, Renderable_t *aRenderable)
+bool renderer_deleteRenderable(Renderer_t *aRenderer, void *aRenderable)
 {
 	bool didDelete = llist_deleteValue(aRenderer->renderables, aRenderable);
-	if(didDelete && aRenderable->owner)
-		obj_release(aRenderable->owner);
+	if(didDelete && aRenderable)
+		obj_release(aRenderable);
 	return didDelete;
 }

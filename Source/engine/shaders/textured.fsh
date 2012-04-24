@@ -1,7 +1,7 @@
 uniform sampler2D u_colormap0;
-uniform vec4 u_color;
+uniform mediump vec4 u_color;
 
-varying vec2 v_texCoord0;
+varying highp vec2 v_texCoord0;
 
 void main()
 {

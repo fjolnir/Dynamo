@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "png_loader.h"
-#include "various.h"
+#include "util.h"
 
 #ifndef TARGET_OS_IPHONE
     #include <png.h>
@@ -123,7 +123,7 @@ Png_t *png_load(const char *aPath) {
         // note that png is ordered top to
         // bottom, but OpenGL expect it bottom to top
         // so the order or swapped
-        memcpy(self->data+(row_bytes * ((self->height) - 1-i)), row_pointers[i], row_bytes);
+        memcpy((void*)(self->data+(row_bytes * i)), row_pointers[i], row_bytes);
     }
 
     /* Clean up after the read,
@@ -159,6 +159,6 @@ void png_destroy(Png_t *self)
 #ifdef TARGET_OS_EMBEDDED
     CFRelease(self->cfData);
 #else
-    free(self->data);
+    free((void*)self->data);
 #endif
 }

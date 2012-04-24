@@ -1,16 +1,15 @@
 #include "sprite.h"
 #include "drawutils.h"
 #include <stdlib.h>
-#include "various.h"
+#include "util.h"
 
 static void sprite_destroy(Sprite_t *aSprite);
-static void _sprite_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
+static void _sprite_draw(Renderer_t *aRenderer, Sprite_t *aSprite, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
 Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity)
 {
 	Sprite_t *out = (Sprite_t*)obj_create_autoreleased(sizeof(Sprite_t), (Obj_destructor_t)&sprite_destroy);
-	out->renderable.displayCallback = &_sprite_draw;
-	out->renderable.owner = out;
+	out->displayCallback = (RenderableDisplayCallback_t)&_sprite_draw;
 	out->location = aLocation;
 	out->size = aSize;
 	out->scale = 1.0f;
@@ -54,11 +53,10 @@ void sprite_step(Sprite_t *aSprite)
 
 #pragma mark - Rendering
 
-void _sprite_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation)
+void _sprite_draw(Renderer_t *aRenderer, Sprite_t *aSprite, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
 {
-	Sprite_t *sprite = (Sprite_t *)aOwner;
-	SpriteAnimation_t *animation = &sprite->animations[sprite->activeAnimation];
+	SpriteAnimation_t *animation = &aSprite->animations[aSprite->activeAnimation];
 
-	TextureRect_t cropRect = texAtlas_getTextureRect(sprite->atlas, animation->currentFrame, sprite->activeAnimation);
-	draw_texturePortion(sprite->location, sprite->atlas->texture, cropRect, sprite->scale, sprite->angle, sprite->flippedHorizontally, sprite->flippedVertically);
+	TextureRect_t cropRect = texAtlas_getTextureRect(aSprite->atlas, animation->currentFrame, aSprite->activeAnimation);
+	draw_texturePortion(aSprite->location, aSprite->atlas->texture, cropRect, aSprite->scale, aSprite->angle, aSprite->flippedHorizontally, aSprite->flippedVertically);
 }

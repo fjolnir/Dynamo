@@ -20,7 +20,7 @@ typedef struct _BackgroundLayer {
 
 typedef struct _Background {
 	OBJ_GUTS
-	Renderable_t renderable;
+    RenderableDisplayCallback_t displayCallback;
 	BackgroundLayer_t *layers[kBackground_maxLayers];
 	vec2_t offset;
 } Background_t;

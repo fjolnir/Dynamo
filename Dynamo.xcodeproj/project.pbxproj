@@ -55,6 +55,7 @@
 		C7ECFE06153FBA340066EA9B /* mxml-set.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDFA153FBA340066EA9B /* mxml-set.c */; };
 		C7ECFE07153FBA340066EA9B /* mxml-string.c in Sources */ = {isa = PBXBuildFile; fileRef = C7ECFDFB153FBA340066EA9B /* mxml-string.c */; };
 		C7ECFE08153FBA340066EA9B /* mxml.h in Headers */ = {isa = PBXBuildFile; fileRef = C7ECFDFC153FBA340066EA9B /* mxml.h */; };
+		C7ECFE8A153FD7E30066EA9B /* libglmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C75AFD8E153FAB5400FE8623 /* libglmath.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7ECFE8A153FD7E30066EA9B /* libglmath.a in Frameworks */,
 				C7ECFDEF153FB57D0066EA9B /* CoreFoundation.framework in Frameworks */,
 				C7ECFDDF153FB4420066EA9B /* CoreGraphics.framework in Frameworks */,
 				C75AFDA2153FABC600FE8623 /* OpenGLES.framework in Frameworks */,

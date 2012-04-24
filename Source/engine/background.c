@@ -1,8 +1,8 @@
 #include "background.h"
 #include "shader.h"
-#include "various.h"
+#include "util.h"
 
-static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation);
+static void _background_draw(Renderer_t *aRenderer, Background_t *aBackground, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 static void background_destroy(Background_t *aBackground);
 static void background_destroyLayer(BackgroundLayer_t *aLayer);
 
@@ -22,8 +22,7 @@ Background_t *background_create()
 {
 	Background_t *out = obj_create_autoreleased(sizeof(Background_t), (Obj_destructor_t)&background_destroy);
 	out->offset = GLMVec2_zero;
-	out->renderable.displayCallback = &_background_draw;
-	out->renderable.owner = out;
+	out->displayCallback = (RenderableDisplayCallback_t)&_background_draw;
 
 	if(!_backgroundShader) {
 		_backgroundShader = obj_retain(shader_loadFromFiles("engine/shaders/background.vsh", "engine/shaders/background.fsh"));
@@ -68,11 +67,9 @@ static void background_destroyLayer(BackgroundLayer_t *aLayer)
 	aLayer->texture = NULL;
 }
 
-static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSinceLastFrame, double aInterpolation)
+static void _background_draw(Renderer_t *aRenderer, Background_t *aBackground, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
 {
-	Background_t *background = (Background_t *)aOwner;
-
-	if(!background->layers[0])
+	if(!aBackground->layers[0])
 		return;
 
 	GLfloat vertices[4*2] = {
@@ -82,7 +79,7 @@ static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSi
 		 1.0f, 1.0f
 	};
 	vec2_t viewportSize = aRenderer->viewportSize;
-	vec2_t textureSize = background->layers[0]->texture->size;
+	vec2_t textureSize = aBackground->layers[0]->texture->size;
 	GLfloat texCoords[4*2] = {
 		0.0f,                         0.0f,
 		viewportSize.w/textureSize.w, 0.0f,
@@ -92,39 +89,39 @@ static void _background_draw(Renderer_t *aRenderer, void *aOwner, double aTimeSi
 
 	shader_makeActive(_backgroundShader);
 	
-	vec2_t uvOffset = vec2_div(background->offset, textureSize);
+	vec2_t uvOffset = vec2_div(aBackground->offset, textureSize);
 	glUniform2f(_backgroundShader->uniforms[kBackground_offsetUniform], uvOffset.x, uvOffset.y);
 	glUniform2f(_backgroundShader->uniforms[kBackground_sizeUniform], textureSize.w, textureSize.h);
 
-	if(background->layers[0]) {
+	if(aBackground->layers[0]) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, background->layers[0]->texture->id);
+		glBindTexture(GL_TEXTURE_2D, aBackground->layers[0]->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap0Uniform], 0);
 	}
-	if(background->layers[1]) {
+	if(aBackground->layers[1]) {
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, background->layers[1]->texture->id);
+		glBindTexture(GL_TEXTURE_2D, aBackground->layers[1]->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap1Uniform], 1);
 	}
-	if(background->layers[2]) {
+	if(aBackground->layers[2]) {
 		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, background->layers[2]->texture->id);
+		glBindTexture(GL_TEXTURE_2D, aBackground->layers[2]->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap2Uniform], 2);
 	}
-	if(background->layers[3]) {
+	if(aBackground->layers[3]) {
 		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, background->layers[3]->texture->id);
+		glBindTexture(GL_TEXTURE_2D, aBackground->layers[3]->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap3Uniform], 3);
 	}
 
 	glUniform1f(_backgroundShader->uniforms[kBackground_layer0DepthUniform],
-	            background->layers[0] != NULL ? background->layers[0]->depth : -1.0f);
+	            aBackground->layers[0] != NULL ? aBackground->layers[0]->depth : -1.0f);
 	glUniform1f(_backgroundShader->uniforms[kBackground_layer1DepthUniform],
-	            background->layers[1] != NULL ? background->layers[1]->depth : -1.0f);
+	            aBackground->layers[1] != NULL ? aBackground->layers[1]->depth : -1.0f);
 	glUniform1f(_backgroundShader->uniforms[kBackground_layer2DepthUniform],
-	            background->layers[2] != NULL ? background->layers[2]->depth : -1.0f);
+	            aBackground->layers[2] != NULL ? aBackground->layers[2]->depth : -1.0f);
 	glUniform1f(_backgroundShader->uniforms[kBackground_layer3DepthUniform],
-	            background->layers[3] != NULL ? background->layers[3]->depth : -1.0f);
+	            aBackground->layers[3] != NULL ? aBackground->layers[3]->depth : -1.0f);
 
 	glVertexAttribPointer(_backgroundShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
 	glEnableVertexAttribArray(_backgroundShader->attributes[kShader_positionAttribute]);

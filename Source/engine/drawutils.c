@@ -1,5 +1,5 @@
 #include "drawutils.h"
-#include "various.h"
+#include "util.h"
 
 Shader_t *gTexturedShader = NULL;
 Shader_t *gColoredShader = NULL;
@@ -9,12 +9,24 @@ static const vec4_t kColorWhite = { 1.0f, 1.0f, 1.0f, 1.0f };
 void draw_init(Renderer_t *aDefaultRenderer)
 {
 	_renderer = aDefaultRenderer;
+    const int maxLen = 1024;
+    char texturedVSH[maxLen], texturedFSH[maxLen], coloredVSH[maxLen], coloredFSH[maxLen];
+
+    //util_pathForResource("textured", "vsh", "shaders", texturedVSH, maxLen);
+    //util_pathForResource("textured", "fsh", "shaders", texturedFSH, maxLen);
+    //util_pathForResource("colored", "vsh", "shaders", coloredVSH, maxLen);
+    //util_pathForResource("colored", "fsh", "shaders", coloredFSH, maxLen);
+	util_pathForResource("textured", "vsh", NULL, texturedVSH, maxLen);
+	util_pathForResource("textured", "fsh", NULL, texturedFSH, maxLen);
+	util_pathForResource("colored", "vsh", NULL, coloredVSH, maxLen);
+	util_pathForResource("colored", "fsh", NULL, coloredFSH, maxLen);
+
 	if(!gTexturedShader) {
-		gTexturedShader = obj_retain(shader_loadFromFiles("engine/shaders/textured.vsh", "engine/shaders/textured.fsh"));
+		gTexturedShader = obj_retain(shader_loadFromFiles((const char*)texturedVSH, (const char*)texturedFSH));
 		gTexturedShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(gTexturedShader, "u_color");
 	}
 	if(!gColoredShader) {
-		gColoredShader = obj_retain(shader_loadFromFiles("engine/shaders/colored.vsh", "engine/shaders/colored.fsh"));
+		gColoredShader = obj_retain(shader_loadFromFiles((const char*)coloredVSH, (const char*)coloredFSH));
 		gColoredShader->attributes[kShader_colorAttribute] = shader_getAttributeLocation(gColoredShader, "a_color");
 	}
 }

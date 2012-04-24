@@ -4,6 +4,6 @@
 #include "renderer.h"
 #include "gametimer.h"
 #include "input.h"
-#include "various.h"
+#include "util.h"
 #include "sound.h"
 #include "drawutils.h"
