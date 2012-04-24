@@ -1,6 +1,6 @@
 #include "object.h"
 #include <stdbool.h>
-#include <GLMath.h>
+#include <GLMath/GLMath.h>
 
 #ifndef _GAMETIMER_H_
 #define _GAMETIMER_H_
