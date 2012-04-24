@@ -1,5 +1,4 @@
 local ffi   = require( "ffi" )
-local gles2 = ffi.load("GLESv2")
 
 ffi.cdef[[
       enum {
@@ -518,4 +517,4 @@ ffi.cdef[[
       void         glViewport (GLint x, GLint y, GLsizei width, GLsizei height);
 ]]
 
-return gles2
+return ffi.load("GLESv2")

@@ -2,25 +2,10 @@ jit.off() -- iOS doesn't allow jit (and there are some bugs with it)
 ffi = require("ffi")
 C = ffi.C
 
-glm = require("glmath")
+require("glmath")
 dynamo = require("dynamo")
 local gl = require("OpenGL")
 
--- Setup dynamo
---local atlasPath = dynamo.pathForResource("character", "png")
---local atlas = dynamo.loadTextureAtlas(atlasPath, vec2_zero, vec2(32, 32))
---local sprite = dynamo.createSprite(vec3(100, 100,0), vec2(32, 32), atlas, {
-	--{ numberOfFrames = 3, currentFrame = 0, loops = true },
-	--{ numberOfFrames = 8, currentFrame = 0, loops = true },
-	--{ numberOfFrames = 2, currentFrame = 0, loops = true },
-	--{ numberOfFrames = 4, currentFrame = 0, loops = true },
-	--{ numberOfFrames = 3, currentFrame = 0, loops = true },
-	--{ numberOfFrames = 1, currentFrame = 0, loops = true },
-	--{ numberOfFrames = 1, currentFrame = 0, loops = true },
-	--{ numberOfFrames = 3, currentFrame = 0, loops = true }
---})
---sprite.activeAnimation = 1
---sprite.scale = 4
 
 function update(timer)
 end
@@ -37,7 +22,6 @@ local mapLayers = {
 }
 angle = 0
 scene = dynamo.createScene({
-	--sprite,
 	mapLayers[1],
 	mapLayers[2],
 	mapLayers[3],
@@ -56,7 +40,6 @@ scene = dynamo.createScene({
 })
 dynamo.renderer:pushRenderable(scene)
 
-a = 0
 lastPos = nil
 dynamo.inputManager:addObserver({
 	type = dynamo.kInputTouch_pan1,
@@ -71,19 +54,11 @@ dynamo.inputManager:addObserver({
 		mapLayers[1]:translate(-0.3*trans.x, -0.3*trans.y)
 		mapLayers[3]:translate(1.03*trans.x, 1.03*trans.y)
 
-		--scene:translate(10, 10)
-		--sprite.flippedHorizontally = (lastPos.x > location.x)
-		--sprite.location = vec3(location.x, location.y-60, 0)
 		if state == dynamo.kInputState_down then
 			lastPos.x = location.x
 			lastPos.y = location.y
 		else
 			lastPos = nil
-		end
-
-		a = a+1
-		if a%4 == 0 then
-			--sprite.step(sprite)
 		end
 	end
 })

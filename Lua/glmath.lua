@@ -1,5 +1,5 @@
--- Load GLMath
 local ffi = require("ffi")
+
 local C = ffi.C
 ffi.cdef[[
 typedef float GLMFloat;
@@ -406,6 +406,5 @@ mat3_identity = C.GLMMat3_identity
 mat4_identity = C.GLMMat4_identity
 mat3_zero = C.GLMMat3_zero
 mat4_zero = C.GLMMat4_zero
-
 
 PI=math.pi

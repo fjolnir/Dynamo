@@ -2,7 +2,7 @@
 --jit.off()
 
 local ffi = require("ffi")
-local lib = ffi.C --ffi.load("./libdynamo.dylib", true)
+local lib = ffi.C
 local gl = require("OpenGL")
 
 local dynamo = setmetatable({}, { __index = lib })
