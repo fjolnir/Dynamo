@@ -2,8 +2,6 @@
 #define _UTIL_H_
 
 #define ANDROID_APP_IDENTIFIER "jp.panasonic.gemini"
-#define ANDROID 1
-#define TWODEEDENG_DEBUG 1
 
 #include <stdio.h>
 #include <assert.h>
