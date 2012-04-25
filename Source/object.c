@@ -8,6 +8,7 @@
 
 #define ENABLE_ZOMBIES (1)
 
+#ifdef __APPLE__
 #include <execinfo.h>
 static void _print_trace(void)
 {
@@ -23,6 +24,12 @@ static void _print_trace(void)
 		printf ("%s\n", strings[i]);
 	free (strings);
 }
+#else
+static void _print_trace(void)
+{
+	// Backtraces only supported on apple devices
+}
+#endif
 
 void obj_zombie_error(Obj_t *aObj)
 {

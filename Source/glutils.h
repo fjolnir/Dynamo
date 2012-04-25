@@ -8,6 +8,9 @@
         #include <OpenGL/gl.h>
         #include <OpenGL/glu.h>
     #endif
+#elif defined(ANDROID)
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #else
 	#ifdef WIN32
 		#include <windows.h>
