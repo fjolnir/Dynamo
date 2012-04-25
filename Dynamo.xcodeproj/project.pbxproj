@@ -9,19 +9,8 @@
 /* Begin PBXBuildFile section */
 		C75AFDA2153FABC600FE8623 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C75AFDA1153FABC600FE8623 /* OpenGLES.framework */; };
 		C7A1907315469BC200B266A6 /* GLMath.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1903D15469BC200B266A6 /* GLMath.c */; };
-		C7A1907415469BC200B266A6 /* GLMath.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1903E15469BC200B266A6 /* GLMath.h */; };
-		C7A1907515469BC200B266A6 /* GLMathBezierCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904215469BC200B266A6 /* GLMathBezierCurve.h */; };
 		C7A1907615469BC200B266A6 /* GLMathExports.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1904315469BC200B266A6 /* GLMathExports.c */; };
-		C7A1907715469BC200B266A6 /* GLMathExports.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904415469BC200B266A6 /* GLMathExports.h */; };
-		C7A1907815469BC200B266A6 /* GLMathMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904515469BC200B266A6 /* GLMathMatrix.h */; };
-		C7A1907915469BC200B266A6 /* GLMathMatrixStack.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904615469BC200B266A6 /* GLMathMatrixStack.h */; };
-		C7A1907A15469BC200B266A6 /* GLMathQuaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904715469BC200B266A6 /* GLMathQuaternion.h */; };
-		C7A1907B15469BC200B266A6 /* GLMathTransforms.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904815469BC200B266A6 /* GLMathTransforms.h */; };
-		C7A1907C15469BC200B266A6 /* GLMathTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904915469BC200B266A6 /* GLMathTypes.h */; };
 		C7A1907D15469BC200B266A6 /* GLMathUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1904A15469BC200B266A6 /* GLMathUtilities.c */; };
-		C7A1907E15469BC200B266A6 /* GLMathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904B15469BC200B266A6 /* GLMathUtilities.h */; };
-		C7A1907F15469BC200B266A6 /* GLMathVector.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904C15469BC200B266A6 /* GLMathVector.h */; };
-		C7A1908015469BC200B266A6 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1904F15469BC200B266A6 /* config.h */; };
 		C7A1908115469BC200B266A6 /* mxml-attr.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905015469BC200B266A6 /* mxml-attr.c */; };
 		C7A1908215469BC200B266A6 /* mxml-entity.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905115469BC200B266A6 /* mxml-entity.c */; };
 		C7A1908315469BC200B266A6 /* mxml-file.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905215469BC200B266A6 /* mxml-file.c */; };
@@ -29,20 +18,14 @@
 		C7A1908515469BC200B266A6 /* mxml-index.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905415469BC200B266A6 /* mxml-index.c */; };
 		C7A1908615469BC200B266A6 /* mxml-node.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905515469BC200B266A6 /* mxml-node.c */; };
 		C7A1908715469BC200B266A6 /* mxml-private.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905615469BC200B266A6 /* mxml-private.c */; };
-		C7A1908815469BC200B266A6 /* mxml-private.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1905715469BC200B266A6 /* mxml-private.h */; };
 		C7A1908915469BC200B266A6 /* mxml-search.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905815469BC200B266A6 /* mxml-search.c */; };
 		C7A1908A15469BC200B266A6 /* mxml-set.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905915469BC200B266A6 /* mxml-set.c */; };
 		C7A1908B15469BC200B266A6 /* mxml-string.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905A15469BC200B266A6 /* mxml-string.c */; };
-		C7A1908C15469BC200B266A6 /* mxml.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1905B15469BC200B266A6 /* mxml.h */; };
-		C7A1908D15469BC200B266A6 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1905E15469BC200B266A6 /* config.h */; };
 		C7A1908E15469BC200B266A6 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905F15469BC200B266A6 /* png.c */; };
-		C7A1908F15469BC200B266A6 /* png.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1906015469BC200B266A6 /* png.h */; };
-		C7A1909015469BC200B266A6 /* pngconf.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1906115469BC200B266A6 /* pngconf.h */; };
 		C7A1909115469BC200B266A6 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906215469BC200B266A6 /* pngerror.c */; };
 		C7A1909215469BC200B266A6 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906315469BC200B266A6 /* pngget.c */; };
 		C7A1909315469BC200B266A6 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906415469BC200B266A6 /* pngmem.c */; };
 		C7A1909415469BC200B266A6 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906515469BC200B266A6 /* pngpread.c */; };
-		C7A1909515469BC200B266A6 /* pngpriv.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A1906615469BC200B266A6 /* pngpriv.h */; };
 		C7A1909615469BC200B266A6 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906715469BC200B266A6 /* pngread.c */; };
 		C7A1909715469BC200B266A6 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906815469BC200B266A6 /* pngrio.c */; };
 		C7A1909815469BC200B266A6 /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906915469BC200B266A6 /* pngrtran.c */; };
@@ -54,41 +37,22 @@
 		C7A1909E15469BC200B266A6 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906F15469BC200B266A6 /* pngwtran.c */; };
 		C7A1909F15469BC200B266A6 /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1907015469BC200B266A6 /* pngwutil.c */; };
 		C7A190CD15469BFB00B266A6 /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190A915469BFB00B266A6 /* array.c */; };
-		C7A190CE15469BFB00B266A6 /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190AA15469BFB00B266A6 /* array.h */; };
 		C7A190CF15469BFB00B266A6 /* background.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190AB15469BFB00B266A6 /* background.c */; };
-		C7A190D015469BFB00B266A6 /* background.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190AC15469BFB00B266A6 /* background.h */; };
 		C7A190D115469BFB00B266A6 /* drawutils.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190AD15469BFB00B266A6 /* drawutils.c */; };
-		C7A190D215469BFB00B266A6 /* drawutils.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190AE15469BFB00B266A6 /* drawutils.h */; };
-		C7A190D315469BFB00B266A6 /* dynamo.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190AF15469BFB00B266A6 /* dynamo.h */; };
 		C7A190D415469BFB00B266A6 /* gametimer.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190B015469BFB00B266A6 /* gametimer.c */; };
-		C7A190D515469BFB00B266A6 /* gametimer.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190B115469BFB00B266A6 /* gametimer.h */; };
-		C7A190D615469BFB00B266A6 /* glutils.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190B215469BFB00B266A6 /* glutils.h */; };
 		C7A190D715469BFB00B266A6 /* input.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190B315469BFB00B266A6 /* input.c */; };
-		C7A190D815469BFB00B266A6 /* input.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190B415469BFB00B266A6 /* input.h */; };
 		C7A190D915469BFB00B266A6 /* linkedlist.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190B515469BFB00B266A6 /* linkedlist.c */; };
-		C7A190DA15469BFB00B266A6 /* linkedlist.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190B615469BFB00B266A6 /* linkedlist.h */; };
 		C7A190DB15469BFB00B266A6 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190B715469BFB00B266A6 /* object.c */; };
-		C7A190DC15469BFB00B266A6 /* object.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190B815469BFB00B266A6 /* object.h */; };
 		C7A190DD15469BFB00B266A6 /* png_loader.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190B915469BFB00B266A6 /* png_loader.c */; };
-		C7A190DE15469BFB00B266A6 /* png_loader.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190BA15469BFB00B266A6 /* png_loader.h */; };
 		C7A190DF15469BFB00B266A6 /* renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190BB15469BFB00B266A6 /* renderer.c */; };
-		C7A190E015469BFB00B266A6 /* renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190BC15469BFB00B266A6 /* renderer.h */; };
 		C7A190E115469BFB00B266A6 /* scene.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190BD15469BFB00B266A6 /* scene.c */; };
-		C7A190E215469BFB00B266A6 /* scene.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190BE15469BFB00B266A6 /* scene.h */; };
 		C7A190E315469BFB00B266A6 /* shader.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190BF15469BFB00B266A6 /* shader.c */; };
-		C7A190E415469BFB00B266A6 /* shader.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190C015469BFB00B266A6 /* shader.h */; };
 		C7A190E515469BFB00B266A6 /* sound.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190C115469BFB00B266A6 /* sound.c */; };
-		C7A190E615469BFB00B266A6 /* sound.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190C215469BFB00B266A6 /* sound.h */; };
 		C7A190E715469BFB00B266A6 /* sprite.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190C315469BFB00B266A6 /* sprite.c */; };
-		C7A190E815469BFB00B266A6 /* sprite.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190C415469BFB00B266A6 /* sprite.h */; };
 		C7A190E915469BFB00B266A6 /* texture_atlas.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190C515469BFB00B266A6 /* texture_atlas.c */; };
-		C7A190EA15469BFB00B266A6 /* texture_atlas.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190C615469BFB00B266A6 /* texture_atlas.h */; };
 		C7A190EB15469BFB00B266A6 /* texture.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190C715469BFB00B266A6 /* texture.c */; };
-		C7A190EC15469BFB00B266A6 /* texture.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190C815469BFB00B266A6 /* texture.h */; };
 		C7A190ED15469BFB00B266A6 /* tmx_map.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190C915469BFB00B266A6 /* tmx_map.c */; };
-		C7A190EE15469BFB00B266A6 /* tmx_map.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190CA15469BFB00B266A6 /* tmx_map.h */; };
 		C7A190EF15469BFB00B266A6 /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A190CB15469BFB00B266A6 /* util.c */; };
-		C7A190F015469BFB00B266A6 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C7A190CC15469BFB00B266A6 /* util.h */; };
 		C7A190F215469C0B00B266A6 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A190F115469C0B00B266A6 /* Accelerate.framework */; };
 		C7ECFDDF153FB4420066EA9B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */; };
 		C7ECFDEF153FB57D0066EA9B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7ECFDEE153FB57D0066EA9B /* CoreFoundation.framework */; };
@@ -357,42 +321,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7A1907415469BC200B266A6 /* GLMath.h in Headers */,
-				C7A1907515469BC200B266A6 /* GLMathBezierCurve.h in Headers */,
-				C7A1907715469BC200B266A6 /* GLMathExports.h in Headers */,
-				C7A1907815469BC200B266A6 /* GLMathMatrix.h in Headers */,
-				C7A1907915469BC200B266A6 /* GLMathMatrixStack.h in Headers */,
-				C7A1907A15469BC200B266A6 /* GLMathQuaternion.h in Headers */,
-				C7A1907B15469BC200B266A6 /* GLMathTransforms.h in Headers */,
-				C7A1907C15469BC200B266A6 /* GLMathTypes.h in Headers */,
-				C7A1907E15469BC200B266A6 /* GLMathUtilities.h in Headers */,
-				C7A1907F15469BC200B266A6 /* GLMathVector.h in Headers */,
-				C7A1908015469BC200B266A6 /* config.h in Headers */,
-				C7A1908815469BC200B266A6 /* mxml-private.h in Headers */,
-				C7A1908C15469BC200B266A6 /* mxml.h in Headers */,
-				C7A1908D15469BC200B266A6 /* config.h in Headers */,
-				C7A1908F15469BC200B266A6 /* png.h in Headers */,
-				C7A1909015469BC200B266A6 /* pngconf.h in Headers */,
-				C7A1909515469BC200B266A6 /* pngpriv.h in Headers */,
-				C7A190CE15469BFB00B266A6 /* array.h in Headers */,
-				C7A190D015469BFB00B266A6 /* background.h in Headers */,
-				C7A190D215469BFB00B266A6 /* drawutils.h in Headers */,
-				C7A190D315469BFB00B266A6 /* dynamo.h in Headers */,
-				C7A190D515469BFB00B266A6 /* gametimer.h in Headers */,
-				C7A190D615469BFB00B266A6 /* glutils.h in Headers */,
-				C7A190D815469BFB00B266A6 /* input.h in Headers */,
-				C7A190DA15469BFB00B266A6 /* linkedlist.h in Headers */,
-				C7A190DC15469BFB00B266A6 /* object.h in Headers */,
-				C7A190DE15469BFB00B266A6 /* png_loader.h in Headers */,
-				C7A190E015469BFB00B266A6 /* renderer.h in Headers */,
-				C7A190E215469BFB00B266A6 /* scene.h in Headers */,
-				C7A190E415469BFB00B266A6 /* shader.h in Headers */,
-				C7A190E615469BFB00B266A6 /* sound.h in Headers */,
-				C7A190E815469BFB00B266A6 /* sprite.h in Headers */,
-				C7A190EA15469BFB00B266A6 /* texture_atlas.h in Headers */,
-				C7A190EC15469BFB00B266A6 /* texture.h in Headers */,
-				C7A190EE15469BFB00B266A6 /* tmx_map.h in Headers */,
-				C7A190F015469BFB00B266A6 /* util.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,6 +443,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Dynamo.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -550,6 +479,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Dynamo.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
