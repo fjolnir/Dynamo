@@ -4,11 +4,17 @@
 
 static void texture_destroy(Texture_t *aTexture);
 
+static Class_t Class_Texture = {
+	"Texture",
+	sizeof(Texture_t),
+	(Obj_destructor_t)&texture_destroy
+};
+
 const TextureRect_t kTextureRectEntire = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical)
 {
-	Texture_t *out  = obj_create_autoreleased(sizeof(Texture_t), (Obj_destructor_t)&texture_destroy);
+	Texture_t *out = obj_create_autoreleased(&Class_Texture);
 
 	Png_t *png = png_load(aPath);
 	if (!png) {

@@ -22,6 +22,12 @@ static TMXProperty_t *_tmx_readPropertiesFromMxmlNode(mxml_node_t *aParentNode, 
 static TMXTile_t _tmx_mapCreateTileForTileGID(TMXMap_t *aMap, int aTileGID);
 static TMXTileset_t *_tmx_mapGetTilesetForTileGID(TMXMap_t *aMap, int aTileID);
 
+static Class_t Class_TMXMap = {
+	"TMXMap",
+	sizeof(TMXMap_t),
+	(Obj_destructor_t)&tmx_destroyMap
+};
+
 TMXMap_t *tmx_readMapFile(const char *aFilename)
 {
 	FILE *fp = fopen(aFilename, "rb");
@@ -30,7 +36,7 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 	assert(tree != NULL);
 	fclose(fp);
 
-	TMXMap_t *out = obj_create_autoreleased(sizeof(TMXMap_t), (Obj_destructor_t)&tmx_destroyMap);
+	TMXMap_t *out = obj_create_autoreleased(&Class_TMXMap);
 	// Start walking through the file
 	mxml_node_t *mapNode = mxmlFindElement(tree, tree, "map", NULL, NULL, MXML_DESCEND);
 
@@ -319,6 +325,12 @@ static void tmx_destroyLayerRenderable(TMXLayerRenderable_t *aRenderable)
     obj_release(aRenderable->map);
 }
 
+static Class_t Class_TMXLayerRenderable = {
+	"TMXLayerRenderable",
+	sizeof(TMXLayerRenderable_t),
+	(Obj_destructor_t)&tmx_destroyLayerRenderable
+};
+
 static void tmx_drawLayerRenderable(Renderer_t *aRenderer, TMXLayerRenderable_t *aRenderable, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
 {
    shader_makeActive(gTexturedShader);
@@ -363,7 +375,7 @@ TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int 
     assert(aLayerIdx < aMap->numberOfLayers);
     obj_retain(aMap);
     
-    TMXLayerRenderable_t *out = obj_create_autoreleased(sizeof(TMXLayerRenderable_t), (Obj_destructor_t)&tmx_destroyLayerRenderable);
+    TMXLayerRenderable_t *out = obj_create_autoreleased(&Class_TMXLayerRenderable);
     out->map = aMap;
     out->layer = &aMap->layers[aLayerIdx];
     out->displayCallback = (RenderableDisplayCallback_t)&tmx_drawLayerRenderable;

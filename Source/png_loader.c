@@ -11,9 +11,15 @@
 #endif
 
 static void png_destroy(Png_t *self);
+static Class_t Class_Png = {
+	"Png",
+	sizeof(Png_t),
+	(Obj_destructor_t)&png_destroy
+};
+
 
 Png_t *png_load(const char *aPath) {
-    Png_t *self = obj_create_autoreleased(sizeof(Png_t), (Obj_destructor_t)&png_destroy);
+    Png_t *self = obj_create_autoreleased(&Class_Png);
 #ifndef TARGET_OS_EMBEDDED
     png_structp png_ptr;
     png_infop info_ptr;

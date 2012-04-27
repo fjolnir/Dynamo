@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // Possible todo: make 
 
@@ -27,7 +28,7 @@ static void _print_trace(void)
 #else
 static void _print_trace(void)
 {
-	// Backtraces only supported on apple devices
+	// Backtraces only supported on apple devices for now.
 }
 #endif
 
@@ -37,23 +38,19 @@ void obj_zombie_error(Obj_t *aObj)
 	_print_trace();
 }
 
-Obj_t *obj_create_autoreleased(int size, Obj_destructor_t aDestructor)
+Obj_t *obj_create_autoreleased(Class_t *aClass)
 {
-	Obj_t *self = obj_create(size, aDestructor);
+	Obj_t *self = obj_create(aClass);
 	return obj_autorelease(self);
 }
 
-Obj_t *obj_create(int size, Obj_destructor_t aDestructor)
+Obj_t *obj_create(Class_t *aClass)
 {
-	assert(size >= sizeof(_Obj_guts));
-	_Obj_guts *self = calloc(1, size);
-	obj_retain(self);
-	if(aDestructor)
-		self->destructor = aDestructor;
-	else
-		self->destructor = &free;
-    
-	return self;
+	assert(aClass != NULL);
+
+	_Obj_guts *self = calloc(1, aClass->instanceSize);
+	self->class = aClass;
+	return obj_retain(self);
 }
 
 Obj_t *obj_retain(Obj_t *aObj)
@@ -68,8 +65,8 @@ void obj_release(Obj_t *aObj)
 	assert(aObj != NULL);
 	_Obj_guts *self = aObj;
     if(__sync_sub_and_fetch(&self->referenceCount, 1) == 0 && !ENABLE_ZOMBIES) {
-		if(self->destructor)
-			self->destructor(aObj);
+		if(self->class->destructor)
+			self->class->destructor(aObj);
 		free(self);
 	} else if(self->referenceCount < 0)
 		obj_zombie_error(self);
@@ -80,15 +77,27 @@ Obj_t *obj_autorelease(Obj_t *aObj)
 	return autoReleasePool_push(autoReleasePool_getGlobal(), aObj);
 }
 
+Class_t *obj_getClass(Obj_t *aObj)
+{
+	return ((_Obj_guts*)aObj)->class;
+}
+
+
 static void autoReleasePool_destroy(void *aPool)
 {
 	autoReleasePool_drain(aPool);
 	obj_release(aPool);
 }
 
+static Class_t Class_autoReleasePool = {
+	"AutoreleasePool",
+	sizeof(Obj_autoReleasePool_t),
+	(Obj_destructor_t)&autoReleasePool_destroy
+};
+
 Obj_autoReleasePool_t *autoReleasePool_create()
 {
-	return obj_create(sizeof(Obj_autoReleasePool_t), (Obj_destructor_t)&autoReleasePool_destroy);
+	return obj_create(&Class_autoReleasePool);
 }
 static Obj_autoReleasePool_t *globalPool;
 Obj_autoReleasePool_t *autoReleasePool_getGlobal()

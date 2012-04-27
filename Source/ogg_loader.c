@@ -7,6 +7,12 @@
 static void ogg_destroy(oggFile_t *aFile);
 static char *_oggErrorString(int aCode);
 
+static Class_t Class_OggFile = {
+	"oggFile",
+	sizeof(oggFile_t),
+	(Obj_destructor_t)&ogg_destroy
+};
+
 oggFile_t *ogg_load(const char *aFilename)
 {
 	FILE *handle = fopen(aFilename, "rb");
@@ -39,7 +45,7 @@ oggFile_t *ogg_load(const char *aFilename)
 		bytes_read += value;
 	}
 
-	oggFile_t *out = obj_create_autoreleased(sizeof(oggFile_t), (Obj_destructor_t)&ogg_destroy);
+	oggFile_t *out = obj_create_autoreleased(&Class_OggFile);
 	out->fileHandle = oggStream;
 	out->samples = samples;
 	out->rate = vorbisInfo->rate;

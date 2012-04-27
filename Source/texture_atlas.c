@@ -3,9 +3,15 @@
 
 static void texAtlas_destroy(TextureAtlas_t *aAtlas);
 
+static Class_t Class_TextureAtlas = {
+	"TextureAtlas",
+	sizeof(TextureAtlas_t),
+	(Obj_destructor_t)&texAtlas_destroy
+};
+
 TextureAtlas_t *texAtlas_create(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize)
 {
-	TextureAtlas_t *out = obj_create_autoreleased(sizeof(TextureAtlas_t), (Obj_destructor_t)&texAtlas_destroy);
+	TextureAtlas_t *out = obj_create_autoreleased(&Class_TextureAtlas);
 	out->texture = obj_retain(aTexture);
 	out->origin = aOrigin;
 	out->size = aSize;

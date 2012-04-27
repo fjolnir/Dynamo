@@ -3,12 +3,23 @@
 #include "util.h"
 
 static void renderer_destroy(Renderer_t *aRenderer);
+static Class_t Class_Renderer = {
+	"Renderer",
+	sizeof(Renderer_t),
+	(Obj_destructor_t)&renderer_destroy
+};
+
+Class_t Class_Renderable = {
+	"Renderable",
+	sizeof(Renderable_t),
+	NULL
+};
 
 #pragma mark - Creation
 
 Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 {
-	Renderer_t *out = obj_create_autoreleased(sizeof(Renderer_t), (Obj_destructor_t)&renderer_destroy);
+	Renderer_t *out = obj_create_autoreleased(&Class_Renderer);
 	out->renderables = obj_retain(llist_create());
 	out->frameBufferId = 0;
 	out->viewportSize = aViewPortSize;

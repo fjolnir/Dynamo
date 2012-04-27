@@ -7,6 +7,11 @@
 #include "util.h"
 
 static void shader_destroy(Shader_t *aShader);
+static Class_t Class_Shader = {
+	"Shader",
+	sizeof(Shader_t),
+	(Obj_destructor_t)&shader_destroy
+};
 
 const char *kShader_UniformNames[kShader_MaxUniforms] = {
 	"u_worldMatrix",
@@ -33,7 +38,7 @@ static void _readFile(const char *aFilePath, size_t *aoLength, char **aoOutput);
 
 Shader_t *shader_load(const char *aVertSrc, const char *aFragSrc)
 {
-	Shader_t *out = obj_create_autoreleased(sizeof(Shader_t), (Obj_destructor_t)&shader_destroy);
+	Shader_t *out = obj_create_autoreleased(&Class_Shader);
 	out->activationCallback = NULL;
 	out->deactivationCallback = NULL;
 	for(int i = 0; i < kShader_MaxUniforms; ++i) out->uniforms[i] = -1;

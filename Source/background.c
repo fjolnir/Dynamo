@@ -6,6 +6,19 @@ static void _background_draw(Renderer_t *aRenderer, Background_t *aBackground, G
 static void background_destroy(Background_t *aBackground);
 static void background_destroyLayer(BackgroundLayer_t *aLayer);
 
+static Class_t Class_Background = {
+	"Background",
+	sizeof(Background_t),
+	(Obj_destructor_t)&background_destroy
+};
+static Class_t Class_BackgroundLayer = {
+	"BackgroundLayer",
+	sizeof(BackgroundLayer_t),
+	(Obj_destructor_t)&background_destroyLayer
+};
+
+
+
 // Shared amongst all background objects
 static Shader_t *_backgroundShader;
 
@@ -20,7 +33,7 @@ enum {
 
 Background_t *background_create()
 {
-	Background_t *out = obj_create_autoreleased(sizeof(Background_t), (Obj_destructor_t)&background_destroy);
+	Background_t *out = obj_create_autoreleased(&Class_Background);
 	out->offset = GLMVec2_zero;
 	out->displayCallback = (RenderableDisplayCallback_t)&_background_draw;
 
@@ -54,7 +67,7 @@ void background_setLayer(Background_t *aBackground, unsigned int aIndex, Backgro
 
 BackgroundLayer_t *background_createLayer(Texture_t *aTexture, float aDepth)
 {
-	BackgroundLayer_t *out = obj_create_autoreleased(sizeof(BackgroundLayer_t), (Obj_destructor_t)&background_destroyLayer);
+	BackgroundLayer_t *out = obj_create_autoreleased(&Class_BackgroundLayer);
 	out->texture = obj_retain(aTexture);
 	out->depth = aDepth;
 

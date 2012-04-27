@@ -12,17 +12,27 @@ typedef float GLMFloat;
 
 // ----- Object
 typedef void (*Obj_destructor_t)(void *aSelf);
+
 typedef struct {
-	long referenceCount;
+	char *name;
+	long instanceSize;
 	Obj_destructor_t destructor;
+} Class_t;
+
+// Add OBJ_GUTS at the beginning of a struct type in order to make it a valid, retainable object
+typedef struct {
+	Class_t *class;
+	long referenceCount;
 } _Obj_guts;
 
 typedef void Obj_t;
 
-Obj_t *obj_create_autoreleased(int size, Obj_destructor_t aDestructor);
+Obj_t *obj_create_autoreleased(Class_t *aClass);
+Obj_t *obj_create(Class_t *aClass);
 Obj_t *obj_retain(Obj_t *aObj);
 void obj_release(Obj_t *aObj);
 Obj_t *obj_autorelease(Obj_t *aObj);
+Class_t *obj_getClass(Obj_t *aObj);
 
 // ----- Linked list
 typedef struct _LinkedList LinkedList_t;
@@ -59,6 +69,7 @@ typedef struct _Renderable {
 	_Obj_guts _guts;
     RenderableDisplayCallback_t displayCallback;
 } Renderable_t;
+extern Class_t Class_Renderable;
 
 // The renderer object
 struct _Renderer {
@@ -621,7 +632,7 @@ end
 
 
 function dynamo.renderable(lambda)
-	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.sizeof("Renderable_t"), nil))
+	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(lib.Class_Renderable))
 	drawable.displayCallback = lambda
 	return drawable
 end

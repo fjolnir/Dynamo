@@ -25,6 +25,7 @@ struct _Renderable {
     OBJ_GUTS
     RenderableDisplayCallback_t displayCallback;
 };
+extern Class_t Class_Renderable;
 
 // The renderer object
 struct _Renderer {

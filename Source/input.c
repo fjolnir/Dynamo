@@ -2,10 +2,21 @@
 #include "util.h"
 
 static void input_destroyManager(InputManager_t *aManager);
+static Class_t Class_InputManager = {
+	"InputManager",
+	sizeof(InputManager_t),
+	(Obj_destructor_t)&input_destroyManager
+};
+static Class_t Class_InputObserver = {
+	"InputObserver",
+	sizeof(InputObserver_t),
+	NULL
+};
+
 
 InputManager_t *input_createManager()
 {
-	InputManager_t *out = obj_create_autoreleased(sizeof(InputManager_t), (Obj_destructor_t)&input_destroyManager);
+	InputManager_t *out = obj_create_autoreleased(&Class_InputManager);
 	out->observers = obj_retain(llist_create());
 	out->activeEvents = obj_retain(llist_create());
 
@@ -23,7 +34,7 @@ void input_destroyManager(InputManager_t *aManager)
 
 InputObserver_t *input_createObserver(Input_type_t aObservedType, Input_handler_t aHandlerCallback, char *aCode, void *aMetaData)
 {
-	InputObserver_t *out = obj_create_autoreleased(sizeof(InputObserver_t), NULL);
+	InputObserver_t *out = obj_create_autoreleased(&Class_InputObserver);
 	out->type = aObservedType;
 	out->handlerCallback = aHandlerCallback;
 	out->metaData = aMetaData;

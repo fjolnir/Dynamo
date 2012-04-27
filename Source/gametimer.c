@@ -1,9 +1,15 @@
 #include "gametimer.h"
 #include "util.h"
 
+static Class_t Class_GameTimer = {
+	"GameTimer",
+	sizeof(GameTimer_t),
+	NULL
+};
+
 GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback)
 {
-	GameTimer_t *out = obj_create_autoreleased(sizeof(GameTimer_t), NULL);
+	GameTimer_t *out = obj_create_autoreleased(&Class_GameTimer);
 	out->desiredInterval = 1.0/(aFps > 0.0 ? aFps : 60.0);
 	out->updateCallback = aUpdateCallback;
 

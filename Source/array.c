@@ -2,10 +2,15 @@
 #include <stdlib.h>
 
 static void array_destroy(Array_t *aArray);
+static Class_t Class_Array = {
+	"Array",
+	sizeof(Array_t),
+	(Obj_destructor_t)&array_destroy
+};
 
 Array_t *array_create(int aCapacity)
 {
-	Array_t *out = obj_create_autoreleased(sizeof(Array_t), (Obj_destructor_t)&array_destroy);
+	Array_t *out = obj_create_autoreleased(&Class_Array);
 	out->capacity = aCapacity ? aCapacity : 4;
 	out->items = calloc(aCapacity, sizeof(void*));
 	out->count = 0;

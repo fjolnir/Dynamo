@@ -2,12 +2,17 @@
 #include <stdlib.h>
 
 static void llist_destroy(LinkedList_t *aList);
+static Class_t Class_LinkedList = {
+	"LinkedList",
+	sizeof(LinkedList_t),
+	(Obj_destructor_t)&llist_destroy
+};
 
 #pragma mark -
 
 LinkedList_t *llist_create()
 {
-	return obj_create_autoreleased(sizeof(LinkedList_t), (Obj_destructor_t)&llist_destroy);
+	return obj_create_autoreleased(&Class_LinkedList);
 }
 
 void llist_destroy(LinkedList_t *aList)
