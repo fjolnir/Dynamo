@@ -22,7 +22,7 @@ static TMXProperty_t *_tmx_readPropertiesFromMxmlNode(mxml_node_t *aParentNode, 
 static TMXTile_t _tmx_mapCreateTileForTileGID(TMXMap_t *aMap, int aTileGID);
 static TMXTileset_t *_tmx_mapGetTilesetForTileGID(TMXMap_t *aMap, int aTileID);
 
-static Class_t Class_TMXMap = {
+Class_t Class_TMXMap = {
 	"TMXMap",
 	sizeof(TMXMap_t),
 	(Obj_destructor_t)&tmx_destroyMap
@@ -325,7 +325,7 @@ static void tmx_destroyLayerRenderable(TMXLayerRenderable_t *aRenderable)
     obj_release(aRenderable->map);
 }
 
-static Class_t Class_TMXLayerRenderable = {
+Class_t Class_TMXLayerRenderable = {
 	"TMXLayerRenderable",
 	sizeof(TMXLayerRenderable_t),
 	(Obj_destructor_t)&tmx_destroyLayerRenderable

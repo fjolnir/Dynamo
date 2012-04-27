@@ -10,6 +10,9 @@
 #ifndef _INPUT_H_
 #define _INPUT_H_
 
+extern Class_t Class_InputManager;
+extern Class_t Class_InputObserver;
+
 // Maximum number of observers for a single event
 #define MAX_SIMUL_OBSERVERS 8
 

@@ -4,10 +4,9 @@
 
 typedef struct _LinkedList LinkedList_t;
 typedef struct _LinkedListItem LinkedListItem_t;
+
 #include "object.h"
 #include <stdbool.h>
-
-
 
 struct _LinkedList {
 	OBJ_GUTS
@@ -15,6 +14,7 @@ struct _LinkedList {
 	LinkedListItem_t *tail;
 };
 
+extern Class_t Class_LinkedList;
 struct _LinkedListItem {
 	LinkedListItem_t *previous, *next;
 	void *value;

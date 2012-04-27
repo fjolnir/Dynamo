@@ -2,6 +2,8 @@
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 
+#include <stdbool.h>
+
 typedef void (*Obj_destructor_t)(void *aSelf);
 
 typedef struct {
@@ -25,6 +27,7 @@ Obj_t *obj_retain(Obj_t *aObj);
 void obj_release(Obj_t *aObj);
 Obj_t *obj_autorelease(Obj_t *aObj);
 Class_t *obj_getClass(Obj_t *aObj);
+bool obj_isClass(Obj_t *aObj, Class_t *aClass);
 
 #include "linkedlist.h"
 

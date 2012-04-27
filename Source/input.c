@@ -2,12 +2,12 @@
 #include "util.h"
 
 static void input_destroyManager(InputManager_t *aManager);
-static Class_t Class_InputManager = {
+Class_t Class_InputManager = {
 	"InputManager",
 	sizeof(InputManager_t),
 	(Obj_destructor_t)&input_destroyManager
 };
-static Class_t Class_InputObserver = {
+Class_t Class_InputObserver = {
 	"InputObserver",
 	sizeof(InputObserver_t),
 	NULL

@@ -3,7 +3,7 @@
 #include "util.h"
 
 static void renderer_destroy(Renderer_t *aRenderer);
-static Class_t Class_Renderer = {
+Class_t Class_Renderer = {
 	"Renderer",
 	sizeof(Renderer_t),
 	(Obj_destructor_t)&renderer_destroy

@@ -6,12 +6,12 @@ static void _background_draw(Renderer_t *aRenderer, Background_t *aBackground, G
 static void background_destroy(Background_t *aBackground);
 static void background_destroyLayer(BackgroundLayer_t *aLayer);
 
-static Class_t Class_Background = {
+Class_t Class_Background = {
 	"Background",
 	sizeof(Background_t),
 	(Obj_destructor_t)&background_destroy
 };
-static Class_t Class_BackgroundLayer = {
+Class_t Class_BackgroundLayer = {
 	"BackgroundLayer",
 	sizeof(BackgroundLayer_t),
 	(Obj_destructor_t)&background_destroyLayer

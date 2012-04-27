@@ -3,7 +3,7 @@
 static void scene_destroy(Scene_t *self);
 static void scene_draw(Renderer_t *aRenderer, Scene_t *aScene, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
-static Class_t Class_Scene = {
+Class_t Class_Scene = {
 	"Scene",
 	sizeof(Scene_t),
 	(Obj_destructor_t)&scene_destroy

@@ -10,6 +10,7 @@
 #ifndef _ATLAS_H_
 #define _ATLAS_H_
 
+extern Class_t Class_TextureAtlas;
 typedef struct _TextureAtlas {
 	OBJ_GUTS
 	vec2_t origin; // The point to consider as (0,0)

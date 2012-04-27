@@ -3,12 +3,15 @@
 
 // Note: Assumes all layers have textures of the same size
 
+#ifndef _BACKGROUND_H_
+#define _BACKGROUND_H_
+
 #include "renderer.h"
 #include "texture.h"
 #include "object.h"
 
-#ifndef _BACKGROUND_H_
-#define _BACKGROUND_H_
+extern Class_t Class_Background;
+extern Class_t Class_BackgroundLayer;
 
 #define kBackground_maxLayers (4)
 

@@ -69,6 +69,7 @@ typedef struct _TMXObjectGroup {
 	TMXProperty_t *properties; // Default NULL
 } TMXObjectGroup_t;
 
+extern Class_t Class_TMXMap;
 typedef struct _TMXMap {
 	OBJ_GUTS
 	TMXMap_orientation orientation;
@@ -85,6 +86,7 @@ typedef struct _TMXMap {
 	TMXProperty_t *properties;
 } TMXMap_t;
 
+extern Class_t Class_TMXLayerRenderable;
 // A renderable that manages a vbo for drawing a layer
 typedef struct _TMXLayerRenderable {
     OBJ_GUTS

@@ -8,6 +8,7 @@
 #ifndef _SOUND_H_
 #define _SOUND_H_
 
+extern Class_t Class_Sound;
 // Encapsulates an OpenAL buffer
 typedef struct _Sound {
 	OBJ_GUTS

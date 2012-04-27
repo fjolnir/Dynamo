@@ -7,7 +7,7 @@
 #include "util.h"
 
 static void shader_destroy(Shader_t *aShader);
-static Class_t Class_Shader = {
+Class_t Class_Shader = {
 	"Shader",
 	sizeof(Shader_t),
 	(Obj_destructor_t)&shader_destroy

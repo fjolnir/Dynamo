@@ -82,6 +82,10 @@ Class_t *obj_getClass(Obj_t *aObj)
 	return ((_Obj_guts*)aObj)->class;
 }
 
+bool obj_isClass(Obj_t *aObj, Class_t *aClass)
+{
+	return obj_getClass(aObj) == aClass;
+}
 
 static void autoReleasePool_destroy(void *aPool)
 {

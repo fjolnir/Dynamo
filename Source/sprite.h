@@ -14,6 +14,7 @@ typedef struct _SpriteAnimation {
 	bool loops;
 } SpriteAnimation_t;
 
+extern Class_t Class_Sprite;
 typedef struct _Sprite {
 	OBJ_GUTS
     RenderableDisplayCallback_t displayCallback;

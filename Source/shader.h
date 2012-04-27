@@ -36,6 +36,7 @@ enum {
 extern const char *kShader_UniformNames[kShader_MaxUniforms];
 extern const char *kShader_AttributeNames[kShader_MaxAttributes];
 
+extern Class_t Class_Shader;
 typedef struct _Shader Shader_t;
 struct _Shader {
 	OBJ_GUTS

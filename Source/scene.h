@@ -9,6 +9,7 @@
 #include "linkedlist.h"
 #include "renderer.h"
 
+extern Class_t Class_Scene;
 typedef struct _Scene {
     OBJ_GUTS
     RenderableDisplayCallback_t displayCallback;

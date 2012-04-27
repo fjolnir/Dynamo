@@ -6,7 +6,7 @@
 static void sprite_destroy(Sprite_t *aSprite);
 static void _sprite_draw(Renderer_t *aRenderer, Sprite_t *aSprite, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
-static Class_t Class_Sprite = {
+Class_t Class_Sprite = {
 	"Sprite",
 	sizeof(Sprite_t),
 	(Obj_destructor_t)&sprite_destroy

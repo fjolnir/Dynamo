@@ -5,6 +5,7 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
+extern Class_t Class_Texture;
 typedef struct _Texture {
 	OBJ_GUTS
 	GLuint id;

@@ -21,13 +21,14 @@ typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, Renderable_t 
 // For defining an object you wish to have rendered
 // (You usually wouldn't use this directly, rather you'd simply add your display callback
 //  function pointer as the first field after the guts of the object you wish to render)
+extern Class_t Class_Renderable;
 struct _Renderable {
     OBJ_GUTS
     RenderableDisplayCallback_t displayCallback;
 };
-extern Class_t Class_Renderable;
 
 // The renderer object
+extern Class_t Class_Renderer;
 struct _Renderer {
 	OBJ_GUTS
 	GLuint frameBufferId; // The FBO the renderer should draw to

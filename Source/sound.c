@@ -9,7 +9,7 @@ static bool _sound_buf_stream(Sound_t *aSound, ALuint aBuffer);
 static bool _sound_beginPlayback(Sound_t *aSound);
 static bool _sound_update(Sound_t *aSound);
 
-static Class_t Class_Sound = {
+Class_t Class_Sound = {
 	"Sound",
 	sizeof(Sound_t),
 	(Obj_destructor_t)&sound_destroy

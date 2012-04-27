@@ -5,6 +5,8 @@
 #ifndef _GAMETIMER_H_
 #define _GAMETIMER_H_
 
+extern Class_t Class_GameTimer;
+
 typedef struct _GameTimer GameTimer_t;
 typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
 

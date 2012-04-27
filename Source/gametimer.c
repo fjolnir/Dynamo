@@ -1,7 +1,7 @@
 #include "gametimer.h"
 #include "util.h"
 
-static Class_t Class_GameTimer = {
+Class_t Class_GameTimer = {
 	"GameTimer",
 	sizeof(GameTimer_t),
 	NULL

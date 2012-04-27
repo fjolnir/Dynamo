@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 static void llist_destroy(LinkedList_t *aList);
-static Class_t Class_LinkedList = {
+Class_t Class_LinkedList = {
 	"LinkedList",
 	sizeof(LinkedList_t),
 	(Obj_destructor_t)&llist_destroy

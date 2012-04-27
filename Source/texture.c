@@ -4,7 +4,7 @@
 
 static void texture_destroy(Texture_t *aTexture);
 
-static Class_t Class_Texture = {
+Class_t Class_Texture = {
 	"Texture",
 	sizeof(Texture_t),
 	(Obj_destructor_t)&texture_destroy

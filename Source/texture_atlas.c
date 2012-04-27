@@ -3,7 +3,7 @@
 
 static void texAtlas_destroy(TextureAtlas_t *aAtlas);
 
-static Class_t Class_TextureAtlas = {
+Class_t Class_TextureAtlas = {
 	"TextureAtlas",
 	sizeof(TextureAtlas_t),
 	(Obj_destructor_t)&texAtlas_destroy
