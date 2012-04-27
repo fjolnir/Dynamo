@@ -15,7 +15,6 @@ extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
 	GLMFloat delta = aElapsed - aTimer->elapsed;
 	aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+delta);
 	aTimer->elapsed = aElapsed;
-
 	for(; aTimer->timeSinceLastUpdate > aTimer->desiredInterval; aTimer->timeSinceLastUpdate -= aTimer->desiredInterval) {
 		if(aTimer->updateCallback)
 			aTimer->updateCallback(aTimer);

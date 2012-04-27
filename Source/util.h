@@ -1,7 +1,7 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
-#define ANDROID_APP_IDENTIFIER "jp.panasonic.gemini"
+#define ANDROID_APP_IDENTIFIER "jp.panasonic.GeminiTest"
 
 #include <stdio.h>
 #include <assert.h>

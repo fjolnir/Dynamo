@@ -12,14 +12,10 @@ void draw_init(Renderer_t *aDefaultRenderer)
     const int maxLen = 1024;
     char texturedVSH[maxLen], texturedFSH[maxLen], coloredVSH[maxLen], coloredFSH[maxLen];
 
-    //util_pathForResource("textured", "vsh", "shaders", texturedVSH, maxLen);
-    //util_pathForResource("textured", "fsh", "shaders", texturedFSH, maxLen);
-    //util_pathForResource("colored", "vsh", "shaders", coloredVSH, maxLen);
-    //util_pathForResource("colored", "fsh", "shaders", coloredFSH, maxLen);
-	util_pathForResource("textured", "vsh", NULL, texturedVSH, maxLen);
-	util_pathForResource("textured", "fsh", NULL, texturedFSH, maxLen);
-	util_pathForResource("colored", "vsh", NULL, coloredVSH, maxLen);
-	util_pathForResource("colored", "fsh", NULL, coloredFSH, maxLen);
+    util_pathForResource("textured", "vsh", "Shaders", texturedVSH, maxLen);
+    util_pathForResource("textured", "fsh", "Shaders", texturedFSH, maxLen);
+    util_pathForResource("colored", "vsh", "Shaders", coloredVSH, maxLen);
+    util_pathForResource("colored", "fsh", "Shaders", coloredFSH, maxLen);
 
 	if(!gTexturedShader) {
 		gTexturedShader = obj_retain(shader_loadFromFiles((const char*)texturedVSH, (const char*)texturedFSH));
