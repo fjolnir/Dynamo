@@ -90,7 +90,6 @@ bool obj_isClass(Obj_t *aObj, Class_t *aClass)
 static void autoReleasePool_destroy(void *aPool)
 {
 	autoReleasePool_drain(aPool);
-	obj_release(aPool);
 }
 
 static Class_t Class_autoReleasePool = {
