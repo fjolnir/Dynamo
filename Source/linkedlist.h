@@ -29,6 +29,6 @@ extern bool llist_deleteValue(LinkedList_t *aList, void *aValue);
 void llist_empty(LinkedList_t *aList);
 
 typedef void (*LinkedListApplier_t)(void *aValue);
-extern void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier); 
+extern void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier);
 #endif
 
