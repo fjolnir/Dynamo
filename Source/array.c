@@ -64,3 +64,9 @@ bool array_containsPtr(Array_t *aArray, void *aPtr)
 	}
 	return false;
 }
+
+extern void *array_top(Array_t *aArray)
+{
+	assert(aArray->count > 0);
+	return aArray->items[aArray->count - 1];
+}
