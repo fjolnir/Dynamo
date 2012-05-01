@@ -4,6 +4,7 @@
 #define _PRIMITIVE_TYPES_
 
 #include "object.h"
+#include <string.h>
 
 extern Class_t Class_String;
 extern Class_t Class_Number;
@@ -14,7 +15,7 @@ typedef struct _String {
 	long length;
 } String_t;
 
-String_t *string_create(const char *str);
+String_t *string_create(const char *str, size_t len);
 
 typedef struct _Number {
 	OBJ_GUTS

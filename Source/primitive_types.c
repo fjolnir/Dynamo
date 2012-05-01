@@ -16,12 +16,13 @@ Class_t Class_Number = {
 	NULL
 };
 
-String_t *string_create(const char *str)
+String_t *string_create(const char *str, size_t len)
 {
 	assert(str != NULL);
 	String_t *self = obj_create_autoreleased(&Class_String);
-	self->cString = malloc(sizeof(char)*strlen(str));
-	strcpy(self->cString, str);
+	self->cString = calloc(1, len+1);
+	strncpy(self->cString, str, len);
+	self->length = len;
 
 	return self;
 }
