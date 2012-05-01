@@ -79,6 +79,7 @@ void *dict_get(Dictionary_t *aDict, const char *aKey)
 
 void dict_set(Dictionary_t *aDict, const char *aKey, void *aValue)
 {
+	assert(strlen(aKey) <= DICT_MAXKEYLEN);
 	if(aDict->insertionCallback)
 		aDict->insertionCallback(aValue);
 	DictionaryNode_t *node = _dict_searchFromNode(&aDict->rootNode, aKey, true);
@@ -90,7 +91,7 @@ bool dict_remove(Dictionary_t *aDict, const char *aKey)
 	DictionaryNode_t *node = _dict_searchFromNode(&aDict->rootNode, aKey, false);
 	void *value = node->value;
 	node->value = NULL;
-	if(aDict->removalCallback)
+	if(value && aDict->removalCallback)
 		aDict->removalCallback(value);
 	return value != NULL;
 }
