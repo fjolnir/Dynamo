@@ -7,6 +7,7 @@
 #include "array.h"
 
 #define DICTNODE_MAXCHILDREN (128)
+#define DICT_MAXKEYLEN (32)
 
 extern Class_t Class_Dictionary;
 
@@ -33,4 +34,7 @@ Dictionary_t *dict_create(DictionaryInsertionCallback_t aInsertionCallback, Dict
 void *dict_get(Dictionary_t *aDict, const char *aKey);
 void dict_set(Dictionary_t *aDict, const char *aKey, void *aValue);
 bool dict_remove(Dictionary_t *aDict, const char *aKey);
+
+typedef void (*DictionaryApplier_t)(const char *aKey, void *aValue, void *aCtx);
+void dict_apply(Dictionary_t *aDict, DictionaryApplier_t aApplier, void *aCtx);
 #endif
