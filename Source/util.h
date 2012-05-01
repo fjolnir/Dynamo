@@ -25,12 +25,12 @@ extern BOOL util_pathForResource(const char *name, const char *ext, const char *
 #pragma mark - Debug logging
 
 #ifdef TWODEEDENG_DEBUG
-#ifdef ANDROID
-    #include <android/log.h>
-    #define debug_log(fmt, ...) __android_log_print(ANDROID_LOG_DEBUG, "GeminiNDK", "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
-#else
-	#define debug_log(fmt, ...) fprintf(stderr, "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
-#endif
+	#ifdef ANDROID
+	    #include <android/log.h>
+	    #define debug_log(fmt, ...) __android_log_print(ANDROID_LOG_DEBUG, "GeminiNDK", "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+	#else
+	    #define debug_log(fmt, ...) fprintf(stderr, "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+	#endif
 #else
 	#define debug_log(fmt, ...)
 #endif
