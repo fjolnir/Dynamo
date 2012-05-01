@@ -5,9 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// Possible todo: make 
-
-#define ENABLE_ZOMBIES (1)
+#define ENABLE_ZOMBIES (0)
 
 #ifdef __APPLE__
 #include <execinfo.h>
@@ -57,19 +55,21 @@ Obj_t *obj_retain(Obj_t *aObj)
 {
 	assert(aObj != NULL);
 	_Obj_guts *self = aObj;
-    __sync_add_and_fetch(&self->referenceCount, 1);
-    return aObj;
+	__sync_add_and_fetch(&self->referenceCount, 1);
+	return aObj;
 }
 void obj_release(Obj_t *aObj)
 {
 	assert(aObj != NULL);
 	_Obj_guts *self = aObj;
-    if(__sync_sub_and_fetch(&self->referenceCount, 1) == 0 && !ENABLE_ZOMBIES) {
+	if(__sync_sub_and_fetch(&self->referenceCount, 1) == 0 && !ENABLE_ZOMBIES) {
 		if(self->class->destructor)
 			self->class->destructor(aObj);
-		free(self);
-	} else if(self->referenceCount < 0)
-		obj_zombie_error(self);
+		if(!ENABLE_ZOMBIES)
+			free(self);
+		else if (self->referenceCount < 0)
+			obj_zombie_error(self);
+	}
 }
 
 Obj_t *obj_autorelease(Obj_t *aObj)
