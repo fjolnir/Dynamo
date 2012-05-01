@@ -27,7 +27,7 @@ LDFLAGS  += -framework Accelerate
 LDFLAGS  += -framework OpenAL
 LDFLAGS  += $(ARCH)
 
-ENGINE_DYNAMICLIBS := -logg -lmxml -lvorbis -lvorbisfile -lpng
+ENGINE_DYNAMICLIBS := -logg -lmxml -lvorbis -lvorbisfile -lpng -lyajl
 
 STATICLIBPNG = ../MacSpecific/libpng.a
 STATICLIBS := -logg -lmxml -lvorbis -lvorbisfile
