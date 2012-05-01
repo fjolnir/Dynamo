@@ -20,7 +20,7 @@ static void _print_trace(void)
 	strings = backtrace_symbols(array, size);
 
 	for(i = 0; i < size; i++)
-		printf ("%s\n", strings[i]);
+		printf("%s\n", strings[i]);
 	free (strings);
 }
 #else
