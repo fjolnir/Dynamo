@@ -1,15 +1,15 @@
-This is a cross platform(win/mac) library for building sprite based games.
-Started as a part of a project for school.
+# Dynamo
+A cross platform library for building sprite based games.
+
 
 Dependencies:
 
- * SDL ('sdl' in homebrew on OS X)
- * libogg ('libogg' in homebrew on OS X)
- * libvorbis ('libvorbis' in homebrew on OS X) 
- * Mini-XML ('libmxml' in homebrew on OS X)
+ * libogg ('libogg' in homebrew on OS X) *Audio is not yet supported on mobile*
+ * libvorbis ('libvorbis' in homebrew on OS X)  *Audio is not yet supported on mobile*
+ * Mini-XML ('libmxml' in homebrew on OS X) *
  * libpng (Comes with X11 for OS X)
  * OpenAL (Pre installed on OS X)
 
-NOTE: Currently the makefile only builds for OS X. I haven't gotten around to running things on windows yet.
+**NOTE** While the engine is built to be cross-platform, only OSX, iOS & Android are actively being developed for.
 
 Licensed with the BSD license.
