@@ -7,6 +7,7 @@
 extern Class_t Class_Sound;
 // Sound effect (for short sounds that need low latency)
 // Encapsulates an OpenAL buffer
+extern Class_t Class_SoundEffect;
 typedef struct _SoundEffect {
 	OBJ_GUTS
 	// These properties should only be modified using their setter functions to ensure that
@@ -26,13 +27,16 @@ typedef struct _SoundEffect {
 } SoundEffect_t;
 
 // For longer non latency sensitive sounds, specifically BGM
+extern Class_t Class_BackgroundMusic;
 typedef struct _BackgroundMusic {
 	// Platform specific and not guaranteed to exist
     void *player;
 } BackgroundMusic_t;
 
 // Manages an audio device
+extern Class_t Class_SoundManager;
 typedef struct _SoundManager {
+    OBJ_GUTS
 	// Platform specific and not guaranteed to exist
 	void *device;
 	void *context;
@@ -58,6 +62,5 @@ extern void bgm_setTime(BackgroundMusic_t *aBGM, float aSeconds);
 
 
 extern SoundManager_t *soundManager_create();
-extern void soundManager_destroy(SoundManager_t *aManager);
 extern bool soundManager_makeCurrent(SoundManager_t *aManager);
 #endif

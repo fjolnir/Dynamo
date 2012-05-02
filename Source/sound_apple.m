@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #ifndef __APPLE__
-#error "This is the audio interface for apple platforms"
+    #error "This is the audio interface for apple platforms"
 #endif
 
 static void sfx_destroy(SoundEffect_t *aSound);
@@ -21,6 +21,7 @@ static bool _sound_beginPlayback(SoundEffect_t *aSound);
 static bool _sound_update(SoundEffect_t *aSound);
 
 static void bgm_destroy(BackgroundMusic_t *aBGM);
+static void soundManager_destroy(SoundManager_t *aManager);
 
 Class_t Class_SoundEffect = {
 	"SoundEffect",
@@ -32,6 +33,12 @@ Class_t Class_BackgroundMusic = {
 	"BackgroundMusic",
 	sizeof(BackgroundMusic_t),
 	(Obj_destructor_t)&bgm_destroy
+};
+
+Class_t Class_SoundManager = {
+	"SoundManager",
+	sizeof(SoundManager_t),
+	(Obj_destructor_t)&soundManager_destroy
 };
 
 #pragma mark - Sound effects
@@ -192,7 +199,7 @@ void bgm_setTime(BackgroundMusic_t *aBGM, float aSeconds)
 
 SoundManager_t *soundManager_create()
 {
-	SoundManager_t *out = malloc(sizeof(SoundManager_t));
+	SoundManager_t *out = obj_create_autoreleased(&Class_SoundManager);
 	out->device = alcOpenDevice(NULL);
 	if(!out->device) return NULL;
 	out->context = alcCreateContext(out->device, NULL);
@@ -214,7 +221,6 @@ void soundManager_destroy(SoundManager_t *aManager)
 {
 	alcDestroyContext(aManager->context);
 	alcCloseDevice(aManager->device);
-	free(aManager);
 }
 
 bool soundManager_makeCurrent(SoundManager_t *aManager)
