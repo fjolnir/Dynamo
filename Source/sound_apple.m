@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
+// TODO: Soften error handling
+
 #ifndef __APPLE__
     #error "This is the audio interface for apple platforms"
 #endif
@@ -54,33 +56,53 @@ SoundEffect_t *sfx_load(const char *aFilename)
 
 	CFURLRef url = CFURLCreateFromFileSystemRepresentation(kCFAllocatorDefault, (UInt8*)aFilename, strlen(aFilename), false);
 
-	AudioFileID AFID;
-#if TARGET_OS_IPHONE
-	OSStatus status = AudioFileOpenURL(url, kAudioFileReadPermission, 0, &AFID);
-#else
-	OSStatus status = AudioFileOpenURL(url, fsRdPerm, 0, &AFID);
-#endif
+	ExtAudioFileRef AFID;
+	OSStatus status = ExtAudioFileOpenURL(url, &AFID);
 	CFRelease(url);
 	_CHECK_ERR("Could not load %s", aFilename)
 
-	AudioStreamBasicDescription format;
-	UInt32 propSize = sizeof(format);
-	status = AudioFileGetProperty(AFID, kAudioFilePropertyDataFormat, &propSize, &format);
+	AudioStreamBasicDescription inputFormat;
+	UInt32 propSize = sizeof(inputFormat);
+	status = ExtAudioFileGetProperty(AFID, kExtAudioFileProperty_FileDataFormat, &propSize, &inputFormat);
 	_CHECK_ERR("Error getting file format");
-	assert(format.mFormatID == kAudioFormatLinearPCM); // TODO: Support compressed audio
-	out->channels = format.mChannelsPerFrame;
-	out->rate = format.mSampleRate;
+	assert(inputFormat.mFormatID == kAudioFormatLinearPCM); // TODO: Support compressed audio
+    assert(inputFormat.mChannelsPerFrame <= 2);
+	out->channels = inputFormat.mChannelsPerFrame;
+	out->rate = inputFormat.mSampleRate;
 
-	UInt64 dataSize;
-	propSize = sizeof(dataSize);
-	status = AudioFileGetProperty(AFID, kAudioFilePropertyAudioDataByteCount, &propSize, (UInt32*)&dataSize);
-	_CHECK_ERR("Error getting file data size");
+    // Configure the format that the input data is converted to (Linear PCM)
+    AudioStreamBasicDescription outputFormat;
+    outputFormat.mSampleRate = inputFormat.mSampleRate;
+	outputFormat.mChannelsPerFrame = inputFormat.mChannelsPerFrame;
+    
+	outputFormat.mFormatID = kAudioFormatLinearPCM;
+	outputFormat.mBytesPerPacket = 2 * inputFormat.mChannelsPerFrame;
+	outputFormat.mFramesPerPacket = 1;
+	outputFormat.mBytesPerFrame = 2 * inputFormat.mChannelsPerFrame;
+	outputFormat.mBitsPerChannel = 16;
+	outputFormat.mFormatFlags = kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsSignedInteger;
 
+    status = ExtAudioFileSetProperty(AFID, kExtAudioFileProperty_ClientDataFormat, sizeof(outputFormat), &outputFormat);
+    _CHECK_ERR("Error setting internal audio format");
+
+    SInt64 dataLengthInFrames;
+    propSize = sizeof(dataLengthInFrames);
+    status = ExtAudioFileGetProperty(AFID, kExtAudioFileProperty_FileLengthFrames, &propSize, &dataLengthInFrames);
+	_CHECK_ERR("Error getting audio data length");
+    
+
+    UInt32 dataSize = dataLengthInFrames*outputFormat.mBytesPerFrame;
 	void *data = malloc(dataSize);
 	assert(data);
-	status = AudioFileReadBytes(AFID, false, 0, (UInt32*)&dataSize, data);
-	_CHECK_ERR("Error reading audio file data");
-	AudioFileClose(AFID);
+    memset(data, 0, dataSize);
+    
+    AudioBufferList dataBuffer;
+    dataBuffer.mNumberBuffers = 1;
+    dataBuffer.mBuffers[0].mDataByteSize = dataSize;
+    dataBuffer.mBuffers[0].mNumberChannels = outputFormat.mChannelsPerFrame;
+    dataBuffer.mBuffers[0].mData = data;
+    status = ExtAudioFileRead(AFID, (UInt32*)&dataLengthInFrames, &dataBuffer);
+	_CHECK_ERR("Error decoding audio file data");
 	
 	out->format = out->channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 	alGenBuffers(1, &out->buffer);
