@@ -194,6 +194,10 @@ void bgm_setTime(BackgroundMusic_t *aBGM, float aSeconds)
 {
     [(AVAudioPlayer *)aBGM->player setCurrentTime:aSeconds];
 }
+void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume)
+{
+    [(AVAudioPlayer *)aBGM->player setVolume:aVolume];
+}
 
 #pragma mark - Sound manager (OpenAL)
 

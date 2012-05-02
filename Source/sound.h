@@ -59,7 +59,7 @@ extern void bgm_play(BackgroundMusic_t *aBGM);
 extern void bgm_stop(BackgroundMusic_t *aBGM);
 extern bool bgm_isPlaying(BackgroundMusic_t *aBGM);
 extern void bgm_setTime(BackgroundMusic_t *aBGM, float aSeconds);
-
+extern void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume);
 
 extern SoundManager_t *soundManager_create();
 extern bool soundManager_makeCurrent(SoundManager_t *aManager);
