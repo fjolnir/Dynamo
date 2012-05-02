@@ -1,7 +1,3 @@
-// A simple wrapper for OpenAL
-//
-#include <OpenAL/AL.h>
-#include <OpenAL/alc.h>
 #include "GLMath/GLMath.h"
 #include "object.h"
 
@@ -9,41 +5,57 @@
 #define _SOUND_H_
 
 extern Class_t Class_Sound;
+// Sound effect (for short sounds that need low latency)
 // Encapsulates an OpenAL buffer
-typedef struct _Sound {
+typedef struct _SoundEffect {
 	OBJ_GUTS
-	int samples;
-	int rate;
-	int channels;
-
-	ALuint buffer;
-	ALuint source;
-	ALenum format;
-
-	// These properties should only be set using their setter functions (Otherwise OpenAL state won't be updated)
+	// These properties should only be modified using their setter functions to ensure that
+	// the internal state stays up to date with their values.
 	vec3_t position;
 	bool isLooping;
 	float pitch;
 	float gain;
-} Sound_t;
 
-// Just manages the OpenAL context&device
+	// Platform specific and not guaranteed to exist
+	int samples;
+	int rate;
+	int channels;
+	unsigned int buffer;
+	unsigned int source;
+	unsigned int format;
+} SoundEffect_t;
+
+// For longer non latency sensitive sounds, specifically BGM
+typedef struct _BackgroundMusic {
+	// Platform specific and not guaranteed to exist
+    void *player;
+} BackgroundMusic_t;
+
+// Manages an audio device
 typedef struct _SoundManager {
-	ALCdevice *device;
-	ALCcontext *context;
+	// Platform specific and not guaranteed to exist
+	void *device;
+	void *context;
 } SoundManager_t;
 
-extern Sound_t *sound_load(const char *aFilename); // Only supports OGG at the moment
+extern SoundEffect_t *sfx_load(const char *aFilename);
 
-extern void sound_play(Sound_t *aSound);
-extern void sound_stop(Sound_t *aSound);
-extern void sound_toggle(Sound_t *aSound);
-extern bool sound_isPlaying(Sound_t *aSound);
+extern void sfx_play(SoundEffect_t *aSound);
+extern void sfx_stop(SoundEffect_t *aSound);
+extern void sfx_toggle(SoundEffect_t *aSound);
+extern bool sfx_isPlaying(SoundEffect_t *aSound);
 
-extern void sound_setPosition(Sound_t *aSound, vec3_t aPos);
-extern void sound_setLooping(Sound_t *aSound, bool aShouldLoop);
-extern void sound_setPitch(Sound_t *aSound, float aPitch);
-extern void sound_setGain(Sound_t *aSound, float aGain);
+extern void sfx_setPosition(SoundEffect_t *aSound, vec3_t aPos);
+extern void sfx_setLooping(SoundEffect_t *aSound, bool aShouldLoop);
+extern void sfx_setPitch(SoundEffect_t *aSound, float aPitch);
+extern void sfx_setGain(SoundEffect_t *aSound, float aGain);
+
+extern BackgroundMusic_t *bgm_load(const char *aFilename);
+extern void bgm_play(BackgroundMusic_t *aBGM);
+extern void bgm_stop(BackgroundMusic_t *aBGM);
+extern bool bgm_isPlaying(BackgroundMusic_t *aBGM);
+extern void bgm_setTime(BackgroundMusic_t *aBGM, float aSeconds);
+
 
 extern SoundManager_t *soundManager_create();
 extern void soundManager_destroy(SoundManager_t *aManager);
