@@ -13,14 +13,16 @@ BOOL util_pathForResource(const char *name, const char *ext, const char *dir, ch
     CFStringRef cfExt = ext ? CFStringCreateWithCString(NULL, ext, kCFStringEncodingUTF8) : NULL;
     CFStringRef cfDir = dir ? CFStringCreateWithCString(NULL, dir, kCFStringEncodingUTF8) : NULL;
     CFURLRef url = CFBundleCopyResourceURL(bundle, cfName, cfExt, cfDir);
-    if(!url)
-        return false;
     
     if(cfName) CFRelease(cfName);
     if(cfExt) CFRelease(cfExt);
     if(cfDir) CFRelease(cfDir);
+    if(!url)
+        return false;
     
-    return CFURLGetFileSystemRepresentation(url, true, (UInt8*)output, maxLen);
+    BOOL ret = CFURLGetFileSystemRepresentation(url, true, (UInt8*)output, maxLen);
+    CFRelease(url);
+    return ret;
     
 #else
     
