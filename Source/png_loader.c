@@ -156,6 +156,7 @@ Png_t *png_load(const char *aPath) {
     self->hasAlpha = CGImageGetAlphaInfo(cgImg) != kCGImageAlphaNone;
     self->cfData   = CGDataProviderCopyData(CGImageGetDataProvider(cgImg));
     self->data     = CFDataGetBytePtr(self->cfData);
+    CGImageRelease(cgImg);
 #endif
     return self;
 }
