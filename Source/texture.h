@@ -10,6 +10,9 @@ typedef struct _Texture {
 	OBJ_GUTS
 	GLuint id;
 	vec2_t size;
+	// We need to inset the texture rectangle ever so slightly in order
+	// to prevent bleeding when using texture atlases
+	vec2_t pxAlignInset;
 } Texture_t;
 
 // A  structure to specify areas to sample from a texture (in UV coordinates)
