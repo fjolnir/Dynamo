@@ -221,9 +221,9 @@ float _sfx_getVolume(SoundEffect_t *aSound)
 	return millibels/SL_MILLIBEL_MAX;
 }
 
-void _sfx_setVolume(SoundEffect_t *aSound, float aVolume)
+void sfx_setVolume(SoundEffect_t *aSound, float aVolume)
 {
-	SLresult result = (*aSound->oslPlayerVolumeInterface)->SetVolumeLevel(aSound->oslPlayerVolumeInterface, (SLmillibel)(aVolume*SL_MILLIBEL_MAX));
+	SLresult result = (*aSound->oslPlayerVolumeInterface)->SetVolumeLevel(aSound->oslPlayerVolumeInterface, (SLmillibel)(aVolume*1000.0));
 	_osl_checkResult("Couldn't set audio volume", result);
 }
 
@@ -292,7 +292,7 @@ void bgm_seek(BackgroundMusic_t *aBGM, float aSeconds)
 }
 void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume)
 {
-	_sfx_setVolume(aBGM->soundEffect, aVolume);
+	sfx_setVolume(aBGM->soundEffect, aVolume);
 }
 
 #pragma mark - Sound manager (OpenSL)

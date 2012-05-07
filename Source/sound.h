@@ -25,7 +25,8 @@ extern void sfx_play(SoundEffect_t *aSound);
 extern void sfx_stop(SoundEffect_t *aSound);
 extern bool sfx_isPlaying(SoundEffect_t *aSound);
 
-extern void sfx_setPosition(SoundEffect_t *aSound, vec3_t aPos);
+extern void sfx_setVolume(SoundEffect_t *aSound, float aVolume);
+extern void sfx_setLocation(SoundEffect_t *aSound, vec3_t aPos);
 extern void sfx_setLooping(SoundEffect_t *aSound, bool aShouldLoop);
 extern void sfx_setPitch(SoundEffect_t *aSound, float aPitch);
 

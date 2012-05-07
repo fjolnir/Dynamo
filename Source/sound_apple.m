@@ -138,7 +138,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
 	_checkForOpenAlError();
 
 	alSourcei(out->source, AL_BUFFER,  out->buffer);
-	sfx_setPosition(out, GLMVec3_zero);
+	sfx_setLocation(out, GLMVec3_zero);
 	sfx_setLooping(out, false);
 	sfx_setPitch(out, 1.0f);
 	alSource3f(out->source, AL_VELOCITY,        0.0, 0.0, 0.0);
@@ -164,7 +164,12 @@ void sfx_destroy(SoundEffect_t *aSound)
 	sfx_unload(aSound);
 }
 
-void sfx_setPosition(SoundEffect_t *aSound, vec3_t aPos)
+void sfx_setVolume(SoundEffect_t *aSound, float aVolume)
+{
+    alSourcef(aSound->source, AL_GAIN, aVolume);
+}
+
+void sfx_setLocation(SoundEffect_t *aSound, vec3_t aPos)
 {
 	aSound->position = aPos;
 	alSource3f(aSound->source, AL_POSITION, aPos.x, aPos.y, aPos.z);
@@ -185,7 +190,7 @@ void sfx_setPitch(SoundEffect_t *aSound, float aPitch)
 void sfx_play(SoundEffect_t *aSound)
 {
 	if(sfx_isPlaying(aSound))
-		return;
+		sfx_stop(aSound);
 	alSourcePlay(aSound->source);
 	_checkForOpenAlError();
 }

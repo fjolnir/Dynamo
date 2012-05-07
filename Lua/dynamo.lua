@@ -445,7 +445,8 @@ extern void sfx_stop(SoundEffect_t *aSound);
 extern void sfx_toggle(SoundEffect_t *aSound);
 extern bool sfx_isPlaying(SoundEffect_t *aSound);
 
-//extern void sfx_setPosition(SoundEffect_t *aSound, vec3_t aPos);
+extern void sfx_setVolume(SoundEffect_t *aSound, float aVolume);
+extern void sfx_setLocation(SoundEffect_t *aSound, vec3_t aPos);
 extern void sfx_setLooping(SoundEffect_t *aSound, bool aShouldLoop);
 extern void sfx_setPitch(SoundEffect_t *aSound, float aPitch);
 
@@ -800,7 +801,20 @@ ffi.metatype("SoundEffect_t", {
 		stop = lib.sfx_stop,
 		isPlaying = lib.sfx_isPlaying,
 		unload = lib.sfx_unload
-	}
+	},
+	__newindex = function(self, key, val)
+		if key == "location" then
+			lib.sfx_setLocation(self, val)
+		elseif key == "loops" then
+			lib.sfx_setLooping(self, val)
+		elseif key == "pitch" then
+			lib.sfx_setPitch(self, val)
+		elseif key == "volume" then
+			lib.sfx_setVolume(self, val)
+		else
+			error("Undefined key "..key)
+		end
+	end
 })
 
 ffi.metatype("BackgroundMusic_t", {
@@ -815,7 +829,7 @@ ffi.metatype("BackgroundMusic_t", {
 		if key == "volume" then
 			lib.bgm_setVolume(self, val)
 		else
-			error("Undefined key "+key)
+			error("Undefined key "..key)
 		end
 	end
 })
