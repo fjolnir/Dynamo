@@ -7,7 +7,6 @@
 #include <OpenAL/alc.h>
 
 #import <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
 
 // TODO: Soften error handling
 
@@ -15,9 +14,11 @@
     #error "This is the audio interface for apple platforms"
 #endif
 
-#ifdef TARGET_OS_EMBEDDED
+#if TARGET_OS_EMBEDDED
+	#import <AVFoundation/AVFoundation.h>
 	#define BGM_PLAYER_CLASS AVAudioPlayer
 #else
+	#import <AppKit/NSSound.h>
 	#define BGM_PLAYER_CLASS NSSound
 #endif
 
@@ -217,10 +218,16 @@ bool sfx_isPlaying(SoundEffect_t *aSound)
 BackgroundMusic_t *bgm_load(const char *aFilename)
 {
     assert(aFilename);
-    NSError *err = nil;
     NSString *path = [NSString stringWithUTF8String:aFilename];
     NSURL *fileURL = [NSURL fileURLWithPath:path isDirectory:NO];
-    AVAudioPlayer *player = [[BGM_PLAYER_CLASS alloc] initWithContentsOfURL:fileURL error:&err];
+#if TARGET_OS_EMBEDDED
+    NSError *err = nil;
+    AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&err];
+	if(err) NSLog(@"%@", err);
+#else
+    NSSound *player = [[NSSound alloc] initWithContentsOfURL:fileURL byReference:YES];
+#endif
+
     if(!player) return NULL;
     
     BackgroundMusic_t *out = obj_create_autoreleased(&Class_BackgroundMusic);

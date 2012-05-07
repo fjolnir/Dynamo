@@ -25,25 +25,54 @@ LDFLAGS  += -framework Cocoa
 LDFLAGS  += -framework OpenGL
 LDFLAGS  += -framework Accelerate
 LDFLAGS  += -framework OpenAL
+LDFLAGS  += -framework AudioToolbox
 LDFLAGS  += $(ARCH)
 
-ENGINE_DYNAMICLIBS := -logg -lmxml -lvorbis -lvorbisfile -lpng -lyajl
+ENGINE_DYNAMICLIBS := -logg -lvorbis -lvorbisfile
 
-STATICLIBPNG = ../MacSpecific/libpng.a
-STATICLIBS := -logg -lmxml -lvorbis -lvorbisfile
+STATICLIBS := -logg -lvorbis -lvorbisfile
 
-ENGINE_SOURCE := $(wildcard Source/*.c) $(wildcard Dependencies/GLMath/*.c)
-ENGINE_OBJ    := $(addprefix build/,$(ENGINE_SOURCE:.c=.o))
+ENGINE_SOURCE := $(wildcard Dependencies/*/*.c) \
+Source/array.c \
+Source/background.c \
+Source/dictionary.c \
+Source/drawutils.c \
+Source/gametimer.c \
+Source/input.c \
+Source/json.c \
+Source/linkedlist.c \
+Source/networking.c \
+Source/object.c \
+Source/ogg_loader.c \
+Source/png_loader.c \
+Source/primitive_types.c \
+Source/renderer.c \
+Source/scene.c \
+Source/shader.c \
+Source/sprite.c \
+Source/texture.c \
+Source/texture_atlas.c \
+Source/tmx_map.c \
+Source/util.c \
+Source/sound_apple.m \
+
+
+ENGINE_OBJ    := $(addprefix build/,$(addsuffix .o,$(ENGINE_SOURCE)))
 ENGINE_DYLIB  := libdynamo.dylib
 
 override CFLAGS := $(CFLAGS) $(C_FLAGS)
 
 all: link
 
-build/%.o : %.c
+build/%.c.o: %.c
 	@echo Building $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+build/%.m.o: %.m
+	echo Building $<
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm $(TEST_BIN) $(TEST_OBJ) $(ENGINE_DYLIB) $(ENGINE_OBJ)

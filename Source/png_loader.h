@@ -8,7 +8,7 @@ typedef struct {
     int width;
     bool hasAlpha;
     const unsigned char *data;
-#ifdef TARGET_OS_EMBEDDED
+#if TARGET_OS_EMBEDDED
     CFDataRef cfData;
 #endif
 } Png_t;

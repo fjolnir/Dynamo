@@ -163,7 +163,7 @@ Png_t *png_load(const char *aPath) {
 
 void png_destroy(Png_t *self)
 {
-#ifdef TARGET_OS_EMBEDDED
+#if TARGET_OS_EMBEDDED
     CFRelease(self->cfData);
 #else
     free((void*)self->data);
