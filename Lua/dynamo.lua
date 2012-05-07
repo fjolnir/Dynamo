@@ -3,7 +3,7 @@
 
 local ffi = require("ffi")
 local lib = ffi.C
-local gl = require("OpenGL")
+local gl = require("OpenGLES")
 
 local dynamo = setmetatable({}, { __index = lib })
 
@@ -424,9 +424,65 @@ extern TMXLayer_t *tmx_mapGetLayerNamed(TMXMap_t *aMap, const char *aLayerName);
 extern TMXObjectGroup_t *tmx_mapGetObjectGroupNamed(TMXMap_t *aMap, const char *aGroupName);
 extern TMXObject_t *tmx_objGroupGetObjectNamed(TMXObjectGroup_t *aGroup, const char *aObjName);
 
+//
+// Audio
+extern Class_t Class_SoundEffect;
+// Sound effect (for short sounds that need low latency)
+typedef struct _SoundEffect SoundEffect_t;
+// For longer non latency sensitive sounds, specifically BGM
+extern Class_t Class_BackgroundMusic;
+typedef struct _BackgroundMusic BackgroundMusic_t;
+// Manages the audio state. Sounds can not be created or played if there is no current sound manager
+// Generally you would just create one and have it persist while the app is running
+extern Class_t Class_SoundManager;
+typedef struct _SoundManager SoundManager_t;
 
+extern SoundEffect_t *sfx_load(const char *aFilename);
+extern void sfx_unload(SoundEffect_t *aSound);
+
+extern void sfx_play(SoundEffect_t *aSound);
+extern void sfx_stop(SoundEffect_t *aSound);
+extern void sfx_toggle(SoundEffect_t *aSound);
+extern bool sfx_isPlaying(SoundEffect_t *aSound);
+
+//extern void sfx_setPosition(SoundEffect_t *aSound, vec3_t aPos);
+extern void sfx_setLooping(SoundEffect_t *aSound, bool aShouldLoop);
+extern void sfx_setPitch(SoundEffect_t *aSound, float aPitch);
+
+extern BackgroundMusic_t *bgm_load(const char *aFilename);
+extern void bgm_unload(BackgroundMusic_t *aBGM);
+
+extern void bgm_play(BackgroundMusic_t *aBGM);
+extern void bgm_stop(BackgroundMusic_t *aBGM);
+extern bool bgm_isPlaying(BackgroundMusic_t *aBGM);
+extern void bgm_seek(BackgroundMusic_t *aBGM, float aSeconds);
+extern void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume);
+
+extern SoundManager_t *soundManager_create();
+extern bool soundManager_makeCurrent(SoundManager_t *aManager);
+
+//
+// Utils
 extern bool util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen);
+
+typedef enum {
+	kPlatformMac,
+	kPlatformIOS,
+	kPlatformAndroid,
+	kPlatformWindows,
+	kPlatformOther
+} Platform_t;
+extern Platform_t util_platform(void);
 ]]
+
+dynamo.platforms = {
+	mac = 0,
+	ios = 1,
+	android = 2,
+	windows = 3,
+	other = 4
+}
+dynamo.platform = tonumber(lib.util_platform())
 
 dynamo.kBackground_maxLayers = 4
 
@@ -603,36 +659,62 @@ local function _createTimer(desiredFPS, updateCallback)
 	return _obj_addToGC(timer)
 end
 
--- Time function (IOS/MacOS only! for now)
-ffi.cdef[[
-struct mach_timebase_info {
-	uint32_t	numer;
-	uint32_t	denom;
-};
-typedef struct mach_timebase_info *mach_timebase_info_t;
-typedef struct mach_timebase_info	mach_timebase_info_data_t;
+-- Time function (Apple/Linux only for now)
+if dynamo.platform == dynamo.platforms.ios or dynamo.platform == dynamo.platforms.mac then
+	ffi.cdef[[
+	struct mach_timebase_info {
+		uint32_t numer;
+		uint32_t denom;
+	};
+	typedef struct mach_timebase_info *mach_timebase_info_t;
+	typedef struct mach_timebase_info	mach_timebase_info_data_t;
 
-void mach_timebase_info(mach_timebase_info_t info);
-uint64_t mach_absolute_time(void);
-]]
-local C = ffi.C
-function dynamo.globalTime()
-	local timebase = ffi.new("mach_timebase_info_data_t[1]")
-	C.mach_timebase_info(timebase)
-	local absolute = C.mach_absolute_time()
-	local nanosec = (absolute * timebase[0].numer) / timebase[0].denom
+	void mach_timebase_info(mach_timebase_info_t info);
+	uint64_t mach_absolute_time(void);
+	]]
+	local C = ffi.C
+	function dynamo.globalTime()
+		local timebase = ffi.new("mach_timebase_info_data_t[1]")
+		C.mach_timebase_info(timebase)
+		local absolute = C.mach_absolute_time()
+		local nanosec = (absolute * timebase[0].numer) / timebase[0].denom
 
-	return tonumber(nanosec)/1000000000
-end
+		return tonumber(nanosec)/1000000000
+	end
 
-dynamo.startTime = dynamo.globalTime()
-function dynamo.time()
-    return dynamo.globalTime() - dynamo.startTime
+	dynamo.startTime = dynamo.globalTime()
+	function dynamo.time()
+		return dynamo.globalTime() - dynamo.startTime
+	end
+elseif dynamo.platform == dynamo.platforms.android then
+	ffi.cdef[[
+		typedef int32_t clockid_t;
+		typedef long time_t;
+		struct timespec {
+			time_t   tv_sec;        /* seconds */
+			long     tv_nsec;       /* nanoseconds */
+		};
+		int clock_gettime(clockid_t clk_id, struct timespec *tp);
+	]]
+	local CLOCK_MONOTONIC = 1
+
+	function dynamo.globalTime()
+		local now = ffi.new("struct timespec[1]")
+		C.clock_gettime(CLOCK_MONOTONIC, now);
+		return tonumber(now[0].tv_sec) + tonumber(now[0].tv_nsec)/1000000000
+	end
+
+	dynamo.startTime = dynamo.globalTime()
+	function dynamo.time()
+		return dynamo.globalTime() - dynamo.startTime
+	end
+else
+	error("Unsupported platform "..tostring(tonumber(dynamo.platform)))
 end
 
 
 function dynamo.renderable(lambda)
-	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(lib.Class_Renderable))
+	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.sizeof("Renderable_t"), nil))
 	drawable.displayCallback = lambda
 	return drawable
 end
@@ -671,9 +753,7 @@ ffi.metatype("TMXLayer_t", {
 })
 
 ffi.metatype("TMXObjectGroup_t", {
-	__index = function(self, key)
-		return lib.tmx_objGroupGetObjectNamed(self, key)
-	end
+	__index = lib.tmx_objGroupGetObjectNamed
 })
 
 function math.round(num)
@@ -701,7 +781,55 @@ ffi.metatype("TMXTileset_t", {
 	}
 })
 
-dynamo.loadMap = lib.tmx_readMapFile
+function dynamo.loadMap(path)
+	local ret = lib.tmx_readMapFile(path)
+	return _obj_addToGC(ret)
+end
+
+
+--
+-- Sound
+
+local function _createSoundManager()
+	local ret = lib.soundManager_create()
+	return _obj_addToGC(ret)
+end
+
+ffi.metatype("SoundEffect_t", {
+	__index = {
+		play = lib.sfx_play,
+		stop = lib.sfx_stop,
+		isPlaying = lib.sfx_isPlaying,
+		unload = lib.sfx_unload
+	}
+})
+
+ffi.metatype("BackgroundMusic_t", {
+	__index = {
+		play = lib.bgm_play,
+		stop = lib.bgm_stop,
+		seek = lib.bgm_seek,
+		isPlaying = lib.bgm_isPlaying,
+		unload = lib.bgm_unload
+	},
+	__newindex = function(self, key, val)
+		if key == "volume" then
+			lib.bgm_setVolume(self, val)
+		else
+			error("Undefined key "+key)
+		end
+	end
+})
+
+function dynamo.loadSFX(path)
+	local ret = lib.sfx_load(path)
+	return _obj_addToGC(ret)
+end
+
+function dynamo.loadBGM(path)
+	local ret = lib.bgm_load(path)
+	return _obj_addToGC(ret)
+end
 
 
 --
@@ -721,6 +849,9 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	lib.obj_retain(dynamo.timer)
 
 	dynamo.inputManager = _createInputManager()
+
+	dynamo.soundManager = _createSoundManager()
+	lib.soundManager_makeCurrent(dynamo.soundManager)
 
 	return dynamo.renderer, dynamo.timer
 end
@@ -752,6 +883,7 @@ function dynamo.postPanEvent(finger, isDown, x, y)
 	end
 	dynamo.inputManager:postMomentaryEvent(lib.kInputTouch_pan1+finger, nil, pos, state)
 end
+postPanEvent = dynamo.postPanEvent
 
 function dynamo.cycle()
 	dynamo.inputManager:postActiveEvents()
@@ -760,3 +892,4 @@ function dynamo.cycle()
 end
 
 return dynamo
+
