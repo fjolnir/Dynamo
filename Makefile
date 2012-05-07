@@ -64,15 +64,10 @@ override CFLAGS := $(CFLAGS) $(C_FLAGS)
 
 all: link
 
-build/%.c.o: %.c
+build/%.o: %
 	@echo Building $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
-
-build/%.m.o: %.m
-	echo Building $<
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm $(TEST_BIN) $(TEST_OBJ) $(ENGINE_DYLIB) $(ENGINE_OBJ)
