@@ -9,6 +9,31 @@
 typedef signed char BOOL;
 extern BOOL util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen);
 
+
+typedef enum {
+	kPlatformMac,
+	kPlatformIOS,
+	kPlatformAndroid,
+	kPlatformWindows,
+	kPlatformOther
+} Platform_t;
+
+#if defined(__APPLE__)
+	#if defined(TARGET_OS_EMBEDDED)
+		#define DYNAMO_PLATFORM kPlatformIOS;
+	#else
+		#define DYNAMO_PLATFORM kPlatformMac;
+	#endif
+#elif defined(ANDROID)
+	#define DYNAMO_PLATFORM kPlatformAndroid;
+#elif defined(WIN32)
+	#define DYNAMO_PLATFORM kPlatformWindows;
+#else
+	#define DYNAMO_PLATFORM kPlatformOther;
+#endif
+
+extern Platform_t util_platform(void);
+
 #ifdef MAX
 #undef MAX
 #endif
