@@ -14,7 +14,7 @@ typedef struct {
 
 // Add OBJ_GUTS at the beginning of a struct type in order to make it a valid, retainable object
 typedef struct {
-	Class_t *class;
+	Class_t *isa;
 	long referenceCount;
 } _Obj_guts;
 
