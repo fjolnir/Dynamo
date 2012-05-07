@@ -26,6 +26,9 @@ Source/texture_atlas.c \
 Source/tmx_map.c \
 Source/util.c \
 Source/sound_android.c \
+Source/dictionary.c \
+Source/json.c \
+Source/primitive_types.c \
 Dependencies/GLMath/GLMath.c \
 Dependencies/GLMath/GLMathExports.c \
 Dependencies/GLMath/GLMathUtilities.c \
@@ -53,7 +56,16 @@ Dependencies/png/pngtrans.c \
 Dependencies/png/pngwio.c \
 Dependencies/png/pngwrite.c \
 Dependencies/png/pngwtran.c \
-Dependencies/png/pngwutil.c
+Dependencies/png/pngwutil.c \
+Dependencies/yajl/yajl.c \
+Dependencies/yajl/yajl_alloc.c \
+Dependencies/yajl/yajl_buf.c \
+Dependencies/yajl/yajl_encode.c \
+Dependencies/yajl/yajl_gen.c \
+Dependencies/yajl/yajl_lex.c \
+Dependencies/yajl/yajl_parser.c \
+Dependencies/yajl/yajl_tree.c \
+Dependencies/yajl/yajl_version.c
 
 LIBS+=bps screen EGL GLESv2 freetype
 LOCAL_LDLIBS := -lz -llog -ldl -lGLESv2 -lOpenSLES
