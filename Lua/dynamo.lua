@@ -712,9 +712,8 @@ else
 	error("Unsupported platform "..tostring(tonumber(dynamo.platform)))
 end
 
-
 function dynamo.renderable(lambda)
-	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.sizeof("Renderable_t"), nil))
+	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.cast("Class_t*", lib.Class_Renderable)))
 	drawable.displayCallback = lambda
 	return drawable
 end

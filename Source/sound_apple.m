@@ -37,7 +37,8 @@ struct _BackgroundMusic {
 };
 struct _SoundManager {
     OBJ_GUTS
-	void *device;
+    ALCcontext *context;
+	ALCdevice *device;
 };
 
 static void sfx_destroy(SoundEffect_t *aSound);
@@ -242,7 +243,7 @@ bool bgm_isPlaying(BackgroundMusic_t *aBGM)
 {
     return [(AVAudioPlayer *)aBGM->player isPlaying];
 }
-void bgm_setTime(BackgroundMusic_t *aBGM, float aSeconds)
+void bgm_seek(BackgroundMusic_t *aBGM, float aSeconds)
 {
     [(AVAudioPlayer *)aBGM->player setCurrentTime:aSeconds];
 }

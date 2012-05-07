@@ -4,7 +4,7 @@ C = ffi.C
 
 require("glmath")
 dynamo = require("dynamo")
-local gl = require("OpenGL")
+local gl = require("OpenGLES")
 
 
 function update(timer)

@@ -517,4 +517,4 @@ ffi.cdef[[
       void         glViewport (GLint x, GLint y, GLsizei width, GLsizei height);
 ]]
 
-return ffi.load("GLESv2")
+return ffi.C
