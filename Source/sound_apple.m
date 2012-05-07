@@ -15,6 +15,31 @@
     #error "This is the audio interface for apple platforms"
 #endif
 
+struct _SoundEffect {
+	OBJ_GUTS
+	// These properties should only be modified using their setter functions to ensure that
+	// the internal state stays up to date with their values.
+	vec3_t position;
+	bool isLooping;
+	float pitch;
+
+	// Platform specific and not guaranteed to exist
+	void *handle;
+	int samples;
+	int rate;
+	int channels;
+	unsigned int buffer;
+	unsigned int source;
+	unsigned int format;
+};
+struct _BackgroundMusic {
+    void *player;
+};
+struct _SoundManager {
+    OBJ_GUTS
+	void *device;
+};
+
 static void sfx_destroy(SoundEffect_t *aSound);
 static char *_openAlErrorString(int aCode);
 static bool _checkForOpenAlError();
@@ -115,7 +140,6 @@ SoundEffect_t *sfx_load(const char *aFilename)
 	sfx_setPosition(out, GLMVec3_zero);
 	sfx_setLooping(out, false);
 	sfx_setPitch(out, 1.0f);
-	sfx_setGain(out, 1.0f);
 	alSource3f(out->source, AL_VELOCITY,        0.0, 0.0, 0.0);
 	alSource3f(out->source, AL_DIRECTION,       0.0, 0.0, 0.0);
 	alSourcef (out->source, AL_ROLLOFF_FACTOR,  0.0          );
@@ -124,7 +148,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
 	return out;
 }
 
-void sfx_destroy(SoundEffect_t *aSound)
+void sfx_unload(SoundEffect_t *aSound)
 {
 	if(alIsBuffer(aSound->buffer)) {
 		alSourceUnqueueBuffers(aSound->source, 1, &aSound->buffer);
@@ -132,6 +156,11 @@ void sfx_destroy(SoundEffect_t *aSound)
 	}
 	if(alIsSource(aSound->source))
 		alDeleteSources(1, &aSound->source);
+}
+
+void sfx_destroy(SoundEffect_t *aSound)
+{
+	sfx_unload(aSound);
 }
 
 void sfx_setPosition(SoundEffect_t *aSound, vec3_t aPos)
@@ -150,12 +179,6 @@ void sfx_setPitch(SoundEffect_t *aSound, float aPitch)
 {
 	aSound->pitch = aPitch;
 	alSourcef(aSound->source, AL_PITCH, 1.0f);
-}
-
-void sfx_setGain(SoundEffect_t *aSound, float aGain)
-{
-	aSound->gain = aGain;
-	alSourcef(aSound->source, AL_GAIN, 1.0f);
 }
 
 void sfx_play(SoundEffect_t *aSound)
@@ -194,10 +217,17 @@ BackgroundMusic_t *bgm_load(const char *aFilename)
     return out;
 }
 
+void bgm_unload(BackgroundMusic_t *aBGM)
+{
+	if(aBGM->player) {
+		bgm_stop(aBGM);
+		[(id)aBGM->player release], aBGM->player = NULL;
+	}
+}
+
 static void bgm_destroy(BackgroundMusic_t *aBGM)
 {
-    bgm_stop(aBGM);
-    [(id)aBGM->player release], aBGM->player = NULL;
+	bgm_unload(aBGM);
 }
 
 void bgm_play(BackgroundMusic_t *aBGM)

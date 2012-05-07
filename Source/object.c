@@ -47,7 +47,7 @@ Obj_t *obj_create(Class_t *aClass)
 	assert(aClass != NULL);
 
 	_Obj_guts *self = calloc(1, aClass->instanceSize);
-	self->class = aClass;
+	self->isa = aClass;
 	return obj_retain(self);
 }
 
@@ -63,8 +63,8 @@ void obj_release(Obj_t *aObj)
 	assert(aObj != NULL);
 	_Obj_guts *self = aObj;
 	if(__sync_sub_and_fetch(&self->referenceCount, 1) == 0 && !ENABLE_ZOMBIES) {
-		if(self->class->destructor)
-			self->class->destructor(aObj);
+		if(self->isa->destructor)
+			self->isa->destructor(aObj);
 		if(!ENABLE_ZOMBIES)
 			free(self);
 		else if (self->referenceCount < 0)
@@ -79,7 +79,7 @@ Obj_t *obj_autorelease(Obj_t *aObj)
 
 Class_t *obj_getClass(Obj_t *aObj)
 {
-	return ((_Obj_guts*)aObj)->class;
+	return ((_Obj_guts*)aObj)->isa;
 }
 
 bool obj_isClass(Obj_t *aObj, Class_t *aClass)

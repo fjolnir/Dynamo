@@ -6,7 +6,7 @@ BOOL util_pathForResource(const char *name, const char *ext, const char *dir, ch
 {
     assert(output != NULL && maxLen > 0);
 
-#if defined(TARGET_OS_EMBEDDED) // iOS
+#if defined(__APPLE__) // iOS
 
     CFBundleRef bundle = CFBundleGetMainBundle();
     CFStringRef cfName = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
@@ -53,3 +53,7 @@ BOOL util_pathForResource(const char *name, const char *ext, const char *dir, ch
 #endif
 }
 
+extern Platform_t util_platform(void)
+{
+	return DYNAMO_PLATFORM;
+}

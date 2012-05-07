@@ -34,8 +34,11 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	out->size.w = (float)png->width;
-	out->size.h = (float)png->height;
+	out->size = vec2_create(png->width, png->height);
+	out->pxAlignInset = vec2_create(
+		(1.0f/out->size.w) * 0.5,
+		(1.0f/out->size.h) * 0.5
+	);
 
 	return out;
 }
@@ -48,8 +51,11 @@ void texture_destroy(Texture_t *aTexture)
 
 TextureRect_t textureRectangle_createWithPixelCoordinates(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize)
 {
-	return textureRectangle_create(aOrigin.x/aTexture->size.w, aOrigin.y/aTexture->size.h,
-	                               aSize.w/aTexture->size.w,   aSize.h/aTexture->size.h);
+	return textureRectangle_create(
+		aTexture->pxAlignInset.w + aOrigin.x/aTexture->size.w,
+		aTexture->pxAlignInset.h + aOrigin.y/aTexture->size.h,
+		aSize.w/aTexture->size.w - aTexture->pxAlignInset.w,
+		aSize.h/aTexture->size.h - aTexture->pxAlignInset.h);
 }
 TextureRect_t textureRectangle_createWithSizeInPixels(Texture_t *aTexture, vec2_t aSize)
 {
