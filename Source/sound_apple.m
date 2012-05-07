@@ -15,6 +15,12 @@
     #error "This is the audio interface for apple platforms"
 #endif
 
+#ifdef TARGET_OS_EMBEDDED
+	#define BGM_PLAYER_CLASS AVAudioPlayer
+#else
+	#define BGM_PLAYER_CLASS NSSound
+#endif
+
 struct _SoundEffect {
 	OBJ_GUTS
 	// These properties should only be modified using their setter functions to ensure that
@@ -91,7 +97,6 @@ SoundEffect_t *sfx_load(const char *aFilename)
 	UInt32 propSize = sizeof(inputFormat);
 	status = ExtAudioFileGetProperty(AFID, kExtAudioFileProperty_FileDataFormat, &propSize, &inputFormat);
 	_CHECK_ERR("Error getting file format");
-	assert(inputFormat.mFormatID == kAudioFormatLinearPCM); // TODO: Support compressed audio
     assert(inputFormat.mChannelsPerFrame <= 2);
 	out->channels = inputFormat.mChannelsPerFrame;
 	out->rate = inputFormat.mSampleRate;
@@ -215,7 +220,7 @@ BackgroundMusic_t *bgm_load(const char *aFilename)
     NSError *err = nil;
     NSString *path = [NSString stringWithUTF8String:aFilename];
     NSURL *fileURL = [NSURL fileURLWithPath:path isDirectory:NO];
-    AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&err];
+    AVAudioPlayer *player = [[BGM_PLAYER_CLASS alloc] initWithContentsOfURL:fileURL error:&err];
     if(!player) return NULL;
     
     BackgroundMusic_t *out = obj_create_autoreleased(&Class_BackgroundMusic);
@@ -238,23 +243,23 @@ static void bgm_destroy(BackgroundMusic_t *aBGM)
 
 void bgm_play(BackgroundMusic_t *aBGM)
 {
-    [(AVAudioPlayer *)aBGM->player play];
+    [(BGM_PLAYER_CLASS *)aBGM->player play];
 }
 void bgm_stop(BackgroundMusic_t *aBGM)
 {
-    [(AVAudioPlayer *)aBGM->player stop];
+    [(BGM_PLAYER_CLASS *)aBGM->player stop];
 }
 bool bgm_isPlaying(BackgroundMusic_t *aBGM)
 {
-    return [(AVAudioPlayer *)aBGM->player isPlaying];
+    return [(BGM_PLAYER_CLASS *)aBGM->player isPlaying];
 }
 void bgm_seek(BackgroundMusic_t *aBGM, float aSeconds)
 {
-    [(AVAudioPlayer *)aBGM->player setCurrentTime:aSeconds];
+    [(BGM_PLAYER_CLASS *)aBGM->player setCurrentTime:aSeconds];
 }
 void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume)
 {
-    [(AVAudioPlayer *)aBGM->player setVolume:aVolume];
+    [(BGM_PLAYER_CLASS *)aBGM->player setVolume:aVolume];
 }
 
 #pragma mark - Sound manager (OpenAL)
