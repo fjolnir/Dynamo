@@ -54,8 +54,7 @@ Source/texture.c \
 Source/texture_atlas.c \
 Source/tmx_map.c \
 Source/util.c \
-Source/sound_apple.m \
-
+Source/sound_apple.m
 
 ENGINE_OBJ    := $(addprefix build/,$(addsuffix .o,$(ENGINE_SOURCE)))
 ENGINE_DYLIB  := libdynamo.dylib
