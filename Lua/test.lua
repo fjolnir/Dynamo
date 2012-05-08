@@ -40,6 +40,8 @@ scene = dynamo.createScene({
 })
 dynamo.renderer:pushRenderable(scene)
 
+snd = dynamo.loadSFX(dynamo.pathForResource("1-01 Just.mp3"))
+
 lastPos = nil
 dynamo.inputManager:addObserver({
 	type = dynamo.kInputTouch_pan1,
@@ -48,6 +50,9 @@ dynamo.inputManager:addObserver({
 		if lastPos == nil then
 			lastPos = { x=location.x, y=location.y }
 		end
+
+		snd:play()
+		snd.volume = location.y/500
 
 		local trans = vec2(location.x - lastPos.x, location.y - lastPos.y)
 		scene:translate(trans.x, trans.y)
