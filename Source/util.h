@@ -49,7 +49,7 @@ extern Platform_t util_platform(void);
 
 #pragma mark - Debug logging
 
-#ifdef TWODEEDENG_DEBUG
+#ifdef DYNAMO_DEBUGDENG_DEBUG
 	#ifdef ANDROID
 	    #include <android/log.h>
 	    #define debug_log(fmt, ...) __android_log_print(ANDROID_LOG_DEBUG, "GeminiNDK", "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
