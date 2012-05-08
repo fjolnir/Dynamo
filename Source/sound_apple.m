@@ -14,7 +14,7 @@
     #error "This is the audio interface for apple platforms"
 #endif
 
-#if TARGET_OS_EMBEDDED
+#if TARGET_OS_EMBEDDED || TARGET_IPHONE_SIMULATOR
 	#import <AVFoundation/AVFoundation.h>
 	#define BGM_PLAYER_CLASS AVAudioPlayer
 #else
@@ -220,7 +220,7 @@ BackgroundMusic_t *bgm_load(const char *aFilename)
     assert(aFilename);
     NSString *path = [NSString stringWithUTF8String:aFilename];
     NSURL *fileURL = [NSURL fileURLWithPath:path isDirectory:NO];
-#if TARGET_OS_EMBEDDED
+#if TARGET_OS_EMBEDDED || TARGET_IPHONE_SIMULATOR
     NSError *err = nil;
     AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&err];
 	if(err) NSLog(@"%@", err);

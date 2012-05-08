@@ -993,6 +993,7 @@
 				C78B8DFB1558A6ED00B8E5CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

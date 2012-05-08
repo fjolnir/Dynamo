@@ -19,7 +19,7 @@ typedef enum {
 } Platform_t;
 
 #if defined(__APPLE__)
-	#if defined(TARGET_OS_EMBEDDED)
+	#if TARGET_OS_EMBEDDED || TARGET_IPHONE_SIMULATOR
 		#define DYNAMO_PLATFORM kPlatformIOS;
 	#else
 		#define DYNAMO_PLATFORM kPlatformMac;
