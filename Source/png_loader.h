@@ -2,6 +2,10 @@
 #define _PNGLOADER_H_
 #include "object.h"
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 typedef struct {
     OBJ_GUTS
     int height;

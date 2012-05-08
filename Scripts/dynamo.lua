@@ -596,13 +596,16 @@ ffi.metatype("Scene_t", {
 		popRenderable = lib.scene_popRenderable,
 		insertRenderable = lib.scene_pushRenderable,
 		deleteRenderable = lib.scene_deleteRenderable,
-		rotate = function(self, angle)
-			self.transform = mat4_rotate(self.transform, angle, 0, 0, 1)
+		rotate = function(self, angle, axis)
+			axis = axis or vec3(0, 0, 1)
+			self.transform = mat4_rotate(self.transform, angle, axis.x, axis.y, axis.z)
 		end,
-		scale = function(self, x, y)
-			self.transform = mat4_scale(self.transform, x, y, 0)
+		scale = function(self, x, y, z)
+			z = z or 1
+			self.transform = mat4_scale(self.transform, x, y, 1)
 		end,
-		translate = function(self, x, y)
+		translate = function(self, x, y, z)
+			z = z or 0
 			self.transform = mat4_translate(self.transform, x, y, 0)
 		end
 	}

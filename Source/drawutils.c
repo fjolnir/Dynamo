@@ -211,6 +211,7 @@ void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill)
 
 void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill)
 {
+    aSubdivisions = MAX(6, aSubdivisions);
 	float vertices[aSubdivisions*2] ;
 	vec4_t colors[aSubdivisions];
 	float twoPi = 2.0f*M_PI;
