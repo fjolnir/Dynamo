@@ -1,6 +1,5 @@
-#include <TargetConditionals.h>
-
 #if defined(__APPLE__)
+	#include <TargetConditionals.h>
 	#include <sys/time.h>
 	#include <unistd.h>
     #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR

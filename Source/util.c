@@ -1,7 +1,9 @@
 #include "util.h"
 #include <sys/stat.h>
 #include <string.h>
-#include <CoreFoundation/CoreFoundation.h>
+#if defined(__APPLE__)
+	#include <CoreFoundation/CoreFoundation.h>
+#endif
 
 BOOL util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen)
 {
