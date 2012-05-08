@@ -20,7 +20,7 @@ static Class_t Class_Png = {
 
 Png_t *png_load(const char *aPath) {
     Png_t *self = obj_create_autoreleased(&Class_Png);
-#ifndef TARGET_OS_EMBEDDED
+#ifndef __APPLE__
     png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;

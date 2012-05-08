@@ -1,7 +1,7 @@
 #if defined(__APPLE__)
 	#include <sys/time.h>
 	#include <unistd.h>
-    #if defined(TARGET_OS_IPHONE) || defined(TARGET_OS_SIMULATOR)
+    #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
         #include <OpenGLES/ES2/gl.h>
         #include <OpenGLES/ES2/glext.h>
     #else
