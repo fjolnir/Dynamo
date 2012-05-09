@@ -1,3 +1,5 @@
+# Makefile for OS X
+
 .LIBPATTERNS = lib%.a lib%.dylib lib%.so
 vpath %.a /usr/local/lib
 
@@ -6,16 +8,16 @@ vpath %.o build/
 ARCH = -arch x86_64
 
 CC         =  gcc
-C_FLAGS    += -Wall -Wno-missing-braces -Wno-unused-function
-C_FLAGS    += -std=gnu99
-C_FLAGS    += -I"/usr/X11/include"
-C_FLAGS    += -I"/usr/local/include"
-C_FLAGS    += -I"./Dependencies/"
-C_FLAGS    += -ggdb
-C_FLAGS    += -O0
-C_FLAGS    += -DTWODEEDENG_DEBUG
-C_FLAGS    += $(shell sdl-config --cflags)
-C_FLAGS    += $(ARCH)
+CFLAGS    += -Wall -Wno-missing-braces -Wno-unused-function
+CFLAGS    += -std=gnu99
+CFLAGS    += -I"/usr/X11/include"
+CFLAGS    += -I"/usr/local/include"
+CFLAGS    += -I"./Dependencies/"
+CFLAGS    += -ggdb
+CFLAGS    += -O0
+CFLAGS    += -DDYNAMO_DEBUG
+CFLAGS    += $(shell sdl-config --cflags)
+CFLAGS    += $(ARCH)
 
 LDFLAGS  += -lc
 LDFLAGS  += -lz
@@ -26,13 +28,15 @@ LDFLAGS  += -framework OpenGL
 LDFLAGS  += -framework Accelerate
 LDFLAGS  += -framework OpenAL
 LDFLAGS  += -framework AudioToolbox
+LDFLAGS  += -framework ApplicationServices
+
 LDFLAGS  += $(ARCH)
 
-ENGINE_DYNAMICLIBS := -logg -lvorbis -lvorbisfile
+DYLIBS := -logg -lvorbis -lvorbisfile
 
 STATICLIBS := -logg -lvorbis -lvorbisfile
 
-ENGINE_SOURCE := $(wildcard Dependencies/*/*.c) \
+SOURCE := $(wildcard Dependencies/*/*.c) \
 Source/array.c \
 Source/background.c \
 Source/dictionary.c \
@@ -56,10 +60,8 @@ Source/tmx_map.c \
 Source/util.c \
 Source/sound_apple.m
 
-ENGINE_OBJ    := $(addprefix build/,$(addsuffix .o,$(ENGINE_SOURCE)))
-ENGINE_DYLIB  := libdynamo.dylib
-
-override CFLAGS := $(CFLAGS) $(C_FLAGS)
+OBJ    := $(addprefix build/,$(addsuffix .o,$(SOURCE)))
+PRODUCT  := libdynamo.dylib
 
 all: link
 
@@ -69,8 +71,8 @@ build/%.o: %
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm $(TEST_BIN) $(TEST_OBJ) $(ENGINE_DYLIB) $(ENGINE_OBJ)
+	@rm $(TEST_BIN) $(TEST_OBJ) $(PRODUCT) $(OBJ)
 
-link: $(ENGINE_OBJ)
+link: $(OBJ)
 	@echo "Linking Dynamo library"
-	@$(CC) -o $(ENGINE_DYLIB) -dynamiclib $(ENGINE_DYNAMICLIBS) $(LDFLAGS) $^
+	@$(CC) -o $(PRODUCT) -dynamiclib $(DYLIBS) $(LDFLAGS) $^
