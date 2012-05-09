@@ -16,7 +16,6 @@ CFLAGS    += -I"./Dependencies/"
 CFLAGS    += -ggdb
 CFLAGS    += -O0
 CFLAGS    += -DDYNAMO_DEBUG
-CFLAGS    += $(shell sdl-config --cflags)
 CFLAGS    += $(ARCH)
 
 LDFLAGS  += -lc
