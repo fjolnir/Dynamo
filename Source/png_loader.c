@@ -7,7 +7,7 @@
 #ifndef TARGET_OS_IPHONE
     #include <png.h>
 #else
-    #include <CoreGraphics/CoreGraphics.h>
+    #include <ApplicationServices/ApplicationServices.h>
 #endif
 
 static void png_destroy(Png_t *self);

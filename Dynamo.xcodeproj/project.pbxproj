@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C72C87D415591547001EF047 /* libglmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87B715591517001EF047 /* libglmath.a */; };
+		C72C87D515591547001EF047 /* liblibpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87CB15591524001EF047 /* liblibpng.a */; };
+		C72C87D615591547001EF047 /* libmxml.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87C21559151F001EF047 /* libmxml.a */; };
+		C72C87D715591547001EF047 /* libyajl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87141559123A001EF047 /* libyajl.a */; };
+		C72C87DA15591564001EF047 /* GLMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87B915591517001EF047 /* GLMath.framework */; };
 		C75AFDA2153FABC600FE8623 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C75AFDA1153FABC600FE8623 /* OpenGLES.framework */; };
 		C78B8D7C1558A60200B8E5CE /* lauxlib.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D761558A60200B8E5CE /* lauxlib.h */; };
 		C78B8D7F1558A60200B8E5CE /* lua.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D791558A60200B8E5CE /* lua.h */; };
@@ -100,7 +105,6 @@
 		C78B8E241558A75000B8E5CE /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DB31558A69600B8E5CE /* util.c */; };
 		C78B8E251558A75000B8E5CE /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB41558A69600B8E5CE /* util.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C78B8E271558A78800B8E5CE /* libpng15.15.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E261558A78800B8E5CE /* libpng15.15.dylib */; };
-		C78B8E371558A83B00B8E5CE /* GLMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E341558A82A00B8E5CE /* GLMath.framework */; };
 		C78B8E3A1558A89A00B8E5CE /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E381558A85800B8E5CE /* ApplicationServices.framework */; };
 		C78B8E3E1558A8E100B8E5CE /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E3D1558A8E100B8E5CE /* OpenGL.framework */; };
 		C78B8E401558A8E400B8E5CE /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E3F1558A8E400B8E5CE /* Accelerate.framework */; };
@@ -108,55 +112,77 @@
 		C78B8E441558A8FB00B8E5CE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E431558A8FB00B8E5CE /* AudioToolbox.framework */; };
 		C78B8E461558AB5500B8E5CE /* libyajl_s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E451558AB5500B8E5CE /* libyajl_s.a */; };
 		C78B8E481558AB6D00B8E5CE /* libmxml.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E471558AB6D00B8E5CE /* libmxml.a */; };
-		C7A1907315469BC200B266A6 /* GLMath.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1903D15469BC200B266A6 /* GLMath.c */; };
-		C7A1907615469BC200B266A6 /* GLMathExports.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1904315469BC200B266A6 /* GLMathExports.c */; };
-		C7A1907D15469BC200B266A6 /* GLMathUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1904A15469BC200B266A6 /* GLMathUtilities.c */; };
-		C7A1908115469BC200B266A6 /* mxml-attr.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905015469BC200B266A6 /* mxml-attr.c */; };
-		C7A1908215469BC200B266A6 /* mxml-entity.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905115469BC200B266A6 /* mxml-entity.c */; };
-		C7A1908315469BC200B266A6 /* mxml-file.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905215469BC200B266A6 /* mxml-file.c */; };
-		C7A1908415469BC200B266A6 /* mxml-get.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905315469BC200B266A6 /* mxml-get.c */; };
-		C7A1908515469BC200B266A6 /* mxml-index.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905415469BC200B266A6 /* mxml-index.c */; };
-		C7A1908615469BC200B266A6 /* mxml-node.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905515469BC200B266A6 /* mxml-node.c */; };
-		C7A1908715469BC200B266A6 /* mxml-private.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905615469BC200B266A6 /* mxml-private.c */; };
-		C7A1908915469BC200B266A6 /* mxml-search.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905815469BC200B266A6 /* mxml-search.c */; };
-		C7A1908A15469BC200B266A6 /* mxml-set.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905915469BC200B266A6 /* mxml-set.c */; };
-		C7A1908B15469BC200B266A6 /* mxml-string.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905A15469BC200B266A6 /* mxml-string.c */; };
-		C7A1908E15469BC200B266A6 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1905F15469BC200B266A6 /* png.c */; };
-		C7A1909115469BC200B266A6 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906215469BC200B266A6 /* pngerror.c */; };
-		C7A1909215469BC200B266A6 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906315469BC200B266A6 /* pngget.c */; };
-		C7A1909315469BC200B266A6 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906415469BC200B266A6 /* pngmem.c */; };
-		C7A1909415469BC200B266A6 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906515469BC200B266A6 /* pngpread.c */; };
-		C7A1909615469BC200B266A6 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906715469BC200B266A6 /* pngread.c */; };
-		C7A1909715469BC200B266A6 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906815469BC200B266A6 /* pngrio.c */; };
-		C7A1909815469BC200B266A6 /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906915469BC200B266A6 /* pngrtran.c */; };
-		C7A1909915469BC200B266A6 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906A15469BC200B266A6 /* pngrutil.c */; };
-		C7A1909A15469BC200B266A6 /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906B15469BC200B266A6 /* pngset.c */; };
-		C7A1909B15469BC200B266A6 /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906C15469BC200B266A6 /* pngtrans.c */; };
-		C7A1909C15469BC200B266A6 /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906D15469BC200B266A6 /* pngwio.c */; };
-		C7A1909D15469BC200B266A6 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906E15469BC200B266A6 /* pngwrite.c */; };
-		C7A1909E15469BC200B266A6 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1906F15469BC200B266A6 /* pngwtran.c */; };
-		C7A1909F15469BC200B266A6 /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = C7A1907015469BC200B266A6 /* pngwutil.c */; };
+		C799E482155908780009C0A7 /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C799E481155908780009C0A7 /* libluajit-5.1.a */; };
 		C7A190F215469C0B00B266A6 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A190F115469C0B00B266A6 /* Accelerate.framework */; };
 		C7ECFDDF153FB4420066EA9B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */; };
 		C7ECFDEF153FB57D0066EA9B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7ECFDEE153FB57D0066EA9B /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C78B8E311558A82A00B8E5CE /* PBXContainerItemProxy */ = {
+		C72C87131559123A001EF047 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C72C870C1559123A001EF047 /* yajl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C72C86A91559113E001EF047;
+			remoteInfo = yajl;
+		};
+		C72C87B615591517001EF047 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = C70EA30314AC9780009D29C6;
 			remoteInfo = "Static Library";
 		};
-		C78B8E331558A82A00B8E5CE /* PBXContainerItemProxy */ = {
+		C72C87B815591517001EF047 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = C7622AF714D085B60093DDD0;
 			remoteInfo = Framework;
 		};
-		C78B8E351558A83600B8E5CE /* PBXContainerItemProxy */ = {
+		C72C87C11559151F001EF047 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C72C87BA1559151F001EF047 /* mxml.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C72C872015591261001EF047;
+			remoteInfo = mxml;
+		};
+		C72C87CA15591524001EF047 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C72C87C315591524001EF047 /* libpng.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C72C87411559129B001EF047;
+			remoteInfo = libpng;
+		};
+		C72C87CC15591532001EF047 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C72C870C1559123A001EF047 /* yajl.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C72C86A81559113E001EF047;
+			remoteInfo = yajl;
+		};
+		C72C87CE15591536001EF047 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C70EA30214AC9780009D29C6;
+			remoteInfo = "Static Library";
+		};
+		C72C87D01559153A001EF047 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C72C87BA1559151F001EF047 /* mxml.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C72C871F15591261001EF047;
+			remoteInfo = mxml;
+		};
+		C72C87D21559153D001EF047 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C72C87C315591524001EF047 /* libpng.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C72C87401559129B001EF047;
+			remoteInfo = libpng;
+		};
+		C72C87D81559155E001EF047 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */;
 			proxyType = 1;
@@ -166,7 +192,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C75AFCF0153FA9F500FE8623 /* libDynamo - iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libDynamo - iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C72C870C1559123A001EF047 /* yajl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = yajl.xcodeproj; path = yajl/yajl.xcodeproj; sourceTree = "<group>"; };
+		C72C87BA1559151F001EF047 /* mxml.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mxml.xcodeproj; path = mxml/mxml.xcodeproj; sourceTree = "<group>"; };
+		C72C87C315591524001EF047 /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = png/libpng.xcodeproj; sourceTree = "<group>"; };
+		C75AFCF0153FA9F500FE8623 /* libdynamo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdynamo.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C75AFCF7153FA9F500FE8623 /* Dynamo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dynamo-Prefix.pch"; sourceTree = "<group>"; };
 		C75AFDA1153FABC600FE8623 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		C78B8D761558A60200B8E5CE /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
@@ -224,7 +253,7 @@
 		C78B8DF11558A6ED00B8E5CE /* Dynamo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Dynamo-Info.plist"; sourceTree = "<group>"; };
 		C78B8DF31558A6ED00B8E5CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C78B8E261558A78800B8E5CE /* libpng15.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng15.15.dylib; path = /usr/X11/lib/libpng15.15.dylib; sourceTree = "<absolute>"; };
-		C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GLMath.xcodeproj; sourceTree = "<group>"; };
+		C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLMath.xcodeproj; path = GLMath/GLMath.xcodeproj; sourceTree = "<group>"; };
 		C78B8E381558A85800B8E5CE /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/ApplicationServices.framework; sourceTree = DEVELOPER_DIR; };
 		C78B8E3B1558A8A500B8E5CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		C78B8E3D1558A8E100B8E5CE /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
@@ -233,51 +262,7 @@
 		C78B8E431558A8FB00B8E5CE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		C78B8E451558AB5500B8E5CE /* libyajl_s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libyajl_s.a; path = /usr/local/Cellar/yajl/2.0.4/lib/libyajl_s.a; sourceTree = "<absolute>"; };
 		C78B8E471558AB6D00B8E5CE /* libmxml.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmxml.a; path = /usr/local/Cellar/libmxml/2.6/lib/libmxml.a; sourceTree = "<absolute>"; };
-		C7A1903D15469BC200B266A6 /* GLMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLMath.c; sourceTree = "<group>"; };
-		C7A1903E15469BC200B266A6 /* GLMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMath.h; sourceTree = "<group>"; };
-		C7A1904215469BC200B266A6 /* GLMathBezierCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathBezierCurve.h; sourceTree = "<group>"; };
-		C7A1904315469BC200B266A6 /* GLMathExports.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLMathExports.c; sourceTree = "<group>"; };
-		C7A1904415469BC200B266A6 /* GLMathExports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathExports.h; sourceTree = "<group>"; };
-		C7A1904515469BC200B266A6 /* GLMathMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathMatrix.h; sourceTree = "<group>"; };
-		C7A1904615469BC200B266A6 /* GLMathMatrixStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathMatrixStack.h; sourceTree = "<group>"; };
-		C7A1904715469BC200B266A6 /* GLMathQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathQuaternion.h; sourceTree = "<group>"; };
-		C7A1904815469BC200B266A6 /* GLMathTransforms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathTransforms.h; sourceTree = "<group>"; };
-		C7A1904915469BC200B266A6 /* GLMathTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathTypes.h; sourceTree = "<group>"; };
-		C7A1904A15469BC200B266A6 /* GLMathUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLMathUtilities.c; sourceTree = "<group>"; };
-		C7A1904B15469BC200B266A6 /* GLMathUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathUtilities.h; sourceTree = "<group>"; };
-		C7A1904C15469BC200B266A6 /* GLMathVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMathVector.h; sourceTree = "<group>"; };
-		C7A1904F15469BC200B266A6 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		C7A1905015469BC200B266A6 /* mxml-attr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-attr.c"; sourceTree = "<group>"; };
-		C7A1905115469BC200B266A6 /* mxml-entity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-entity.c"; sourceTree = "<group>"; };
-		C7A1905215469BC200B266A6 /* mxml-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-file.c"; sourceTree = "<group>"; };
-		C7A1905315469BC200B266A6 /* mxml-get.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-get.c"; sourceTree = "<group>"; };
-		C7A1905415469BC200B266A6 /* mxml-index.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-index.c"; sourceTree = "<group>"; };
-		C7A1905515469BC200B266A6 /* mxml-node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-node.c"; sourceTree = "<group>"; };
-		C7A1905615469BC200B266A6 /* mxml-private.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-private.c"; sourceTree = "<group>"; };
-		C7A1905715469BC200B266A6 /* mxml-private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mxml-private.h"; sourceTree = "<group>"; };
-		C7A1905815469BC200B266A6 /* mxml-search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-search.c"; sourceTree = "<group>"; };
-		C7A1905915469BC200B266A6 /* mxml-set.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-set.c"; sourceTree = "<group>"; };
-		C7A1905A15469BC200B266A6 /* mxml-string.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-string.c"; sourceTree = "<group>"; };
-		C7A1905B15469BC200B266A6 /* mxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mxml.h; sourceTree = "<group>"; };
-		C7A1905E15469BC200B266A6 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		C7A1905F15469BC200B266A6 /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
-		C7A1906015469BC200B266A6 /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
-		C7A1906115469BC200B266A6 /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
-		C7A1906215469BC200B266A6 /* pngerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
-		C7A1906315469BC200B266A6 /* pngget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
-		C7A1906415469BC200B266A6 /* pngmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngmem.c; sourceTree = "<group>"; };
-		C7A1906515469BC200B266A6 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
-		C7A1906615469BC200B266A6 /* pngpriv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
-		C7A1906715469BC200B266A6 /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
-		C7A1906815469BC200B266A6 /* pngrio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrio.c; sourceTree = "<group>"; };
-		C7A1906915469BC200B266A6 /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
-		C7A1906A15469BC200B266A6 /* pngrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
-		C7A1906B15469BC200B266A6 /* pngset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngset.c; sourceTree = "<group>"; };
-		C7A1906C15469BC200B266A6 /* pngtrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngtrans.c; sourceTree = "<group>"; };
-		C7A1906D15469BC200B266A6 /* pngwio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwio.c; sourceTree = "<group>"; };
-		C7A1906E15469BC200B266A6 /* pngwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwrite.c; sourceTree = "<group>"; };
-		C7A1906F15469BC200B266A6 /* pngwtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwtran.c; sourceTree = "<group>"; };
-		C7A1907015469BC200B266A6 /* pngwutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwutil.c; sourceTree = "<group>"; };
+		C799E481155908780009C0A7 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "/usr/local/lib/libluajit-5.1.a"; sourceTree = "<absolute>"; };
 		C7A190F115469C0B00B266A6 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 		C7A190F315469C1900B266A6 /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Shaders; sourceTree = SOURCE_ROOT; };
 		C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -289,6 +274,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C72C87D415591547001EF047 /* libglmath.a in Frameworks */,
+				C72C87D515591547001EF047 /* liblibpng.a in Frameworks */,
+				C72C87D615591547001EF047 /* libmxml.a in Frameworks */,
+				C72C87D715591547001EF047 /* libyajl.a in Frameworks */,
 				C7A190F215469C0B00B266A6 /* Accelerate.framework in Frameworks */,
 				C7ECFDEF153FB57D0066EA9B /* CoreFoundation.framework in Frameworks */,
 				C7ECFDDF153FB4420066EA9B /* CoreGraphics.framework in Frameworks */,
@@ -301,6 +290,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C72C87DA15591564001EF047 /* GLMath.framework in Frameworks */,
+				C799E482155908780009C0A7 /* libluajit-5.1.a in Frameworks */,
 				C78B8E481558AB6D00B8E5CE /* libmxml.a in Frameworks */,
 				C78B8E461558AB5500B8E5CE /* libyajl_s.a in Frameworks */,
 				C78B8E441558A8FB00B8E5CE /* AudioToolbox.framework in Frameworks */,
@@ -308,7 +299,6 @@
 				C78B8E401558A8E400B8E5CE /* Accelerate.framework in Frameworks */,
 				C78B8E3E1558A8E100B8E5CE /* OpenGL.framework in Frameworks */,
 				C78B8E3A1558A89A00B8E5CE /* ApplicationServices.framework in Frameworks */,
-				C78B8E371558A83B00B8E5CE /* GLMath.framework in Frameworks */,
 				C78B8E271558A78800B8E5CE /* libpng15.15.dylib in Frameworks */,
 				C78B8DEA1558A6ED00B8E5CE /* Cocoa.framework in Frameworks */,
 			);
@@ -317,6 +307,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C72C870D1559123A001EF047 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C72C87141559123A001EF047 /* libyajl.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C72C87B115591517001EF047 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C72C87B715591517001EF047 /* libglmath.a */,
+				C72C87B915591517001EF047 /* GLMath.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C72C87BB1559151F001EF047 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C72C87C21559151F001EF047 /* libmxml.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C72C87C415591524001EF047 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C72C87CB15591524001EF047 /* liblibpng.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		C75AFCE0153FA9D800FE8623 = {
 			isa = PBXGroup;
 			children = (
@@ -331,7 +354,7 @@
 		C75AFCF1153FA9F500FE8623 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C75AFCF0153FA9F500FE8623 /* libDynamo - iOS.a */,
+				C75AFCF0153FA9F500FE8623 /* libdynamo.a */,
 				C78B8DE81558A6ED00B8E5CE /* Dynamo.framework */,
 			);
 			name = Products;
@@ -340,6 +363,7 @@
 		C75AFCF2153FA9F500FE8623 /* Frameworks & Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				C799E481155908780009C0A7 /* libluajit-5.1.a */,
 				C78B8E471558AB6D00B8E5CE /* libmxml.a */,
 				C78B8E451558AB5500B8E5CE /* libyajl_s.a */,
 				C78B8E261558A78800B8E5CE /* libpng15.15.dylib */,
@@ -442,91 +466,16 @@
 			path = "Framework Resources";
 			sourceTree = "<group>";
 		};
-		C78B8E291558A82A00B8E5CE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				C78B8E321558A82A00B8E5CE /* libglmath.a */,
-				C78B8E341558A82A00B8E5CE /* GLMath.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		C7A1903315469BC200B266A6 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				C72C87C315591524001EF047 /* libpng.xcodeproj */,
+				C72C87BA1559151F001EF047 /* mxml.xcodeproj */,
+				C72C870C1559123A001EF047 /* yajl.xcodeproj */,
+				C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */,
 				C78B8D751558A60200B8E5CE /* LuaJIT */,
-				C7A1903415469BC200B266A6 /* GLMath */,
-				C7A1904E15469BC200B266A6 /* mxml */,
-				C7A1905C15469BC200B266A6 /* png */,
 			);
 			path = Dependencies;
-			sourceTree = "<group>";
-		};
-		C7A1903415469BC200B266A6 /* GLMath */ = {
-			isa = PBXGroup;
-			children = (
-				C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */,
-				C7A1903D15469BC200B266A6 /* GLMath.c */,
-				C7A1903E15469BC200B266A6 /* GLMath.h */,
-				C7A1904215469BC200B266A6 /* GLMathBezierCurve.h */,
-				C7A1904315469BC200B266A6 /* GLMathExports.c */,
-				C7A1904415469BC200B266A6 /* GLMathExports.h */,
-				C7A1904515469BC200B266A6 /* GLMathMatrix.h */,
-				C7A1904615469BC200B266A6 /* GLMathMatrixStack.h */,
-				C7A1904715469BC200B266A6 /* GLMathQuaternion.h */,
-				C7A1904815469BC200B266A6 /* GLMathTransforms.h */,
-				C7A1904915469BC200B266A6 /* GLMathTypes.h */,
-				C7A1904A15469BC200B266A6 /* GLMathUtilities.c */,
-				C7A1904B15469BC200B266A6 /* GLMathUtilities.h */,
-				C7A1904C15469BC200B266A6 /* GLMathVector.h */,
-			);
-			path = GLMath;
-			sourceTree = "<group>";
-		};
-		C7A1904E15469BC200B266A6 /* mxml */ = {
-			isa = PBXGroup;
-			children = (
-				C7A1904F15469BC200B266A6 /* config.h */,
-				C7A1905015469BC200B266A6 /* mxml-attr.c */,
-				C7A1905115469BC200B266A6 /* mxml-entity.c */,
-				C7A1905215469BC200B266A6 /* mxml-file.c */,
-				C7A1905315469BC200B266A6 /* mxml-get.c */,
-				C7A1905415469BC200B266A6 /* mxml-index.c */,
-				C7A1905515469BC200B266A6 /* mxml-node.c */,
-				C7A1905615469BC200B266A6 /* mxml-private.c */,
-				C7A1905715469BC200B266A6 /* mxml-private.h */,
-				C7A1905815469BC200B266A6 /* mxml-search.c */,
-				C7A1905915469BC200B266A6 /* mxml-set.c */,
-				C7A1905A15469BC200B266A6 /* mxml-string.c */,
-				C7A1905B15469BC200B266A6 /* mxml.h */,
-			);
-			path = mxml;
-			sourceTree = "<group>";
-		};
-		C7A1905C15469BC200B266A6 /* png */ = {
-			isa = PBXGroup;
-			children = (
-				C7A1905E15469BC200B266A6 /* config.h */,
-				C7A1905F15469BC200B266A6 /* png.c */,
-				C7A1906015469BC200B266A6 /* png.h */,
-				C7A1906115469BC200B266A6 /* pngconf.h */,
-				C7A1906215469BC200B266A6 /* pngerror.c */,
-				C7A1906315469BC200B266A6 /* pngget.c */,
-				C7A1906415469BC200B266A6 /* pngmem.c */,
-				C7A1906515469BC200B266A6 /* pngpread.c */,
-				C7A1906615469BC200B266A6 /* pngpriv.h */,
-				C7A1906715469BC200B266A6 /* pngread.c */,
-				C7A1906815469BC200B266A6 /* pngrio.c */,
-				C7A1906915469BC200B266A6 /* pngrtran.c */,
-				C7A1906A15469BC200B266A6 /* pngrutil.c */,
-				C7A1906B15469BC200B266A6 /* pngset.c */,
-				C7A1906C15469BC200B266A6 /* pngtrans.c */,
-				C7A1906D15469BC200B266A6 /* pngwio.c */,
-				C7A1906E15469BC200B266A6 /* pngwrite.c */,
-				C7A1906F15469BC200B266A6 /* pngwtran.c */,
-				C7A1907015469BC200B266A6 /* pngwutil.c */,
-			);
-			path = png;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -608,10 +557,14 @@
 			buildRules = (
 			);
 			dependencies = (
+				C72C87D31559153D001EF047 /* PBXTargetDependency */,
+				C72C87D11559153A001EF047 /* PBXTargetDependency */,
+				C72C87CF15591536001EF047 /* PBXTargetDependency */,
+				C72C87CD15591532001EF047 /* PBXTargetDependency */,
 			);
 			name = "Dynamo - iOS";
 			productName = Dynamo;
-			productReference = C75AFCF0153FA9F500FE8623 /* libDynamo - iOS.a */;
+			productReference = C75AFCF0153FA9F500FE8623 /* libdynamo.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		C78B8DE71558A6ED00B8E5CE /* Dynamo - Mac */ = {
@@ -626,7 +579,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				C78B8E361558A83600B8E5CE /* PBXTargetDependency */,
+				C72C87D91559155E001EF047 /* PBXTargetDependency */,
 			);
 			name = "Dynamo - Mac";
 			productName = Dynamo;
@@ -653,8 +606,20 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = C78B8E291558A82A00B8E5CE /* Products */;
+					ProductGroup = C72C87B115591517001EF047 /* Products */;
 					ProjectRef = C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */;
+				},
+				{
+					ProductGroup = C72C87C415591524001EF047 /* Products */;
+					ProjectRef = C72C87C315591524001EF047 /* libpng.xcodeproj */;
+				},
+				{
+					ProductGroup = C72C87BB1559151F001EF047 /* Products */;
+					ProjectRef = C72C87BA1559151F001EF047 /* mxml.xcodeproj */;
+				},
+				{
+					ProductGroup = C72C870D1559123A001EF047 /* Products */;
+					ProjectRef = C72C870C1559123A001EF047 /* yajl.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -666,18 +631,39 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		C78B8E321558A82A00B8E5CE /* libglmath.a */ = {
+		C72C87141559123A001EF047 /* libyajl.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libyajl.a;
+			remoteRef = C72C87131559123A001EF047 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C72C87B715591517001EF047 /* libglmath.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libglmath.a;
-			remoteRef = C78B8E311558A82A00B8E5CE /* PBXContainerItemProxy */;
+			remoteRef = C72C87B615591517001EF047 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C78B8E341558A82A00B8E5CE /* GLMath.framework */ = {
+		C72C87B915591517001EF047 /* GLMath.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = GLMath.framework;
-			remoteRef = C78B8E331558A82A00B8E5CE /* PBXContainerItemProxy */;
+			remoteRef = C72C87B815591517001EF047 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C72C87C21559151F001EF047 /* libmxml.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libmxml.a;
+			remoteRef = C72C87C11559151F001EF047 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C72C87CB15591524001EF047 /* liblibpng.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = liblibpng.a;
+			remoteRef = C72C87CA15591524001EF047 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -698,34 +684,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7A1907315469BC200B266A6 /* GLMath.c in Sources */,
-				C7A1907615469BC200B266A6 /* GLMathExports.c in Sources */,
-				C7A1907D15469BC200B266A6 /* GLMathUtilities.c in Sources */,
-				C7A1908115469BC200B266A6 /* mxml-attr.c in Sources */,
-				C7A1908215469BC200B266A6 /* mxml-entity.c in Sources */,
-				C7A1908315469BC200B266A6 /* mxml-file.c in Sources */,
-				C7A1908415469BC200B266A6 /* mxml-get.c in Sources */,
-				C7A1908515469BC200B266A6 /* mxml-index.c in Sources */,
-				C7A1908615469BC200B266A6 /* mxml-node.c in Sources */,
-				C7A1908715469BC200B266A6 /* mxml-private.c in Sources */,
-				C7A1908915469BC200B266A6 /* mxml-search.c in Sources */,
-				C7A1908A15469BC200B266A6 /* mxml-set.c in Sources */,
-				C7A1908B15469BC200B266A6 /* mxml-string.c in Sources */,
-				C7A1908E15469BC200B266A6 /* png.c in Sources */,
-				C7A1909115469BC200B266A6 /* pngerror.c in Sources */,
-				C7A1909215469BC200B266A6 /* pngget.c in Sources */,
-				C7A1909315469BC200B266A6 /* pngmem.c in Sources */,
-				C7A1909415469BC200B266A6 /* pngpread.c in Sources */,
-				C7A1909615469BC200B266A6 /* pngread.c in Sources */,
-				C7A1909715469BC200B266A6 /* pngrio.c in Sources */,
-				C7A1909815469BC200B266A6 /* pngrtran.c in Sources */,
-				C7A1909915469BC200B266A6 /* pngrutil.c in Sources */,
-				C7A1909A15469BC200B266A6 /* pngset.c in Sources */,
-				C7A1909B15469BC200B266A6 /* pngtrans.c in Sources */,
-				C7A1909C15469BC200B266A6 /* pngwio.c in Sources */,
-				C7A1909D15469BC200B266A6 /* pngwrite.c in Sources */,
-				C7A1909E15469BC200B266A6 /* pngwtran.c in Sources */,
-				C7A1909F15469BC200B266A6 /* pngwutil.c in Sources */,
 				C78B8DB51558A69600B8E5CE /* array.c in Sources */,
 				C78B8DB71558A69600B8E5CE /* background.c in Sources */,
 				C78B8DB91558A69600B8E5CE /* dictionary.c in Sources */,
@@ -779,10 +737,30 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C78B8E361558A83600B8E5CE /* PBXTargetDependency */ = {
+		C72C87CD15591532001EF047 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = yajl;
+			targetProxy = C72C87CC15591532001EF047 /* PBXContainerItemProxy */;
+		};
+		C72C87CF15591536001EF047 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Static Library";
+			targetProxy = C72C87CE15591536001EF047 /* PBXContainerItemProxy */;
+		};
+		C72C87D11559153A001EF047 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = mxml;
+			targetProxy = C72C87D01559153A001EF047 /* PBXContainerItemProxy */;
+		};
+		C72C87D31559153D001EF047 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libpng;
+			targetProxy = C72C87D21559153D001EF047 /* PBXContainerItemProxy */;
+		};
+		C72C87D91559155E001EF047 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Framework;
-			targetProxy = C78B8E351558A83600B8E5CE /* PBXContainerItemProxy */;
+			targetProxy = C72C87D81559155E001EF047 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -844,7 +822,7 @@
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = dynamo;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
@@ -877,7 +855,7 @@
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = dynamo;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;

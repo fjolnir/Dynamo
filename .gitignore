@@ -10,3 +10,9 @@ mxml-2.7
 Dynamo.xcodeproj/project.xcworkspace/xcuserdata
 build
 obj
+Dependencies/mxml/mxml.xcodeproj/project.xcworkspace/xcuserdata
+Dependencies/mxml/mxml.xcodeproj/xcuserdata
+Dependencies/png/libpng.xcodeproj/project.xcworkspace/xcuserdata
+Dependencies/png/libpng.xcodeproj/xcuserdata
+Dependencies/yajl/yajl.xcodeproj/project.xcworkspace/xcuserdata
+Dependencies/yajl/yajl.xcodeproj/xcuserdata

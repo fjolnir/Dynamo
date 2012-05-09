@@ -1,0 +1,255 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C72C879415591338001EF047 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C878715591338001EF047 /* config.h */; };
+		C72C879515591338001EF047 /* mxml-attr.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C878815591338001EF047 /* mxml-attr.c */; };
+		C72C879615591338001EF047 /* mxml-entity.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C878915591338001EF047 /* mxml-entity.c */; };
+		C72C879715591338001EF047 /* mxml-file.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C878A15591338001EF047 /* mxml-file.c */; };
+		C72C879815591338001EF047 /* mxml-get.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C878B15591338001EF047 /* mxml-get.c */; };
+		C72C879915591338001EF047 /* mxml-index.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C878C15591338001EF047 /* mxml-index.c */; };
+		C72C879A15591338001EF047 /* mxml-node.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C878D15591338001EF047 /* mxml-node.c */; };
+		C72C879B15591338001EF047 /* mxml-private.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C878E15591338001EF047 /* mxml-private.c */; };
+		C72C879C15591338001EF047 /* mxml-private.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C878F15591338001EF047 /* mxml-private.h */; };
+		C72C879D15591338001EF047 /* mxml-search.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C879015591338001EF047 /* mxml-search.c */; };
+		C72C879E15591338001EF047 /* mxml-set.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C879115591338001EF047 /* mxml-set.c */; };
+		C72C879F15591338001EF047 /* mxml-string.c in Sources */ = {isa = PBXBuildFile; fileRef = C72C879215591338001EF047 /* mxml-string.c */; };
+		C72C87A015591338001EF047 /* mxml.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C879315591338001EF047 /* mxml.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C72C872015591261001EF047 /* libmxml.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmxml.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C72C878715591338001EF047 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = SOURCE_ROOT; };
+		C72C878815591338001EF047 /* mxml-attr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-attr.c"; sourceTree = SOURCE_ROOT; };
+		C72C878915591338001EF047 /* mxml-entity.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-entity.c"; sourceTree = SOURCE_ROOT; };
+		C72C878A15591338001EF047 /* mxml-file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-file.c"; sourceTree = SOURCE_ROOT; };
+		C72C878B15591338001EF047 /* mxml-get.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-get.c"; sourceTree = SOURCE_ROOT; };
+		C72C878C15591338001EF047 /* mxml-index.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-index.c"; sourceTree = SOURCE_ROOT; };
+		C72C878D15591338001EF047 /* mxml-node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-node.c"; sourceTree = SOURCE_ROOT; };
+		C72C878E15591338001EF047 /* mxml-private.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-private.c"; sourceTree = SOURCE_ROOT; };
+		C72C878F15591338001EF047 /* mxml-private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mxml-private.h"; sourceTree = SOURCE_ROOT; };
+		C72C879015591338001EF047 /* mxml-search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-search.c"; sourceTree = SOURCE_ROOT; };
+		C72C879115591338001EF047 /* mxml-set.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-set.c"; sourceTree = SOURCE_ROOT; };
+		C72C879215591338001EF047 /* mxml-string.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "mxml-string.c"; sourceTree = SOURCE_ROOT; };
+		C72C879315591338001EF047 /* mxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mxml.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C72C871D15591261001EF047 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C72C871515591261001EF047 = {
+			isa = PBXGroup;
+			children = (
+				C72C872515591261001EF047 /* mxml */,
+				C72C872115591261001EF047 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C72C872115591261001EF047 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C72C872015591261001EF047 /* libmxml.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C72C872515591261001EF047 /* mxml */ = {
+			isa = PBXGroup;
+			children = (
+				C72C878715591338001EF047 /* config.h */,
+				C72C878815591338001EF047 /* mxml-attr.c */,
+				C72C878915591338001EF047 /* mxml-entity.c */,
+				C72C878A15591338001EF047 /* mxml-file.c */,
+				C72C878B15591338001EF047 /* mxml-get.c */,
+				C72C878C15591338001EF047 /* mxml-index.c */,
+				C72C878D15591338001EF047 /* mxml-node.c */,
+				C72C878E15591338001EF047 /* mxml-private.c */,
+				C72C878F15591338001EF047 /* mxml-private.h */,
+				C72C879015591338001EF047 /* mxml-search.c */,
+				C72C879115591338001EF047 /* mxml-set.c */,
+				C72C879215591338001EF047 /* mxml-string.c */,
+				C72C879315591338001EF047 /* mxml.h */,
+			);
+			path = mxml;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		C72C871E15591261001EF047 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C72C879415591338001EF047 /* config.h in Headers */,
+				C72C879C15591338001EF047 /* mxml-private.h in Headers */,
+				C72C87A015591338001EF047 /* mxml.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		C72C871F15591261001EF047 /* mxml */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C72C872D15591261001EF047 /* Build configuration list for PBXNativeTarget "mxml" */;
+			buildPhases = (
+				C72C871C15591261001EF047 /* Sources */,
+				C72C871D15591261001EF047 /* Frameworks */,
+				C72C871E15591261001EF047 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mxml;
+			productName = mxml;
+			productReference = C72C872015591261001EF047 /* libmxml.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C72C871715591261001EF047 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = C72C871A15591261001EF047 /* Build configuration list for PBXProject "mxml" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C72C871515591261001EF047;
+			productRefGroup = C72C872115591261001EF047 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C72C871F15591261001EF047 /* mxml */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C72C871C15591261001EF047 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C72C879515591338001EF047 /* mxml-attr.c in Sources */,
+				C72C879615591338001EF047 /* mxml-entity.c in Sources */,
+				C72C879715591338001EF047 /* mxml-file.c in Sources */,
+				C72C879815591338001EF047 /* mxml-get.c in Sources */,
+				C72C879915591338001EF047 /* mxml-index.c in Sources */,
+				C72C879A15591338001EF047 /* mxml-node.c in Sources */,
+				C72C879B15591338001EF047 /* mxml-private.c in Sources */,
+				C72C879D15591338001EF047 /* mxml-search.c in Sources */,
+				C72C879E15591338001EF047 /* mxml-set.c in Sources */,
+				C72C879F15591338001EF047 /* mxml-string.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C72C872B15591261001EF047 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C72C872C15591261001EF047 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C72C872E15591261001EF047 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/mxml.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C72C872F15591261001EF047 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/mxml.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C72C871A15591261001EF047 /* Build configuration list for PBXProject "mxml" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C72C872B15591261001EF047 /* Debug */,
+				C72C872C15591261001EF047 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C72C872D15591261001EF047 /* Build configuration list for PBXNativeTarget "mxml" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C72C872E15591261001EF047 /* Debug */,
+				C72C872F15591261001EF047 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C72C871715591261001EF047 /* Project object */;
+}
