@@ -9,13 +9,13 @@ static const vec4_t kColorWhite = { 1.0f, 1.0f, 1.0f, 1.0f };
 void draw_init(Renderer_t *aDefaultRenderer)
 {
 	_renderer = aDefaultRenderer;
-    const int maxLen = 1024;
-    char texturedVSH[maxLen], texturedFSH[maxLen], coloredVSH[maxLen], coloredFSH[maxLen];
+	const int maxLen = 1024;
+	char texturedVSH[maxLen], texturedFSH[maxLen], coloredVSH[maxLen], coloredFSH[maxLen];
 
-    util_pathForResource("textured", "vsh", "Shaders", texturedVSH, maxLen);
-    util_pathForResource("textured", "fsh", "Shaders", texturedFSH, maxLen);
-    util_pathForResource("colored", "vsh", "Shaders", coloredVSH, maxLen);
-    util_pathForResource("colored", "fsh", "Shaders", coloredFSH, maxLen);
+	assert(util_pathForResource("textured", "vsh", "Shaders", texturedVSH, maxLen));
+	assert(util_pathForResource("textured", "fsh", "Shaders", texturedFSH, maxLen));
+	assert(util_pathForResource("colored", "vsh", "Shaders", coloredVSH, maxLen));
+	assert(util_pathForResource("colored", "fsh", "Shaders", coloredFSH, maxLen));
 
 	if(!gTexturedShader) {
 		gTexturedShader = obj_retain(shader_loadFromFiles((const char*)texturedVSH, (const char*)texturedFSH));
@@ -211,7 +211,7 @@ void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill)
 
 void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill)
 {
-    aSubdivisions = MAX(6, aSubdivisions);
+	aSubdivisions = MAX(6, aSubdivisions);
 	float vertices[aSubdivisions*2] ;
 	vec4_t colors[aSubdivisions];
 	float twoPi = 2.0f*M_PI;

@@ -38,7 +38,11 @@ Background_t *background_create()
 	out->displayCallback = (RenderableDisplayCallback_t)&_background_draw;
 
 	if(!_backgroundShader) {
-		_backgroundShader = obj_retain(shader_loadFromFiles("engine/shaders/background.vsh", "engine/shaders/background.fsh"));
+		const int maxLen = 1024;
+		char vshPath[maxLen], fshPath[maxLen];
+		assert(util_pathForResource("background", "vsh", "Shaders" vshPath, maxLen));
+		assert(util_pathForResource("background", "fsh", "Shaders" fshPath, maxLen));
+		_backgroundShader = obj_retain(shader_loadFromFiles(vshPath, fshPath));
 		_backgroundShader->uniforms[kBackground_offsetUniform] = shader_getUniformLocation(_backgroundShader, "u_backgroundOffset");
 		_backgroundShader->uniforms[kBackground_layer0DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer0Depth");
 		_backgroundShader->uniforms[kBackground_layer1DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer1Depth");
