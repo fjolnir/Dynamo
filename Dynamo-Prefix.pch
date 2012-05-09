@@ -1,5 +1,0 @@
-#include <TargetConditionals.h>
-#include <CoreFoundation/CoreFoundation.h>
-
-#ifdef __OBJC__
-#endif
