@@ -43,17 +43,18 @@ void renderer_destroy(Renderer_t *aRenderer)
 #pragma mark - Display
 
 void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
-{	
+{
 	glClear(GL_COLOR_BUFFER_BIT);
-	
+
 	// Render each of the renderer's entities
 	LinkedListItem_t *currentItem = aRenderer->renderables->head;
 	Renderable_t *renderable;
 	if(currentItem) {
 		do {
 			renderable = (Renderable_t *)currentItem->value;
-			renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
-		} while( (currentItem = currentItem->next) );
+			if(renderable && renderable->displayCallback)
+				renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
+		} while((currentItem = currentItem->next));
 	}
 }
 
@@ -62,14 +63,14 @@ void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFl
 
 void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable)
 {
-    obj_retain(aRenderable);
+	obj_retain(aRenderable);
 	llist_pushValue(aRenderer->renderables, aRenderable);
 }
 
 void renderer_popRenderable(Renderer_t *aRenderer)
 {
 	Renderable_t *renderable = llist_popValue(aRenderer->renderables);
-    obj_release(renderable);
+	obj_release(renderable);
 }
 
 bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift)
