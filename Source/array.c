@@ -70,3 +70,9 @@ extern void *array_top(Array_t *aArray)
 	assert(aArray->count > 0);
 	return aArray->items[aArray->count - 1];
 }
+
+extern void *array_get(Array_t *aArray, unsigned int aIdx)
+{
+	assert(aIdx < aArray->count);
+	return aArray->items[aIdx];
+}
