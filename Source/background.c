@@ -40,8 +40,8 @@ Background_t *background_create()
 	if(!_backgroundShader) {
 		const int maxLen = 1024;
 		char vshPath[maxLen], fshPath[maxLen];
-		assert(util_pathForResource("background", "vsh", "Shaders" vshPath, maxLen));
-		assert(util_pathForResource("background", "fsh", "Shaders" fshPath, maxLen));
+		assert(util_pathForResource("background", "vsh", "Shaders", vshPath, maxLen));
+		assert(util_pathForResource("background", "fsh", "Shaders", fshPath, maxLen));
 		_backgroundShader = obj_retain(shader_loadFromFiles(vshPath, fshPath));
 		_backgroundShader->uniforms[kBackground_offsetUniform] = shader_getUniformLocation(_backgroundShader, "u_backgroundOffset");
 		_backgroundShader->uniforms[kBackground_layer0DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer0Depth");
