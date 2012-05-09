@@ -17,8 +17,6 @@ Class_t Class_BackgroundLayer = {
 	(Obj_destructor_t)&background_destroyLayer
 };
 
-
-
 // Shared amongst all background objects
 static Shader_t *_backgroundShader;
 
