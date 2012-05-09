@@ -16,10 +16,9 @@
 	#include <windows.h>
 	#error "Windows currently not being maintained, you'll have to add GLee, glfw or the like to get opengl function pointers"
 #else
-	#include <GLES2/gl2.h>
-	#include <EGL/egl.h>
-	//#include <GL/gl.h>
-	//#include <GL/glext.h>
+	//#include <EGL/egl.h>
+	#include <GL/gl.h>
+	#include <GL/glext.h>
 #endif
 
 #ifdef DEBUG
