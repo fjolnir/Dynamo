@@ -24,6 +24,7 @@ extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
 	for(; aTimer->timeSinceLastUpdate > aTimer->desiredInterval; aTimer->timeSinceLastUpdate -= aTimer->desiredInterval) {
 		if(aTimer->updateCallback)
 			aTimer->updateCallback(aTimer);
+		++aTimer->ticks;
 	}
 }
 

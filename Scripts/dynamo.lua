@@ -121,6 +121,7 @@ struct _GameTimer {
 	GLMFloat elapsed;
 	GLMFloat timeSinceLastUpdate;
 	GLMFloat desiredInterval; // The minimum interval between updates
+	long ticks;
 	GameTimer_updateCallback_t updateCallback;
 };
 
