@@ -1,0 +1,60 @@
+.LIBPATTERNS = lib%.a lib%.dylib lib%.so
+vpath %.a /usr/local/lib
+vpath %.o build/
+
+CC        =  emcc
+C_FLAGS  += -Wall -Wno-missing-braces -Wno-unused-function
+C_FLAGS  += -std=gnu99
+C_FLAGS  += -I"./Dependencies/"
+C_FLAGS  += -I"./Dependencies/mxml/"
+#C_FLAGS  += -O0
+C_FLAGS  += -DDYNAMO_DEBUG
+C_FLAGS  += --closure 1
+#C_FLAGS  += "--embed-file Shaders"
+#C_FLAGS  += "--embed-file Scripts"
+EMCC_DEBUG := 1
+
+LDFLAGS += --embed-file Shaders
+LDFLAGS += --embed-file Scripts
+
+SOURCE := $(wildcard Dependencies/*/*.c) \
+Source/array.c \
+Source/background.c \
+Source/dictionary.c \
+Source/drawutils.c \
+Source/gametimer.c \
+Source/input.c \
+Source/json.c \
+Source/linkedlist.c \
+Source/networking.c \
+Source/object.c \
+Source/png_loader.c \
+Source/primitive_types.c \
+Source/renderer.c \
+Source/scene.c \
+Source/shader.c \
+Source/sprite.c \
+Source/texture.c \
+Source/texture_atlas.c \
+Source/tmx_map.c \
+Source/util.c \
+Source/emscripten.c
+
+OBJ     := $(addprefix build/,$(SOURCE:.c=.o))
+PRODUCT := dynamo.js
+
+override CFLAGS := $(CFLAGS) $(C_FLAGS)
+
+all: link
+
+build/%.o : %.c
+	@echo Building $<
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	@rm $(PRODUCT) $(OBJ)
+
+link: $(OBJ)
+	@echo "Linking Dynamo library"
+	@$(CC) -o $(PRODUCT) $(LDFLAGS) $^

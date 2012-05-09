@@ -40,15 +40,15 @@ BOOL util_pathForResource(const char *name, const char *ext, const char *dir, ch
         APPEND(ANDROID_APP_IDENTIFIER)
 		APPEND("/files/game_assets/")
     #endif
-    APPEND(dir)
-	if(dir && dir[strlen(dir)-1] != '/')
-		APPEND("/")
+    /*APPEND(dir)*/
+	/*if(dir)*/
+		/*APPEND("/")*/
     APPEND(name)
     if(ext) {
         APPEND(".")
         APPEND(ext)
     }
-    
+
     struct stat unused;
     return stat(output, &unused) == 0;
     #undef APPEND
