@@ -1,8 +1,10 @@
 #include "texture.h"
 #include "png_loader.h"
 #include "util.h"
+#include "drawutils.h"
 
 static void texture_destroy(Texture_t *aTexture);
+static void _texture_draw(Renderer_t *aRenderer, Texture_t *aTexture, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
 Class_t Class_Texture = {
 	"Texture",
@@ -15,6 +17,7 @@ const TextureRect_t kTextureRectEntire = { 0.0f, 0.0f, 1.0f, 1.0f };
 Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical)
 {
 	Texture_t *out = obj_create_autoreleased(&Class_Texture);
+	out->displayCallback = (RenderableDisplayCallback_t)&_texture_draw;
 
 	Png_t *png = png_load(aPath);
 	if (!png) {
@@ -66,4 +69,9 @@ TextureRect_t textureRectangle_create(float aX, float aY, float aWidth, float aH
 {
 	TextureRect_t out = { aX, aY, aWidth, aHeight };
 	return out;
+}
+
+static void _texture_draw(Renderer_t *aRenderer, Texture_t *aTexture, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
+{
+	draw_texture(aTexture->location, aTexture, 1.0, 0.0, false, false);
 }

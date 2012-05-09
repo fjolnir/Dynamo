@@ -40,7 +40,9 @@ scene = dynamo.createScene({
 })
 dynamo.renderer:pushRenderable(scene)
 
-snd = dynamo.loadSFX(dynamo.pathForResource("1-01 Just.mp3"))
+tex = dynamo.loadTexture(dynamo.pathForResource("cavestory.png"))
+dynamo.renderer:pushRenderable(tex)
+--snd = dynamo.loadSFX(dynamo.pathForResource("1-01 Just.mp3"))
 
 lastPos = nil
 dynamo.inputManager:addObserver({
@@ -51,7 +53,7 @@ dynamo.inputManager:addObserver({
 			lastPos = { x=location.x, y=location.y }
 		end
 
-		snd:play()
+		--snd:play()
 		snd.volume = location.y/500
 
 		local trans = vec2(location.x - lastPos.x, location.y - lastPos.y)

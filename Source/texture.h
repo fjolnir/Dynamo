@@ -1,5 +1,6 @@
 #include "object.h"
 #include "glutils.h"
+#include "renderer.h"
 #include "GLMath/GLMath.h"
 
 #ifndef _TEXTURE_H_
@@ -8,6 +9,8 @@
 extern Class_t Class_Texture;
 typedef struct _Texture {
 	OBJ_GUTS
+	RenderableDisplayCallback_t displayCallback;
+	vec3_t location; // The location to use if the texture is drawn directly as a renderable
 	GLuint id;
 	vec2_t size;
 	// We need to inset the texture rectangle ever so slightly in order
