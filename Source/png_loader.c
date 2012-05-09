@@ -4,10 +4,10 @@
 #include "png_loader.h"
 #include "util.h"
 
-#ifndef TARGET_OS_IPHONE
+#ifndef __APPLE__
     #include <png.h>
 #else
-    #include <ApplicationServices/ApplicationServices.h>
+    #include <CoreGraphics/CoreGraphics.h>
 #endif
 
 static void png_destroy(Png_t *self);

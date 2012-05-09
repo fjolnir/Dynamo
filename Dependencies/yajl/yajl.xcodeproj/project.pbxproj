@@ -31,6 +31,7 @@
 		C72C86F0155911B8001EF047 /* yajl_gen.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C86EC155911B8001EF047 /* yajl_gen.h */; };
 		C72C86F1155911B8001EF047 /* yajl_parse.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C86ED155911B8001EF047 /* yajl_parse.h */; };
 		C72C86F2155911B8001EF047 /* yajl_tree.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C86EE155911B8001EF047 /* yajl_tree.h */; };
+		C73EFC9C155A46D200FD64CA /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC9B155A46D200FD64CA /* libc.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,8 @@
 		C72C86EC155911B8001EF047 /* yajl_gen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = yajl_gen.h; path = api/yajl_gen.h; sourceTree = SOURCE_ROOT; };
 		C72C86ED155911B8001EF047 /* yajl_parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = yajl_parse.h; path = api/yajl_parse.h; sourceTree = SOURCE_ROOT; };
 		C72C86EE155911B8001EF047 /* yajl_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = yajl_tree.h; path = api/yajl_tree.h; sourceTree = SOURCE_ROOT; };
+		C73EFC99155A46BE00FD64CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		C73EFC9B155A46D200FD64CA /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/usr/lib/libc.dylib; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C73EFC9C155A46D200FD64CA /* libc.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +79,8 @@
 		C72C869E1559113E001EF047 = {
 			isa = PBXGroup;
 			children = (
+				C73EFC9B155A46D200FD64CA /* libc.dylib */,
+				C73EFC99155A46BE00FD64CA /* Foundation.framework */,
 				C72C86AE1559113E001EF047 /* yajl */,
 				C72C86AA1559113E001EF047 /* Products */,
 			);
@@ -213,7 +219,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -228,7 +233,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -236,7 +240,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -244,7 +247,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -252,22 +254,24 @@
 		C72C86B71559113E001EF047 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				DSTROOT = /tmp/yajl.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 			};
 			name = Debug;
 		};
 		C72C86B81559113E001EF047 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				DSTROOT = /tmp/yajl.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 			};
 			name = Release;
 		};

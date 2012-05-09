@@ -6,20 +6,14 @@
 #include <OpenAL/AL.h>
 #include <OpenAL/alc.h>
 
-#import <Foundation/Foundation.h>
-
 // TODO: Soften error handling
 
 #ifndef __APPLE__
     #error "This is the audio interface for apple platforms"
 #endif
 
-#if TARGET_OS_EMBEDDED || TARGET_IPHONE_SIMULATOR
+#ifdef __APPLE__
 	#import <AVFoundation/AVFoundation.h>
-	#define BGM_PLAYER_CLASS AVAudioPlayer
-#else
-	#import <AppKit/NSSound.h>
-	#define BGM_PLAYER_CLASS NSSound
 #endif
 
 struct _SoundEffect {
@@ -220,13 +214,10 @@ BackgroundMusic_t *bgm_load(const char *aFilename)
     assert(aFilename);
     NSString *path = [NSString stringWithUTF8String:aFilename];
     NSURL *fileURL = [NSURL fileURLWithPath:path isDirectory:NO];
-#if TARGET_OS_EMBEDDED || TARGET_IPHONE_SIMULATOR
+
     NSError *err = nil;
     AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&err];
 	if(err) NSLog(@"%@", err);
-#else
-    NSSound *player = [[NSSound alloc] initWithContentsOfURL:fileURL byReference:YES];
-#endif
 
     if(!player) return NULL;
     
@@ -250,23 +241,23 @@ static void bgm_destroy(BackgroundMusic_t *aBGM)
 
 void bgm_play(BackgroundMusic_t *aBGM)
 {
-    [(BGM_PLAYER_CLASS *)aBGM->player play];
+    [(AVAudioPlayer *)aBGM->player play];
 }
 void bgm_stop(BackgroundMusic_t *aBGM)
 {
-    [(BGM_PLAYER_CLASS *)aBGM->player stop];
+    [(AVAudioPlayer *)aBGM->player stop];
 }
 bool bgm_isPlaying(BackgroundMusic_t *aBGM)
 {
-    return [(BGM_PLAYER_CLASS *)aBGM->player isPlaying];
+    return [(AVAudioPlayer *)aBGM->player isPlaying];
 }
 void bgm_seek(BackgroundMusic_t *aBGM, float aSeconds)
 {
-    [(BGM_PLAYER_CLASS *)aBGM->player setCurrentTime:aSeconds];
+    [(AVAudioPlayer *)aBGM->player setCurrentTime:aSeconds];
 }
 void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume)
 {
-    [(BGM_PLAYER_CLASS *)aBGM->player setVolume:aVolume];
+    [(AVAudioPlayer *)aBGM->player setVolume:aVolume];
 }
 
 #pragma mark - Sound manager (OpenAL)

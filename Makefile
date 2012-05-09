@@ -17,6 +17,7 @@ CFLAGS    += -ggdb
 CFLAGS    += -O0
 CFLAGS    += -DDYNAMO_DEBUG
 CFLAGS    += $(ARCH)
+CFLAGS    += -F/System/Library/Frameworks/ApplicationServices.framework/Frameworks
 
 LDFLAGS  += -lc
 LDFLAGS  += -lz

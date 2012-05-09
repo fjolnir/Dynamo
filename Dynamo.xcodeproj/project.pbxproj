@@ -7,12 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C71E0B6F155A40E500CB6F37 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C71E0B6E155A40E500CB6F37 /* AVFoundation.framework */; };
+		C71E0B71155A40E900CB6F37 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C71E0B70155A40E900CB6F37 /* CoreGraphics.framework */; };
+		C71E0B73155A40F300CB6F37 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C71E0B72155A40F300CB6F37 /* AudioToolbox.framework */; };
+		C71E0B75155A40F700CB6F37 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C71E0B74155A40F700CB6F37 /* OpenGLES.framework */; };
 		C72C87D415591547001EF047 /* libglmath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87B715591517001EF047 /* libglmath.a */; };
 		C72C87D515591547001EF047 /* liblibpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87CB15591524001EF047 /* liblibpng.a */; };
 		C72C87D615591547001EF047 /* libmxml.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87C21559151F001EF047 /* libmxml.a */; };
 		C72C87D715591547001EF047 /* libyajl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87141559123A001EF047 /* libyajl.a */; };
 		C72C87DA15591564001EF047 /* GLMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87B915591517001EF047 /* GLMath.framework */; };
-		C75AFDA2153FABC600FE8623 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C75AFDA1153FABC600FE8623 /* OpenGLES.framework */; };
+		C73EFC4D155A412400FD64CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC4C155A412400FD64CA /* Foundation.framework */; };
+		C73EFC4F155A41CB00FD64CA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC4E155A41CB00FD64CA /* AVFoundation.framework */; };
+		C73EFC51155A421700FD64CA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC50155A421700FD64CA /* OpenAL.framework */; };
+		C73EFC54155A422C00FD64CA /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC53155A422B00FD64CA /* OpenGL.framework */; };
+		C73EFC56155A423000FD64CA /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC55155A423000FD64CA /* Accelerate.framework */; };
+		C73EFC58155A423700FD64CA /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC57155A423700FD64CA /* ApplicationServices.framework */; };
+		C73EFC5A155A424000FD64CA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC59155A424000FD64CA /* AudioToolbox.framework */; };
+		C73EFC5E155A427800FD64CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC5D155A427800FD64CA /* Foundation.framework */; };
 		C78B8D7C1558A60200B8E5CE /* lauxlib.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D761558A60200B8E5CE /* lauxlib.h */; };
 		C78B8D7F1558A60200B8E5CE /* lua.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D791558A60200B8E5CE /* lua.h */; };
 		C78B8D801558A60200B8E5CE /* luaconf.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7A1558A60200B8E5CE /* luaconf.h */; };
@@ -60,7 +71,6 @@
 		C78B8DE01558A69700B8E5CE /* tmx_map.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB21558A69600B8E5CE /* tmx_map.h */; };
 		C78B8DE11558A69700B8E5CE /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DB31558A69600B8E5CE /* util.c */; };
 		C78B8DE21558A69700B8E5CE /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB41558A69600B8E5CE /* util.h */; };
-		C78B8DEA1558A6ED00B8E5CE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8DE91558A6ED00B8E5CE /* Cocoa.framework */; };
 		C78B8DF41558A6ED00B8E5CE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C78B8DF21558A6ED00B8E5CE /* InfoPlist.strings */; };
 		C78B8DFC1558A75000B8E5CE /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D871558A69600B8E5CE /* array.c */; };
 		C78B8DFD1558A75000B8E5CE /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D881558A69600B8E5CE /* array.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -105,17 +115,9 @@
 		C78B8E241558A75000B8E5CE /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DB31558A69600B8E5CE /* util.c */; };
 		C78B8E251558A75000B8E5CE /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB41558A69600B8E5CE /* util.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C78B8E271558A78800B8E5CE /* libpng15.15.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E261558A78800B8E5CE /* libpng15.15.dylib */; };
-		C78B8E3A1558A89A00B8E5CE /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E381558A85800B8E5CE /* ApplicationServices.framework */; };
-		C78B8E3E1558A8E100B8E5CE /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E3D1558A8E100B8E5CE /* OpenGL.framework */; };
-		C78B8E401558A8E400B8E5CE /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E3F1558A8E400B8E5CE /* Accelerate.framework */; };
-		C78B8E421558A8EE00B8E5CE /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E411558A8EE00B8E5CE /* OpenAL.framework */; };
-		C78B8E441558A8FB00B8E5CE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E431558A8FB00B8E5CE /* AudioToolbox.framework */; };
 		C78B8E461558AB5500B8E5CE /* libyajl_s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E451558AB5500B8E5CE /* libyajl_s.a */; };
 		C78B8E481558AB6D00B8E5CE /* libmxml.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E471558AB6D00B8E5CE /* libmxml.a */; };
 		C799E482155908780009C0A7 /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C799E481155908780009C0A7 /* libluajit-5.1.a */; };
-		C7A190F215469C0B00B266A6 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7A190F115469C0B00B266A6 /* Accelerate.framework */; };
-		C7ECFDDF153FB4420066EA9B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */; };
-		C7ECFDEF153FB57D0066EA9B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7ECFDEE153FB57D0066EA9B /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,12 +194,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C71E0B6C155A40E000CB6F37 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
+		C71E0B6E155A40E500CB6F37 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		C71E0B70155A40E900CB6F37 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		C71E0B72155A40F300CB6F37 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		C71E0B74155A40F700CB6F37 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		C72C870C1559123A001EF047 /* yajl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = yajl.xcodeproj; path = yajl/yajl.xcodeproj; sourceTree = "<group>"; };
 		C72C87BA1559151F001EF047 /* mxml.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mxml.xcodeproj; path = mxml/mxml.xcodeproj; sourceTree = "<group>"; };
 		C72C87C315591524001EF047 /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = png/libpng.xcodeproj; sourceTree = "<group>"; };
+		C73EFC4C155A412400FD64CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		C73EFC4E155A41CB00FD64CA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		C73EFC50155A421700FD64CA /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
+		C73EFC53155A422B00FD64CA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
+		C73EFC55155A423000FD64CA /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
+		C73EFC57155A423700FD64CA /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/ApplicationServices.framework; sourceTree = DEVELOPER_DIR; };
+		C73EFC59155A424000FD64CA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		C73EFC5D155A427800FD64CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		C75AFCF0153FA9F500FE8623 /* libdynamo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdynamo.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C75AFCF7153FA9F500FE8623 /* Dynamo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dynamo-Prefix.pch"; sourceTree = "<group>"; };
-		C75AFDA1153FABC600FE8623 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		C78B8D761558A60200B8E5CE /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		C78B8D791558A60200B8E5CE /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
 		C78B8D7A1558A60200B8E5CE /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
@@ -246,27 +260,14 @@
 		C78B8DB31558A69600B8E5CE /* util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = util.c; path = Source/util.c; sourceTree = SOURCE_ROOT; };
 		C78B8DB41558A69600B8E5CE /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = util.h; path = Source/util.h; sourceTree = SOURCE_ROOT; };
 		C78B8DE81558A6ED00B8E5CE /* Dynamo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Dynamo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C78B8DE91558A6ED00B8E5CE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		C78B8DEC1558A6ED00B8E5CE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		C78B8DED1558A6ED00B8E5CE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		C78B8DEE1558A6ED00B8E5CE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C78B8DF11558A6ED00B8E5CE /* Dynamo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Dynamo-Info.plist"; sourceTree = "<group>"; };
 		C78B8DF31558A6ED00B8E5CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C78B8E261558A78800B8E5CE /* libpng15.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng15.15.dylib; path = /usr/X11/lib/libpng15.15.dylib; sourceTree = "<absolute>"; };
 		C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLMath.xcodeproj; path = GLMath/GLMath.xcodeproj; sourceTree = "<group>"; };
-		C78B8E381558A85800B8E5CE /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/ApplicationServices.framework; sourceTree = DEVELOPER_DIR; };
-		C78B8E3B1558A8A500B8E5CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		C78B8E3D1558A8E100B8E5CE /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
-		C78B8E3F1558A8E400B8E5CE /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
-		C78B8E411558A8EE00B8E5CE /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
-		C78B8E431558A8FB00B8E5CE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		C78B8E451558AB5500B8E5CE /* libyajl_s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libyajl_s.a; path = /usr/local/Cellar/yajl/2.0.4/lib/libyajl_s.a; sourceTree = "<absolute>"; };
 		C78B8E471558AB6D00B8E5CE /* libmxml.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmxml.a; path = /usr/local/Cellar/libmxml/2.6/lib/libmxml.a; sourceTree = "<absolute>"; };
 		C799E481155908780009C0A7 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "/usr/local/lib/libluajit-5.1.a"; sourceTree = "<absolute>"; };
-		C7A190F115469C0B00B266A6 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 		C7A190F315469C1900B266A6 /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Shaders; sourceTree = SOURCE_ROOT; };
-		C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		C7ECFDEE153FB57D0066EA9B /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,14 +275,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C73EFC4D155A412400FD64CA /* Foundation.framework in Frameworks */,
+				C71E0B75155A40F700CB6F37 /* OpenGLES.framework in Frameworks */,
+				C71E0B73155A40F300CB6F37 /* AudioToolbox.framework in Frameworks */,
+				C71E0B71155A40E900CB6F37 /* CoreGraphics.framework in Frameworks */,
+				C71E0B6F155A40E500CB6F37 /* AVFoundation.framework in Frameworks */,
 				C72C87D415591547001EF047 /* libglmath.a in Frameworks */,
 				C72C87D515591547001EF047 /* liblibpng.a in Frameworks */,
 				C72C87D615591547001EF047 /* libmxml.a in Frameworks */,
 				C72C87D715591547001EF047 /* libyajl.a in Frameworks */,
-				C7A190F215469C0B00B266A6 /* Accelerate.framework in Frameworks */,
-				C7ECFDEF153FB57D0066EA9B /* CoreFoundation.framework in Frameworks */,
-				C7ECFDDF153FB4420066EA9B /* CoreGraphics.framework in Frameworks */,
-				C75AFDA2153FABC600FE8623 /* OpenGLES.framework in Frameworks */,
 				C78B8D861558A67A00B8E5CE /* libluajit_ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -290,17 +292,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C73EFC5E155A427800FD64CA /* Foundation.framework in Frameworks */,
+				C73EFC5A155A424000FD64CA /* AudioToolbox.framework in Frameworks */,
+				C73EFC58155A423700FD64CA /* ApplicationServices.framework in Frameworks */,
+				C73EFC56155A423000FD64CA /* Accelerate.framework in Frameworks */,
+				C73EFC54155A422C00FD64CA /* OpenGL.framework in Frameworks */,
+				C73EFC51155A421700FD64CA /* OpenAL.framework in Frameworks */,
+				C73EFC4F155A41CB00FD64CA /* AVFoundation.framework in Frameworks */,
+				C78B8E271558A78800B8E5CE /* libpng15.15.dylib in Frameworks */,
 				C72C87DA15591564001EF047 /* GLMath.framework in Frameworks */,
 				C799E482155908780009C0A7 /* libluajit-5.1.a in Frameworks */,
 				C78B8E481558AB6D00B8E5CE /* libmxml.a in Frameworks */,
 				C78B8E461558AB5500B8E5CE /* libyajl_s.a in Frameworks */,
-				C78B8E441558A8FB00B8E5CE /* AudioToolbox.framework in Frameworks */,
-				C78B8E421558A8EE00B8E5CE /* OpenAL.framework in Frameworks */,
-				C78B8E401558A8E400B8E5CE /* Accelerate.framework in Frameworks */,
-				C78B8E3E1558A8E100B8E5CE /* OpenGL.framework in Frameworks */,
-				C78B8E3A1558A89A00B8E5CE /* ApplicationServices.framework in Frameworks */,
-				C78B8E271558A78800B8E5CE /* libpng15.15.dylib in Frameworks */,
-				C78B8DEA1558A6ED00B8E5CE /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,13 +343,45 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		C73EFC52155A421D00FD64CA /* iOS Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C73EFC4C155A412400FD64CA /* Foundation.framework */,
+				C71E0B74155A40F700CB6F37 /* OpenGLES.framework */,
+				C71E0B72155A40F300CB6F37 /* AudioToolbox.framework */,
+				C71E0B70155A40E900CB6F37 /* CoreGraphics.framework */,
+				C71E0B6E155A40E500CB6F37 /* AVFoundation.framework */,
+				C71E0B6C155A40E000CB6F37 /* Accelerate.framework */,
+			);
+			name = "iOS Frameworks";
+			sourceTree = "<group>";
+		};
+		C73EFC5F155A428400FD64CA /* Mac Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C799E481155908780009C0A7 /* libluajit-5.1.a */,
+				C78B8E471558AB6D00B8E5CE /* libmxml.a */,
+				C78B8E451558AB5500B8E5CE /* libyajl_s.a */,
+				C78B8E261558A78800B8E5CE /* libpng15.15.dylib */,
+				C73EFC5D155A427800FD64CA /* Foundation.framework */,
+				C73EFC59155A424000FD64CA /* AudioToolbox.framework */,
+				C73EFC57155A423700FD64CA /* ApplicationServices.framework */,
+				C73EFC55155A423000FD64CA /* Accelerate.framework */,
+				C73EFC53155A422B00FD64CA /* OpenGL.framework */,
+				C73EFC50155A421700FD64CA /* OpenAL.framework */,
+				C73EFC4E155A41CB00FD64CA /* AVFoundation.framework */,
+			);
+			name = "Mac Frameworks";
+			sourceTree = "<group>";
+		};
 		C75AFCE0153FA9D800FE8623 = {
 			isa = PBXGroup;
 			children = (
 				C7A1903315469BC200B266A6 /* Dependencies */,
 				C75AFCF5153FA9F500FE8623 /* Dynamo */,
+				C73EFC5F155A428400FD64CA /* Mac Frameworks */,
+				C73EFC52155A421D00FD64CA /* iOS Frameworks */,
 				C78B8DF01558A6ED00B8E5CE /* Supporting Files (Mac Framework) */,
-				C75AFCF2153FA9F500FE8623 /* Frameworks & Libraries */,
 				C75AFCF1153FA9F500FE8623 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -358,29 +393,6 @@
 				C78B8DE81558A6ED00B8E5CE /* Dynamo.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		C75AFCF2153FA9F500FE8623 /* Frameworks & Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				C799E481155908780009C0A7 /* libluajit-5.1.a */,
-				C78B8E471558AB6D00B8E5CE /* libmxml.a */,
-				C78B8E451558AB5500B8E5CE /* libyajl_s.a */,
-				C78B8E261558A78800B8E5CE /* libpng15.15.dylib */,
-				C78B8E431558A8FB00B8E5CE /* AudioToolbox.framework */,
-				C78B8E411558A8EE00B8E5CE /* OpenAL.framework */,
-				C78B8E3F1558A8E400B8E5CE /* Accelerate.framework */,
-				C78B8E3D1558A8E100B8E5CE /* OpenGL.framework */,
-				C78B8E3B1558A8A500B8E5CE /* CoreGraphics.framework */,
-				C78B8E381558A85800B8E5CE /* ApplicationServices.framework */,
-				C7A190F115469C0B00B266A6 /* Accelerate.framework */,
-				C7ECFDEE153FB57D0066EA9B /* CoreFoundation.framework */,
-				C7ECFDDE153FB4420066EA9B /* CoreGraphics.framework */,
-				C75AFDA1153FABC600FE8623 /* OpenGLES.framework */,
-				C78B8DE91558A6ED00B8E5CE /* Cocoa.framework */,
-				C78B8DEB1558A6ED00B8E5CE /* Other Frameworks */,
-			);
-			name = "Frameworks & Libraries";
 			sourceTree = "<group>";
 		};
 		C75AFCF5153FA9F500FE8623 /* Dynamo */ = {
@@ -444,16 +456,6 @@
 				C78B8D7B1558A60200B8E5CE /* lualib.h */,
 			);
 			path = LuaJIT;
-			sourceTree = "<group>";
-		};
-		C78B8DEB1558A6ED00B8E5CE /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				C78B8DEC1558A6ED00B8E5CE /* AppKit.framework */,
-				C78B8DED1558A6ED00B8E5CE /* CoreData.framework */,
-				C78B8DEE1558A6ED00B8E5CE /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		C78B8DF01558A6ED00B8E5CE /* Supporting Files (Mac Framework) */ = {
@@ -799,8 +801,6 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Dynamo-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -821,7 +821,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = dynamo;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -837,8 +836,6 @@
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Dynamo.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Dynamo-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -854,7 +851,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
 				);
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = dynamo;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -866,7 +862,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -910,7 +906,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
