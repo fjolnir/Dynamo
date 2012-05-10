@@ -4,7 +4,7 @@ include $(CLEAR_VARS)
 LOCAL_CFLAGS := -I$(LOCAL_PATH)/Dependencies -std=gnu99 -I$(LOCAL_PATH)/Dependencies/png -I$(LOCAL_PATH)/Dependencies/mxml  -g -DTWODEEDENG_DEBUG
 LOCAL_CXXFLAGS := -std=gnu++98
 LOCAL_ARM_MODE := arm
-TARGET_PLATFORM := armeabi-v7a
+TARGET_PLATFORM := android-9
 TARGET_ABI := android-9-armeabi
 
 LOCAL_MODULE    := dynamo
@@ -30,7 +30,6 @@ Source/dictionary.c \
 Source/json.c \
 Source/primitive_types.c \
 Dependencies/GLMath/GLMath.c \
-Dependencies/GLMath/GLMathExports.c \
 Dependencies/GLMath/GLMathUtilities.c \
 Dependencies/mxml/mxml-attr.c \
 Dependencies/mxml/mxml-entity.c \
