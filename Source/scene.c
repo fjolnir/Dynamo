@@ -44,7 +44,7 @@ void scene_pushRenderable(Scene_t *aScene, void *aRenderable)
 
 void scene_popRenderable(Scene_t *aScene)
 {
-	Renderable_t *renderable = llist_popValue(aScene->renderables);
+    llist_popValue(aScene->renderables);
 }
 
 bool scene_insertRenderable(Scene_t *aScene, void *aRenderableToInsert, void *aRenderableToShift)
