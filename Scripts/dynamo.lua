@@ -10,6 +10,9 @@ local dynamo = setmetatable({}, { __index = lib })
 ffi.cdef[[
 typedef float GLMFloat;
 
+typedef void (*InsertionCallback_t)(void *aVal);
+typedef void (*RemovalCallback_t)(void *aVal);
+
 // ----- Object
 typedef void (*Obj_destructor_t)(void *aSelf);
 
@@ -48,7 +51,7 @@ struct _LinkedListItem {
 	void *value;
 };
 
-extern LinkedList_t *llist_create();
+extern LinkedList_t *llist_create(InsertionCallback_t aInsertionCallback, RemovalCallback_t aRemovalCallback);
 
 extern void llist_pushValue(LinkedList_t *aList, void *aValue);
 extern void *llist_popValue(LinkedList_t *aList);
@@ -114,6 +117,7 @@ extern bool scene_deleteRenderable(Scene_t *aScene, void *aRenderable);
 // ----- Game timer
 typedef struct _GameTimer GameTimer_t;
 typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
+typedef void (*GameTimer_scheduledCallback_t)(GameTimer_t *aTimer, void *aContext);
 
 // All values are in seconds
 struct _GameTimer {
@@ -123,14 +127,12 @@ struct _GameTimer {
 	GLMFloat desiredInterval; // The minimum interval between updates
 	long ticks;
 	GameTimer_updateCallback_t updateCallback;
+    LinkedList_t *scheduledCallbacks;
 };
-
 extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
-
-// Updates the timer and calls the update callback as many times as required to progress up until elapsed
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
-
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
+extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
 
 // ----- Texture
 typedef struct _Texture {
@@ -660,7 +662,10 @@ end
 ffi.metatype("GameTimer_t", {
 	__index = {
 		step = lib.gameTimer_step,
-		interpolation = lib.gameTimer_interpolationSinceLastUpdate
+		interpolation = lib.gameTimer_interpolationSinceLastUpdate,
+		afterDelay = function(self, delay, lambda)
+			lib.gameTimer_afterDelay(self, delay, lambda, nil)
+		end
 	}
 })
 
