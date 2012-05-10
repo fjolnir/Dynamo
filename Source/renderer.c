@@ -20,7 +20,7 @@ Class_t Class_Renderable = {
 Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 {
 	Renderer_t *out = obj_create_autoreleased(&Class_Renderer);
-	out->renderables = obj_retain(llist_create());
+	out->renderables = obj_retain(llist_create((InsertionCallback_t)&obj_retain, (RemovalCallback_t)&obj_release));
 	out->frameBufferId = 0;
 	out->viewportSize = aViewPortSize;
 	out->cameraOffset = aCameraOffset;
@@ -63,14 +63,12 @@ void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFl
 
 void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable)
 {
-	obj_retain(aRenderable);
 	llist_pushValue(aRenderer->renderables, aRenderable);
 }
 
 void renderer_popRenderable(Renderer_t *aRenderer)
 {
-	Renderable_t *renderable = llist_popValue(aRenderer->renderables);
-	obj_release(renderable);
+    llist_popValue(aRenderer->renderables);
 }
 
 bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift)

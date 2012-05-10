@@ -38,4 +38,10 @@ Obj_autoReleasePool_t *autoReleasePool_create();
 void *autoReleasePool_push(Obj_autoReleasePool_t *aPool, Obj_t *aObj);
 void autoReleasePool_drain(Obj_autoReleasePool_t *aPool);
 
+
+// Utility functions to allow obj_retain/release to be used as appliers
+void _obj_retain(void *aObj, void *ignored);
+void _obj_release(void *aObj, void *ignored);
+void _obj_autorelease(void *aObj, void *ignored);
+
 #endif

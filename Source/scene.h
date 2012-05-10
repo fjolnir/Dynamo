@@ -12,7 +12,7 @@
 extern Class_t Class_Scene;
 typedef struct _Scene {
     OBJ_GUTS
-    RenderableDisplayCallback_t displayCallback;
+    RENDERABLE_GUTS
     LinkedList_t *renderables;
     mat4_t transform;
 } Scene_t;

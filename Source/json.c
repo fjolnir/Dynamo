@@ -73,7 +73,7 @@ static int handle_start_map(void *ctxStack_)
 	Array_t *ctxStack = ctxStack_;
     
 	struct _ParseContext *newCtx = calloc(1, sizeof(struct _ParseContext));
-	newCtx->container = dict_create((DictionaryInsertionCallback_t)&obj_retain, (DictionaryRemovalCallback_t)&obj_release);
+	newCtx->container = dict_create((InsertionCallback_t)&obj_retain, (RemovalCallback_t)&obj_release);
     if(ctxStack->count > 0) {
         struct _ParseContext *parenCtx = array_top(ctxStack);
         _CTX_SET(parenCtx, newCtx->container)
@@ -86,7 +86,7 @@ static int handle_start_array(void *ctxStack_)
 {
 	Array_t *ctxStack = ctxStack_;
 	struct _ParseContext *newCtx = calloc(1, sizeof(struct _ParseContext));
-	newCtx->container = array_create(4, (ArrayInsertionCallback_t)&obj_retain, (ArrayRemovalCallback_t)&obj_release);
+	newCtx->container = array_create(4, (InsertionCallback_t)&obj_retain, (RemovalCallback_t)&obj_release);
     if(ctxStack->count > 0) {
         struct _ParseContext *parenCtx = array_top(ctxStack);
         _CTX_SET(parenCtx, newCtx->container)
@@ -130,7 +130,7 @@ static void _freeParseContext(struct _ParseContext *ctx)
 
 Obj_t *parseJSON(const char *aJsonStr)
 {
-	Array_t *ctxStack = array_create(8, NULL, (ArrayRemovalCallback_t)&_freeParseContext);
+	Array_t *ctxStack = array_create(8, NULL, (RemovalCallback_t)&_freeParseContext);
 	yajl_handle parser = yajl_alloc(&parserCallbacks, NULL, (void *)ctxStack);
 	yajl_status status = yajl_parse(parser, (const unsigned char*)aJsonStr, strlen(aJsonStr));
     if(status != yajl_status_ok) {

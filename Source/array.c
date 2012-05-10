@@ -9,7 +9,7 @@ Class_t Class_Array = {
 	(Obj_destructor_t)&array_destroy
 };
 
-Array_t *array_create(int aCapacity, ArrayInsertionCallback_t aInsertionCallback, ArrayRemovalCallback_t aRemovalCallback)
+Array_t *array_create(int aCapacity, InsertionCallback_t aInsertionCallback, RemovalCallback_t aRemovalCallback)
 {
 	Array_t *out = obj_create_autoreleased(&Class_Array);
 	out->capacity = aCapacity ? aCapacity : 4;

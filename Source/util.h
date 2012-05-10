@@ -6,6 +6,10 @@
 #include <stdio.h>
 #include <assert.h>
 
+
+typedef void (*InsertionCallback_t)(void *aVal);
+typedef void (*RemovalCallback_t)(void *aVal);
+
 typedef signed char BOOL;
 extern BOOL util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen);
 

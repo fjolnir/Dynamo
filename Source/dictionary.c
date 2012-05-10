@@ -14,7 +14,7 @@ Class_t Class_Dictionary = {
 };
 
 
-Dictionary_t *dict_create(DictionaryInsertionCallback_t aInsertionCallback, DictionaryRemovalCallback_t aRemovalCallback)
+Dictionary_t *dict_create(InsertionCallback_t aInsertionCallback, RemovalCallback_t aRemovalCallback)
 {
 	Dictionary_t *self = obj_create_autoreleased(&Class_Dictionary);
 	self->insertionCallback = aInsertionCallback;

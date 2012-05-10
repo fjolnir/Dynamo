@@ -10,9 +10,12 @@ Class_t Class_LinkedList = {
 
 #pragma mark -
 
-LinkedList_t *llist_create()
+LinkedList_t *llist_create(InsertionCallback_t aInsertionCallback, RemovalCallback_t aRemovalCallback)
 {
-	return obj_create_autoreleased(&Class_LinkedList);
+	LinkedList_t *out = obj_create_autoreleased(&Class_LinkedList);
+	out->insertionCallback = aInsertionCallback;
+	out->removalCallback = aRemovalCallback;
+	return out;
 }
 
 void llist_destroy(LinkedList_t *aList)
@@ -21,8 +24,10 @@ void llist_destroy(LinkedList_t *aList)
 	if(currentItem) {
 		LinkedListItem_t *temp;
 		do {
-			temp = currentItem;
-			currentItem = temp->next;
+            if(aList->removalCallback)
+				aList->removalCallback(currentItem->value);
+            temp = currentItem;
+            currentItem = temp->next;
 			free(temp);
 		} while(currentItem);
 	}
@@ -44,6 +49,9 @@ static LinkedListItem_t *_llist_itemForValue(LinkedList_t *aList, void *aValue)
 
 void llist_pushValue(LinkedList_t *aList, void *aValue)
 {
+	if(aList->insertionCallback)
+		aList->insertionCallback(aValue);
+
 	LinkedListItem_t *item = calloc(1, sizeof(LinkedListItem_t));
 	item->value = aValue;
 	item->previous = aList->tail;
@@ -58,6 +66,9 @@ void *llist_popValue(LinkedList_t *aList)
 	LinkedListItem_t *tail = aList->tail;
 	if(!tail) return NULL;
 	void *val = tail->value;
+	if(aList->removalCallback)
+		aList->removalCallback(val);
+
 	if(tail->previous)
 		tail->previous->next = NULL;
 	aList->tail = tail->previous;
@@ -71,6 +82,9 @@ void *llist_popValue(LinkedList_t *aList)
 
 bool llist_insertValue(LinkedList_t *aList, void *aValueToInsert, void *aValueToShift)
 {
+	if(aList->insertionCallback)
+		aList->insertionCallback(aValueToInsert);
+
 	LinkedListItem_t *itemToInsert = calloc(1, sizeof(LinkedListItem_t));
 	itemToInsert->value = aValueToInsert;
 	LinkedListItem_t *itemToShift = _llist_itemForValue(aList, aValueToShift);
@@ -93,6 +107,9 @@ bool llist_deleteValue(LinkedList_t *aList, void *aValue)
 {
 	LinkedListItem_t *itemToDelete = _llist_itemForValue(aList, aValue);
 	if(itemToDelete) {
+		if(aList->removalCallback)
+			aList->removalCallback(itemToDelete->value);
+
 		if(itemToDelete->previous) itemToDelete->previous->next = itemToDelete->next;
 		if(itemToDelete->next)     itemToDelete->next->previous = itemToDelete->previous;
 		if(aList->head == itemToDelete)

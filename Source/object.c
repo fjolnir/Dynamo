@@ -117,7 +117,12 @@ void *autoReleasePool_push(Obj_autoReleasePool_t *aPool, void *aObj)
 }
 void autoReleasePool_drain(Obj_autoReleasePool_t *aPool)
 {
-	llist_apply(aPool, &obj_release);
+	llist_apply(aPool, &_obj_release, NULL);
 	llist_empty(aPool);
 }
+
+
+void _obj_retain(Obj_t *aObj, void *ignored) { obj_retain(aObj); }
+void _obj_release(Obj_t *aObj, void *ignored) { obj_release(aObj); }
+void _obj_autorelease(Obj_t *aObj, void *ignored) { obj_autorelease(aObj); }
 

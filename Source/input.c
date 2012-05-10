@@ -17,15 +17,14 @@ Class_t Class_InputObserver = {
 InputManager_t *input_createManager()
 {
 	InputManager_t *out = obj_create_autoreleased(&Class_InputManager);
-	out->observers = obj_retain(llist_create());
-	out->activeEvents = obj_retain(llist_create());
+	out->observers = obj_retain(llist_create((InsertionCallback_t)&obj_retain, (RemovalCallback_t)&obj_release));
+	out->activeEvents = obj_retain(llist_create(NULL, NULL));
 
 	return out;
 }
 
 void input_destroyManager(InputManager_t *aManager)
 {
-	llist_apply(aManager->observers, &obj_release);
 	obj_release(aManager->observers);
 	aManager->observers = NULL;
 	obj_release(aManager->activeEvents);
@@ -46,12 +45,10 @@ InputObserver_t *input_createObserver(Input_type_t aObservedType, Input_handler_
 
 void input_addObserver(InputManager_t *aManager, InputObserver_t *aObserver)
 {
-	obj_retain(aObserver);
 	llist_pushValue(aManager->observers, aObserver);
 }
 bool input_removeObserver(InputManager_t *aManager, InputObserver_t *aObserver)
 {
-	obj_release(aObserver);
 	return llist_deleteValue(aManager->observers, aObserver);
 }
 
