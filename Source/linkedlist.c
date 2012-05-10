@@ -128,12 +128,15 @@ void llist_empty(LinkedList_t *aList)
 	while(llist_popValue(aList));
 }
 
-void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier)
+void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier, void *aCtx)
 {
 	LinkedListItem_t *item = aList->head;
+	// We store a pointer to the next value before applying so that it's safe to remove the current value within the applier
+	LinkedListItem_t *next;
 	if(item) {
 		do {
-			aApplier(item->value);
-		} while( (item = item->next));
+			next = item->next;
+			aApplier(item->value, aCtx);
+		} while( (item = next) );
 	}
 }
