@@ -90,7 +90,7 @@ extern Class_t Class_TMXLayerRenderable;
 // A renderable that manages a vbo for drawing a layer
 typedef struct _TMXLayerRenderable {
     OBJ_GUTS
-    RenderableDisplayCallback_t displayCallback;
+    RENDERABLE_GUTS
     TMXLayer_t *layer;
     TMXMap_t *map; // Reference required so that we can retain it
     TextureAtlas_t *atlas;

@@ -9,7 +9,7 @@
 extern Class_t Class_Texture;
 typedef struct _Texture {
 	OBJ_GUTS
-	RenderableDisplayCallback_t displayCallback;
+    RENDERABLE_GUTS
 	vec3_t location; // The location to use if the texture is drawn directly as a renderable
 	GLuint id;
 	vec2_t size;

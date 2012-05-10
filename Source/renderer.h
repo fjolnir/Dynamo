@@ -18,13 +18,17 @@ typedef struct _Renderable Renderable_t;
 
 typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, Renderable_t *aRenderable, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
+// To make an Object renderable, include RENDERABLE_GUTS immediately after OBJ_GUTS
+#define RENDERABLE_GUTS \
+    RenderableDisplayCallback_t displayCallback;
+
 // For defining an object you wish to have rendered
-// (You usually wouldn't use this directly, rather you'd simply add your display callback
-//  function pointer as the first field after the guts of the object you wish to render)
+// (You usually wouldn't use this type directly, rather you'd simply add RENDERABLE_GUTS
+//  as the first field after the guts of the object you wish to render)
 extern Class_t Class_Renderable;
 struct _Renderable {
     OBJ_GUTS
-    RenderableDisplayCallback_t displayCallback;
+    RENDERABLE_GUTS
 };
 
 // The renderer object
