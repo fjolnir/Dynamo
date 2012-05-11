@@ -482,6 +482,7 @@ typedef enum {
 	kPlatformOther
 } Platform_t;
 extern Platform_t util_platform(void);
+extern void _debug_log(const char *str);
 ]]
 
 dynamo.platforms = {
@@ -516,6 +517,23 @@ function dynamo.pathForResource(name, type, directory)
 	else
 		return nil
 	end
+end
+
+function dynamo.log(...)
+	prefix = ""
+	if debug ~= nil then
+		local info = debug.getinfo(1, "Sln")
+		if info.what == "C" then
+			prefix = "<C function>: "
+		else
+			print(info.short_src)
+			print(info.currentline)
+			print(info.name)
+			
+			prefix = string.format("%s:%s (%s): ", info.short_src, info.currentline, info.name)
+		end
+	end
+	lib._debug_log(prefix..table.concat({...}))
 end
 
 --

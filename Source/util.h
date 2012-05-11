@@ -53,15 +53,20 @@ extern Platform_t util_platform(void);
 
 #pragma mark - Debug logging
 
-#ifdef DYNAMO_DEBUGDENG_DEBUG
+#ifdef DYNAMO_DEBUG
 	#ifdef ANDROID
 	    #include <android/log.h>
-	    #define debug_log(fmt, ...) __android_log_print(ANDROID_LOG_DEBUG, "GeminiNDK", "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+	    #define debug_log(fmt, ...) __android_log_print(ANDROID_LOG_DEBUG, "Dynamo", "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+		#define debug_log_min(fmt, ...)  __android_log_print(ANDROID_LOG_DEBUG, "Dynamo", fmt "\n", ## __VA_ARGS__)
 	#else
 	    #define debug_log(fmt, ...) fprintf(stderr, "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+		#define debug_log_min(fmt, ...)  fprintf(stderr, fmt "\n", ## __VA_ARGS__)
 	#endif
 #else
 	#define debug_log(fmt, ...)
 #endif
+
+// For FFI
+extern void _debug_log(const char *str);
 
 #endif

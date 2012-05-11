@@ -60,3 +60,8 @@ extern Platform_t util_platform(void)
 {
 	return DYNAMO_PLATFORM;
 }
+
+void _debug_log(const char *str)
+{
+	debug_log_min("%s", str);
+}
