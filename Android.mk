@@ -1,7 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS := -I$(LOCAL_PATH)/Dependencies -std=gnu99 -I$(LOCAL_PATH)/Dependencies/png -I$(LOCAL_PATH)/Dependencies/mxml  -g -DTWODEEDENG_DEBUG
+LOCAL_CFLAGS := -I$(LOCAL_PATH)/Dependencies -std=gnu99 -I$(LOCAL_PATH)/Dependencies/png -I$(LOCAL_PATH)/Dependencies/mxml  -g -DDYNAMO_DEBUG
 LOCAL_CXXFLAGS := -std=gnu++98
 LOCAL_ARM_MODE := arm
 TARGET_PLATFORM := armeabi-v7a
