@@ -45,7 +45,11 @@ void renderer_destroy(Renderer_t *aRenderer)
 void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-
+    
+    matrix_stack_push(aRenderer->worldMatrixStack);
+    vec3_t ofs = aRenderer->cameraOffset;
+    matrix_stack_translate(aRenderer->worldMatrixStack, ofs.x, ofs.y, ofs.z);
+    
 	// Render each of the renderer's entities
 	LinkedListItem_t *currentItem = aRenderer->renderables->head;
 	Renderable_t *renderable;
@@ -56,6 +60,8 @@ void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFl
 				renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
 		} while((currentItem = currentItem->next));
 	}
+    
+    matrix_stack_pop(aRenderer->worldMatrixStack);
 }
 
 
