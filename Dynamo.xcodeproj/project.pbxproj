@@ -16,6 +16,7 @@
 		C72C87D615591547001EF047 /* libmxml.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87C21559151F001EF047 /* libmxml.a */; };
 		C72C87D715591547001EF047 /* libyajl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87141559123A001EF047 /* libyajl.a */; };
 		C72C87DA15591564001EF047 /* GLMath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C72C87B915591517001EF047 /* GLMath.framework */; };
+		C734C80315609DE000C49454 /* libluajit_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C734C80215609DE000C49454 /* libluajit_ios.a */; };
 		C73EFC4D155A412400FD64CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC4C155A412400FD64CA /* Foundation.framework */; };
 		C73EFC4F155A41CB00FD64CA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC4E155A41CB00FD64CA /* AVFoundation.framework */; };
 		C73EFC51155A421700FD64CA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC50155A421700FD64CA /* OpenAL.framework */; };
@@ -24,11 +25,16 @@
 		C73EFC58155A423700FD64CA /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC57155A423700FD64CA /* ApplicationServices.framework */; };
 		C73EFC5A155A424000FD64CA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC59155A424000FD64CA /* AudioToolbox.framework */; };
 		C73EFC5E155A427800FD64CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC5D155A427800FD64CA /* Foundation.framework */; };
+		C7650D43155B629900A0C86D /* libChipmunk-iPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7650D3E155B628000A0C86D /* libChipmunk-iPhone.a */; };
+		C7650D46155B62AD00A0C86D /* libChipmunk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7650D3C155B628000A0C86D /* libChipmunk.a */; };
+		C7650D49155B640B00A0C86D /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = C7650D47155B640B00A0C86D /* world.c */; };
+		C7650D4A155B640B00A0C86D /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = C7650D47155B640B00A0C86D /* world.c */; };
+		C7650D4B155B640B00A0C86D /* world.h in Headers */ = {isa = PBXBuildFile; fileRef = C7650D48155B640B00A0C86D /* world.h */; };
+		C7650D4C155B640B00A0C86D /* world.h in Headers */ = {isa = PBXBuildFile; fileRef = C7650D48155B640B00A0C86D /* world.h */; };
 		C78B8D7C1558A60200B8E5CE /* lauxlib.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D761558A60200B8E5CE /* lauxlib.h */; };
 		C78B8D7F1558A60200B8E5CE /* lua.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D791558A60200B8E5CE /* lua.h */; };
 		C78B8D801558A60200B8E5CE /* luaconf.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7A1558A60200B8E5CE /* luaconf.h */; };
 		C78B8D811558A60200B8E5CE /* lualib.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7B1558A60200B8E5CE /* lualib.h */; };
-		C78B8D861558A67A00B8E5CE /* libluajit_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8D851558A67A00B8E5CE /* libluajit_ios.a */; };
 		C78B8DB51558A69600B8E5CE /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D871558A69600B8E5CE /* array.c */; };
 		C78B8DB61558A69600B8E5CE /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D881558A69600B8E5CE /* array.h */; };
 		C78B8DB71558A69600B8E5CE /* background.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D891558A69600B8E5CE /* background.c */; };
@@ -191,6 +197,41 @@
 			remoteGlobalIDString = C7622AF614D085B60093DDD0;
 			remoteInfo = Framework;
 		};
+		C7650D39155B628000A0C86D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D3E5F0490AA32FDE004E361B;
+			remoteInfo = ChipmunkDemo;
+		};
+		C7650D3B155B628000A0C86D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D34963BB0B56CAA300CAD239;
+			remoteInfo = ChipmunkStatic;
+		};
+		C7650D3D155B628000A0C86D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D3C3787A11063B1B003EF1D9;
+			remoteInfo = "ChipmunkStatic-iPhone";
+		};
+		C7650D41155B629300A0C86D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D3C3787911063B1B003EF1D9;
+			remoteInfo = "ChipmunkStatic-iPhone";
+		};
+		C7650D44155B62A100A0C86D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D34963BA0B56CAA300CAD239;
+			remoteInfo = ChipmunkStatic;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -202,6 +243,7 @@
 		C72C870C1559123A001EF047 /* yajl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = yajl.xcodeproj; path = yajl/yajl.xcodeproj; sourceTree = "<group>"; };
 		C72C87BA1559151F001EF047 /* mxml.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mxml.xcodeproj; path = mxml/mxml.xcodeproj; sourceTree = "<group>"; };
 		C72C87C315591524001EF047 /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = png/libpng.xcodeproj; sourceTree = "<group>"; };
+		C734C80215609DE000C49454 /* libluajit_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluajit_ios.a; path = Dependencies/LuaJIT/libluajit_ios.a; sourceTree = "<group>"; };
 		C73EFC4C155A412400FD64CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		C73EFC4E155A41CB00FD64CA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		C73EFC50155A421700FD64CA /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
@@ -211,7 +253,9 @@
 		C73EFC59155A424000FD64CA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		C73EFC5D155A427800FD64CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		C75AFCF0153FA9F500FE8623 /* libdynamo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdynamo.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		C75AFCF7153FA9F500FE8623 /* Dynamo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dynamo-Prefix.pch"; sourceTree = "<group>"; };
+		C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Chipmunk6.xcodeproj; path = Chipmunk/xcode/Chipmunk6.xcodeproj; sourceTree = "<group>"; };
+		C7650D47155B640B00A0C86D /* world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = world.c; path = Source/world.c; sourceTree = SOURCE_ROOT; };
+		C7650D48155B640B00A0C86D /* world.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = world.h; path = Source/world.h; sourceTree = SOURCE_ROOT; };
 		C78B8D761558A60200B8E5CE /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		C78B8D791558A60200B8E5CE /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
 		C78B8D7A1558A60200B8E5CE /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
@@ -275,6 +319,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7650D43155B629900A0C86D /* libChipmunk-iPhone.a in Frameworks */,
 				C73EFC4D155A412400FD64CA /* Foundation.framework in Frameworks */,
 				C71E0B75155A40F700CB6F37 /* OpenGLES.framework in Frameworks */,
 				C71E0B73155A40F300CB6F37 /* AudioToolbox.framework in Frameworks */,
@@ -284,7 +329,7 @@
 				C72C87D515591547001EF047 /* liblibpng.a in Frameworks */,
 				C72C87D615591547001EF047 /* libmxml.a in Frameworks */,
 				C72C87D715591547001EF047 /* libyajl.a in Frameworks */,
-				C78B8D861558A67A00B8E5CE /* libluajit_ios.a in Frameworks */,
+				C734C80315609DE000C49454 /* libluajit_ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +337,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7650D46155B62AD00A0C86D /* libChipmunk.a in Frameworks */,
 				C73EFC5E155A427800FD64CA /* Foundation.framework in Frameworks */,
 				C73EFC5A155A424000FD64CA /* AudioToolbox.framework in Frameworks */,
 				C73EFC58155A423700FD64CA /* ApplicationServices.framework in Frameworks */,
@@ -346,6 +392,7 @@
 		C73EFC52155A421D00FD64CA /* iOS Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C734C80215609DE000C49454 /* libluajit_ios.a */,
 				C73EFC4C155A412400FD64CA /* Foundation.framework */,
 				C71E0B74155A40F700CB6F37 /* OpenGLES.framework */,
 				C71E0B72155A40F300CB6F37 /* AudioToolbox.framework */,
@@ -377,8 +424,8 @@
 		C75AFCE0153FA9D800FE8623 = {
 			isa = PBXGroup;
 			children = (
-				C7A1903315469BC200B266A6 /* Dependencies */,
 				C75AFCF5153FA9F500FE8623 /* Dynamo */,
+				C7A1903315469BC200B266A6 /* Dependencies */,
 				C73EFC5F155A428400FD64CA /* Mac Frameworks */,
 				C73EFC52155A421D00FD64CA /* iOS Frameworks */,
 				C78B8DF01558A6ED00B8E5CE /* Supporting Files (Mac Framework) */,
@@ -398,52 +445,63 @@
 		C75AFCF5153FA9F500FE8623 /* Dynamo */ = {
 			isa = PBXGroup;
 			children = (
-				C78B8D871558A69600B8E5CE /* array.c */,
-				C78B8D881558A69600B8E5CE /* array.h */,
-				C78B8D891558A69600B8E5CE /* background.c */,
-				C78B8D8A1558A69600B8E5CE /* background.h */,
-				C78B8D8B1558A69600B8E5CE /* dictionary.c */,
-				C78B8D8C1558A69600B8E5CE /* dictionary.h */,
-				C78B8D8D1558A69600B8E5CE /* drawutils.c */,
-				C78B8D8E1558A69600B8E5CE /* drawutils.h */,
 				C78B8D8F1558A69600B8E5CE /* dynamo.h */,
-				C78B8D901558A69600B8E5CE /* gametimer.c */,
+				C7650D48155B640B00A0C86D /* world.h */,
+				C7650D47155B640B00A0C86D /* world.c */,
+				C78B8D881558A69600B8E5CE /* array.h */,
+				C78B8D871558A69600B8E5CE /* array.c */,
+				C78B8D8A1558A69600B8E5CE /* background.h */,
+				C78B8D891558A69600B8E5CE /* background.c */,
+				C78B8D8C1558A69600B8E5CE /* dictionary.h */,
+				C78B8D8B1558A69600B8E5CE /* dictionary.c */,
+				C78B8D8E1558A69600B8E5CE /* drawutils.h */,
+				C78B8D8D1558A69600B8E5CE /* drawutils.c */,
 				C78B8D911558A69600B8E5CE /* gametimer.h */,
-				C78B8D921558A69600B8E5CE /* glutils.h */,
-				C78B8D931558A69600B8E5CE /* input.c */,
+				C78B8D901558A69600B8E5CE /* gametimer.c */,
 				C78B8D941558A69600B8E5CE /* input.h */,
-				C78B8D951558A69600B8E5CE /* json.c */,
+				C78B8D931558A69600B8E5CE /* input.c */,
 				C78B8D961558A69600B8E5CE /* json.h */,
-				C78B8D971558A69600B8E5CE /* linkedlist.c */,
+				C78B8D951558A69600B8E5CE /* json.c */,
 				C78B8D981558A69600B8E5CE /* linkedlist.h */,
-				C78B8D9B1558A69600B8E5CE /* object.c */,
+				C78B8D971558A69600B8E5CE /* linkedlist.c */,
 				C78B8D9C1558A69600B8E5CE /* object.h */,
-				C78B8D9F1558A69600B8E5CE /* png_loader.c */,
+				C78B8D9B1558A69600B8E5CE /* object.c */,
 				C78B8DA01558A69600B8E5CE /* png_loader.h */,
-				C78B8DA11558A69600B8E5CE /* primitive_types.c */,
+				C78B8D9F1558A69600B8E5CE /* png_loader.c */,
 				C78B8DA21558A69600B8E5CE /* primitive_types.h */,
-				C78B8DA31558A69600B8E5CE /* renderer.c */,
+				C78B8DA11558A69600B8E5CE /* primitive_types.c */,
 				C78B8DA41558A69600B8E5CE /* renderer.h */,
-				C78B8DA51558A69600B8E5CE /* scene.c */,
+				C78B8DA31558A69600B8E5CE /* renderer.c */,
 				C78B8DA61558A69600B8E5CE /* scene.h */,
-				C78B8DA71558A69600B8E5CE /* shader.c */,
+				C78B8DA51558A69600B8E5CE /* scene.c */,
 				C78B8DA81558A69600B8E5CE /* shader.h */,
-				C78B8DA91558A69600B8E5CE /* sound_apple.m */,
+				C78B8DA71558A69600B8E5CE /* shader.c */,
 				C78B8DAA1558A69600B8E5CE /* sound.h */,
-				C78B8DAB1558A69600B8E5CE /* sprite.c */,
+				C78B8DA91558A69600B8E5CE /* sound_apple.m */,
 				C78B8DAC1558A69600B8E5CE /* sprite.h */,
-				C78B8DAD1558A69600B8E5CE /* texture_atlas.c */,
+				C78B8DAB1558A69600B8E5CE /* sprite.c */,
 				C78B8DAE1558A69600B8E5CE /* texture_atlas.h */,
-				C78B8DAF1558A69600B8E5CE /* texture.c */,
+				C78B8DAD1558A69600B8E5CE /* texture_atlas.c */,
 				C78B8DB01558A69600B8E5CE /* texture.h */,
-				C78B8DB11558A69600B8E5CE /* tmx_map.c */,
+				C78B8DAF1558A69600B8E5CE /* texture.c */,
 				C78B8DB21558A69600B8E5CE /* tmx_map.h */,
-				C78B8DB31558A69600B8E5CE /* util.c */,
+				C78B8DB11558A69600B8E5CE /* tmx_map.c */,
 				C78B8DB41558A69600B8E5CE /* util.h */,
+				C78B8DB31558A69600B8E5CE /* util.c */,
+				C78B8D921558A69600B8E5CE /* glutils.h */,
 				C7A190F315469C1900B266A6 /* Shaders */,
-				C75AFCF7153FA9F500FE8623 /* Dynamo-Prefix.pch */,
 			);
 			path = Dynamo;
+			sourceTree = "<group>";
+		};
+		C7650D30155B628000A0C86D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C7650D3A155B628000A0C86D /* ChipmunkDemo.app */,
+				C7650D3C155B628000A0C86D /* libChipmunk.a */,
+				C7650D3E155B628000A0C86D /* libChipmunk-iPhone.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		C78B8D751558A60200B8E5CE /* LuaJIT */ = {
@@ -471,6 +529,7 @@
 		C7A1903315469BC200B266A6 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */,
 				C72C87C315591524001EF047 /* libpng.xcodeproj */,
 				C72C87BA1559151F001EF047 /* mxml.xcodeproj */,
 				C72C870C1559123A001EF047 /* yajl.xcodeproj */,
@@ -513,6 +572,7 @@
 				C78B8DDE1558A69700B8E5CE /* texture.h in Headers */,
 				C78B8DE01558A69700B8E5CE /* tmx_map.h in Headers */,
 				C78B8DE21558A69700B8E5CE /* util.h in Headers */,
+				C7650D4B155B640B00A0C86D /* world.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +602,7 @@
 				C78B8E211558A75000B8E5CE /* texture.h in Headers */,
 				C78B8E231558A75000B8E5CE /* tmx_map.h in Headers */,
 				C78B8E251558A75000B8E5CE /* util.h in Headers */,
+				C7650D4C155B640B00A0C86D /* world.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,6 +620,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C7650D42155B629300A0C86D /* PBXTargetDependency */,
 				C72C87D31559153D001EF047 /* PBXTargetDependency */,
 				C72C87D11559153A001EF047 /* PBXTargetDependency */,
 				C72C87CF15591536001EF047 /* PBXTargetDependency */,
@@ -581,6 +643,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C7650D45155B62A100A0C86D /* PBXTargetDependency */,
 				C72C87D91559155E001EF047 /* PBXTargetDependency */,
 			);
 			name = "Dynamo - Mac";
@@ -607,6 +670,10 @@
 			productRefGroup = C75AFCF1153FA9F500FE8623 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = C7650D30155B628000A0C86D /* Products */;
+					ProjectRef = C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */;
+				},
 				{
 					ProductGroup = C72C87B115591517001EF047 /* Products */;
 					ProjectRef = C78B8E281558A82A00B8E5CE /* GLMath.xcodeproj */;
@@ -668,6 +735,27 @@
 			remoteRef = C72C87CA15591524001EF047 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		C7650D3A155B628000A0C86D /* ChipmunkDemo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = ChipmunkDemo.app;
+			remoteRef = C7650D39155B628000A0C86D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C7650D3C155B628000A0C86D /* libChipmunk.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libChipmunk.a;
+			remoteRef = C7650D3B155B628000A0C86D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C7650D3E155B628000A0C86D /* libChipmunk-iPhone.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libChipmunk-iPhone.a";
+			remoteRef = C7650D3D155B628000A0C86D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -706,6 +794,7 @@
 				C78B8DDD1558A69700B8E5CE /* texture.c in Sources */,
 				C78B8DDF1558A69700B8E5CE /* tmx_map.c in Sources */,
 				C78B8DE11558A69700B8E5CE /* util.c in Sources */,
+				C7650D49155B640B00A0C86D /* world.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,6 +822,7 @@
 				C78B8E201558A75000B8E5CE /* texture.c in Sources */,
 				C78B8E221558A75000B8E5CE /* tmx_map.c in Sources */,
 				C78B8E241558A75000B8E5CE /* util.c in Sources */,
+				C7650D4A155B640B00A0C86D /* world.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,6 +853,16 @@
 			isa = PBXTargetDependency;
 			name = Framework;
 			targetProxy = C72C87D81559155E001EF047 /* PBXContainerItemProxy */;
+		};
+		C7650D42155B629300A0C86D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ChipmunkStatic-iPhone";
+			targetProxy = C7650D41155B629300A0C86D /* PBXContainerItemProxy */;
+		};
+		C7650D45155B62A100A0C86D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ChipmunkStatic;
+			targetProxy = C7650D44155B62A100A0C86D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -798,11 +898,15 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Dynamo.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+					"DYNAMO_DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -835,6 +939,10 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Dynamo.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -876,7 +984,6 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Dynamo-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -919,7 +1026,6 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Dynamo-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

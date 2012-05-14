@@ -174,24 +174,23 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 
 #pragma mark - Primitive drawing (Debug drawing)
 
-void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill)
+void draw_rect(vec2_t aCenter, vec2_t aSize, float aAngle, vec4_t aColor, bool aShouldFill)
 {
-	aRect.size = vec2_floor(aRect.size);
+    vec2_t size = vec2_floor(aSize);
+	size = vec2_floor(size);
 	GLfloat vertices[4*2] = {
 		0.0f,      0.0f,
-		0.0f,      aRect.s.h,
-		aRect.s.w, aRect.s.h,
-		aRect.s.w, 0.0f
+		0.0f,      aSize.h,
+		size.w, size.h,
+		size.w, 0.0f
 	};
 	vec4_t colors[4] = { aColor, aColor, aColor, aColor };
 
 	// Translate&rotate the rectangle into it's target location
-	vec2_t center = { aRect.origin.x + (aRect.size.w/2.0f),  aRect.origin.y + (aRect.size.h/2.0f) };
-
 	matrix_stack_push(_renderer->worldMatrixStack);
-	matrix_stack_translate(_renderer->worldMatrixStack, floorf(center.x), floorf(center.y), 0.0);
+	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), 0.0);
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
-	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aRect.s.w/-2.0f), floorf(aRect.s.h/-2.0f), 0.0f);
+	matrix_stack_translate(_renderer->worldMatrixStack, floorf(size.w/-2.0f), floorf(size.h/-2.0f), 0.0f);
 
 	shader_makeActive(gColoredShader);
 
@@ -282,4 +281,52 @@ void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor)
 	glDrawArrays(GL_LINE_STRIP, 0, 2);
 
 	shader_makeInactive(gColoredShader);
+}
+
+#pragma mark - World shape debug drawing
+
+void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB)
+{
+    GLMFloat angle = aEntity->cpBody->a;
+    
+    if(aDrawBB) {
+        vec4_t bbColor = { 0,1,0,1 };
+        cpBB bb = aShape->cpShape->bb;
+        vec2_t verts[] = {
+            { bb.l, bb.b },
+            { bb.l, bb.t },
+            { bb.r, bb.t },
+            { bb.r, bb.b }
+        };
+        draw_polygon(4, verts, bbColor, false);
+    }
+    sranddev();
+    vec4_t shapeColor = { 0.4, 0.4, 0.8,1 };
+    switch(aShape->cpShape->klass_private->type) {
+        case CP_CIRCLE_SHAPE: {
+            cpCircleShape *circle = (cpCircleShape *)aShape->cpShape;
+            draw_circle(*(vec2_t*)&circle->tc, circle->r, 30, shapeColor, true);
+            break;
+        } case CP_POLY_SHAPE: {
+            cpPolyShape *poly = (cpPolyShape *)aShape->cpShape;
+            draw_polygon(poly->numVerts, (vec2_t*)poly->tVerts, shapeColor, true);
+            break;
+        } case CP_SEGMENT_SHAPE: {
+            cpSegmentShape *seg = (cpSegmentShape *)aShape->cpShape;
+            draw_lineSeg(*(vec2_t *)&seg->ta, *(vec2_t *)&seg->tb, shapeColor);
+            break;
+        } default:
+            break;
+    }
+}
+
+struct _DrawShapeHandlerCtx { WorldEntity_t *entity; bool shouldDrawBB; };
+void _drawShapeHandler(WorldShape_t *aShape, struct _DrawShapeHandlerCtx *aCtx)
+{
+    draw_worldShape(aShape, aCtx->entity, aCtx->shouldDrawBB);
+}
+void draw_worldEntity(WorldEntity_t *aEntity, bool aDrawBB)
+{
+    struct _DrawShapeHandlerCtx ctx = { aEntity, aDrawBB };
+    llist_apply(aEntity->shapes, (LinkedListApplier_t)_drawShapeHandler, &ctx);
 }

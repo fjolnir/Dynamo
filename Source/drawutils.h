@@ -5,17 +5,10 @@
 #include "texture_atlas.h"
 #include "shader.h"
 #include "renderer.h"
+#include "world.h"
 
 #ifndef __DRAWUTILS_H_
 #define __DRAWUTILS_H_
-
-// Rectangles (Origin: bottom left)
-union _rect_t {
-	float f[4];
-	struct { vec2_t o; vec2_t s; };
-	struct { vec2_t origin; vec2_t size; };
-};
-typedef union _rect_t rect_t;
 
 #define kDraw_defaultEllipseSubDivs 25
 
@@ -48,7 +41,7 @@ extern void draw_textureAtlas_getVertices(TextureAtlas_t *aAtlas, int aNumberOfT
 
 
 // Draws an untextured rectangle
-extern void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill);
+extern void draw_rect(vec2_t aCenter, vec2_t aSize, float aAngle, vec4_t aColor, bool aShouldFill);
 
 // Draws an untextured ellipse
 extern void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill);
@@ -61,4 +54,9 @@ extern void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor
 
 // Draws a line segment
 extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
+
+#pragma mark - World shape debug drawing
+
+extern void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB);
+extern void draw_worldEntity(WorldEntity_t *aEntity, bool aDrawBB);
 #endif

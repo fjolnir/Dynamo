@@ -22,7 +22,7 @@ typedef struct {
 	Obj_destructor_t destructor;
 } Class_t;
 
-// Add OBJ_GUTS at the beginning of a struct type in order to make it a valid, retainable object
+// Add _Obj_guts _guts; at the beginning of a struct type in order to make it a valid, retainable object
 typedef struct {
 	Class_t *class;
 	long referenceCount;
@@ -70,7 +70,7 @@ typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, void *aOwner,
 // For defining an object you wish to have rendered
 typedef struct _Renderable {
 	_Obj_guts _guts;
-    RenderableDisplayCallback_t displayCallback;
+	RenderableDisplayCallback_t displayCallback;
 } Renderable_t;
 extern Class_t Class_Renderable;
 
@@ -127,7 +127,7 @@ struct _GameTimer {
 	GLMFloat desiredInterval; // The minimum interval between updates
 	long ticks;
 	GameTimer_updateCallback_t updateCallback;
-    LinkedList_t *scheduledCallbacks;
+	LinkedList_t *scheduledCallbacks;
 };
 extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
@@ -193,40 +193,16 @@ typedef union _rect_t rect_t;
 
 extern void draw_init(Renderer_t *aDefaultRenderer);
 extern void draw_cleanup();
-
 extern void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t aTextureArea, vec4_t aColor, float aAngle, bool aFlipHorizontal, bool aFlipVertical);
-
-// Draws a specified portion of a texture onto a quad of the same size as the portion sampled
 extern void draw_texturePortion(vec3_t aCenter, Texture_t *aTexture, TextureRect_t aTextureArea, float aScale, float aAngle, bool aFlipHorizontal, bool aFlipVertical);
-
-// Draws a texture onto a quad of the same size
 extern void draw_texture(vec3_t aCenter, Texture_t *aTexture, float aScale, float aAngle, bool aFlipHorizontal, bool aFlipVertical);
-
-// Draws multiple subtextures at different locations using a texture atlas (In a single draw call, useful for performing
-// multiple simple draws, such as when drawing a tiled level)
-// aOffsets: an array of [x,y] offsets in the texture atlas (Cast to int)
-// aCenterPoints: an array of points to draw the tiles at
 extern void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints);
-
-// Generates the vertices used by the above function (use this if you want to store your vertices in a VBO when handling
-// larger meshes
 extern void draw_textureAtlas_getVertices(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints,
 	vec2_t **aoVertices, vec2_t **aoTexCoords, int *aoNumberOfVertices, GLuint **aoIndices, int *aoNumberOfIndices);
-
-
-// Draws an untextured rectangle
 extern void draw_rect(rect_t aRect, float aAngle, vec4_t aColor, bool aShouldFill);
-
-// Draws an untextured ellipse
 extern void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle, vec4_t aColor, bool aShouldFill);
-
-// Draws an untextured circle
 extern void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t aColor, bool aShouldFill);
-
-// Draws an untextured polygon
 extern void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool aShouldFill);
-
-// Draws a line segment
 extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
 
 // ----- Sprite
@@ -471,6 +447,86 @@ extern SoundManager_t *soundManager_create();
 extern bool soundManager_makeCurrent(SoundManager_t *aManager);
 
 //
+// Game world
+
+typedef struct _World World_t;
+typedef struct _WorldShape WorldShape_t;
+typedef struct _WorldEntity WorldEntity_t;
+
+typedef struct _World_ContactPointSet {
+	int count;
+	struct {
+		vec2_t point;
+		vec2_t normal;
+		GLMFloat depth;
+	} points[4];
+} World_ContactPointSet;
+
+typedef struct _World_CollisionInfo {
+	WorldEntity_t *a;
+	WorldEntity_t *b;
+	bool firstContact;
+	World_ContactPointSet contactPoints;
+	void *cpArbiter;
+} World_CollisionInfo;
+
+typedef void (*WorldEntity_CollisionHandler)(WorldEntity_t *aEntity, World_t *aWorld, World_CollisionInfo aCollisionInfo);
+typedef void (*WorldEntity_UpdateHandler)(WorldEntity_t *aEntity, World_t *aWorld);
+
+// A Game entity is an object that can be rendered and/or included in the physics simulation
+extern Class_t Class_WorldEntity;
+struct _WorldEntity {
+	_Obj_guts _guts;
+	Obj_t *owner; // Weak reference (Owner should retain the entity)
+	void *cpBody;
+	LinkedList_t *shapes;
+	WorldEntity_UpdateHandler updateHandler;
+	WorldEntity_CollisionHandler preCollisionHandler;
+	WorldEntity_CollisionHandler collisionHandler;
+	WorldEntity_CollisionHandler postCollisionHandler;
+};
+
+// A collision shape, attached to one and only one(!) entity
+struct _WorldShape {
+	_Obj_guts _guts;
+	void *cpShape;
+};
+
+struct _World {
+	_Obj_guts _guts;
+	void *cpSpace;
+	LinkedList_t *entities;
+	WorldEntity_t *staticEntity;
+};
+
+extern World_t *world_create(void);
+extern void world_step(World_t *aWorld, GameTimer_t *aTimer);
+extern void world_setGravity(World_t *aWorld, vec2_t aGravity);
+extern vec2_t world_gravity(World_t *aWorld);
+extern void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity);
+extern void world_addStaticEntity(World_t *aWorld, WorldEntity_t *aEntity);
+
+extern vec2_t worldEnt_location(void *aEntity);
+extern WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat aMomentum);
+extern void worldEnt_setLocation(WorldEntity_t *aEntity, vec2_t aLocation);
+extern GLMFloat worldEnt_angle(WorldEntity_t *aEntity);
+extern void worldEnt_setAngle(WorldEntity_t *aEntity, GLMFloat aAngle);
+extern void worldEnt_addShape(WorldEntity_t *aEntity, WorldShape_t *aShape);
+
+extern WorldShape_t *worldShape_createCircle(vec2_t aCenter, GLMFloat aRadius);
+extern WorldShape_t *worldShape_createSegment(vec2_t a, vec2_t b, GLMFloat aThickness);
+extern WorldShape_t *worldShape_createBox(vec2_t aSize);
+// Takes an array of counter clockwise winded vertices
+extern WorldShape_t *worldShape_createPoly(unsigned aVertCount, vec2_t *aVerts);
+
+extern GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLMFloat aOuterRadius, vec2_t aOffset);
+extern GLMFloat world_momentForSegment(GLMFloat aMass, vec2_t a, vec2_t b);
+extern GLMFloat world_momentForPoly(GLMFloat aMass, unsigned aVertCount, vec2_t *aVerts, vec2_t aOffset);
+extern GLMFloat world_momentForBox(GLMFloat aMass, vec2_t aSize);
+extern void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB);
+extern void draw_worldEntity(WorldEntity_t *aEntity, bool aDrawBB);
+
+//
 // Utils
 extern bool util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen);
 
@@ -570,7 +626,6 @@ end
 
 --
 -- Sprites
---
 ffi.metatype("Sprite_t", {
 	__index = {
 		step = lib.sprite_step
@@ -592,7 +647,6 @@ end
 
 --
 -- The Renderer
-
 ffi.metatype("Renderer_t", {
 	__index = {
 		display = lib.renderer_display,
@@ -602,7 +656,7 @@ ffi.metatype("Renderer_t", {
 		deleteRenderable = lib.renderer_deleteRenderable,
 		handleResize = function(self, viewport)
 			self.viewportSize = viewport
-			self.projectionMatrixStack:pushItem(mat4_ortho(0, viewport.w, viewport.h, 0, -1, 1));
+			self.projectionMatrixStack:pushItem(mat4_ortho(0, viewport.w, 0, viewport.h, -1, 1));
 		end
 	}
 })
@@ -724,8 +778,8 @@ elseif dynamo.platform == dynamo.platforms.android then
 		typedef int32_t clockid_t;
 		typedef long time_t;
 		struct timespec {
-			time_t   tv_sec;        /* seconds */
-			long     tv_nsec;       /* nanoseconds */
+			time_t   tv_sec;  /* seconds */
+			long     tv_nsec; /* nanoseconds */
 		};
 		int clock_gettime(clockid_t clk_id, struct timespec *tp);
 	]]
@@ -878,6 +932,84 @@ end
 
 
 --
+-- Game world
+
+ffi.metatype("World_t", {
+	__index = {
+		addEntity = lib.world_addEntity,
+		gravity = lib.world_gravity,
+		step = lib.world_step,
+		momentForCircle = lib.world_momentForCircle,
+		momentForSegment = lib.world_momentForSegment,
+		momentForPoly = lib.world_momentForPoly,
+		momentForBox = lib.world_momentForBox,
+		drawShape = lib.draw_worldShape,
+		drawEntity = lib.draw_worldEntity
+	},
+	__newindex = function(self, key, val)
+		if key == "gravity" then
+			lib.world_setGravity(self, val)
+		end
+	end
+})
+
+ffi.metatype("WorldEntity_t", {
+	__index = {
+		location = lib.worldEnt_location,
+		--location = function(self)
+			--print("passed self: ", self)
+			--return lib.worldEnt_location(self)
+		--end,
+		angle = lib.worldEnt_angle,
+		addShape = lib.worldEnt_addShape
+	},
+	__newindex = function(self, key, val)
+		if key == "location" then
+			lib.worldEnt_setLocation(self, val)
+		elseif key == "angle" then
+			lib.worldEnt_setAngle(self, val)
+		end
+	end
+})
+
+local function _createWorld()
+	return _obj_addToGC(lib.world_create())
+end
+
+function dynamo.createEntity(world, owner, mass, momentum, shapes)
+	shapes = shapes or {}
+	local ret = lib.worldEnt_create(world, owner, mass, momentum)
+	for i,shape in ipairs(shapes) do
+		ret:addShape(shape)
+	end
+	return _obj_addToGC(ret)
+end
+
+function dynamo.createCircleShape(center, radius)
+	local ret = lib.worldShape_createCircle(center, radius)
+	return _obj_addToGC(ret)
+end
+
+function dynamo.createSegmentShape(a, b, thickness)
+	local ret = lib.worldShape_createSegment(a, b, (thickness or 1))
+	return _obj_addToGC(ret)
+end
+
+function dynamo.createBoxShape(size)
+	local ret = lib.worldShape_createBox(size)
+	return _obj_addToGC(ret)
+end
+
+function dynamo.createPolyShape(vertices)
+	if #vertices < 3 then
+		error("Too few vertices to create polygon shape")
+	end
+	local ret = lib.worldShape_createPoly(#vertices, vertices)
+	return _obj_addToGC(ret)
+end
+
+
+--
 -- Lifecycle/HighLevelInterface functions
 
 dynamo.initialized = false
@@ -897,6 +1029,9 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 
 	dynamo.soundManager = _createSoundManager()
 	lib.soundManager_makeCurrent(dynamo.soundManager)
+
+	dynamo.world = _createWorld()
+	dynamo.world.gravity = vec2(0,-100)
 
 	return dynamo.renderer, dynamo.timer
 end
@@ -933,6 +1068,7 @@ postPanEvent = dynamo.postPanEvent
 function dynamo.cycle()
 	dynamo.inputManager:postActiveEvents()
 	dynamo.timer:step(dynamo.time())
+	dynamo.world:step(dynamo.timer)
 	dynamo.renderer:display(dynamo.timer.timeSinceLastUpdate, dynamo.timer:interpolation())
 end
 

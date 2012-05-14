@@ -7,3 +7,4 @@
 #include "util.h"
 #include "sound.h"
 #include "drawutils.h"
+#include "world.h"
