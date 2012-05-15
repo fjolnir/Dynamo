@@ -505,19 +505,28 @@ extern void world_setGravity(World_t *aWorld, vec2_t aGravity);
 extern vec2_t world_gravity(World_t *aWorld);
 extern void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity);
 extern void world_addStaticEntity(World_t *aWorld, WorldEntity_t *aEntity);
+extern WorldEntity_t *world_pointQuery(World_t *aWorld, vec2_t aPoint);
 
-extern vec2_t worldEnt_location(void *aEntity);
+extern vec2_t worldEnt_location(WorldEntity_t *aEntity);
 extern WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat aMomentum);
 extern void worldEnt_setLocation(WorldEntity_t *aEntity, vec2_t aLocation);
 extern GLMFloat worldEnt_angle(WorldEntity_t *aEntity);
 extern void worldEnt_setAngle(WorldEntity_t *aEntity, GLMFloat aAngle);
 extern void worldEnt_addShape(WorldEntity_t *aEntity, WorldShape_t *aShape);
+extern void worldEnt_applyForce(WorldEntity_t *aEntity, vec2_t aForce, vec2_t aOffset);
+extern void worldEnt_applyImpulse(WorldEntity_t *aEntity, vec2_t aImpulse, vec2_t aOffset);
+extern vec2_t worldEnt_velocity(WorldEntity_t *aEntity);
+extern void worldEnt_setVelocity(WorldEntity_t *aEntity, vec2_t aVelocity);
 
 extern WorldShape_t *worldShape_createCircle(vec2_t aCenter, GLMFloat aRadius);
 extern WorldShape_t *worldShape_createSegment(vec2_t a, vec2_t b, GLMFloat aThickness);
 extern WorldShape_t *worldShape_createBox(vec2_t aSize);
 // Takes an array of counter clockwise winded vertices
 extern WorldShape_t *worldShape_createPoly(unsigned aVertCount, vec2_t *aVerts);
+extern GLMFloat worldShape_friction(WorldShape_t *aEntity);
+extern void worldShape_setFriction(WorldShape_t *aEntity, GLMFloat aVal);
+extern GLMFloat worldShape_elasticity(WorldShape_t *aEntity);
+extern void worldShape_setElasticity(WorldShape_t *aEntity, GLMFloat aVal);
 
 extern GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLMFloat aOuterRadius, vec2_t aOffset);
 extern GLMFloat world_momentForSegment(GLMFloat aMass, vec2_t a, vec2_t b);
@@ -944,7 +953,8 @@ ffi.metatype("World_t", {
 		momentForPoly = lib.world_momentForPoly,
 		momentForBox = lib.world_momentForBox,
 		drawShape = lib.draw_worldShape,
-		drawEntity = lib.draw_worldEntity
+		drawEntity = lib.draw_worldEntity,
+		pointQuery = lib.world_pointQuery
 	},
 	__newindex = function(self, key, val)
 		if key == "gravity" then
@@ -961,16 +971,36 @@ ffi.metatype("WorldEntity_t", {
 			--return lib.worldEnt_location(self)
 		--end,
 		angle = lib.worldEnt_angle,
-		addShape = lib.worldEnt_addShape
+		velocity = lib.worldEnt_velocity,
+		addShape = lib.worldEnt_addShape,
+		applyForce = lib.worldEnt_applyForce,
+		applyImpulse = lib.worldEnt_applyImpulse
 	},
 	__newindex = function(self, key, val)
 		if key == "location" then
 			lib.worldEnt_setLocation(self, val)
 		elseif key == "angle" then
 			lib.worldEnt_setAngle(self, val)
+		elseif key == "velocity" then
+			lib.worldEnt_setVelocity(self, val)
 		end
 	end
 })
+
+ffi.metatype("WorldShape_t", {
+	__index = {
+		friction = lib.worldShape_friction,
+		elasticity = lib.worldShape_elasticity
+	},
+	__newindex = function(self, key, val)
+		if key == "friction" then
+			lib.worldShape_setFriction(self, val)
+		elseif key == "elasticity" then
+			lib.worldShape_setElasticity(self, val)
+		end
+	end
+})
+
 
 local function _createWorld()
 	return _obj_addToGC(lib.world_create())
@@ -1031,7 +1061,7 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	lib.soundManager_makeCurrent(dynamo.soundManager)
 
 	dynamo.world = _createWorld()
-	dynamo.world.gravity = vec2(0,-100)
+	dynamo.world.gravity = vec2(0,-980)
 
 	return dynamo.renderer, dynamo.timer
 end

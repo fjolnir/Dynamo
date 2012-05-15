@@ -64,12 +64,18 @@ extern void world_step(World_t *aWorld, GameTimer_t *aTimer);
 extern void world_setGravity(World_t *aWorld, vec2_t aGravity);
 extern vec2_t world_gravity(World_t *aWorld);
 extern void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity);
+extern void world_removeEntity(World_t *aWorld, WorldEntity_t *aEntity);
+extern WorldEntity_t *world_pointQuery(World_t *aWorld, vec2_t aPoint);
 
 extern WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat aMomentum);
 extern vec2_t worldEnt_location(WorldEntity_t *aEntity);
 extern void worldEnt_setLocation(WorldEntity_t *aEntity, vec2_t aLocation);
 extern GLMFloat worldEnt_angle(WorldEntity_t *aEntity);
 extern void worldEnt_setAngle(WorldEntity_t *aEntity, GLMFloat aAngle);
+extern void worldEnt_applyForce(WorldEntity_t *aEntity, vec2_t aForce, vec2_t aOffset);
+extern void worldEnt_applyImpulse(WorldEntity_t *aEntity, vec2_t aImpulse, vec2_t aOffset);
+extern vec2_t worldEnt_velocity(WorldEntity_t *aEntity);
+extern void worldEnt_setVelocity(WorldEntity_t *aEntity, vec2_t aVelocity);
 extern void worldEnt_addShape(WorldEntity_t *aEntity, WorldShape_t *aShape);
 
 
@@ -78,6 +84,10 @@ extern WorldShape_t *worldShape_createSegment(vec2_t a, vec2_t b, GLMFloat aThic
 extern WorldShape_t *worldShape_createBox(vec2_t aSize);
 // Takes an array of counter clockwise winded vertices
 extern WorldShape_t *worldShape_createPoly(unsigned aVertCount, vec2_t *aVerts);
+extern GLMFloat worldShape_friction(WorldShape_t *aEntity);
+extern void worldShape_setFriction(WorldShape_t *aEntity, GLMFloat aVal);
+extern GLMFloat worldShape_elasticity(WorldShape_t *aEntity);
+extern void worldShape_setElasticity(WorldShape_t *aEntity, GLMFloat aVal);
 
 extern GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLMFloat aOuterRadius, vec2_t aOffset);
 extern GLMFloat world_momentForSegment(GLMFloat aMass, vec2_t a, vec2_t b);

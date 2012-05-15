@@ -881,12 +881,14 @@
 		C75AFCE7153FA9D800FE8623 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_CFLAGS = "-fno-reg-struct-return";
 			};
 			name = Debug;
 		};
 		C75AFCE8153FA9D800FE8623 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_CFLAGS = "-fno-reg-struct-return";
 			};
 			name = Release;
 		};

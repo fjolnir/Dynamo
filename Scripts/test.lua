@@ -9,23 +9,31 @@ local gl = require("OpenGLES")
 dynamo.init(vec2(640, 980), 60)
 gl.glClearColor(0,0,0,0)
 
-local box = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForBox(1, vec2(200,200)), {
-	dynamo.createBoxShape(vec2(200,200))
-})
-box.location = vec2(110, 400)
+local boxShape = dynamo.createBoxShape(vec2(200,100))
+boxShape.elasticity = 0.3
+local box = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForBox(1, vec2(200,100)), {boxShape})
+box.location = vec2(110, 700)
 dynamo.world:addEntity(box)
-dynamo.log("Created box")
+dynamo.log("Created box", tostring(box))
 
-dynamo.world.staticEntity:addShape(dynamo.createSegmentShape(vec2(0,200), vec2(400, 0)))
+local circle = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForCircle(1, 0, 70, vec2_zero), {
+	dynamo.createCircleShape(vec2(0, 0), 70)
+})
+circle.location = vec2(200, 500)
+dynamo.world:addEntity(circle)
+
+local seg1 = dynamo.createSegmentShape(vec2(0,200), vec2(400, 0))
+seg1.elasticity = 0.4
+dynamo.world.staticEntity:addShape(seg1)
 dynamo.world.staticEntity:addShape(dynamo.createSegmentShape(vec2(400,0), vec2(800, 200)))
-
-
-dynamo.log("Created static box")
+dynamo.world.staticEntity:addShape(dynamo.createSegmentShape(vec2(0,0), vec2(0, 980)))
+dynamo.world.staticEntity:addShape(dynamo.createSegmentShape(vec2(0,0), vec2(640, 0)))
+dynamo.world.staticEntity:addShape(dynamo.createSegmentShape(vec2(0,980), vec2(640, 980)))
+dynamo.world.staticEntity:addShape(dynamo.createSegmentShape(vec2(640,0), vec2(640, 980)))
 
 dynamo.renderer:pushRenderable(
 	dynamo.renderable(function(renderer, renderable, timeSinceLastFrame, interpolation)
 		local loc = box:location()
-		print(loc.x, loc.y)
 		dynamo.world.drawEntity(box, true)
 		dynamo.world.drawEntity(dynamo.world.staticEntity, true)
 	end)
@@ -42,6 +50,13 @@ dynamo.inputManager:addObserver({
 		location = location[0] -- Dereference the pointer
 		if lastPos == nil then
 			lastPos = { x=location.x, y=location.y }
+		end
+
+		local entity = dynamo.world:pointQuery(location)
+		print(entity)
+		if entity ~= nil then
+			local delta = vec2((location.x - lastPos.x)*4, (location.y - lastPos.y)*4)
+			entity.location = location
 		end
 
 		if state == dynamo.kInputState_down then

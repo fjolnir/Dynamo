@@ -71,6 +71,8 @@ void world_step(World_t *aWorld, GameTimer_t *aTimer)
 
 void world_destroy(World_t *aWorld)
 {
+    llist_apply(aWorld->entities, (LinkedListApplier_t)&_removeEntityFromWorld, aWorld);
+    world_removeEntity(aWorld, aWorld->staticEntity);
     cpSpaceFree(aWorld->cpSpace), aWorld->cpSpace = NULL;
     obj_release(aWorld->entities);
     obj_release(aWorld->staticEntity);
@@ -83,6 +85,12 @@ void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity)
     llist_apply(aEntity->shapes, (LinkedListApplier_t)&_addShapeToSpace, aWorld);
 }
 
+void world_removeEntity(World_t *aWorld, WorldEntity_t *aEntity)
+{
+    llist_apply(aEntity->shapes, (LinkedListApplier_t)&_removeShapeFromSpace, aWorld);
+    llist_deleteValue(aWorld->entities, aEntity);
+}
+
 void world_setGravity(World_t *aWorld, vec2_t aGravity)
 {
     cpSpaceSetGravity(aWorld->cpSpace, VEC2_TO_CPV(aGravity));
@@ -91,6 +99,15 @@ vec2_t world_gravity(World_t *aWorld)
 {
     cpVect gravity = cpSpaceGetGravity(aWorld->cpSpace);
     return CPV_TO_VEC2(gravity);
+}
+
+WorldEntity_t *world_pointQuery(World_t *aWorld, vec2_t aPoint)
+{
+    cpShape *cpShape = cpSpacePointQueryFirst(aWorld->cpSpace, VEC2_TO_CPV(aPoint), CP_ALL_LAYERS, CP_NO_GROUP);
+    if(!cpShape)
+        return NULL;
+    WorldEntity_t *entity = cpShape->body->data;
+    return entity;
 }
 
 
@@ -135,6 +152,25 @@ void worldEnt_setAngle(WorldEntity_t *aEntity, GLMFloat aAngle)
     cpBodySetAngle(aEntity->cpBody, aAngle);
 }
 
+void worldEnt_applyForce(WorldEntity_t *aEntity, vec2_t aForce, vec2_t aOffset)
+{
+    cpBodyApplyForce(aEntity->cpBody, VEC2_TO_CPV(aForce), VEC2_TO_CPV(aOffset));
+}
+void worldEnt_applyImpulse(WorldEntity_t *aEntity, vec2_t aImpulse, vec2_t aOffset)
+{
+    cpBodyApplyImpulse(aEntity->cpBody, VEC2_TO_CPV(aImpulse), VEC2_TO_CPV(aOffset));
+}
+
+vec2_t worldEnt_velocity(WorldEntity_t *aEntity)
+{
+    cpVect vel = cpBodyGetVel(aEntity->cpBody);
+    return CPV_TO_VEC2(vel);
+}
+void worldEnt_setVelocity(WorldEntity_t *aEntity, vec2_t aVelocity)
+{
+    cpBodySetVel(aEntity->cpBody, VEC2_TO_CPV(aVelocity));
+}
+
 void worldEnt_addShape(WorldEntity_t *aEntity, WorldShape_t *aShape)
 {
     cpShapeSetBody(aShape->cpShape, aEntity->cpBody);
@@ -174,10 +210,29 @@ WorldShape_t *worldShape_createPoly(unsigned aVertCount, vec2_t *aVerts)
     return out;
 }
 
-static void worldShape_destroy(WorldShape_t *aEntity)
+void worldShape_destroy(WorldShape_t *aEntity)
 {
     cpShapeFree(aEntity->cpShape);
 }
+
+GLMFloat worldShape_friction(WorldShape_t *aEntity)
+{
+    return cpShapeGetFriction(aEntity->cpShape);
+}
+void worldShape_setFriction(WorldShape_t *aEntity, GLMFloat aVal)
+{
+    cpShapeSetFriction(aEntity->cpShape, aVal);
+}
+
+GLMFloat worldShape_elasticity(WorldShape_t *aEntity)
+{
+    return cpShapeGetElasticity(aEntity->cpShape);
+}
+void worldShape_setElasticity(WorldShape_t *aEntity, GLMFloat aVal)
+{
+    cpShapeSetElasticity(aEntity->cpShape, aVal);
+}
+
 
 GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLMFloat aOuterRadius, vec2_t aOffset)
 {
@@ -255,8 +310,9 @@ static void _removeShapeFromSpace(WorldShape_t *aShape, World_t *aWorld)
 }
 static void _removeEntityFromWorld(WorldEntity_t *aEntity, World_t *aWorld)
 {
-    llist_apply(aEntity->shapes, (LinkedListApplier_t)_removeShapeFromSpace, aWorld);
-    cpSpaceRemoveBody(aWorld->cpSpace, aEntity->cpBody);
+    world_removeEntity(aWorld, aEntity);
+    if(aEntity != aWorld->staticEntity)
+        cpSpaceRemoveBody(aWorld->cpSpace, aEntity->cpBody);
 }
 
 static void _callEntityUpdateCallback(WorldEntity_t *aEntity, World_t *aWorld)
