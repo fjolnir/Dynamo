@@ -240,10 +240,24 @@ void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle
 	matrix_stack_pop(_renderer->worldMatrixStack);
 }
 
-void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t aColor, bool aShouldFill)
+void draw_circle(vec2_t aCenter, float aRadius, int aSubdivisions, vec4_t aColor, bool aShouldFill)
 {
-	vec2_t size = { radius, radius };
+	vec2_t size = { aRadius, aRadius };
 	draw_ellipse(aCenter, size, aSubdivisions, 0.0f, aColor, aShouldFill);
+}
+void draw_circleShowingAngle(vec2_t aCenter, float aRadius, float aAngle, int aSubdivisions, vec4_t aColor, bool aShouldFill)
+{
+    draw_circle(aCenter, aRadius, aSubdivisions, aColor, aShouldFill);
+    
+    vec3_t edgePoint = vec3_create(aRadius, 0, 0);
+    quat_t quat = quat_createf(0, 0, 1, aAngle);
+    edgePoint = quat_rotateVec3(quat, edgePoint);
+    draw_lineSeg(aCenter, vec2_add(aCenter, edgePoint.xy), vec4_create(1, 1, 1, 1));
+}
+
+void draw_point(vec2_t aLocation, vec4_t aColor)
+{
+    draw_circle(aLocation, 4, 6, aColor, true);
 }
 
 void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool aShouldFill)
@@ -285,8 +299,7 @@ void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor)
 #pragma mark - World shape debug drawing
 
 void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB)
-{
-//    GLMFloat angle = aEntity->cpBody->a;
+{   
     if(aDrawBB) {
         vec4_t bbColor = { 0,1,0,1 };
         cpBB bb = aShape->cpShape->bb;
@@ -302,8 +315,9 @@ void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB)
     vec4_t shapeColor = { 0.4, 0.4, 0.8,1 };
     switch(aShape->cpShape->klass_private->type) {
         case CP_CIRCLE_SHAPE: {
+            GLMFloat angle = aEntity->cpBody->a;
             cpCircleShape *circle = (cpCircleShape *)aShape->cpShape;
-            draw_circle(*(vec2_t*)&circle->tc, circle->r, 30, shapeColor, true);
+            draw_circleShowingAngle(*(vec2_t*)&circle->tc, circle->r, angle, 30, shapeColor, true);
             break;
         } case CP_POLY_SHAPE: {
             cpPolyShape *poly = (cpPolyShape *)aShape->cpShape;
@@ -318,13 +332,63 @@ void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB)
     }
 }
 
-struct _DrawShapeHandlerCtx { WorldEntity_t *entity; bool shouldDrawBB; };
-void _drawShapeHandler(WorldShape_t *aShape, struct _DrawShapeHandlerCtx *aCtx)
+struct _World_drawCtx { WorldEntity_t *entity; bool shouldDrawBB; };
+static void _drawShapeHandler(WorldShape_t *aShape, struct _World_drawCtx *aCtx)
 {
     draw_worldShape(aShape, aCtx->entity, aCtx->shouldDrawBB);
 }
 void draw_worldEntity(WorldEntity_t *aEntity, bool aDrawBB)
 {
-    struct _DrawShapeHandlerCtx ctx = { aEntity, aDrawBB };
+    struct _World_drawCtx ctx = { aEntity, aDrawBB };
     llist_apply(aEntity->shapes, (LinkedListApplier_t)_drawShapeHandler, &ctx);
+}
+
+static void _drawConstraint(cpConstraint *constraint, void *data)
+{
+    cpBody *body_a = constraint->a;
+	cpBody *body_b = constraint->b;
+    
+    vec4_t color = vec4_create(1, 0, 0, 1);
+    const cpConstraintClass *klass = constraint->klass_private;
+	if(klass == cpPinJointGetClass()){
+		cpPinJoint *joint = (cpPinJoint *)constraint;
+        
+		cpVect a = cpvadd(body_a->p, cpvrotate(joint->anchr1, body_a->rot));
+		cpVect b = cpvadd(body_b->p, cpvrotate(joint->anchr2, body_b->rot));
+        draw_lineSeg(vec2_create(a.x, a.y), vec2_create(b.x, b.y), color);
+	} else if(klass == cpSlideJointGetClass()){
+		cpSlideJoint *joint = (cpSlideJoint *)constraint;
+        
+		cpVect a = cpvadd(body_a->p, cpvrotate(joint->anchr1, body_a->rot));
+		cpVect b = cpvadd(body_b->p, cpvrotate(joint->anchr2, body_b->rot));
+        draw_lineSeg(vec2_create(a.x, a.y), vec2_create(b.x, b.y), color);
+	} else if(klass == cpPivotJointGetClass()){
+		cpPivotJoint *joint = (cpPivotJoint *)constraint;
+		cpVect a = cpvadd(body_a->p, cpvrotate(joint->anchr1, body_a->rot));
+		cpVect b = cpvadd(body_b->p, cpvrotate(joint->anchr2, body_b->rot));
+        draw_point(vec2_create(a.x, a.y), color);
+        draw_point(vec2_create(b.x, b.y), color);
+	} else if(klass == cpGrooveJointGetClass()){
+		cpGrooveJoint *joint = (cpGrooveJoint *)constraint;
+        
+		cpVect a = cpvadd(body_a->p, cpvrotate(joint->grv_a, body_a->rot));
+		cpVect b = cpvadd(body_a->p, cpvrotate(joint->grv_b, body_a->rot));
+		cpVect c = cpvadd(body_b->p, cpvrotate(joint->anchr2, body_b->rot));
+        draw_lineSeg(vec2_create(a.x, a.y), vec2_create(b.x, b.y), color);
+        draw_lineSeg(vec2_create(b.x, b.y), vec2_create(c.x, c.y), color);
+	} else if(klass == cpDampedSpringGetClass()){
+		//drawSpring((cpDampedSpring *)constraint, body_a, body_b);
+	}
+}
+
+static void _drawEntityHandler(WorldEntity_t *aEntity, struct _World_drawCtx *aCtx)
+{
+    draw_worldEntity(aEntity, aCtx->shouldDrawBB);
+}
+void draw_world(World_t *aWorld, bool aDrawBB)
+{
+    draw_worldEntity(aWorld->staticEntity, aDrawBB);
+    struct _World_drawCtx ctx = { NULL, aDrawBB };
+    llist_apply(aWorld->entities, (LinkedListApplier_t)&_drawEntityHandler, &ctx);
+    cpSpaceEachConstraint(aWorld->cpSpace, &_drawConstraint, NULL);
 }

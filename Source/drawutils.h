@@ -57,6 +57,7 @@ extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
 
 #pragma mark - World shape debug drawing
 
+extern void draw_world(World_t *aWorld, bool aDrawBB);
 extern void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB);
 extern void draw_worldEntity(WorldEntity_t *aEntity, bool aDrawBB);
 #endif
