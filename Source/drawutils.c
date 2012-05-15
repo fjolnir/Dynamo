@@ -286,8 +286,7 @@ void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor)
 
 void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB)
 {
-    GLMFloat angle = aEntity->cpBody->a;
-    
+//    GLMFloat angle = aEntity->cpBody->a;
     if(aDrawBB) {
         vec4_t bbColor = { 0,1,0,1 };
         cpBB bb = aShape->cpShape->bb;
