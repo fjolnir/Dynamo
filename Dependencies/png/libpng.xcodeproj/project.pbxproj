@@ -245,6 +245,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				DSTROOT = /tmp/libpng.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				OTHER_CFLAGS = "-fno-reg-struct-return";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
@@ -257,6 +258,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				DSTROOT = /tmp/libpng.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				OTHER_CFLAGS = "-fno-reg-struct-return";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
