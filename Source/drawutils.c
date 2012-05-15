@@ -179,19 +179,18 @@ void draw_rect(vec2_t aCenter, vec2_t aSize, float aAngle, vec4_t aColor, bool a
     vec2_t size = vec2_floor(aSize);
 	size = vec2_floor(size);
 	GLfloat vertices[4*2] = {
-		0.0f,      0.0f,
-		0.0f,      aSize.h,
-		size.w, size.h,
-		size.w, 0.0f
+		-size.w/2.0, -aSize.h/2.0,
+		-size.w/2.0,  aSize.h/2.0,
+		 size.w/2.0,  size.h/2.0,
+		 size.w/2.0, -aSize.h/2.0
 	};
 	vec4_t colors[4] = { aColor, aColor, aColor, aColor };
 
 	// Translate&rotate the rectangle into it's target location
 	matrix_stack_push(_renderer->worldMatrixStack);
-	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), 0.0);
 	matrix_stack_rotate(_renderer->worldMatrixStack, aAngle, 0.0f, 0.0f, 1.0f);
-	matrix_stack_translate(_renderer->worldMatrixStack, floorf(size.w/-2.0f), floorf(size.h/-2.0f), 0.0f);
-
+	matrix_stack_translate(_renderer->worldMatrixStack, floorf(aCenter.x), floorf(aCenter.y), 0.0);
+    
 	shader_makeActive(gColoredShader);
 
 	shader_updateMatrices(gColoredShader, _renderer);
