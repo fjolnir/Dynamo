@@ -29,7 +29,7 @@ typedef struct _World_CollisionInfo {
     cpArbiter *cpArbiter;
 } World_CollisionInfo;
 
-typedef void (*WorldEntity_CollisionHandler)(WorldEntity_t *aEntity, World_t *aWorld, World_CollisionInfo aCollisionInfo);
+typedef void (*WorldEntity_CollisionHandler)(WorldEntity_t *aEntity, World_t *aWorld, World_CollisionInfo *aCollisionInfo);
 typedef void (*WorldEntity_UpdateHandler)(WorldEntity_t *aEntity, World_t *aWorld);
 
 // A Game entity is an object that can be rendered and/or included in the physics simulation

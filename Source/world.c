@@ -274,9 +274,9 @@ static int collisionWillBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void 
     World_CollisionInfo collInfo = _collisionInfoForArbiter(aArbiter);
     World_t *world = aSpace->data;
     if(collInfo.a->preCollisionHandler)
-        collInfo.a->preCollisionHandler(collInfo.a, world, collInfo);
+        collInfo.a->preCollisionHandler(collInfo.a, world, &collInfo);
     if(collInfo.b->preCollisionHandler)
-        collInfo.b->preCollisionHandler(collInfo.b, world, collInfo);
+        collInfo.b->preCollisionHandler(collInfo.b, world, &collInfo);
     return true;
 }
 static void collisionDidBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void *aData)
@@ -284,18 +284,18 @@ static void collisionDidBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void 
     World_CollisionInfo collInfo = _collisionInfoForArbiter(aArbiter);
     World_t *world = aSpace->data;
     if(collInfo.a->collisionHandler)
-        collInfo.a->collisionHandler(collInfo.a, world, collInfo);
+        collInfo.a->collisionHandler(collInfo.a, world, &collInfo);
     if(collInfo.b->collisionHandler)
-        collInfo.b->collisionHandler(collInfo.b, world, collInfo);
+        collInfo.b->collisionHandler(collInfo.b, world, &collInfo);
 }
 static void collisionDidEnd(cpArbiter *aArbiter, struct cpSpace *aSpace, void *aData)
 {
     World_CollisionInfo collInfo = _collisionInfoForArbiter(aArbiter);
     World_t *world = aSpace->data;
     if(collInfo.a->postCollisionHandler)
-        collInfo.a->postCollisionHandler(collInfo.a, world, collInfo);
+        collInfo.a->postCollisionHandler(collInfo.a, world, &collInfo);
     if(collInfo.b->postCollisionHandler)
-        collInfo.b->postCollisionHandler(collInfo.b, world, collInfo);
+        collInfo.b->postCollisionHandler(collInfo.b, world, &collInfo);
 }
 
 #pragma mark -
