@@ -35,6 +35,8 @@ dynamo.renderer:pushRenderable(
 	dynamo.renderable(function(renderer, renderable, timeSinceLastFrame, interpolation)
 		local loc = box:location()
 		dynamo.world.drawEntity(box, true)
+		dynamo.world.drawEntity(circle, true)
+
 		dynamo.world.drawEntity(dynamo.world.staticEntity, true)
 	end)
 )
