@@ -499,6 +499,27 @@ struct _World {
 	WorldEntity_t *staticEntity;
 };
 
+typedef enum {
+    kWorldJointType_Pin,
+    kWorldJointType_Slide,
+    kWorldJointType_Pivot,
+    kWorldJointType_Groove,
+    kWorldJointType_DampedSpring,
+    kWorldJointType_DampedRotarySpring,
+    kWorldJointType_RotaryLimit,
+    kWorldJointType_Ratchet,
+    kWorldJointType_Gear,
+    kWorldJointType_SimpleMotor
+} WorldJointType_t;
+
+extern Class_t Class_WorldConstraint;
+typedef struct _WorldConstraint {
+    World_t *world; // Weak
+    WorldEntity_t *a, *b;
+    WorldJointType_t type;
+    void *cpConstraint;
+} WorldConstraint_t;
+
 extern World_t *world_create(void);
 extern void world_step(World_t *aWorld, GameTimer_t *aTimer);
 extern void world_setGravity(World_t *aWorld, vec2_t aGravity);
@@ -532,6 +553,19 @@ extern GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLM
 extern GLMFloat world_momentForSegment(GLMFloat aMass, vec2_t a, vec2_t b);
 extern GLMFloat world_momentForPoly(GLMFloat aMass, unsigned aVertCount, vec2_t *aVerts, vec2_t aOffset);
 extern GLMFloat world_momentForBox(GLMFloat aMass, vec2_t aSize);
+
+extern WorldConstraint_t *worldConstr_createPinJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB);
+extern WorldConstraint_t *worldConstr_createSlideJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB, GLMFloat minDist, GLMFloat maxDist);
+extern WorldConstraint_t *worldConstr_createPivotJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aPivot);
+extern WorldConstraint_t *worldConstr_createGrooveJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aGrooveStart, vec2_t aGrooveEnd, vec2_t aAnchorB);
+extern WorldConstraint_t *worldConstr_createDampedSpringJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB, GLMFloat aRestLength, GLMFloat aStiffness, GLMFloat aDamping);
+extern WorldConstraint_t *worldConstr_createDampedRotarySpringJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat restAngle, GLMFloat aStiffness, GLMFloat aDamping);
+extern WorldConstraint_t *worldConstr_createRotaryLimitJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aMinAngle, GLMFloat aMaxAngle);
+extern WorldConstraint_t *worldConstr_createRatchetJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatchet);
+extern WorldConstraint_t *worldConstr_createGearJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatio);
+extern WorldConstraint_t *worldConstr_createSimpleMotorJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aRate);
+
+extern void draw_world(World_t *aWorld, bool aDrawBB);
 extern void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB);
 extern void draw_worldEntity(WorldEntity_t *aEntity, bool aDrawBB);
 
@@ -952,6 +986,7 @@ ffi.metatype("World_t", {
 		momentForSegment = lib.world_momentForSegment,
 		momentForPoly = lib.world_momentForPoly,
 		momentForBox = lib.world_momentForBox,
+		draw = lib.draw_world,
 		drawShape = lib.draw_worldShape,
 		drawEntity = lib.draw_worldEntity,
 		pointQuery = lib.world_pointQuery
@@ -974,7 +1009,17 @@ ffi.metatype("WorldEntity_t", {
 		velocity = lib.worldEnt_velocity,
 		addShape = lib.worldEnt_addShape,
 		applyForce = lib.worldEnt_applyForce,
-		applyImpulse = lib.worldEnt_applyImpulse
+		applyImpulse = lib.worldEnt_applyImpulse,
+		createPinJoint = lib.worldConstr_createPinJoint,
+		createSlideJoint = lib.worldConstr_createSlideJoint,
+		createPivotJoint = lib.worldConstr_createPivotJoint,
+		createGrooveJoint = lib.worldConstr_createGrooveJoint,
+		createDampedSpring = lib.worldConstr_createDampedSpringJoint,
+		createDampedRotarySpring = lib.worldConstr_createDampedRotarySpringJoint,
+		creatRotaryLimitJoint = lib.worldConstr_createRotaryLimitJoint,
+		createRatchetJoint = lib.worldConstr_createRatchetJoint,
+		createGearJoint = lib.worldConstr_createGearJoint,
+		createSimpleMotorJoint = lib.worldConstr_createSimpleMotorJoint
 	},
 	__newindex = function(self, key, val)
 		if key == "location" then

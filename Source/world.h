@@ -59,6 +59,27 @@ struct _World {
     WorldEntity_t *staticEntity;
 };
 
+typedef enum {
+    kWorldJointType_Pin,
+    kWorldJointType_Slide,
+    kWorldJointType_Pivot,
+    kWorldJointType_Groove,
+    kWorldJointType_DampedSpring,
+    kWorldJointType_DampedRotarySpring,
+    kWorldJointType_RotaryLimit,
+    kWorldJointType_Ratchet,
+    kWorldJointType_Gear,
+    kWorldJointType_SimpleMotor
+} WorldJointType_t;
+
+extern Class_t Class_WorldConstraint;
+typedef struct _WorldConstraint {
+    World_t *world; // Weak
+    WorldEntity_t *a, *b;
+    WorldJointType_t type;
+    cpConstraint *cpConstraint;
+} WorldConstraint_t;
+
 extern World_t *world_create(void);
 extern void world_step(World_t *aWorld, GameTimer_t *aTimer);
 extern void world_setGravity(World_t *aWorld, vec2_t aGravity);
@@ -66,6 +87,8 @@ extern vec2_t world_gravity(World_t *aWorld);
 extern void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity);
 extern void world_removeEntity(World_t *aWorld, WorldEntity_t *aEntity);
 extern WorldEntity_t *world_pointQuery(World_t *aWorld, vec2_t aPoint);
+extern void world_addJoint(World_t *aWorld, WorldConstraint_t *aJoint);
+extern void world_removeJoint(World_t *aWorld, WorldConstraint_t *aJoint);
 
 extern WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat aMomentum);
 extern vec2_t worldEnt_location(WorldEntity_t *aEntity);
@@ -93,4 +116,15 @@ extern GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLM
 extern GLMFloat world_momentForSegment(GLMFloat aMass, vec2_t a, vec2_t b);
 extern GLMFloat world_momentForPoly(GLMFloat aMass, unsigned aVertCount, vec2_t *aVerts, vec2_t aOffset);
 extern GLMFloat world_momentForBox(GLMFloat aMass, vec2_t aSize);
+
+extern WorldConstraint_t *worldConstr_createPinJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB);
+extern WorldConstraint_t *worldConstr_createSlideJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB, GLMFloat minDist, GLMFloat maxDist);
+extern WorldConstraint_t *worldConstr_createPivotJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aPivot);
+extern WorldConstraint_t *worldConstr_createGrooveJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aGrooveStart, vec2_t aGrooveEnd, vec2_t aAnchorB);
+extern WorldConstraint_t *worldConstr_createDampedSpringJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB, GLMFloat aRestLength, GLMFloat aStiffness, GLMFloat aDamping);
+extern WorldConstraint_t *worldConstr_createDampedRotarySpringJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat restAngle, GLMFloat aStiffness, GLMFloat aDamping);
+extern WorldConstraint_t *worldConstr_createRotaryLimitJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aMinAngle, GLMFloat aMaxAngle);
+extern WorldConstraint_t *worldConstr_createRatchetJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatchet);
+extern WorldConstraint_t *worldConstr_createGearJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatio);
+extern WorldConstraint_t *worldConstr_createSimpleMotorJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aRate);
 #endif

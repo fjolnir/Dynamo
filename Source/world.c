@@ -1,5 +1,6 @@
 // Note: Assumes cpFloat is the same type as GLMFloat
 #include "world.h"
+#include "input.h"
 
 #define VEC2_TO_CPV(v) ((cpVect){ v.x, v.y })
 #define CPV_TO_VEC2(v) ((vec2_t){ v.x, v.y })
@@ -51,6 +52,7 @@ World_t *world_create(void)
                                collisionDidEnd, NULL);
     out->entities = obj_retain(llist_create((InsertionCallback_t)&obj_retain, &obj_release));
     
+    // Create the static entity
     out->staticEntity = obj_create(&Class_WorldEntity);
     out->staticEntity->world = out;
     out->staticEntity->owner = out;
@@ -83,6 +85,7 @@ void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity)
     assert(aEntity != aWorld->staticEntity);
     cpSpaceAddBody(aWorld->cpSpace, aEntity->cpBody);
     llist_apply(aEntity->shapes, (LinkedListApplier_t)&_addShapeToSpace, aWorld);
+    llist_pushValue(aWorld->entities, aEntity);
 }
 
 void world_removeEntity(World_t *aWorld, WorldEntity_t *aEntity)
@@ -320,3 +323,219 @@ static void _callEntityUpdateCallback(WorldEntity_t *aEntity, World_t *aWorld)
     if(aEntity->updateHandler)
         aEntity->updateHandler(aEntity, aWorld);
 }
+
+#pragma mark - Joints
+
+static void world_destroyJoint(WorldConstraint_t *aJoint);
+Class_t Class_WorldConstraint = {
+    "WorldJoint",
+    sizeof(WorldConstraint_t),
+    (Obj_destructor_t)&world_destroyJoint
+};
+
+static void world_destroyJoint(WorldConstraint_t *aJoint)
+{
+    cpSpaceRemoveConstraint(aJoint->world->cpSpace, aJoint->cpConstraint);
+    cpConstraintFree(aJoint->cpConstraint);
+    obj_release(aJoint->a);
+    obj_release(aJoint->b);
+}
+
+WorldConstraint_t *worldConstr_createPinJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_Pin;
+    ret->cpConstraint = cpPinJointNew(a->cpBody, b->cpBody, VEC2_TO_CPV(aAnchorA), VEC2_TO_CPV(aAnchorB));
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+
+WorldConstraint_t *worldConstr_createSlideJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB,
+                                     GLMFloat aMinDist, GLMFloat aMaxDist)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_Slide;
+    ret->cpConstraint = cpSlideJointNew(a->cpBody, b->cpBody, VEC2_TO_CPV(aAnchorA), VEC2_TO_CPV(aAnchorB), aMinDist, aMaxDist);
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+WorldConstraint_t *worldConstr_createPivotJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aPivot)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_Pivot;
+    ret->cpConstraint = cpPivotJointNew(a->cpBody, b->cpBody, VEC2_TO_CPV(aPivot));
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+WorldConstraint_t *worldConstr_createGrooveJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aGrooveStart, vec2_t aGrooveEnd,
+                                      vec2_t aAnchorB)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_Groove;
+    ret->cpConstraint = cpGrooveJointNew(a->cpBody, b->cpBody, VEC2_TO_CPV(aGrooveStart), VEC2_TO_CPV(aGrooveEnd),
+                                         VEC2_TO_CPV(aAnchorB));
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+WorldConstraint_t *worldConstr_createDampedSpringJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB,
+                                            GLMFloat aRestLength, GLMFloat aStiffness, GLMFloat aDamping)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_DampedSpring;
+    ret->cpConstraint = cpDampedSpringNew(a->cpBody, b->cpBody, VEC2_TO_CPV(aAnchorA), VEC2_TO_CPV(aAnchorB), aRestLength, aStiffness, aDamping);
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+WorldConstraint_t *worldConstr_createDampedRotarySpringJoint(WorldEntity_t *a, WorldEntity_t *b,
+                                                  GLMFloat aRestAngle, GLMFloat aStiffness, GLMFloat aDamping)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_DampedRotarySpring;
+    ret->cpConstraint = cpDampedRotarySpringNew(a->cpBody, b->cpBody, aRestAngle, aStiffness, aDamping);
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+WorldConstraint_t *worldConstr_createRotaryLimitJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aMinAngle, GLMFloat aMaxAngle)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_RotaryLimit;
+    ret->cpConstraint = cpRotaryLimitJointNew(a->cpBody, b->cpBody, aMinAngle, aMaxAngle);
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+WorldConstraint_t *worldConstr_createRatchetJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatchet)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_Ratchet;
+    ret->cpConstraint = cpRatchetJointNew(a->cpBody, b->cpBody, aPhase, aRatchet);
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+WorldConstraint_t *worldConstr_createGearJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatio)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_Gear;
+    ret->cpConstraint = cpGearJointNew(a->cpBody, b->cpBody, aPhase, aRatio);
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+WorldConstraint_t *worldConstr_createSimpleMotorJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aRate)
+{
+    assert(a->world == b->world);
+    WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
+    ret->world = a->world;
+    ret->a = obj_retain(a);
+    ret->b = obj_retain(b);
+    ret->type = kWorldJointType_SimpleMotor;
+    ret->cpConstraint = cpSimpleMotorNew(a->cpBody, b->cpBody, aRate);
+    cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
+    return ret;
+}
+
+vec2_t worldConstr_anchorA(WorldConstraint_t *aConstraint)
+{
+    cpVect ret;
+    switch(aConstraint->type) {
+        case kWorldJointType_Pin:
+            ret = cpPinJointGetAnchr1(aConstraint->cpConstraint);
+            break;
+        case kWorldJointType_Slide:
+            ret = cpSlideJointGetAnchr1(aConstraint->cpConstraint);
+            break;
+        case kWorldJointType_DampedSpring:
+            ret = cpDampedSpringGetAnchr1(aConstraint->cpConstraint);
+            break;
+        default:
+            debug_log("Invalid constraint");
+            ret = cpv(-1,-1);
+    }
+    return CPV_TO_VEC2(ret);
+}
+void worldConstr_setAnchorA(WorldConstraint_t *aConstraint, vec2_t aAnchor)
+{
+    switch(aConstraint->type) {
+        case kWorldJointType_Pin:
+            cpPinJointSetAnchr1(aConstraint->cpConstraint, VEC2_TO_CPV(aAnchor));
+            break;
+        case kWorldJointType_Slide:
+            cpSlideJointSetAnchr1(aConstraint->cpConstraint, VEC2_TO_CPV(aAnchor));
+            break;
+        case kWorldJointType_DampedSpring:
+            cpDampedSpringSetAnchr1(aConstraint->cpConstraint, VEC2_TO_CPV(aAnchor));
+            break;
+        default:
+            debug_log("Invalid constraint");
+    }
+}
+vec2_t worldConstr_anchorB(WorldConstraint_t *aConstraint)
+{
+    cpVect ret;
+    switch(aConstraint->type) {
+        case kWorldJointType_Pin:
+            ret = cpPinJointGetAnchr2(aConstraint->cpConstraint);
+            break;
+        case kWorldJointType_Slide:
+            ret = cpSlideJointGetAnchr2(aConstraint->cpConstraint);
+            break;
+        case kWorldJointType_DampedSpring:
+            ret = cpDampedSpringGetAnchr2(aConstraint->cpConstraint);
+            break;
+        default:
+            debug_log("Invalid constraint");
+            ret = cpv(-1,-1);
+    }
+    return CPV_TO_VEC2(ret);
+}
+void worldConstr_setAnchorB(WorldConstraint_t *aConstraint, vec2_t aAnchor)
+{
+    switch(aConstraint->type) {
+        case kWorldJointType_Pin:
+            cpPinJointSetAnchr2(aConstraint->cpConstraint, VEC2_TO_CPV(aAnchor));
+            break;
+        case kWorldJointType_Slide:
+            cpSlideJointSetAnchr2(aConstraint->cpConstraint, VEC2_TO_CPV(aAnchor));
+            break;
+        case kWorldJointType_DampedSpring:
+            cpDampedSpringSetAnchr2(aConstraint->cpConstraint, VEC2_TO_CPV(aAnchor));
+            break;
+        default:
+            debug_log("Invalid constraint");
+    }
+}
+
