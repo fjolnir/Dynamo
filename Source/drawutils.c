@@ -242,7 +242,7 @@ void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle
 
 void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t aColor, bool aShouldFill)
 {
-	vec2_t size = { radius*2.0f, radius*2.0f };
+	vec2_t size = { radius, radius };
 	draw_ellipse(aCenter, size, aSubdivisions, 0.0f, aColor, aShouldFill);
 }
 
