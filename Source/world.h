@@ -6,7 +6,7 @@
 #include "renderer.h"
 #include "linkedlist.h"
 #include "gametimer.h"
-#include <Chipmunk/Chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 typedef struct _World World_t;
 typedef struct _WorldShape WorldShape_t;
