@@ -7,6 +7,7 @@
 #ifndef __APPLE__
     #include <png.h>
 #else
+    #include <CoreFoundation/CoreFoundation.h>
     #include <CoreGraphics/CoreGraphics.h>
 #endif
 
@@ -150,12 +151,28 @@ Png_t *png_load(const char *aPath) {
     CGDataProviderRelease(provider);
     if(!cgImg)
         return false;
-
     self->width    = CGImageGetWidth(cgImg);
     self->height   = CGImageGetHeight(cgImg);
     self->hasAlpha = CGImageGetAlphaInfo(cgImg) != kCGImageAlphaNone;
-    self->cfData   = CGDataProviderCopyData(CGImageGetDataProvider(cgImg));
-    self->data     = CFDataGetBytePtr(self->cfData);
+    
+    self->data = malloc(self->width * self->height * 4);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef ctx = CGBitmapContextCreate((void*)self->data, self->width, self->height,
+                                             8, 4*self->width, colorSpace,
+                                             kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    if(!ctx) {
+        CGImageRelease(cgImg);
+        return false;
+    }
+    
+    // Draw a flipped representation into the data pointer
+    CGContextClearRect(ctx, CGRectMake( 0, 0, self->width, self->height ) );
+    CGContextScaleCTM(ctx, 1, -1);
+    CGContextTranslateCTM(ctx, 0, -self->height);
+    CGContextDrawImage(ctx, CGRectMake(0, 0, self->width, self->height), cgImg);
+    
+	CGContextRelease(ctx);
     CGImageRelease(cgImg);
 #endif
     return self;
@@ -163,9 +180,5 @@ Png_t *png_load(const char *aPath) {
 
 void png_destroy(Png_t *self)
 {
-#ifdef __APPLE__
-    CFRelease(self->cfData);
-#else
     free((void*)self->data);
-#endif
 }
