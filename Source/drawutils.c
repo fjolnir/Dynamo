@@ -311,7 +311,6 @@ void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB)
         };
         draw_polygon(4, verts, bbColor, false);
     }
-    sranddev();
     vec4_t shapeColor = { 0.4, 0.4, 0.8,1 };
     switch(aShape->cpShape->klass_private->type) {
         case CP_CIRCLE_SHAPE: {
