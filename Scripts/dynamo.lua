@@ -477,6 +477,7 @@ typedef void (*WorldEntity_UpdateHandler)(WorldEntity_t *aEntity, World_t *aWorl
 extern Class_t Class_WorldEntity;
 struct _WorldEntity {
 	_Obj_guts _guts;
+    World_t *world; // Weak reference
 	Obj_t *owner; // Weak reference (Owner should retain the entity)
 	void *cpBody;
 	LinkedList_t *shapes;
