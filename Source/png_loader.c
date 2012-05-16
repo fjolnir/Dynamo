@@ -127,7 +127,7 @@ Png_t *png_load(const char *aPath) {
     png_bytepp row_pointers = png_get_rows(png_ptr, info_ptr);
 
     for(int i = 0; i < self->height; i++) {
-        memcpy(self->data + (row_bytes * (self->height - 1 - i)), row_pointers[i], row_bytes);
+        memcpy((void*)self->data + (row_bytes * (self->height - 1 - i)), row_pointers[i], row_bytes);
     }
 
     /* Clean up after the read,
