@@ -5,7 +5,6 @@ require("glmath")
 dynamo = require("dynamo")
 local gl = require("OpenGLES")
 
-
 dynamo.init(vec2(640, 980), 24)
 gl.glClearColor(0,0,0,0)
 
@@ -24,13 +23,13 @@ sprite = dynamo.createSprite(vec3_zero, vec2(32, 32), sprite, {
 sprite.scale = 3
 sprite.activeAnimation = 6
 
-local box = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForBox(1, vec2(200,100)), {
-	 dynamo.createBoxShape(vec2(200,100))
+local box = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForBox(1, vec2(32*sprite.scale,32*sprite.scale)), {
+	 dynamo.createBoxShape(vec2(32*sprite.scale,32*sprite.scale))
 })
 box.location = vec2(110, 700)
-box.updateHandler = function(entity)
-	sprite.angle = entity:angle()
-	sprite.location.xy = entity:location()
+function box:updateHandler()
+	sprite.angle = self:angle()
+	sprite.location.xy = self:location()
 end
 
 local circle = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForCircle(1, 0, 70, vec2_zero), {
@@ -39,7 +38,7 @@ local circle = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForC
 circle.elasticity = 1
 circle.location = vec2(200, 500)
 
-circle.collisionHandler = function(entity, world, collisionInfo)
+function circle:collisionHandler(collisionInfo)
 	if collisionInfo.b == box then
 		local pt = collisionInfo.contactPoints.points[0].point
 		print("box and circle collided", pt.x, pt.y)
@@ -97,7 +96,6 @@ dynamo.inputManager:addObserver({
 			lastPos.x = location.x
 			lastPos.y = location.y
 		else
-			print("Touch ended")
 			lastPos = nil
 			selectedEntity = nil
 		end

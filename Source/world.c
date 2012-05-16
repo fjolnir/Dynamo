@@ -275,30 +275,27 @@ static World_CollisionInfo _collisionInfoForArbiter(cpArbiter *aArbiter)
 static int collisionWillBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void *aData)
 {
     World_CollisionInfo collInfo = _collisionInfoForArbiter(aArbiter);
-    World_t *world = aSpace->data;
     if(collInfo.a->preCollisionHandler)
-        collInfo.a->preCollisionHandler(collInfo.a, world, &collInfo);
+        collInfo.a->preCollisionHandler(collInfo.a, &collInfo);
     if(collInfo.b->preCollisionHandler)
-        collInfo.b->preCollisionHandler(collInfo.b, world, &collInfo);
+        collInfo.b->preCollisionHandler(collInfo.b, &collInfo);
     return true;
 }
 static void collisionDidBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void *aData)
 {
     World_CollisionInfo collInfo = _collisionInfoForArbiter(aArbiter);
-    World_t *world = aSpace->data;
     if(collInfo.a->collisionHandler)
-        collInfo.a->collisionHandler(collInfo.a, world, &collInfo);
+        collInfo.a->collisionHandler(collInfo.a, &collInfo);
     if(collInfo.b->collisionHandler)
-        collInfo.b->collisionHandler(collInfo.b, world, &collInfo);
+        collInfo.b->collisionHandler(collInfo.b, &collInfo);
 }
 static void collisionDidEnd(cpArbiter *aArbiter, struct cpSpace *aSpace, void *aData)
 {
     World_CollisionInfo collInfo = _collisionInfoForArbiter(aArbiter);
-    World_t *world = aSpace->data;
     if(collInfo.a->postCollisionHandler)
-        collInfo.a->postCollisionHandler(collInfo.a, world, &collInfo);
+        collInfo.a->postCollisionHandler(collInfo.a, &collInfo);
     if(collInfo.b->postCollisionHandler)
-        collInfo.b->postCollisionHandler(collInfo.b, world, &collInfo);
+        collInfo.b->postCollisionHandler(collInfo.b, &collInfo);
 }
 
 #pragma mark -
@@ -321,7 +318,7 @@ static void _removeEntityFromWorld(WorldEntity_t *aEntity, World_t *aWorld)
 static void _callEntityUpdateCallback(WorldEntity_t *aEntity, World_t *aWorld)
 {
     if(aEntity->updateHandler)
-        aEntity->updateHandler(aEntity, aWorld);
+        aEntity->updateHandler(aEntity);
 }
 
 #pragma mark - Joints
