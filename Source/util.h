@@ -69,4 +69,8 @@ extern Platform_t util_platform(void);
 // For FFI
 extern void _debug_log(const char *str);
 
+// Reads a file into the passed buffer
+// You are responsible for freeing the output
+void util_readFile(const char *aFilePath, size_t *aoLength, char **aoOutput);
+
 #endif

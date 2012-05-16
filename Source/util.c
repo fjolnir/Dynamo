@@ -65,3 +65,21 @@ void _debug_log(const char *str)
 {
 	debug_log_min("%s", str);
 }
+
+// TODO: Add graceful error handling (Was failing with a mysterious sigsegv on missing files on android)
+void util_readFile(const char *aFilePath, size_t *aoLength, char **aoOutput)
+{
+	FILE *fd = fopen(aFilePath, "r");
+	if(!fd) {
+        if(aoLength) *aoLength = 0;
+        return;
+    }
+    
+	fseek(fd, 0, SEEK_END);
+	if(aoLength) *aoLength = ftell(fd);
+	if(*aoLength <= 0) return;
+	rewind(fd);
+    
+	*aoOutput = calloc(*aoLength+1, sizeof(char));
+	fread(*aoOutput, sizeof(char), *aoLength, fd);
+}

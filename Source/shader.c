@@ -34,7 +34,6 @@ const char *kShader_AttributeNames[kShader_MaxAttributes] = {
 
 static bool _shader_link(GLuint aProgramObject);
 static GLuint _shader_compile(const char *aSrc, GLenum aType, bool *aoSucceeded);
-static void _readFile(const char *aFilePath, size_t *aoLength, char **aoOutput);
 
 Shader_t *shader_load(const char *aVertSrc, const char *aFragSrc)
 {
@@ -78,10 +77,10 @@ Shader_t *shader_loadFromFiles(const char *aVertShaderPath, const char *aFragSha
 	char *vertShaderSource = NULL, *fragShaderSource = NULL;
 	size_t vertShaderLength, fragShaderLength;
 	
-	_readFile(aVertShaderPath, &vertShaderLength, &vertShaderSource);
+	util_readFile(aVertShaderPath, &vertShaderLength, &vertShaderSource);
 	assert(vertShaderLength > 0 && vertShaderSource != NULL);
 
-	_readFile(aFragShaderPath, &fragShaderLength, &fragShaderSource);
+	util_readFile(aFragShaderPath, &fragShaderLength, &fragShaderSource);
 	assert(fragShaderLength > 0 && fragShaderSource != NULL);
 	Shader_t *out = shader_load(vertShaderSource, fragShaderSource);
 
@@ -200,20 +199,3 @@ static GLuint _shader_compile(const char *aSrc, GLenum aType, bool *aoSucceeded)
 	return shaderObject;
 }
 
-
-#pragma mark - Utilities
-
-// TODO: Add graceful error handling (Was failing with a mysterious sigsegv on missing files on android)
-static void _readFile(const char *aFilePath, size_t *aoLength, char **aoOutput)
-{
-	FILE *fd = fopen(aFilePath, "r");
-	if(!fd) return;
-
-	fseek(fd, 0, SEEK_END);
-	*aoLength = ftell(fd);
-	if(!*aoLength) return;
-	rewind(fd);
-
-	*aoOutput = calloc(*aoLength+1, sizeof(char));
-	fread(*aoOutput, sizeof(char), *aoLength, fd);
-}
