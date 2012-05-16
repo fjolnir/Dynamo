@@ -6,13 +6,32 @@ dynamo = require("dynamo")
 local gl = require("OpenGLES")
 
 
-dynamo.init(vec2(640, 980), 60)
+dynamo.init(vec2(640, 980), 24)
 gl.glClearColor(0,0,0,0)
+
+local sprite = dynamo.loadTexture(dynamo.pathForResource("character.png"))
+sprite = dynamo.createTextureAtlas(sprite, vec2_zero, vec2(32, 32))
+sprite = dynamo.createSprite(vec3_zero, vec2(32, 32), sprite, {
+	{ 1, 0, true },
+	{ 1, 0, true },
+	{ 1, 0, true },
+	{ 1, 0, true },
+	{ 1, 0, true },
+	{ 1, 0, true },
+	{ 8, 0, true },
+	{ 1, 0, true }
+})
+sprite.scale = 3
+sprite.activeAnimation = 6
 
 local box = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForBox(1, vec2(200,100)), {
 	 dynamo.createBoxShape(vec2(200,100))
 })
 box.location = vec2(110, 700)
+box.updateHandler = function(entity)
+	sprite.angle = entity:angle()
+	sprite.location.xy = entity:location()
+end
 
 local circle = dynamo.createEntity(dynamo.world, nil, 1, dynamo.world.momentForCircle(1, 0, 70, vec2_zero), {
 	dynamo.createCircleShape(vec2(0, 0), 70)
@@ -46,9 +65,13 @@ dynamo.renderer:pushRenderable(
 		dynamo.world:draw(false)
 	end)
 )
+dynamo.renderer:pushRenderable(sprite)
 
 
 dynamo.timer.updateCallback = function(timer)
+	if timer.ticks % 2 == 0 then
+		sprite:step()
+	end
 end
 
 lastPos = nil
