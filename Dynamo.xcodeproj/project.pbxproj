@@ -25,58 +25,58 @@
 		C73EFC58155A423700FD64CA /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC57155A423700FD64CA /* ApplicationServices.framework */; };
 		C73EFC5A155A424000FD64CA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC59155A424000FD64CA /* AudioToolbox.framework */; };
 		C73EFC5E155A427800FD64CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC5D155A427800FD64CA /* Foundation.framework */; };
+		C76454161564C6E7004D99E8 /* lua.c in Sources */ = {isa = PBXBuildFile; fileRef = C76454141564C6E7004D99E8 /* lua.c */; };
+		C76454171564C6E7004D99E8 /* lua.c in Sources */ = {isa = PBXBuildFile; fileRef = C76454141564C6E7004D99E8 /* lua.c */; };
+		C76454191564C6E7004D99E8 /* lua.h in Headers */ = {isa = PBXBuildFile; fileRef = C76454151564C6E7004D99E8 /* lua.h */; };
+		C764541E1564CA0A004D99E8 /* dynamo.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8F1558A69600B8E5CE /* dynamo.h */; };
+		C764541F1564CA0A004D99E8 /* world.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C7650D48155B640B00A0C86D /* world.h */; };
+		C76454201564CA0A004D99E8 /* array.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D881558A69600B8E5CE /* array.h */; };
+		C76454211564CA0A004D99E8 /* background.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8A1558A69600B8E5CE /* background.h */; };
+		C76454221564CA0A004D99E8 /* dictionary.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8C1558A69600B8E5CE /* dictionary.h */; };
+		C76454231564CA0A004D99E8 /* drawutils.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8E1558A69600B8E5CE /* drawutils.h */; };
+		C76454241564CA0A004D99E8 /* gametimer.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D911558A69600B8E5CE /* gametimer.h */; };
+		C76454251564CA0A004D99E8 /* input.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D941558A69600B8E5CE /* input.h */; };
+		C76454261564CA0A004D99E8 /* json.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D961558A69600B8E5CE /* json.h */; };
+		C76454271564CA0A004D99E8 /* linkedlist.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D981558A69600B8E5CE /* linkedlist.h */; };
+		C76454281564CA0A004D99E8 /* object.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D9C1558A69600B8E5CE /* object.h */; };
+		C76454291564CA0A004D99E8 /* png_loader.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA01558A69600B8E5CE /* png_loader.h */; };
+		C764542A1564CA0A004D99E8 /* primitive_types.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA21558A69600B8E5CE /* primitive_types.h */; };
+		C764542B1564CA0A004D99E8 /* renderer.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA41558A69600B8E5CE /* renderer.h */; };
+		C764542C1564CA0A004D99E8 /* scene.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA61558A69600B8E5CE /* scene.h */; };
+		C764542D1564CA0A004D99E8 /* shader.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA81558A69600B8E5CE /* shader.h */; };
+		C764542E1564CA0A004D99E8 /* sound.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DAA1558A69600B8E5CE /* sound.h */; };
+		C764542F1564CA0A004D99E8 /* sprite.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DAC1558A69600B8E5CE /* sprite.h */; };
+		C76454301564CA0A004D99E8 /* texture_atlas.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DAE1558A69600B8E5CE /* texture_atlas.h */; };
+		C76454311564CA0A004D99E8 /* texture.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB01558A69600B8E5CE /* texture.h */; };
+		C76454321564CA0A004D99E8 /* tmx_map.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB21558A69600B8E5CE /* tmx_map.h */; };
+		C76454331564CA0A004D99E8 /* lua.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C76454151564C6E7004D99E8 /* lua.h */; };
+		C76454341564CA0A004D99E8 /* util.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB41558A69600B8E5CE /* util.h */; };
+		C76454351564CA0A004D99E8 /* glutils.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D921558A69600B8E5CE /* glutils.h */; };
 		C7650D43155B629900A0C86D /* libChipmunk-iPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7650D3E155B628000A0C86D /* libChipmunk-iPhone.a */; };
 		C7650D46155B62AD00A0C86D /* libChipmunk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7650D3C155B628000A0C86D /* libChipmunk.a */; };
 		C7650D49155B640B00A0C86D /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = C7650D47155B640B00A0C86D /* world.c */; };
 		C7650D4A155B640B00A0C86D /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = C7650D47155B640B00A0C86D /* world.c */; };
-		C7650D4B155B640B00A0C86D /* world.h in Headers */ = {isa = PBXBuildFile; fileRef = C7650D48155B640B00A0C86D /* world.h */; };
 		C7650D4C155B640B00A0C86D /* world.h in Headers */ = {isa = PBXBuildFile; fileRef = C7650D48155B640B00A0C86D /* world.h */; };
-		C78B8D7C1558A60200B8E5CE /* lauxlib.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D761558A60200B8E5CE /* lauxlib.h */; };
-		C78B8D7F1558A60200B8E5CE /* lua.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D791558A60200B8E5CE /* lua.h */; };
-		C78B8D801558A60200B8E5CE /* luaconf.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7A1558A60200B8E5CE /* luaconf.h */; };
-		C78B8D811558A60200B8E5CE /* lualib.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7B1558A60200B8E5CE /* lualib.h */; };
 		C78B8DB51558A69600B8E5CE /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D871558A69600B8E5CE /* array.c */; };
-		C78B8DB61558A69600B8E5CE /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D881558A69600B8E5CE /* array.h */; };
 		C78B8DB71558A69600B8E5CE /* background.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D891558A69600B8E5CE /* background.c */; };
-		C78B8DB81558A69600B8E5CE /* background.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8A1558A69600B8E5CE /* background.h */; };
 		C78B8DB91558A69600B8E5CE /* dictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D8B1558A69600B8E5CE /* dictionary.c */; };
-		C78B8DBA1558A69600B8E5CE /* dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8C1558A69600B8E5CE /* dictionary.h */; };
 		C78B8DBB1558A69700B8E5CE /* drawutils.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D8D1558A69600B8E5CE /* drawutils.c */; };
-		C78B8DBC1558A69700B8E5CE /* drawutils.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8E1558A69600B8E5CE /* drawutils.h */; };
-		C78B8DBD1558A69700B8E5CE /* dynamo.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8F1558A69600B8E5CE /* dynamo.h */; };
 		C78B8DBE1558A69700B8E5CE /* gametimer.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D901558A69600B8E5CE /* gametimer.c */; };
-		C78B8DBF1558A69700B8E5CE /* gametimer.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D911558A69600B8E5CE /* gametimer.h */; };
-		C78B8DC01558A69700B8E5CE /* glutils.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D921558A69600B8E5CE /* glutils.h */; };
 		C78B8DC11558A69700B8E5CE /* input.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D931558A69600B8E5CE /* input.c */; };
-		C78B8DC21558A69700B8E5CE /* input.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D941558A69600B8E5CE /* input.h */; };
 		C78B8DC31558A69700B8E5CE /* json.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D951558A69600B8E5CE /* json.c */; };
-		C78B8DC41558A69700B8E5CE /* json.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D961558A69600B8E5CE /* json.h */; };
 		C78B8DC51558A69700B8E5CE /* linkedlist.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D971558A69600B8E5CE /* linkedlist.c */; };
-		C78B8DC61558A69700B8E5CE /* linkedlist.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D981558A69600B8E5CE /* linkedlist.h */; };
 		C78B8DC91558A69700B8E5CE /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D9B1558A69600B8E5CE /* object.c */; };
-		C78B8DCA1558A69700B8E5CE /* object.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D9C1558A69600B8E5CE /* object.h */; };
 		C78B8DCD1558A69700B8E5CE /* png_loader.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D9F1558A69600B8E5CE /* png_loader.c */; };
-		C78B8DCE1558A69700B8E5CE /* png_loader.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA01558A69600B8E5CE /* png_loader.h */; };
 		C78B8DCF1558A69700B8E5CE /* primitive_types.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DA11558A69600B8E5CE /* primitive_types.c */; };
-		C78B8DD01558A69700B8E5CE /* primitive_types.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA21558A69600B8E5CE /* primitive_types.h */; };
 		C78B8DD11558A69700B8E5CE /* renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DA31558A69600B8E5CE /* renderer.c */; };
-		C78B8DD21558A69700B8E5CE /* renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA41558A69600B8E5CE /* renderer.h */; };
 		C78B8DD31558A69700B8E5CE /* scene.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DA51558A69600B8E5CE /* scene.c */; };
-		C78B8DD41558A69700B8E5CE /* scene.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA61558A69600B8E5CE /* scene.h */; };
 		C78B8DD51558A69700B8E5CE /* shader.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DA71558A69600B8E5CE /* shader.c */; };
-		C78B8DD61558A69700B8E5CE /* shader.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DA81558A69600B8E5CE /* shader.h */; };
 		C78B8DD71558A69700B8E5CE /* sound_apple.m in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DA91558A69600B8E5CE /* sound_apple.m */; };
-		C78B8DD81558A69700B8E5CE /* sound.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DAA1558A69600B8E5CE /* sound.h */; };
 		C78B8DD91558A69700B8E5CE /* sprite.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DAB1558A69600B8E5CE /* sprite.c */; };
-		C78B8DDA1558A69700B8E5CE /* sprite.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DAC1558A69600B8E5CE /* sprite.h */; };
 		C78B8DDB1558A69700B8E5CE /* texture_atlas.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DAD1558A69600B8E5CE /* texture_atlas.c */; };
-		C78B8DDC1558A69700B8E5CE /* texture_atlas.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DAE1558A69600B8E5CE /* texture_atlas.h */; };
 		C78B8DDD1558A69700B8E5CE /* texture.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DAF1558A69600B8E5CE /* texture.c */; };
-		C78B8DDE1558A69700B8E5CE /* texture.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB01558A69600B8E5CE /* texture.h */; };
 		C78B8DDF1558A69700B8E5CE /* tmx_map.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DB11558A69600B8E5CE /* tmx_map.c */; };
-		C78B8DE01558A69700B8E5CE /* tmx_map.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB21558A69600B8E5CE /* tmx_map.h */; };
 		C78B8DE11558A69700B8E5CE /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8DB31558A69600B8E5CE /* util.c */; };
-		C78B8DE21558A69700B8E5CE /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB41558A69600B8E5CE /* util.h */; };
 		C78B8DF41558A6ED00B8E5CE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C78B8DF21558A6ED00B8E5CE /* InfoPlist.strings */; };
 		C78B8DFC1558A75000B8E5CE /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D871558A69600B8E5CE /* array.c */; };
 		C78B8DFD1558A75000B8E5CE /* array.h in Headers */ = {isa = PBXBuildFile; fileRef = C78B8D881558A69600B8E5CE /* array.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -234,6 +234,43 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C764541D1564C9EC004D99E8 /* Copy Headers */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = include/dynamo;
+			dstSubfolderSpec = 16;
+			files = (
+				C764541E1564CA0A004D99E8 /* dynamo.h in Copy Headers */,
+				C764541F1564CA0A004D99E8 /* world.h in Copy Headers */,
+				C76454201564CA0A004D99E8 /* array.h in Copy Headers */,
+				C76454211564CA0A004D99E8 /* background.h in Copy Headers */,
+				C76454221564CA0A004D99E8 /* dictionary.h in Copy Headers */,
+				C76454231564CA0A004D99E8 /* drawutils.h in Copy Headers */,
+				C76454241564CA0A004D99E8 /* gametimer.h in Copy Headers */,
+				C76454251564CA0A004D99E8 /* input.h in Copy Headers */,
+				C76454261564CA0A004D99E8 /* json.h in Copy Headers */,
+				C76454271564CA0A004D99E8 /* linkedlist.h in Copy Headers */,
+				C76454281564CA0A004D99E8 /* object.h in Copy Headers */,
+				C76454291564CA0A004D99E8 /* png_loader.h in Copy Headers */,
+				C764542A1564CA0A004D99E8 /* primitive_types.h in Copy Headers */,
+				C764542B1564CA0A004D99E8 /* renderer.h in Copy Headers */,
+				C764542C1564CA0A004D99E8 /* scene.h in Copy Headers */,
+				C764542D1564CA0A004D99E8 /* shader.h in Copy Headers */,
+				C764542E1564CA0A004D99E8 /* sound.h in Copy Headers */,
+				C764542F1564CA0A004D99E8 /* sprite.h in Copy Headers */,
+				C76454301564CA0A004D99E8 /* texture_atlas.h in Copy Headers */,
+				C76454311564CA0A004D99E8 /* texture.h in Copy Headers */,
+				C76454321564CA0A004D99E8 /* tmx_map.h in Copy Headers */,
+				C76454331564CA0A004D99E8 /* lua.h in Copy Headers */,
+				C76454341564CA0A004D99E8 /* util.h in Copy Headers */,
+				C76454351564CA0A004D99E8 /* glutils.h in Copy Headers */,
+			);
+			name = "Copy Headers";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		C71E0B6C155A40E000CB6F37 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 		C71E0B6E155A40E500CB6F37 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -253,6 +290,8 @@
 		C73EFC59155A424000FD64CA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		C73EFC5D155A427800FD64CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		C75AFCF0153FA9F500FE8623 /* libdynamo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdynamo.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C76454141564C6E7004D99E8 /* lua.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lua.c; path = Source/lua.c; sourceTree = SOURCE_ROOT; };
+		C76454151564C6E7004D99E8 /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lua.h; path = Source/lua.h; sourceTree = SOURCE_ROOT; };
 		C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Chipmunk6.xcodeproj; path = Chipmunk/xcode/Chipmunk6.xcodeproj; sourceTree = "<group>"; };
 		C7650D47155B640B00A0C86D /* world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = world.c; path = Source/world.c; sourceTree = SOURCE_ROOT; };
 		C7650D48155B640B00A0C86D /* world.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = world.h; path = Source/world.h; sourceTree = SOURCE_ROOT; };
@@ -486,6 +525,8 @@
 				C78B8DAF1558A69600B8E5CE /* texture.c */,
 				C78B8DB21558A69600B8E5CE /* tmx_map.h */,
 				C78B8DB11558A69600B8E5CE /* tmx_map.c */,
+				C76454151564C6E7004D99E8 /* lua.h */,
+				C76454141564C6E7004D99E8 /* lua.c */,
 				C78B8DB41558A69600B8E5CE /* util.h */,
 				C78B8DB31558A69600B8E5CE /* util.c */,
 				C78B8D921558A69600B8E5CE /* glutils.h */,
@@ -542,40 +583,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		C75AFCEE153FA9F500FE8623 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C78B8D7C1558A60200B8E5CE /* lauxlib.h in Headers */,
-				C78B8D7F1558A60200B8E5CE /* lua.h in Headers */,
-				C78B8D801558A60200B8E5CE /* luaconf.h in Headers */,
-				C78B8D811558A60200B8E5CE /* lualib.h in Headers */,
-				C78B8DB61558A69600B8E5CE /* array.h in Headers */,
-				C78B8DB81558A69600B8E5CE /* background.h in Headers */,
-				C78B8DBA1558A69600B8E5CE /* dictionary.h in Headers */,
-				C78B8DBC1558A69700B8E5CE /* drawutils.h in Headers */,
-				C78B8DBD1558A69700B8E5CE /* dynamo.h in Headers */,
-				C78B8DBF1558A69700B8E5CE /* gametimer.h in Headers */,
-				C78B8DC01558A69700B8E5CE /* glutils.h in Headers */,
-				C78B8DC21558A69700B8E5CE /* input.h in Headers */,
-				C78B8DC41558A69700B8E5CE /* json.h in Headers */,
-				C78B8DC61558A69700B8E5CE /* linkedlist.h in Headers */,
-				C78B8DCA1558A69700B8E5CE /* object.h in Headers */,
-				C78B8DCE1558A69700B8E5CE /* png_loader.h in Headers */,
-				C78B8DD01558A69700B8E5CE /* primitive_types.h in Headers */,
-				C78B8DD21558A69700B8E5CE /* renderer.h in Headers */,
-				C78B8DD41558A69700B8E5CE /* scene.h in Headers */,
-				C78B8DD61558A69700B8E5CE /* shader.h in Headers */,
-				C78B8DD81558A69700B8E5CE /* sound.h in Headers */,
-				C78B8DDA1558A69700B8E5CE /* sprite.h in Headers */,
-				C78B8DDC1558A69700B8E5CE /* texture_atlas.h in Headers */,
-				C78B8DDE1558A69700B8E5CE /* texture.h in Headers */,
-				C78B8DE01558A69700B8E5CE /* tmx_map.h in Headers */,
-				C78B8DE21558A69700B8E5CE /* util.h in Headers */,
-				C7650D4B155B640B00A0C86D /* world.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C78B8DE51558A6ED00B8E5CE /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -603,6 +610,7 @@
 				C78B8E231558A75000B8E5CE /* tmx_map.h in Headers */,
 				C78B8E251558A75000B8E5CE /* util.h in Headers */,
 				C7650D4C155B640B00A0C86D /* world.h in Headers */,
+				C76454191564C6E7004D99E8 /* lua.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,7 +623,7 @@
 			buildPhases = (
 				C75AFCEC153FA9F500FE8623 /* Sources */,
 				C75AFCED153FA9F500FE8623 /* Frameworks */,
-				C75AFCEE153FA9F500FE8623 /* Headers */,
+				C764541D1564C9EC004D99E8 /* Copy Headers */,
 			);
 			buildRules = (
 			);
@@ -795,6 +803,7 @@
 				C78B8DDF1558A69700B8E5CE /* tmx_map.c in Sources */,
 				C78B8DE11558A69700B8E5CE /* util.c in Sources */,
 				C7650D49155B640B00A0C86D /* world.c in Sources */,
+				C76454161564C6E7004D99E8 /* lua.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -823,6 +832,7 @@
 				C78B8E221558A75000B8E5CE /* tmx_map.c in Sources */,
 				C78B8E241558A75000B8E5CE /* util.c in Sources */,
 				C7650D4A155B640B00A0C86D /* world.c in Sources */,
+				C76454171564C6E7004D99E8 /* lua.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
