@@ -364,8 +364,10 @@ static void tmx_drawLayerRenderable(Renderer_t *aRenderer, TMXLayerRenderable_t 
 vec2_t tmx_tileset_texCoordFromId(TMXTileset_t *aTileset, int id)
 {
     int tilesPerRow = (aTileset->imageWidth - aTileset->spacing) / (aTileset->tileWidth + aTileset->spacing);
+    int rows = (aTileset->imageHeight - aTileset->spacing) / (aTileset->tileHeight + aTileset->spacing);
+    
     int u = id % tilesPerRow;
-    int v = id / tilesPerRow;
+    int v = rows - (id / tilesPerRow) - 1;
     return vec2_create(u, v);
 }
 
@@ -403,7 +405,7 @@ TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int 
 	vec2_t *screenCoords = malloc(sizeof(vec2_t)*out->layer->numberOfTiles);
 	for(int y = 0; y < out->map->height; ++y) {
 		for(int x = 0; x < out->map->width; ++x) {
-            int idx = y*out->map->width + x;
+            int idx = (out->map->height - y - 1) * out->map->width + x;
             TMXTile_t *tile = &out->layer->tiles[idx];
             texOffsets[idx] = tmx_tileset_texCoordFromId(tileset, tile->id);
 			screenCoords[idx].x = (out->map->tileWidth * (float)x) + out->map->tileWidth / 2.0f;
