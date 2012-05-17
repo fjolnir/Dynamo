@@ -174,13 +174,14 @@ void worldEnt_setVelocity(WorldEntity_t *aEntity, vec2_t aVelocity)
     cpBodySetVel(aEntity->cpBody, VEC2_TO_CPV(aVelocity));
 }
 
-void worldEnt_addShape(WorldEntity_t *aEntity, WorldShape_t *aShape)
+WorldShape_t *worldEnt_addShape(WorldEntity_t *aEntity, WorldShape_t *aShape)
 {
     cpShapeSetBody(aShape->cpShape, aEntity->cpBody);
     if(aEntity == aEntity->world->staticEntity) {
         cpSpaceAddShape(aEntity->world->cpSpace, aShape->cpShape);
     }
     llist_pushValue(aEntity->shapes, aShape);
+    return aShape;
 }
 
 #pragma mark - World entity shapes
@@ -234,6 +235,14 @@ GLMFloat worldShape_elasticity(WorldShape_t *aEntity)
 void worldShape_setElasticity(WorldShape_t *aEntity, GLMFloat aVal)
 {
     cpShapeSetElasticity(aEntity->cpShape, aVal);
+}
+WorldShapeGroup_t worldShape_group(WorldShape_t *aShape)
+{
+    return cpShapeGetGroup(aShape->cpShape);
+}
+void worldShape_setGroup(WorldShape_t *aShape, WorldShapeGroup_t aGroup)
+{
+    cpShapeSetGroup(aShape->cpShape, aGroup);
 }
 
 

@@ -51,6 +51,7 @@ struct _WorldShape {
     OBJ_GUTS
     cpShape *cpShape;
 };
+typedef cpGroup WorldShapeGroup_t;
 
 struct _World {
     OBJ_GUTS
@@ -99,8 +100,7 @@ extern void worldEnt_applyForce(WorldEntity_t *aEntity, vec2_t aForce, vec2_t aO
 extern void worldEnt_applyImpulse(WorldEntity_t *aEntity, vec2_t aImpulse, vec2_t aOffset);
 extern vec2_t worldEnt_velocity(WorldEntity_t *aEntity);
 extern void worldEnt_setVelocity(WorldEntity_t *aEntity, vec2_t aVelocity);
-extern void worldEnt_addShape(WorldEntity_t *aEntity, WorldShape_t *aShape);
-
+extern WorldShape_t *worldEnt_addShape(WorldEntity_t *aEntity, WorldShape_t *aShape);
 
 extern WorldShape_t *worldShape_createCircle(vec2_t aCenter, GLMFloat aRadius);
 extern WorldShape_t *worldShape_createSegment(vec2_t a, vec2_t b, GLMFloat aThickness);
@@ -111,6 +111,8 @@ extern GLMFloat worldShape_friction(WorldShape_t *aEntity);
 extern void worldShape_setFriction(WorldShape_t *aEntity, GLMFloat aVal);
 extern GLMFloat worldShape_elasticity(WorldShape_t *aEntity);
 extern void worldShape_setElasticity(WorldShape_t *aEntity, GLMFloat aVal);
+extern WorldShapeGroup_t worldShape_group(WorldShape_t *aShape);
+extern void worldShape_setGroup(WorldShape_t *aShape, WorldShapeGroup_t aGroup);
 
 extern GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLMFloat aOuterRadius, vec2_t aOffset);
 extern GLMFloat world_momentForSegment(GLMFloat aMass, vec2_t a, vec2_t b);
