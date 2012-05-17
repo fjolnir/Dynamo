@@ -16,8 +16,6 @@ Class_t Class_GameTimer = {
 	(Obj_destructor_t)&gameTimer_destroy
 };
 
-
-
 GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback)
 {
 	GameTimer_t *out = obj_create_autoreleased(&Class_GameTimer);
