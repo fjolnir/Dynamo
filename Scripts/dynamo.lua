@@ -32,7 +32,7 @@ extern bool llist_insertValue(LinkedList_t *aList, void *aValueToInsert, void *a
 extern bool llist_deleteValue(LinkedList_t *aList, void *aValue);
 void llist_empty(LinkedList_t *aList);
 typedef void (*LinkedListApplier_t)(void *aValue);
-extern void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier); 
+extern void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier);
 typedef struct _Renderer Renderer_t;
 typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, void *aOwner, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 typedef struct _Renderable { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; } Renderable_t;
@@ -161,9 +161,7 @@ extern Class_t Class_WorldEntity;
 struct _WorldEntity { _Obj_guts _guts; World_t *world;  Obj_t *owner;  void *cpBody; LinkedList_t *shapes; WorldEntity_UpdateHandler updateHandler; WorldEntity_CollisionHandler preCollisionHandler; WorldEntity_CollisionHandler collisionHandler; WorldEntity_CollisionHandler postCollisionHandler;};
 struct _WorldShape { _Obj_guts _guts; void *cpShape;};
 struct _World { _Obj_guts _guts; void *cpSpace; LinkedList_t *entities; WorldEntity_t *staticEntity;};
-typedef enum {
-    kWorldJointType_Pin,    kWorldJointType_Slide,    kWorldJointType_Pivot,    kWorldJointType_Groove,    kWorldJointType_DampedSpring,    kWorldJointType_DampedRotarySpring,    kWorldJointType_RotaryLimit,    kWorldJointType_Ratchet,    kWorldJointType_Gear,    kWorldJointType_SimpleMotor
-} WorldJointType_t;
+typedef enum { kWorldJointType_Pin,    kWorldJointType_Slide,    kWorldJointType_Pivot,    kWorldJointType_Groove,    kWorldJointType_DampedSpring,    kWorldJointType_DampedRotarySpring,    kWorldJointType_RotaryLimit,    kWorldJointType_Ratchet,    kWorldJointType_Gear,    kWorldJointType_SimpleMotor } WorldJointType_t;
 extern Class_t Class_WorldConstraint;
 typedef struct _WorldConstraint {    World_t *world;     WorldEntity_t *a, *b;    WorldJointType_t type;    void *cpConstraint;} WorldConstraint_t;
 extern World_t *world_create(void);
@@ -207,6 +205,7 @@ extern WorldConstraint_t *worldConstr_createRotaryLimitJoint(WorldEntity_t *a, W
 extern WorldConstraint_t *worldConstr_createRatchetJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatchet);
 extern WorldConstraint_t *worldConstr_createGearJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatio);
 extern WorldConstraint_t *worldConstr_createSimpleMotorJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aRate);
+extern void worldConstr_invalidate(WorldConstraint_t *aConstraint);
 extern void draw_world(World_t *aWorld, bool aDrawBB);
 extern void draw_worldShape(WorldShape_t *aShape, WorldEntity_t *aEntity, bool aDrawBB);
 extern void draw_worldEntity(WorldEntity_t *aEntity, bool aDrawBB);
@@ -237,15 +236,6 @@ local function _obj_addToGC(obj)
 	ffi.gc(obj, lib.obj_release)
 	return obj
 end
-
-local function _wrapConstructor(fun)
-	return function(...)
-		print(fun)
-		local ret = fun(...)
-		return _obj_addToGC(ret)
-	end
-end
-
 function dynamo.pathForResource(name, type, directory)
 	type = type or nil
 	directory = directory or nil
@@ -266,10 +256,6 @@ function dynamo.log(...)
 		if info.what == "C" then
 			prefix = "<C function>: "
 		else
-			print(info.short_src)
-			print(info.currentline)
-			print(info.name)
-			
 			prefix = string.format("%s:%s (%s): ", info.short_src, info.currentline, info.name)
 		end
 	end
@@ -297,7 +283,7 @@ ffi.metatype("TextureAtlas_t", {
 	}
 })
 
-dynamo.createTextureAtlas = _wrapConstructor(lib.texAtlas_create)
+dynamo.createTextureAtlas = function(...) return _obj_addToGC(lib.texAtlas_create(...)) end
 
 function dynamo.loadTextureAtlas(path, origin, size)
 	local tex = dynamo.loadTexture(path)
@@ -325,6 +311,7 @@ function dynamo.createSprite(location, size, atlas, animations)
 
 	return _obj_addToGC(sprite)
 end
+
 
 --
 -- The Renderer
@@ -404,7 +391,8 @@ ffi.metatype("InputManager_t", {
 	}
 })
 
-local _createInputManager = _wrapConstructor(lib.input_createManager)
+local _createInputManager = function(...) return _obj_addToGC(lib.input_createManager(...)) end
+
 
 --
 -- Game timer
@@ -419,9 +407,9 @@ ffi.metatype("GameTimer_t", {
 	}
 })
 
-local _createTimer = _wrapConstructor(lib.gameTimer_create)
+local _createTimer = function(...) return _obj_addToGC(lib.gameTimer_create(...)) end
 
--- Time function (Apple/Linux only for now)
+-- Apple variant
 if dynamo.platform == dynamo.platforms.ios or dynamo.platform == dynamo.platforms.mac then
 	ffi.cdef[[
 	struct mach_timebase_info {
@@ -448,6 +436,7 @@ if dynamo.platform == dynamo.platforms.ios or dynamo.platform == dynamo.platform
 	function dynamo.time()
 		return dynamo.globalTime() - dynamo.startTime
 	end
+-- Linux variant
 elseif dynamo.platform == dynamo.platforms.android then
 	ffi.cdef[[
 		typedef int32_t clockid_t;
@@ -471,7 +460,7 @@ elseif dynamo.platform == dynamo.platforms.android then
 		return dynamo.globalTime() - dynamo.startTime
 	end
 else
-	error("Unsupported platform "..tostring(tonumber(dynamo.platform)))
+	error("Unsupported platform (Time function not yet ported) "..tostring(tonumber(dynamo.platform)))
 end
 
 function dynamo.renderable(lambda)
@@ -480,14 +469,15 @@ function dynamo.renderable(lambda)
 	return drawable
 end
 
+
 --
 -- Maps
 ffi.metatype("TMXMap_t", {
 	__index = {
-		getProperty = lib.tmx_mapGetPropertyNamed,
-		getLayer = tmx_mapGetLayerNamed,
-		getObjectGroup = tmx_mapGetObjectGroupNamed,
-		createLayerRenderable = _wrapConstructor(lib.tmx_createRenderableForLayer)
+		getProperty           = lib.tmx_mapGetPropertyNamed,
+		getLayer              = tmx_mapGetLayerNamed,
+		getObjectGroup        = tmx_mapGetObjectGroupNamed,
+		createLayerRenderable = function(...) return _obj_addToGC(lib.tmx_createRenderableForLayer(...)) end
 	}
 })
 
@@ -497,7 +487,7 @@ ffi.metatype("TMXLayer_t", {
 		generateAtlasDrawInfo = function(self, map)
 			local texOffsets = ffi.new("vec2_t[?]", self.numberOfTiles)
 			local screenCoords = ffi.new("vec2_t[?]", self.numberOfTiles)
-			
+
 			for y=0, map.height-1 do
 				for x=0, map.width-1 do
 					local idx = y*map.width + x
@@ -540,20 +530,20 @@ ffi.metatype("TMXTileset_t", {
 	}
 })
 
-dynamo.loadMap = _wrapConstructor(lib.tmx_readMapFile)
+dynamo.loadMap = function(...) return _obj_addToGC(lib.tmx_readMapFile(...)) end
+
 
 --
 -- Sound
 
-local _createSoundManager = _wrapConstructor(lib.soundManager_create)
-
+local _createSoundManager = function(...) return _obj_addToGC(lib.soundManager_create(...)) end
 
 ffi.metatype("SoundEffect_t", {
 	__index = {
-		play = lib.sfx_play,
-		stop = lib.sfx_stop,
+		play      = lib.sfx_play,
+		stop      = lib.sfx_stop,
 		isPlaying = lib.sfx_isPlaying,
-		unload = lib.sfx_unload
+		unload    = lib.sfx_unload
 	},
 	__newindex = function(self, key, val)
 		if key == "location" then
@@ -572,11 +562,11 @@ ffi.metatype("SoundEffect_t", {
 
 ffi.metatype("BackgroundMusic_t", {
 	__index = {
-		play = lib.bgm_play,
-		stop = lib.bgm_stop,
-		seek = lib.bgm_seek,
+		play      = lib.bgm_play,
+		stop      = lib.bgm_stop,
+		seek      = lib.bgm_seek,
 		isPlaying = lib.bgm_isPlaying,
-		unload = lib.bgm_unload
+		unload    = lib.bgm_unload
 	},
 	__newindex = function(self, key, val)
 		if key == "volume" then
@@ -587,26 +577,27 @@ ffi.metatype("BackgroundMusic_t", {
 	end
 })
 
-dynamo.loadSFX = _wrapConstructor(lib.sfx_load)
-dynamo.loadBGM = _wrapConstructor(lib.bgm_load)
+dynamo.loadSFX = function(...) return _obj_addToGC(lib.sfx_load(...)) end
+dynamo.loadBGM = function(...) return _obj_addToGC(lib.bgm_load(...)) end
+
 
 --
 -- Game world
 
 ffi.metatype("World_t", {
 	__index = {
-		addEntity = lib.world_addEntity,
-		gravity = lib.world_gravity,
-		step = lib.world_step,
-		momentForCircle = lib.world_momentForCircle,
+		addEntity        = lib.world_addEntity,
+		gravity          = lib.world_gravity,
+		step             = lib.world_step,
+		momentForCircle  = lib.world_momentForCircle,
 		momentForSegment = lib.world_momentForSegment,
-		momentForPoly = lib.world_momentForPoly,
-		momentForBox = lib.world_momentForBox,
-		draw = lib.draw_world,
-		drawShape = lib.draw_worldShape,
-		drawEntity = lib.draw_worldEntity,
-		pointQuery = lib.world_pointQuery,
-		createEntity = function(world, owner, mass, momentum, shapes)
+		momentForPoly    = lib.world_momentForPoly,
+		momentForBox     = lib.world_momentForBox,
+		draw             = lib.draw_world,
+		drawShape        = lib.draw_worldShape,
+		drawEntity       = lib.draw_worldEntity,
+		pointQuery       = lib.world_pointQuery,
+		createEntity     = function(world, owner, mass, momentum, shapes)
 			shapes = shapes or {}
 			local ret = lib.worldEnt_create(world, owner, mass, momentum)
 			for i,shape in ipairs(shapes) do
@@ -614,18 +605,16 @@ ffi.metatype("World_t", {
 			end
 			return _obj_addToGC(ret)
 		end,
-		createCircleShape = _wrapConstructor(lib.worldShape_createCircle),
-		createBoxShape = _wrapConstructor(lib.worldShape_createBox),
-		createSegmentShape = function(a, b, thickness)
-			local ret = lib.worldShape_createSegment(a, b, (thickness or 1))
-			return _obj_addToGC(ret)
+		createCircleShape  = function(self, ...) return _obj_addToGC(lib.worldShape_createCircle(...)) end,
+		createBoxShape     = function(self, ...) return _obj_addToGC(lib.worldShape_createBox(...)) end,
+		createSegmentShape = function(self, a, b, thickness)
+			return _obj_addToGC(lib.worldShape_createSegment(a, b, (thickness or 1)))
 		end,
-		createPolyShape = function(vertices)
+		createPolyShape = function(self, vertices)
 			if #vertices < 3 then
 				error("Too few vertices to create polygon shape")
 			end
-			local ret = lib.worldShape_createPoly(#vertices, vertices)
-			return _obj_addToGC(ret)
+			return _obj_addToGC(lib.worldShape_createPoly(#vertices, vertices))
 		end
 	},
 	__newindex = function(self, key, val)
@@ -634,44 +623,44 @@ ffi.metatype("World_t", {
 		end
 	end
 })
+local _createWorld = function(...)
+	return _obj_addToGC(lib.world_create(...))
+end
 
 ffi.metatype("WorldEntity_t", {
 	__index = {
-		location = lib.worldEnt_location,
-		--location = function(self)
-			--print("passed self: ", self)
-			--return lib.worldEnt_location(self)
-		--end,
-		angle = lib.worldEnt_angle,
-		velocity = lib.worldEnt_velocity,
-		addShape = lib.worldEnt_addShape,
-		applyForce = lib.worldEnt_applyForce,
+		location     = lib.worldEnt_location,
+		angle        = lib.worldEnt_angle,
+		velocity     = lib.worldEnt_velocity,
+		addShape     = lib.worldEnt_addShape,
+		applyForce   = lib.worldEnt_applyForce,
 		applyImpulse = lib.worldEnt_applyImpulse,
+
 		-- Shapes
 		addCircleShape = function(self, center, radius)
-			return self:addShape(dynamo.world.createCircleShape(center, radius))
+			return self:addShape(self.world:createCircleShape(center, radius))
 		end,
 		addBoxShape = function(self, size)
-			return self:addShape(dynamo.world.createBoxShape(size))
+			return self:addShape(self.world:createBoxShape(size))
 		end,
 		addSegmentShape = function(self, a, b, thickness)
-			return self:addShape(dynamo.world.createSegmentShape(a, b, thickness))
+			return self:addShape(self.world:createSegmentShape(a, b, thickness))
 		end,
 		addPolyShape = function(self, vertices)
-			return self:addShape(dynamo.world.createPolyShape(vertices))
+			return self:addShape(self.world:createPolyShape(vertices))
 		end,
 
 		-- Constraints
-		createPinJoint = _wrapConstructor(lib.worldConstr_createPinJoint),
-		createSlideJoint = _wrapConstructor(lib.worldConstr_createSlideJoint),
-		createPivotJoint = _wrapConstructor(lib.worldConstr_createPivotJoint),
-		createGrooveJoint = _wrapConstructor(lib.worldConstr_createGrooveJoint),
-		createDampedSpring = _wrapConstructor(lib.worldConstr_createDampedSpringJoint),
-		createDampedRotarySpring = _wrapConstructor(lib.worldConstr_createDampedRotarySpringJoint),
-		creatRotaryLimitJoint = _wrapConstructor(lib.worldConstr_createRotaryLimitJoint),
-		createRatchetJoint = _wrapConstructor(lib.worldConstr_createRatchetJoint),
-		createGearJoint = _wrapConstructor(lib.worldConstr_createGearJoint),
-		createSimpleMotorJoint = _wrapConstructor(lib.worldConstr_createSimpleMotorJoint),
+		createPinJoint           = function(...) return _obj_addToGC(lib.worldConstr_createPinJoint(...)) end,
+		createSlideJoint         = function(...) return _obj_addToGC(lib.worldConstr_createSlideJoint(...)) end,
+		createPivotJoint         = function(...) return _obj_addToGC(lib.worldConstr_createPivotJoint(...)) end,
+		createGrooveJoint        = function(...) return _obj_addToGC(lib.worldConstr_createGrooveJoint(...)) end,
+		createDampedSpring       = function(...) return _obj_addToGC(lib.worldConstr_createDampedSpringJoint(...)) end,
+		createDampedRotarySpring = function(...) return _obj_addToGC(lib.worldConstr_createDampedRotarySpringJoint(...)) end,
+		creatRotaryLimitJoint    = function(...) return _obj_addToGC(lib.worldConstr_createRotaryLimitJoint(...)) end,
+		createRatchetJoint       = function(...) return _obj_addToGC(lib.worldConstr_createRatchetJoint(...)) end,
+		createGearJoint          = function(...) return _obj_addToGC(lib.worldConstr_createGearJoint(...)) end,
+		createSimpleMotorJoint   = function(...) return _obj_addToGC(lib.worldConstr_createSimpleMotorJoint(...)) end,
 	},
 	__newindex = function(self, key, val)
 		if key == "location" then
@@ -701,7 +690,11 @@ ffi.metatype("WorldShape_t", {
 	end
 })
 
-local _createWorld = _wrapConstructor(lib.world_create)
+ffi.metatype("WorldConstraint_t", {
+	__index = {
+		invalidate = lib.worldConstr_invalidate
+	}
+})
 
 --
 -- Lifecycle/HighLevelInterface functions
@@ -714,7 +707,7 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	dynamo.renderer = _createRenderer(viewport)
 	lib.draw_init(dynamo.renderer)
 	dynamo.renderer:handleResize(viewport)
-	
+
 	dynamo.timer = _createTimer(desiredFPS, updateCallback)
 	lib.obj_retain(dynamo.renderer)
 	lib.obj_retain(dynamo.timer)
@@ -735,6 +728,8 @@ function dynamo.cleanup()
 	dynamo.renderer = nil
 	dynamo.timer = nil
 	dynamo.inputManager = nil
+	dynamo.world = nil
+	dynamo.soundManager = nil
 	lib.draw_cleanup()
 end
 
@@ -742,7 +737,7 @@ function dynamo.postTapEvent(finger, isDown, x, y)
 	finger = finger or 0
 	local pos = vec2(x or 0, y or 0)
 	local state = lib.kInputState_up
-	if isDown == true then 
+	if isDown == true then
 		state = lib.kInputState_down
 	end
 	dynamo.inputManager:postMomentaryEvent(lib.kInputTouch_tap1+finger, nil, pos, state)
@@ -757,7 +752,6 @@ function dynamo.postPanEvent(finger, isDown, x, y)
 	end
 	dynamo.inputManager:postMomentaryEvent(lib.kInputTouch_pan1+finger, nil, pos, state)
 end
-postPanEvent = dynamo.postPanEvent
 
 function dynamo.cycle()
 	dynamo.inputManager:postActiveEvents()
@@ -767,3 +761,4 @@ function dynamo.cycle()
 end
 
 return dynamo
+

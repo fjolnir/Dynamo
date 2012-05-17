@@ -79,6 +79,7 @@ typedef struct _WorldConstraint {
     WorldEntity_t *a, *b;
     WorldJointType_t type;
     cpConstraint *cpConstraint;
+    bool isValid;
 } WorldConstraint_t;
 
 extern World_t *world_create(void);
@@ -129,4 +130,5 @@ extern WorldConstraint_t *worldConstr_createRotaryLimitJoint(WorldEntity_t *a, W
 extern WorldConstraint_t *worldConstr_createRatchetJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatchet);
 extern WorldConstraint_t *worldConstr_createGearJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatio);
 extern WorldConstraint_t *worldConstr_createSimpleMotorJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aRate);
+extern void worldConstr_invalidate(WorldConstraint_t *aConstraint);
 #endif

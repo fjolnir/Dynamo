@@ -341,7 +341,7 @@ Class_t Class_WorldConstraint = {
 
 static void world_destroyJoint(WorldConstraint_t *aJoint)
 {
-    cpSpaceRemoveConstraint(aJoint->world->cpSpace, aJoint->cpConstraint);
+    worldConstr_invalidate(aJoint);
     cpConstraintFree(aJoint->cpConstraint);
     obj_release(aJoint->a);
     obj_release(aJoint->b);
@@ -472,6 +472,14 @@ WorldConstraint_t *worldConstr_createSimpleMotorJoint(WorldEntity_t *a, WorldEnt
     ret->cpConstraint = cpSimpleMotorNew(a->cpBody, b->cpBody, aRate);
     cpSpaceAddConstraint(ret->world->cpSpace, ret->cpConstraint);
     return ret;
+}
+
+void worldConstr_invalidate(WorldConstraint_t *aConstraint)
+{
+    if(!aConstraint->isValid)
+        return;
+    aConstraint->isValid = false;
+    cpSpaceRemoveConstraint(aConstraint->world->cpSpace, aConstraint->cpConstraint);
 }
 
 vec2_t worldConstr_anchorA(WorldConstraint_t *aConstraint)
