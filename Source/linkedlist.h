@@ -1,4 +1,9 @@
-// Note: linked lists do not call obj_retain on their values (since they support arbitrary pointers)
+/*!
+	@header JSON
+	@abstract
+	@discussion A linked list implementation.
+*/
+
 #ifndef _LINKEDLIST_H_
 #define _LINKEDLIST_H_
 

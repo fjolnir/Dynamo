@@ -1,4 +1,9 @@
-// Reference counting
+/*!
+	@header Object
+	@abstract
+	@discussion Provides reference counting and type checking for structs.
+*/
+
 #ifndef _OBJECT_H_
 #define _OBJECT_H_
 

@@ -1,3 +1,9 @@
+/*!
+	@header PNG Loader
+	@abstract
+	@discussion Provides loading of PNGs.
+*/
+
 #ifndef _PNGLOADER_H_
 #define _PNGLOADER_H_
 #include "object.h"

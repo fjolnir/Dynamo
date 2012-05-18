@@ -1,4 +1,8 @@
-// Just a list of renderables encapsulated in a single drawable with a common transformation
+/*!
+	@header Scene
+	@abstract
+	@discussion A list of renderables encapsulated in a single drawable with a common transformation
+*/
 
 #ifndef _SCENE_H_
 #define _SCENE_H_

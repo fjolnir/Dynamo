@@ -1,8 +1,13 @@
-// A mechanism to define callbacks for keyboard events
-// Does not actually provide a method for listening to the keyboard.
-// Rather you would pipe events from whatever middleware framework or library you are using
-// on your platform
+/*!
+	@header Input
+	@abstract
+	@discussion A mechanism to define callbacks for keyboard events
+	Does not actually provide a method for listening to the keyboard.
+	Rather you would pipe events from whatever middleware framework or library you are using
+	on your platform
+*/
 
+// 
 #include "object.h"
 #include "linkedlist.h"
 #include "GLMath/GLMath.h"

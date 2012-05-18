@@ -1,3 +1,9 @@
+/*!
+	@header Drawing Utilities
+	@abstract
+	@discussion Manages the game loop.
+*/
+
 #include "object.h"
 #include <stdbool.h>
 #include <GLMath/GLMath.h>

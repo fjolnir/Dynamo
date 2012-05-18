@@ -1,3 +1,9 @@
+/*!
+	@header Lua Context
+	@abstract
+	@discussion Tools for managing a lua context
+*/
+
 #ifndef _LUACTX_H_
 #define _LUACTX_H_
 

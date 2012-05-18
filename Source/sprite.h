@@ -1,5 +1,10 @@
-// Sprite class supporting atlases with multiple animations consisting of multiple frames
-// Y Offset: Animations, X Offset: Frames
+/*!
+	@header Sprite
+	@abstract
+	@discussion Sprite class supporting atlases with multiple animations consisting of multiple frames
+
+	Y Offset in atlas: Animations, X Offset: Frames
+*/
 
 #include "object.h"
 #include "renderer.h"

@@ -1,4 +1,8 @@
-// A wrapper around chipmunk
+/*!
+	@header Physics World
+	@abstract
+	@discussion A wrapper around chipmunk physics.
+*/
 
 #ifndef __WORLD_H_
 #define __WORLD_H_

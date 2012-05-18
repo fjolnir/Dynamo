@@ -1,4 +1,8 @@
-// Utilities for simple drawing
+/*!
+	@header Drawing Utilities
+	@abstract
+	@discussion Utilities for simple drawing.
+*/
 
 #include "GLMath/GLMath.h"
 #include "texture.h"

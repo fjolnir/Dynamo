@@ -1,3 +1,8 @@
+/*!
+	@header Array
+	@abstract
+	@discussion Implementation of a resizable pointer array.
+*/
 #ifndef _ARRAY_H_
 #define _ARRAY_H_
 

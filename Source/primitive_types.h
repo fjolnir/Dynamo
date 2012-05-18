@@ -1,5 +1,10 @@
-// Objectified primitive types created in order to be able to memory manage/insert them along with Obj_t's into collections
+/*!
+	@header Primitive Type Objects
+	@abstract
+	@discussion Provides Objectified primitive types created in order to be able to memory manage/insert them along with Obj_t's into collections/type check them.
 
+*/
+// 
 #ifndef _PRIMITIVE_TYPES_
 #define _PRIMITIVE_TYPES_
 

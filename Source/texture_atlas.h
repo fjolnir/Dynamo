@@ -1,8 +1,11 @@
-// Splits a texture into multiple evenly sized chunks (Not in memory)
-// relative to a starting point.
+/*!
+	@header Texture Atlas
+	@abstract
+	@discussion Splits a texture into multiple evenly sized chunks (Not in memory) relative to a starting point.
 
-// Usage example: multiple atlases share the same texture, but use a different origin&size
-//   thereby allowing multiple differently sized objects to be drawn using a single texture in a single draw call
+	<b>Usage case for relative starting point:</b> multiple atlases share the same texture, but use a different origin&size
+	thereby allowing multiple differently sized objects to be drawn using a single texture in a single draw call
+*/
 
 #include "object.h"
 #include "texture.h"

@@ -1,3 +1,9 @@
+/*!
+	@header Sound
+	@abstract
+	@discussion Sound management & playback.
+*/
+
 #include "GLMath/GLMath.h"
 #include "object.h"
 

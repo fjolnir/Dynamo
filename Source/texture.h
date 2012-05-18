@@ -1,3 +1,9 @@
+/*!
+	@header Texture
+	@abstract
+	@discussion Provides texture loading.
+*/
+
 #include "object.h"
 #include "glutils.h"
 #include "renderer.h"

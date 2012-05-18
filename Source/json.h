@@ -1,4 +1,11 @@
-// Supports string, number, dictionary & array
+/*!
+	@header JSON
+	@abstract
+	@discussion JSON parsing&generation.
+
+	Supports string, number, dictionary & array
+*/
+
 #ifndef __JSON_H_
 #define __JSON_H_
 

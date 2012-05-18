@@ -1,3 +1,9 @@
+/*!
+	@header Shader
+	@abstract
+	@discussion Shader management.
+*/
+
 // Shader loading
 #include "object.h"
 #include "glutils.h"

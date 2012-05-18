@@ -1,4 +1,8 @@
-// A trie based dictionary (defined over ascii: 0-127)
+/*!
+	@header Background
+	@abstract
+	@discussion A trie based dictionary (defined over ascii: 0-127)
+*/
 
 #ifndef _DICTIONARY_H_
 #define _DICTIONARY_H_

@@ -1,7 +1,11 @@
-// Draws a background
-// Supports up to 4 parallax layers
+/*!
+	@header Background
+	@abstract
+	@discussion Draws a background
+	Supports up to 4 parallax layers
 
-// Note: Assumes all layers have textures of the same size
+	<b>Note:</b> Assumes all layers have textures of the same size
+*/
 
 #ifndef _BACKGROUND_H_
 #define _BACKGROUND_H_
