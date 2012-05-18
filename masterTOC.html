@@ -1,0 +1,769 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<title>API Reference: Dynamo</title>
+<!-- A big scary CSS block --><style type="text/css"><!--#pagehead { FONT-WEIGHT: bold; FONT-SIZE: 32px; COLOR: #000000; FONT-FAMILY: lucida grande, geneva, helvetica, arial, sans-serif; } td { font-size: 10px; } a:link {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #0000ff;} a:visited {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #0000ff;} a:visited:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} a:active {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} a:hover {text-decoration: underline; font-family: lucida grande, geneva, helvetica, arial, sans-serif; color: #ff6600;} h4 {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: tiny; font-weight: bold;} body {text-decoration: none; font-family: lucida grande, geneva, helvetica, arial, sans-serif; font-size: 10pt;} --></style>
+<!-- End big scary CSS block -->
+</head>
+<head><meta name="ROBOTS" content="NOINDEX"></head>
+<body bgcolor="#ffffff">
+
+<a name="MYTAG"></a>
+
+<center>
+
+<!-- start of header -->
+<!--#include virtual="/path/to/header.html"-->
+<!-- end of header -->
+
+<table border="0" cellpadding="0" cellspacing="0" width="600">
+<tr height="5">
+<td width="600" height="5"><br></td>
+			</tr>
+<tr>
+<td width="600">
+					<div id="pagehead">Dynamo</div>
+				</td>
+			</tr>
+<tr height="10">
+<td width="600" height="10"><br></td>
+			</tr>
+<tr>
+<td valign="top" width="600"><font face="Geneva,Helvetica,Arial" size="2"><span id="bodytext"> 
+<p>Dynamo is a lightweight 2D engine written in C with LuaJIT bindings.
+ </p></span></font></td>
+			</tr>
+<tr height="10">
+<td height="10" width="600"></td>
+			</tr>
+<tr height="5">
+<td height="5" width="600">
+					<hr alt="">
+<br>
+</td>
+			</tr>
+<tr>
+<td width="600" align="center" valign="top">
+<h2>Headers</h2>
+				
+      <blockquote class="groupindent">
+<table border="0" cellpadding="1" cellspacing="0" width="420">
+<tr>
+<td width="33%">
+<a name="group___header_AR" href="array_h/index.html">Array</a><br>
+</td>
+<td width="33%">
+<a href="json_h/index.html">JSON</a><br>
+</td>
+<td width="33%">
+<a name="group___header_SC" href="scene_h/index.html">Scene</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a name="group___header_BA" href="dictionary_h/index.html">Background</a><br>
+</td>
+<td width="33%">
+<a name="group___header_LU" href="lua_h/index.html">Lua Context</a><br>
+</td>
+<td width="33%">
+<a name="group___header_SH" href="shader_h/index.html">Shader</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a href="background_h/index.html">Background</a><br>
+</td>
+<td width="33%">
+<a name="group___header_OB" href="object_h/index.html">Object</a><br>
+</td>
+<td width="33%">
+<a name="group___header_SO" href="sound_h/index.html">Sound</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a name="group___header_DR" href="gametimer_h/index.html">Drawing Utilities</a><br>
+</td>
+<td width="33%">
+<a name="group___header_PH" href="world_h/index.html">Physics World</a><br>
+</td>
+<td width="33%">
+<a name="group___header_SP" href="sprite_h/index.html">Sprite</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a href="drawutils_h/index.html">Drawing Utilities</a><br>
+</td>
+<td width="33%">
+<a name="group___header_PN" href="png_loader_h/index.html">PNG Loader</a><br>
+</td>
+<td width="33%">
+<a name="group___header_TE" href="texture_h/index.html">Texture</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a name="group___header_IN" href="input_h/index.html">Input</a><br>
+</td>
+<td width="33%">
+<a name="group___header_PR" href="primitive_types_h/index.html">Primitive Type Objects</a><br>
+</td>
+<td width="33%">
+<a href="texture_atlas_h/index.html">Texture Atlas</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a name="group___header_JS" href="linkedlist_h/index.html">JSON</a><br>
+</td>
+<td width="33%">
+<a name="group___header_RE" href="renderer_h/index.html">Renderer</a><br>
+</td>
+<td width="33%">
+<a name="group___header_UT" href="util_h/index.html">Utilities</a><br>
+</td>
+</tr>
+</table>
+</blockquote>
+
+<h2>Functions</h2>
+      <blockquote class="letterlist"><table width="80%"><tr><td>
+<a href="#group___function_AR">A</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_BA">B</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_DI">D</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_GA">G</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_IN">I</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_LL">L</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_NU">N</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_OB">O</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_PA">P</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_RE">R</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_SC">S</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_TE">T</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_UT">U</a>&#160;<span class="hierpipe">|</span> 
+<a href="#group___function_WO">W</a>
+</td></tr></table></blockquote>
+<blockquote class="groupindent">
+<table border="0" cellpadding="1" cellspacing="0" width="420">
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/array_containsPtr" name="group___function_AR" retarget="yes" href="array_h/index.html#//apple_ref/c/func/array_containsPtr">array_containsPtr</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/llist_create" retarget="yes" href="linkedlist_h/index.html#//apple_ref/c/func/llist_create">llist_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/string_create" name="group___function_ST" retarget="yes" href="primitive_types_h/index.html#//apple_ref/c/func/string_create">string_create</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/array_create" retarget="yes" href="array_h/index.html#//apple_ref/c/func/array_create">array_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/llist_deleteValue" retarget="yes" href="linkedlist_h/index.html#//apple_ref/c/func/llist_deleteValue">llist_deleteValue</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/texAtlas_create" name="group___function_TE" retarget="yes" href="texture_atlas_h/index.html#//apple_ref/c/func/texAtlas_create">texAtlas_create</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/array_get" retarget="yes" href="array_h/index.html#//apple_ref/c/func/array_get">array_get</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/llist_empty" retarget="yes" href="linkedlist_h/index.html#//apple_ref/c/func/llist_empty">llist_empty</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/texAtlas_getTextureRect" retarget="yes" href="texture_atlas_h/index.html#//apple_ref/c/func/texAtlas_getTextureRect">texAtlas_getTextureRect</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/array_pop" retarget="yes" href="array_h/index.html#//apple_ref/c/func/array_pop">array_pop</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/llist_insertValue" retarget="yes" href="linkedlist_h/index.html#//apple_ref/c/func/llist_insertValue">llist_insertValue</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/textureRectangle_create" retarget="yes" href="texture_h/index.html#//apple_ref/c/func/textureRectangle_create">textureRectangle_create</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/array_push" retarget="yes" href="array_h/index.html#//apple_ref/c/func/array_push">array_push</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/llist_popValue" retarget="yes" href="linkedlist_h/index.html#//apple_ref/c/func/llist_popValue">llist_popValue</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/textureRectangle_createWithPixelCoordinates" retarget="yes" href="texture_h/index.html#//apple_ref/c/func/textureRectangle_createWithPixelCoordinates">textureRectangle_createWithPixelCoordinates</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/array_resize" retarget="yes" href="array_h/index.html#//apple_ref/c/func/array_resize">array_resize</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/llist_pushValue" retarget="yes" href="linkedlist_h/index.html#//apple_ref/c/func/llist_pushValue">llist_pushValue</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/textureRectangle_createWithSizeInPixels" retarget="yes" href="texture_h/index.html#//apple_ref/c/func/textureRectangle_createWithSizeInPixels">textureRectangle_createWithSizeInPixels</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/array_top" retarget="yes" href="array_h/index.html#//apple_ref/c/func/array_top">array_top</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/luaCtx_addSearchPath" name="group___function_LU" retarget="yes" href="lua_h/index.html#//apple_ref/c/func/luaCtx_addSearchPath">luaCtx_addSearchPath</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/texture_loadFromPng" retarget="yes" href="texture_h/index.html#//apple_ref/c/func/texture_loadFromPng">texture_loadFromPng</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/autoReleasePool_create" name="group___function_AU" retarget="yes" href="object_h/index.html#//apple_ref/c/func/autoReleasePool_create">autoReleasePool_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/luaCtx_createContext" retarget="yes" href="lua_h/index.html#//apple_ref/c/func/luaCtx_createContext">luaCtx_createContext</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/util_pathForResource" name="group___function_UT" retarget="yes" href="util_h/index.html#//apple_ref/c/func/util_pathForResource">util_pathForResource</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/autoReleasePool_drain" retarget="yes" href="object_h/index.html#//apple_ref/c/func/autoReleasePool_drain">autoReleasePool_drain</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/luaCtx_executeFile" retarget="yes" href="lua_h/index.html#//apple_ref/c/func/luaCtx_executeFile">luaCtx_executeFile</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/util_platform" retarget="yes" href="util_h/index.html#//apple_ref/c/func/util_platform">util_platform</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/autoReleasePool_getGlobal" retarget="yes" href="object_h/index.html#//apple_ref/c/func/autoReleasePool_getGlobal">autoReleasePool_getGlobal</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/luaCtx_executeString" retarget="yes" href="lua_h/index.html#//apple_ref/c/func/luaCtx_executeString">luaCtx_executeString</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/util_readFile" retarget="yes" href="util_h/index.html#//apple_ref/c/func/util_readFile">util_readFile</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/autoReleasePool_push" retarget="yes" href="object_h/index.html#//apple_ref/c/func/autoReleasePool_push">autoReleasePool_push</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/luaCtx_pcall" retarget="yes" href="lua_h/index.html#//apple_ref/c/func/luaCtx_pcall">luaCtx_pcall</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createDampedRotarySpringJoint" name="group___function_WO" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createDampedRotarySpringJoint">worldConstr_createDampedRotarySpringJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/background_create" name="group___function_BA" retarget="yes" href="background_h/index.html#//apple_ref/c/func/background_create">background_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/number_create" name="group___function_NU" retarget="yes" href="primitive_types_h/index.html#//apple_ref/c/func/number_create">number_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createDampedSpringJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createDampedSpringJoint">worldConstr_createDampedSpringJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/background_createLayer" retarget="yes" href="background_h/index.html#//apple_ref/c/func/background_createLayer">background_createLayer</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/objToJSON" name="group___function_OB" retarget="yes" href="json_h/index.html#//apple_ref/c/func/objToJSON">objToJSON</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createGearJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createGearJoint">worldConstr_createGearJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/background_setLayer" retarget="yes" href="background_h/index.html#//apple_ref/c/func/background_setLayer">background_setLayer</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/obj_autorelease" retarget="yes" href="object_h/index.html#//apple_ref/c/func/obj_autorelease">obj_autorelease</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createGrooveJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createGrooveJoint">worldConstr_createGrooveJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/bgm_isPlaying" name="group___function_BG" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/bgm_isPlaying">bgm_isPlaying</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/obj_create" retarget="yes" href="object_h/index.html#//apple_ref/c/func/obj_create">obj_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createPinJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createPinJoint">worldConstr_createPinJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/bgm_load" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/bgm_load">bgm_load</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/obj_create_autoreleased" retarget="yes" href="object_h/index.html#//apple_ref/c/func/obj_create_autoreleased">obj_create_autoreleased</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createPivotJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createPivotJoint">worldConstr_createPivotJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/bgm_play" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/bgm_play">bgm_play</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/obj_getClass" retarget="yes" href="object_h/index.html#//apple_ref/c/func/obj_getClass">obj_getClass</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createRatchetJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createRatchetJoint">worldConstr_createRatchetJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/bgm_seek" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/bgm_seek">bgm_seek</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/obj_isClass" retarget="yes" href="object_h/index.html#//apple_ref/c/func/obj_isClass">obj_isClass</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createRotaryLimitJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createRotaryLimitJoint">worldConstr_createRotaryLimitJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/bgm_setVolume" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/bgm_setVolume">bgm_setVolume</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/obj_release" retarget="yes" href="object_h/index.html#//apple_ref/c/func/obj_release">obj_release</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createSimpleMotorJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createSimpleMotorJoint">worldConstr_createSimpleMotorJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/bgm_stop" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/bgm_stop">bgm_stop</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/obj_retain" retarget="yes" href="object_h/index.html#//apple_ref/c/func/obj_retain">obj_retain</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_createSlideJoint" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_createSlideJoint">worldConstr_createSlideJoint</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/bgm_unload" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/bgm_unload">bgm_unload</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/parseJSON" name="group___function_PA" retarget="yes" href="json_h/index.html#//apple_ref/c/func/parseJSON">parseJSON</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldConstr_invalidate" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldConstr_invalidate">worldConstr_invalidate</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/dict_apply" name="group___function_DI" retarget="yes" href="dictionary_h/index.html#//apple_ref/c/func/dict_apply">dict_apply</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/png_load" name="group___function_PN" retarget="yes" href="png_loader_h/index.html#//apple_ref/c/func/png_load">png_load</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_addShape" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_addShape">worldEnt_addShape</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/dict_create" retarget="yes" href="dictionary_h/index.html#//apple_ref/c/func/dict_create">dict_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/renderer_create" name="group___function_RE" retarget="yes" href="renderer_h/index.html#//apple_ref/c/func/renderer_create">renderer_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_angle" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_angle">worldEnt_angle</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/dict_get" retarget="yes" href="dictionary_h/index.html#//apple_ref/c/func/dict_get">dict_get</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/renderer_deleteRenderable" retarget="yes" href="renderer_h/index.html#//apple_ref/c/func/renderer_deleteRenderable">renderer_deleteRenderable</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_applyForce" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_applyForce">worldEnt_applyForce</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/dict_remove" retarget="yes" href="dictionary_h/index.html#//apple_ref/c/func/dict_remove">dict_remove</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/renderer_display" retarget="yes" href="renderer_h/index.html#//apple_ref/c/func/renderer_display">renderer_display</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_applyImpulse" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_applyImpulse">worldEnt_applyImpulse</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/dict_set" retarget="yes" href="dictionary_h/index.html#//apple_ref/c/func/dict_set">dict_set</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/renderer_insertRenderable" retarget="yes" href="renderer_h/index.html#//apple_ref/c/func/renderer_insertRenderable">renderer_insertRenderable</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_create" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_create">worldEnt_create</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_circle" name="group___function_DR" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_circle">draw_circle</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/renderer_popRenderable" retarget="yes" href="renderer_h/index.html#//apple_ref/c/func/renderer_popRenderable">renderer_popRenderable</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_location" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_location">worldEnt_location</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_cleanup" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_cleanup">draw_cleanup</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/renderer_pushRenderable" retarget="yes" href="renderer_h/index.html#//apple_ref/c/func/renderer_pushRenderable">renderer_pushRenderable</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_setAngle" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_setAngle">worldEnt_setAngle</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_ellipse" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_ellipse">draw_ellipse</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/scene_create" name="group___function_SC" retarget="yes" href="scene_h/index.html#//apple_ref/c/func/scene_create">scene_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_setLocation" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_setLocation">worldEnt_setLocation</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_init" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_init">draw_init</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/scene_deleteRenderable" retarget="yes" href="scene_h/index.html#//apple_ref/c/func/scene_deleteRenderable">scene_deleteRenderable</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_setVelocity" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_setVelocity">worldEnt_setVelocity</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_lineSeg" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_lineSeg">draw_lineSeg</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/scene_insertRenderable" retarget="yes" href="scene_h/index.html#//apple_ref/c/func/scene_insertRenderable">scene_insertRenderable</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldEnt_velocity" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldEnt_velocity">worldEnt_velocity</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_polygon" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_polygon">draw_polygon</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/scene_popRenderable" retarget="yes" href="scene_h/index.html#//apple_ref/c/func/scene_popRenderable">scene_popRenderable</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_createBox" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_createBox">worldShape_createBox</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_quad" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_quad">draw_quad</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/scene_pushRenderable" retarget="yes" href="scene_h/index.html#//apple_ref/c/func/scene_pushRenderable">scene_pushRenderable</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_createCircle" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_createCircle">worldShape_createCircle</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_rect" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_rect">draw_rect</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_isPlaying" name="group___function_SF" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_isPlaying">sfx_isPlaying</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_createPoly" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_createPoly">worldShape_createPoly</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_texture" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_texture">draw_texture</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_load" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_load">sfx_load</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_createSegment" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_createSegment">worldShape_createSegment</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_textureAtlas" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_textureAtlas">draw_textureAtlas</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_play" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_play">sfx_play</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_elasticity" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_elasticity">worldShape_elasticity</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_textureAtlas_getVertices" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_textureAtlas_getVertices">draw_textureAtlas_getVertices</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_setLocation" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_setLocation">sfx_setLocation</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_friction" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_friction">worldShape_friction</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_texturePortion" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_texturePortion">draw_texturePortion</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_setLooping" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_setLooping">sfx_setLooping</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_group" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_group">worldShape_group</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_world" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_world">draw_world</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_setPitch" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_setPitch">sfx_setPitch</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_setElasticity" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_setElasticity">worldShape_setElasticity</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_worldEntity" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_worldEntity">draw_worldEntity</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_setVolume" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_setVolume">sfx_setVolume</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_setFriction" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_setFriction">worldShape_setFriction</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/draw_worldShape" retarget="yes" href="drawutils_h/index.html#//apple_ref/c/func/draw_worldShape">draw_worldShape</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_stop" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_stop">sfx_stop</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/worldShape_setGroup" retarget="yes" href="world_h/index.html#//apple_ref/c/func/worldShape_setGroup">worldShape_setGroup</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/gameTimer_afterDelay" name="group___function_GA" retarget="yes" href="gametimer_h/index.html#//apple_ref/c/func/gameTimer_afterDelay">gameTimer_afterDelay</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sfx_unload" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/sfx_unload">sfx_unload</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_addEntity" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_addEntity">world_addEntity</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/gameTimer_create" retarget="yes" href="gametimer_h/index.html#//apple_ref/c/func/gameTimer_create">gameTimer_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/shader_getAttributeLocation" name="group___function_SH" retarget="yes" href="shader_h/index.html#//apple_ref/c/func/shader_getAttributeLocation">shader_getAttributeLocation</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_create" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_create">world_create</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/gameTimer_interpolationSinceLastUpdate" retarget="yes" href="gametimer_h/index.html#//apple_ref/c/func/gameTimer_interpolationSinceLastUpdate">gameTimer_interpolationSinceLastUpdate</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/shader_getUniformLocation" retarget="yes" href="shader_h/index.html#//apple_ref/c/func/shader_getUniformLocation">shader_getUniformLocation</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_gravity" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_gravity">world_gravity</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/gameTimer_step" retarget="yes" href="gametimer_h/index.html#//apple_ref/c/func/gameTimer_step">gameTimer_step</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/shader_load" retarget="yes" href="shader_h/index.html#//apple_ref/c/func/shader_load">shader_load</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_momentForBox" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_momentForBox">world_momentForBox</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/input_addObserver" name="group___function_IN" retarget="yes" href="input_h/index.html#//apple_ref/c/func/input_addObserver">input_addObserver</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/shader_loadFromFiles" retarget="yes" href="shader_h/index.html#//apple_ref/c/func/shader_loadFromFiles">shader_loadFromFiles</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_momentForCircle" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_momentForCircle">world_momentForCircle</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/input_beginEvent" retarget="yes" href="input_h/index.html#//apple_ref/c/func/input_beginEvent">input_beginEvent</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/shader_makeActive" retarget="yes" href="shader_h/index.html#//apple_ref/c/func/shader_makeActive">shader_makeActive</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_momentForPoly" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_momentForPoly">world_momentForPoly</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/input_createManager" retarget="yes" href="input_h/index.html#//apple_ref/c/func/input_createManager">input_createManager</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/shader_makeInactive" retarget="yes" href="shader_h/index.html#//apple_ref/c/func/shader_makeInactive">shader_makeInactive</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_momentForSegment" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_momentForSegment">world_momentForSegment</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/input_createObserver" retarget="yes" href="input_h/index.html#//apple_ref/c/func/input_createObserver">input_createObserver</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/shader_updateMatrices" retarget="yes" href="shader_h/index.html#//apple_ref/c/func/shader_updateMatrices">shader_updateMatrices</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_pointQuery" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_pointQuery">world_pointQuery</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/input_endEvent" retarget="yes" href="input_h/index.html#//apple_ref/c/func/input_endEvent">input_endEvent</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/soundManager_create" name="group___function_SO" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/soundManager_create">soundManager_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_removeEntity" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_removeEntity">world_removeEntity</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/input_postActiveEvents" retarget="yes" href="input_h/index.html#//apple_ref/c/func/input_postActiveEvents">input_postActiveEvents</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/soundManager_makeCurrent" retarget="yes" href="sound_h/index.html#//apple_ref/c/func/soundManager_makeCurrent">soundManager_makeCurrent</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_setGravity" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_setGravity">world_setGravity</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/input_postMomentaryEvent" retarget="yes" href="input_h/index.html#//apple_ref/c/func/input_postMomentaryEvent">input_postMomentaryEvent</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sprite_create" name="group___function_SP" retarget="yes" href="sprite_h/index.html#//apple_ref/c/func/sprite_create">sprite_create</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/world_step" retarget="yes" href="world_h/index.html#//apple_ref/c/func/world_step">world_step</a><br>
+</td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/input_removeObserver" retarget="yes" href="input_h/index.html#//apple_ref/c/func/input_removeObserver">input_removeObserver</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sprite_createAnimation" retarget="yes" href="sprite_h/index.html#//apple_ref/c/func/sprite_createAnimation">sprite_createAnimation</a><br>
+</td>
+<td width="33%"></td>
+</tr>
+<tr>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/llist_apply" name="group___function_LL" retarget="yes" href="linkedlist_h/index.html#//apple_ref/c/func/llist_apply">llist_apply</a><br>
+</td>
+<td width="33%">
+<a logicalpath="//apple_ref/c/func/sprite_step" retarget="yes" href="sprite_h/index.html#//apple_ref/c/func/sprite_step">sprite_step</a><br>
+</td>
+<td width="33%"></td>
+</tr>
+</table>
+</blockquote>
+
+    </td>
+			</tr>
+</table>
+<!-- start of footer --><!-- START FOOTER TABLE --><table width="600" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td width="600"><div style="min-width: 1px; width: 1px; min-height: 48px; height: 48px;"></div></td></tr>
+<tr><td bgcolor="#919699" colspan="2"><div style="width: 600px; min-width: 600px; height: 1px; min-height: 1px;"></div></td></tr>
+<tr><td><div style="width: 1; min-width: 1; height: 17px; min-height: 17px;"></div></td></tr>
+<tr>
+<td> 
+	<div align="center">
+	
+	</div>
+	</td>
+</tr>
+</table>
+</center>
+<!-- END FOOTER TABLE -->
+
+<!-- end of footer -->
+	
+
+
+	
+
+</body>
+</html>
