@@ -5,7 +5,9 @@
 	#include <CoreFoundation/CoreFoundation.h>
 #endif
 
-BOOL util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen)
+typedef signed char BOOL;
+
+bool util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen)
 {
     assert(output != NULL && maxLen > 0);
 

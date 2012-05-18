@@ -85,15 +85,15 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 		// Parse the tiles and resolve the global tile ids
 		mxml_node_t *dataNode = mxmlFindElement(tempNode, tree, "data", NULL, NULL, MXML_DESCEND_FIRST);
 		assert(dataNode);
-        mxml_node_t **tileNodes = _mxmlFindChildren(dataNode, tree, "tile", &out->layers[i].numberOfTiles);
-        assert(out->layers[i].numberOfTiles == out->width*out->height);
+		mxml_node_t **tileNodes = _mxmlFindChildren(dataNode, tree, "tile", &out->layers[i].numberOfTiles);
+		assert(out->layers[i].numberOfTiles == out->width*out->height);
 
-        out->layers[i].tiles = malloc(sizeof(TMXTile_t)*out->layers[i].numberOfTiles);
-        for(int j = 0; j < out->layers[i].numberOfTiles; ++j) {
-            int gid = _mxmlElementGetAttrAsInt(tileNodes[j], "gid", 0);
-            out->layers[i].tiles[j] = _tmx_mapCreateTileForTileGID(out, gid);
-        }
-        free(tileNodes);
+		out->layers[i].tiles = malloc(sizeof(TMXTile_t)*out->layers[i].numberOfTiles);
+		for(int j = 0; j < out->layers[i].numberOfTiles; ++j) {
+			int gid = _mxmlElementGetAttrAsInt(tileNodes[j], "gid", 0);
+			out->layers[i].tiles[j] = _tmx_mapCreateTileForTileGID(out, gid);
+		}
+		free(tileNodes);
 	}
 	free(layerNodes);
 
@@ -214,9 +214,9 @@ static TMXTile_t _tmx_mapCreateTileForTileGID(TMXMap_t *aMap, int aTileGID)
 	if(aTileGID == -1) return out;
 
 	out.flippedHorizontally = (aTileGID & FLIPPED_HORIZONTALLY_FLAG);
-    out.flippedVertically = (aTileGID & FLIPPED_VERTICALLY_FLAG);
-    // Clear the flags
-    aTileGID &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG);
+	out.flippedVertically = (aTileGID & FLIPPED_VERTICALLY_FLAG);
+	// Clear the flags
+	aTileGID &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG);
 	TMXTileset_t *tileset = _tmx_mapGetTilesetForTileGID(aMap, aTileGID);
 	if(!tileset) return out;
 	out.tileset = tileset;
@@ -279,8 +279,8 @@ static mxml_node_t **_mxmlFindChildren(mxml_node_t *aNode, mxml_node_t *aTop, co
 	mxml_node_t **nodes = malloc(sizeof(mxml_node_t*)*capacity);
 	mxml_node_t *currNode;
 	for(currNode = mxmlFindElement(aNode, aTop, aName, NULL, NULL, MXML_DESCEND_FIRST);
-	    currNode != NULL;
-	    currNode = mxmlFindElement(currNode, aTop, aName, NULL, NULL, MXML_NO_DESCEND), ++count)
+		currNode != NULL;
+		currNode = mxmlFindElement(currNode, aTop, aName, NULL, NULL, MXML_NO_DESCEND), ++count)
 	{
 		if(count >= capacity) {
 			capacity *= 2;
@@ -319,10 +319,10 @@ TMXProperty_t *_tmx_readPropertiesFromMxmlNode(mxml_node_t *aParentNode, mxml_no
 
 static void tmx_destroyLayerRenderable(TMXLayerRenderable_t *aRenderable)
 {
-    glDeleteBuffers(1, &aRenderable->posVBO);
-    glDeleteBuffers(1, &aRenderable->texCoordVBO);
-    glDeleteBuffers(1, &aRenderable->indexVBO);
-    obj_release(aRenderable->map);
+	glDeleteBuffers(1, &aRenderable->posVBO);
+	glDeleteBuffers(1, &aRenderable->texCoordVBO);
+	glDeleteBuffers(1, &aRenderable->indexVBO);
+	obj_release(aRenderable->map);
 }
 
 Class_t Class_TMXLayerRenderable = {
@@ -333,26 +333,26 @@ Class_t Class_TMXLayerRenderable = {
 
 static void tmx_drawLayerRenderable(Renderer_t *aRenderer, TMXLayerRenderable_t *aRenderable, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
 {
-   shader_makeActive(gTexturedShader);
+	shader_makeActive(gTexturedShader);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aRenderable->atlas->texture->id);
-    
+
 	shader_updateMatrices(gTexturedShader, aRenderer);
 	glUniform1i(gTexturedShader->uniforms[kShader_colormap0Uniform], 0);
 	vec4_t white = {1.0, 1.0, 1.0, 1.0};
 	glUniform4fv(gTexturedShader->uniforms[kShader_colorUniform], 1, white.f);
-    
+
 	glBindBuffer(GL_ARRAY_BUFFER, aRenderable->posVBO);
 	glVertexAttribPointer(gTexturedShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_positionAttribute]);
-    
+
 	glBindBuffer(GL_ARRAY_BUFFER, aRenderable->texCoordVBO);
 	glVertexAttribPointer(gTexturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
-    
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, aRenderable->indexVBO);
 	glDrawElements(GL_TRIANGLES, aRenderable->indexCount, GL_UNSIGNED_INT, 0);
-    
+
 	shader_makeInactive(gTexturedShader);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -363,84 +363,86 @@ static void tmx_drawLayerRenderable(Renderer_t *aRenderer, TMXLayerRenderable_t 
 
 vec2_t tmx_tileset_texCoordFromId(TMXTileset_t *aTileset, int id)
 {
-    int tilesPerRow = (aTileset->imageWidth - aTileset->spacing) / (aTileset->tileWidth + aTileset->spacing);
-    int rows = (aTileset->imageHeight - aTileset->spacing) / (aTileset->tileHeight + aTileset->spacing);
-    
-    int u = id % tilesPerRow;
-    int v = rows - (id / tilesPerRow) - 1;
-    return vec2_create(u, v);
+	int tilesPerRow = (aTileset->imageWidth - aTileset->spacing) / (aTileset->tileWidth + aTileset->spacing);
+	int rows = (aTileset->imageHeight - aTileset->spacing) / (aTileset->tileHeight + aTileset->spacing);
+
+	int u = id % tilesPerRow;
+	int v = rows - (id / tilesPerRow) - 1;
+	return vec2_create(u, v);
 }
 
 TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int aLayerIdx)
 {
-    assert(aMap != NULL);
-    assert(aLayerIdx < aMap->numberOfLayers);
-    obj_retain(aMap);
-    
-    TMXLayerRenderable_t *out = obj_create_autoreleased(&Class_TMXLayerRenderable);
-    out->map = aMap;
-    out->layer = &aMap->layers[aLayerIdx];
-    out->displayCallback = (RenderableDisplayCallback_t)&tmx_drawLayerRenderable;
-    
-    // Find the first used tile and use its tileset
-    TMXTileset_t *tileset = NULL; 
-    for(int i = 0; i < out->layer->numberOfTiles && tileset == NULL; ++i) {
-        tileset = out->layer->tiles[i].tileset;
-    }
-    assert(tileset != NULL);
-    
-    // Open a texture atlas for the tileset
-    vec2_t tileSize = vec2_create(out->map->tileWidth, out->map->tileHeight);
-    char texPath[512];
-    util_pathForResource(tileset->imagePath, NULL, NULL, texPath, 512);
-    Texture_t *tex = texture_loadFromPng((const char*)texPath, false, false);
-    assert(tex != NULL);
-    TextureAtlas_t *atlas = texAtlas_create(tex, vec2_create(tileset->margin, tileset->margin), tileSize);
-    atlas->margin = vec2_create(tileset->spacing, tileset->spacing);
-    assert(atlas != NULL);
-    out->atlas = obj_retain(atlas);
-    
-    // Generate & store the tile mesh
+	assert(aMap != NULL);
+	assert(aLayerIdx < aMap->numberOfLayers);
+	obj_retain(aMap);
+
+	TMXLayerRenderable_t *out = obj_create_autoreleased(&Class_TMXLayerRenderable);
+	out->map = aMap;
+	out->layer = &aMap->layers[aLayerIdx];
+	out->displayCallback = (RenderableDisplayCallback_t)&tmx_drawLayerRenderable;
+
+	// Find the first used tile and use its tileset
+	TMXTileset_t *tileset = NULL;
+	for(int i = 0; i < out->layer->numberOfTiles && tileset == NULL; ++i) {
+		tileset = out->layer->tiles[i].tileset;
+	}
+	assert(tileset != NULL);
+
+	// Open a texture atlas for the tileset
+	vec2_t tileSize = vec2_create(out->map->tileWidth, out->map->tileHeight);
+	char texPath[512];
+	util_pathForResource(tileset->imagePath, NULL, NULL, texPath, 512);
+	debug_log("map texture path: %s", texPath);
+	Texture_t *tex = texture_loadFromPng((const char*)texPath, false, false);
+	assert(tex != NULL);
+	TextureAtlas_t *atlas = texAtlas_create(tex, vec2_create(tileset->margin, tileset->margin), tileSize);
+	atlas->margin = vec2_create(tileset->spacing, tileset->spacing);
+	assert(atlas != NULL);
+	out->atlas = obj_retain(atlas);
+
+	// Generate & store the tile mesh
 	vec2_t *texOffsets = malloc(sizeof(vec2_t)*out->layer->numberOfTiles);
 	vec2_t *screenCoords = malloc(sizeof(vec2_t)*out->layer->numberOfTiles);
 	for(int y = 0; y < out->map->height; ++y) {
 		for(int x = 0; x < out->map->width; ++x) {
-            int idx = (out->map->height - y - 1) * out->map->width + x;
-            TMXTile_t *tile = &out->layer->tiles[idx];
-            texOffsets[idx] = tmx_tileset_texCoordFromId(tileset, tile->id);
+			int idx = (out->map->height - y - 1) * out->map->width + x;
+			TMXTile_t *tile = &out->layer->tiles[idx];
+			texOffsets[idx] = tmx_tileset_texCoordFromId(tileset, tile->id);
 			screenCoords[idx].x = (out->map->tileWidth * (float)x) + out->map->tileWidth / 2.0f;
 			screenCoords[idx].y = (out->map->tileHeight * (float)y) + out->map->tileWidth / 2.0f;
 		}
 	}
 
-    int numberOfVertices;
+	int numberOfVertices;
 	int numberOfIndices;
 	vec2_t *vertices;
 	vec2_t *texCoords;
 	GLuint *indices;
-    draw_textureAtlas_getVertices(atlas, out->layer->numberOfTiles, texOffsets, screenCoords, &vertices, &texCoords, &numberOfVertices, &indices, &numberOfIndices);
-    free(texOffsets);
+	draw_textureAtlas_getVertices(atlas, out->layer->numberOfTiles, texOffsets, screenCoords,
+	                              &vertices, &texCoords, &numberOfVertices, &indices, &numberOfIndices);
+	free(texOffsets);
 	free(screenCoords);
-    
-    glGenBuffers(1, &out->posVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, out->posVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vec2_t)*numberOfVertices, vertices, GL_STATIC_DRAW);
 
-    glGenBuffers(1, &out->texCoordVBO);
+	glGenBuffers(1, &out->posVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, out->posVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vec2_t)*numberOfVertices, vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &out->texCoordVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, out->texCoordVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vec2_t)*numberOfVertices, texCoords, GL_STATIC_DRAW);
-    
+
 	out->indexCount = numberOfIndices;
 	glGenBuffers(1, &out->indexVBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, out->indexVBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*numberOfIndices, indices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
+
 	free(vertices);
 	free(texCoords);
 	free(indices);
-    
-    return out;
+
+	return out;
 }

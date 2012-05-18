@@ -22,17 +22,26 @@ typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, Renderable_t 
 #define RENDERABLE_GUTS \
     RenderableDisplayCallback_t displayCallback;
 
-// For defining an object you wish to have rendered
-// (You usually wouldn't use this type directly, rather you'd simply add RENDERABLE_GUTS
-//  as the first field after the guts of the object you wish to render)
-extern Class_t Class_Renderable;
+/*!
+	For defining an object you wish to have rendered
+	(You usually wouldn't use this type directly, rather you'd simply add RENDERABLE_GUTS
+	as the first field after the guts of the object you wish to render)
+*/
 struct _Renderable {
     OBJ_GUTS
     RENDERABLE_GUTS
 };
+extern Class_t Class_Renderable;
 
-// The renderer object
-extern Class_t Class_Renderer;
+/*!
+	The renderer object
+
+	@field frameBufferId The id of the framebuffer the renderer draws to.
+	@field viewportSize The size of the renderer viewport
+	@field cameraOffset The viewing offset of the renderer
+	@field worldMatrixStack The world matrix stack
+	@field projectionMatrixStack The projection matrix stack
+*/
 struct _Renderer {
 	OBJ_GUTS
 	GLuint frameBufferId; // The FBO the renderer should draw to
@@ -42,17 +51,33 @@ struct _Renderer {
 	matrix_stack_t *projectionMatrixStack;
 	LinkedList_t *renderables; // For internal use only
 };
+extern Class_t Class_Renderer;
 
-// Renderer creation
+/*!
+	Creates a renderer object
+*/
 extern Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset);
 
-// Display
+/*!
+	Draws every renderable in the given renderer.
+*/
 extern void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
-// Renderable list management (Renderables need to conform to the layout of Renderable_t). Retains
+/*!
+	Adds a renderable to the top of the renderable stack.
+*/
 extern void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable);
+/*!
+	Removes the topmost renderable
+*/
 extern void renderer_popRenderable(Renderer_t *aRenderer);
+/*!
+	Inserts a renderable behind another renderable
+*/
 extern bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift);
+/*!
+	Removes the given renderable from the renderable stack
+*/
 extern bool renderer_deleteRenderable(Renderer_t *aRenderer, void *aRenderable);
 
 #endif

@@ -3,6 +3,20 @@
 #include <stdlib.h>
 #include <assert.h>
 
+typedef struct _DictionaryNode DictionaryNode_t;
+
+struct _DictionaryNode {
+	void *value;
+	DictionaryNode_t *children[DICTNODE_MAXCHILDREN];
+};
+
+struct _Dictionary {
+	OBJ_GUTS
+	DictionaryNode_t rootNode;
+	InsertionCallback_t insertionCallback;
+	RemovalCallback_t removalCallback;
+};
+
 static DictionaryNode_t *_dict_createNode(void *value);
 static void dict_destroy(Dictionary_t *aDict);
 static DictionaryNode_t *_dict_searchFromNode(DictionaryNode_t *aNode, const char *key, bool createPath);

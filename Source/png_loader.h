@@ -2,6 +2,9 @@
 #define _PNGLOADER_H_
 #include "object.h"
 
+/*!
+	Representation of a png image.
+*/
 typedef struct {
     OBJ_GUTS
     int height;
@@ -10,5 +13,8 @@ typedef struct {
     const unsigned char *data;
 } Png_t;
 
+/*!
+	Loads a png from the given path
+*/
 extern Png_t *png_load(const char *aPath);
 #endif
