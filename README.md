@@ -1,6 +1,8 @@
 # Dynamo
 A cross platform library for building sprite based games.
 
+Documentation is available at [http://aptiva.github.com/Dynamo/](http://aptiva.github.com/Dynamo/)
+
 
 Dependencies:
 
