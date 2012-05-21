@@ -65,7 +65,7 @@ bool luaCtx_executeString(LuaContext_t *aCtx, const char *aScript)
 bool luaCtx_addSearchPath(LuaContext_t *aCtx, const char *aPath)
 {
     size_t appendLen = 20 + strlen(aPath)*2;
-    char *strToAppend = malloc(appendLen);
+    char strToAppend[appendLen];
     snprintf(strToAppend, appendLen, ";%s/?.lua;%s/?/init.lua", aPath, aPath);
     
     lua_State *ls = aCtx->luaState;
@@ -75,6 +75,6 @@ bool luaCtx_addSearchPath(LuaContext_t *aCtx, const char *aPath)
         lua_concat(ls, 2);
         lua_setfield(ls, -2, "path");
     lua_pop(ls, 1);
-        
+    
     return true;
 }
