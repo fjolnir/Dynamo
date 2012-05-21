@@ -29,7 +29,7 @@ bool luaCtx_pcall(LuaContext_t *aCtx, int nargs, int nresults, int errfunc)
 {
     int err = lua_pcall(aCtx->luaState, nargs, nresults, errfunc);
     if(err) {
-        debug_log("Lua error: %s", (char*)lua_tostring(aCtx->luaState, -1));
+        dynamo_log("Lua error: %s", (char*)lua_tostring(aCtx->luaState, -1));
         lua_pop(aCtx->luaState, 1);
         return false;
     }
@@ -42,7 +42,7 @@ bool luaCtx_executeFile(LuaContext_t *aCtx, const char *aPath)
     err = luaL_loadfile(aCtx->luaState, aPath);
     
     if(err) {
-        debug_log("Lua error: %s", (char*)lua_tostring(aCtx->luaState, -1));
+        dynamo_log("Lua error: %s", (char*)lua_tostring(aCtx->luaState, -1));
         lua_pop(aCtx->luaState, 1);
         return false;
     }
@@ -54,7 +54,7 @@ bool luaCtx_executeString(LuaContext_t *aCtx, const char *aScript)
     int err = 0;
     err = luaL_loadstring(aCtx->luaState, aScript);
     if(err) {
-        debug_log("Lua error: %s", (char*)lua_tostring(aCtx->luaState, -1));
+        dynamo_log("Lua error: %s", (char*)lua_tostring(aCtx->luaState, -1));
         lua_pop(aCtx->luaState, 1);
         return false;
     }

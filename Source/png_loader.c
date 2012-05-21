@@ -116,7 +116,7 @@ Png_t *png_load(const char *aPath) {
 			self->hasAlpha = false;
 			break;
 		default:
-			debug_log("Color type: %d not supported", color_type);
+			dynamo_log("Color type: %d not supported", color_type);
 			png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 			fclose(fp);
 			return false;

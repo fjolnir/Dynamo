@@ -1,5 +1,4 @@
 #include "primitive_types.h"
-#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -18,7 +17,7 @@ Class_t Class_Number = {
 
 String_t *string_create(const char *str, size_t len)
 {
-	assert(str != NULL);
+	dynamo_assert(str != NULL, "Invalid string");
 	String_t *self = obj_create_autoreleased(&Class_String);
 	self->cString = calloc(1, len+1);
 	strncpy(self->cString, str, len);

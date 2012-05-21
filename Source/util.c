@@ -9,7 +9,7 @@ typedef signed char BOOL;
 
 bool util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen)
 {
-    assert(output != NULL && maxLen > 0);
+    dynamo_assert(output != NULL && maxLen > 0, "Invalid output buffer");
 
 #if defined(__APPLE__) // iOS
 
@@ -63,9 +63,9 @@ extern Platform_t util_platform(void)
 	return DYNAMO_PLATFORM;
 }
 
-void _debug_log(const char *str)
+void _dynamo_log(const char *str)
 {
-	debug_log_min("%s", str);
+	dynamo_log_min("%s", str);
 }
 
 // TODO: Add graceful error handling (Was failing with a mysterious sigsegv on missing files on android)

@@ -1,6 +1,5 @@
 #include "object.h"
 #include "util.h"
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,7 +31,7 @@ static void _print_trace(void)
 
 void obj_zombie_error(Obj_t *aObj)
 {
-	debug_log("*** TRIED TO FREE ZOMBIE OBJECT (%p). Break on obj_zombie_error to debug", aObj);
+	dynamo_log("*** TRIED TO FREE ZOMBIE OBJECT (%p). Break on obj_zombie_error to debug", aObj);
 	_print_trace();
 }
 
@@ -44,7 +43,7 @@ Obj_t *obj_create_autoreleased(Class_t *aClass)
 
 Obj_t *obj_create(Class_t *aClass)
 {
-	assert(aClass != NULL);
+	dynamo_assert(aClass != NULL, "Invalid class");
 
 	_Obj_guts *self = calloc(1, aClass->instanceSize);
 	self->isa = aClass;
@@ -53,14 +52,14 @@ Obj_t *obj_create(Class_t *aClass)
 
 Obj_t *obj_retain(Obj_t *aObj)
 {
-	assert(aObj != NULL);
+	dynamo_assert(aObj != NULL, "Invalid object");
 	_Obj_guts *self = aObj;
 	__sync_add_and_fetch(&self->referenceCount, 1);
 	return aObj;
 }
 void obj_release(Obj_t *aObj)
 {
-	assert(aObj != NULL);
+	dynamo_assert(aObj != NULL, "Invalid object");
 	_Obj_guts *self = aObj;
 	if(__sync_sub_and_fetch(&self->referenceCount, 1) == 0 && !ENABLE_ZOMBIES) {
 		if(self->isa->destructor)
@@ -111,7 +110,7 @@ Obj_autoReleasePool_t *autoReleasePool_getGlobal()
 }
 void *autoReleasePool_push(Obj_autoReleasePool_t *aPool, void *aObj)
 {
-	assert(aObj != NULL);
+	dynamo_assert(aObj != NULL, "Invalid object");
 	llist_pushValue(aPool, aObj);
 	return aObj;
 }

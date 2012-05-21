@@ -1,7 +1,6 @@
 #include "shader.h"
 #include <stdbool.h>
 #include "glutils.h"
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "util.h"
@@ -47,10 +46,10 @@ Shader_t *shader_load(const char *aVertSrc, const char *aFragSrc)
 	bool success;
 
 	GLuint vertexShader = _shader_compile(aVertSrc, GL_VERTEX_SHADER, &success);
-	assert(success);
+	dynamo_assert(success, "Couldn't compile vertex shader");
 
 	GLuint fragmentShader = _shader_compile(aFragSrc, GL_FRAGMENT_SHADER, &success);
-	assert(success);
+	dynamo_assert(success, "Couldn't compile fragment shader");
 
 	glAttachShader(out->program, vertexShader);
 	out->vertexShader = vertexShader;
@@ -59,7 +58,7 @@ Shader_t *shader_load(const char *aVertSrc, const char *aFragSrc)
 
 	success = _shader_link(out->program);
     glError()
-	assert(success);
+	dynamo_assert(success, "Couldn't link shader program");
 
 	// Hook up the default uniforms&attributes if available
 	out->uniforms[kShader_worldMatrixUniform] = shader_getUniformLocation(out, kShader_UniformNames[kShader_worldMatrixUniform]);
@@ -78,10 +77,10 @@ Shader_t *shader_loadFromFiles(const char *aVertShaderPath, const char *aFragSha
 	size_t vertShaderLength, fragShaderLength;
 	
 	util_readFile(aVertShaderPath, &vertShaderLength, &vertShaderSource);
-	assert(vertShaderLength > 0 && vertShaderSource != NULL);
+	dynamo_assert(vertShaderLength > 0 && vertShaderSource != NULL, "Could not read vertex shader source");
 
 	util_readFile(aFragShaderPath, &fragShaderLength, &fragShaderSource);
-	assert(fragShaderLength > 0 && fragShaderSource != NULL);
+	dynamo_assert(fragShaderLength > 0 && fragShaderSource != NULL, "Could not read fragment shader source");
 	Shader_t *out = shader_load(vertShaderSource, fragShaderSource);
 
 	free(vertShaderSource);
@@ -118,7 +117,7 @@ GLint shader_getUniformLocation(Shader_t *aShader, const char *aUniformName)
 {
 	GLint location = glGetUniformLocation(aShader->program, aUniformName);
 	//if(location == -1)
-		//debug_log("Uniform lookup error: No such uniform (%s)", aUniformName);
+		//dynamo_log("Uniform lookup error: No such uniform (%s)", aUniformName);
 	
 	return location;
 }
@@ -127,7 +126,7 @@ GLint shader_getAttributeLocation(Shader_t *aShader, const char *aAttributeName)
 {
 	GLint location = glGetAttribLocation(aShader->program, aAttributeName);
 	//if(location == -1)
-		//debug_log("Attribute lookup error: No such attribute (%s)", aAttributeName);
+		//dynamo_log("Attribute lookup error: No such attribute (%s)", aAttributeName);
 
 	return location;
 }
@@ -152,14 +151,14 @@ static bool _shader_link(GLuint aProgramObject)
 	if(logLength > 0) {
 		GLchar *log = (GLchar *)malloc(logLength);
 		glGetProgramInfoLog(aProgramObject, logLength, &logLength, log);
-		debug_log(">> Program link log:\n%s", log);
+		dynamo_log(">> Program link log:\n%s", log);
 		free(log);
 	}
 	
 	bool success;
 	glGetProgramiv(aProgramObject, GL_LINK_STATUS, (GLint *)&success);
 	if(success == false)
-		debug_log("Failed to link shader program");
+		dynamo_log("Failed to link shader program");
 	return success;
 }
 
@@ -184,14 +183,14 @@ static GLuint _shader_compile(const char *aSrc, GLenum aType, bool *aoSucceeded)
 	if (temp > 0) {
 		GLchar *log = (GLchar *)malloc(temp);
 		glGetShaderInfoLog(shaderObject, temp, &temp, log);
-		debug_log(">> %s shader compile log:\n %s\n", aType == GL_FRAGMENT_SHADER ? "Fragment" : "Vertex", log);
+		dynamo_log(">> %s shader compile log:\n %s\n", aType == GL_FRAGMENT_SHADER ? "Fragment" : "Vertex", log);
 		free(log);
 	}
 
 	glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &temp);
 	if(temp == GL_FALSE) {
 		*aoSucceeded = false;
-		debug_log(">> Failed to compile shader:\n%s\n---", aSrc);
+		dynamo_log(">> Failed to compile shader:\n%s\n---", aSrc);
 	}
 	*aoSucceeded = true;
 	free(source);

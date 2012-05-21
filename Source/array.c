@@ -1,6 +1,6 @@
 #include "array.h"
 #include <stdlib.h>
-#include <assert.h>
+#include <util.h>
 
 void array_destroy(Array_t *aArray);
 Class_t Class_Array = {
@@ -42,7 +42,7 @@ void array_push(Array_t *aArray, void *aValue)
 
 void array_pop(Array_t *aArray)
 {
-	assert(aArray->count > 0);
+	dynamo_assert(aArray->count > 0, "Invalid array");
 	if(aArray->removalCallback)
 		aArray->removalCallback(aArray->items[aArray->count-1]);
 
@@ -67,12 +67,12 @@ bool array_containsPtr(Array_t *aArray, void *aPtr)
 
 extern void *array_top(Array_t *aArray)
 {
-	assert(aArray->count > 0);
+	dynamo_assert(aArray->count > 0, "Invalid array");
 	return aArray->items[aArray->count - 1];
 }
 
 extern void *array_get(Array_t *aArray, unsigned int aIdx)
 {
-	assert(aIdx < aArray->count);
+	dynamo_assert(aIdx < aArray->count, "Invalid array");
 	return aArray->items[aIdx];
 }

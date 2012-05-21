@@ -212,7 +212,7 @@ extern void draw_worldEntity(WorldEntity_t *aEntity, bool aDrawBB);
 extern bool util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen);
 typedef enum { kPlatformMac, kPlatformIOS, kPlatformAndroid, kPlatformWindows, kPlatformOther } Platform_t;
 extern Platform_t util_platform(void);
-extern void _debug_log(const char *str);
+extern void _dynamo_log(const char *str);
 ]]
 
 dynamo.platforms = {
@@ -259,7 +259,7 @@ function dynamo.log(...)
 			prefix = string.format("%s:%s (%s): ", info.short_src, info.currentline, info.name)
 		end
 	end
-	lib._debug_log(prefix..table.concat({...}))
+	lib._dynamo_log(prefix..table.concat({...}))
 end
 
 

@@ -82,7 +82,7 @@ void world_destroy(World_t *aWorld)
 
 void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity)
 {
-    assert(aEntity != aWorld->staticEntity);
+    dynamo_assert(aEntity != aWorld->staticEntity, "You cannot re-add static entity to world");
     cpSpaceAddBody(aWorld->cpSpace, aEntity->cpBody);
     llist_apply(aEntity->shapes, (LinkedListApplier_t)&_addShapeToSpace, aWorld);
     llist_pushValue(aWorld->entities, aEntity);
@@ -269,8 +269,8 @@ static World_CollisionInfo _collisionInfoForArbiter(cpArbiter *aArbiter)
 {
     cpBody *bodyA, *bodyB;
     cpArbiterGetBodies(aArbiter, &bodyA, &bodyB);
-    WorldEntity_t *a = bodyA->data; assert(a != NULL);
-    WorldEntity_t *b = bodyB->data; assert(b != NULL);
+    WorldEntity_t *a = bodyA->data; dynamo_assert(a != NULL, "Incomplete collision");
+    WorldEntity_t *b = bodyB->data; dynamo_assert(b != NULL, "Incomplete collision");
     
     cpContactPointSet cpPointSet = cpArbiterGetContactPointSet(aArbiter);
     World_ContactPointSet pointSet = *(World_ContactPointSet *)&cpPointSet;
@@ -349,7 +349,7 @@ static void world_destroyJoint(WorldConstraint_t *aJoint)
 
 WorldConstraint_t *worldConstr_createPinJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -363,7 +363,7 @@ WorldConstraint_t *worldConstr_createPinJoint(WorldEntity_t *a, WorldEntity_t *b
 WorldConstraint_t *worldConstr_createSlideJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB,
                                      GLMFloat aMinDist, GLMFloat aMaxDist)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -375,7 +375,7 @@ WorldConstraint_t *worldConstr_createSlideJoint(WorldEntity_t *a, WorldEntity_t 
 }
 WorldConstraint_t *worldConstr_createPivotJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aPivot)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -388,7 +388,7 @@ WorldConstraint_t *worldConstr_createPivotJoint(WorldEntity_t *a, WorldEntity_t 
 WorldConstraint_t *worldConstr_createGrooveJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aGrooveStart, vec2_t aGrooveEnd,
                                       vec2_t aAnchorB)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -402,7 +402,7 @@ WorldConstraint_t *worldConstr_createGrooveJoint(WorldEntity_t *a, WorldEntity_t
 WorldConstraint_t *worldConstr_createDampedSpringJoint(WorldEntity_t *a, WorldEntity_t *b, vec2_t aAnchorA, vec2_t aAnchorB,
                                             GLMFloat aRestLength, GLMFloat aStiffness, GLMFloat aDamping)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -415,7 +415,7 @@ WorldConstraint_t *worldConstr_createDampedSpringJoint(WorldEntity_t *a, WorldEn
 WorldConstraint_t *worldConstr_createDampedRotarySpringJoint(WorldEntity_t *a, WorldEntity_t *b,
                                                   GLMFloat aRestAngle, GLMFloat aStiffness, GLMFloat aDamping)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -427,7 +427,7 @@ WorldConstraint_t *worldConstr_createDampedRotarySpringJoint(WorldEntity_t *a, W
 }
 WorldConstraint_t *worldConstr_createRotaryLimitJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aMinAngle, GLMFloat aMaxAngle)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -439,7 +439,7 @@ WorldConstraint_t *worldConstr_createRotaryLimitJoint(WorldEntity_t *a, WorldEnt
 }
 WorldConstraint_t *worldConstr_createRatchetJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatchet)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -451,7 +451,7 @@ WorldConstraint_t *worldConstr_createRatchetJoint(WorldEntity_t *a, WorldEntity_
 }
 WorldConstraint_t *worldConstr_createGearJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aPhase, GLMFloat aRatio)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -463,7 +463,7 @@ WorldConstraint_t *worldConstr_createGearJoint(WorldEntity_t *a, WorldEntity_t *
 }
 WorldConstraint_t *worldConstr_createSimpleMotorJoint(WorldEntity_t *a, WorldEntity_t *b, GLMFloat aRate)
 {
-    assert(a->world == b->world);
+    dynamo_assert(a->world == b->world, "Entities are not in the same world");
     WorldConstraint_t *ret = obj_create_autoreleased(&Class_WorldConstraint);
     ret->world = a->world;
     ret->a = obj_retain(a);
@@ -496,7 +496,7 @@ vec2_t worldConstr_anchorA(WorldConstraint_t *aConstraint)
             ret = cpDampedSpringGetAnchr1(aConstraint->cpConstraint);
             break;
         default:
-            debug_log("Invalid constraint");
+            dynamo_log("Invalid constraint");
             ret = cpv(-1,-1);
     }
     return CPV_TO_VEC2(ret);
@@ -514,7 +514,7 @@ void worldConstr_setAnchorA(WorldConstraint_t *aConstraint, vec2_t aAnchor)
             cpDampedSpringSetAnchr1(aConstraint->cpConstraint, VEC2_TO_CPV(aAnchor));
             break;
         default:
-            debug_log("Invalid constraint");
+            dynamo_log("Invalid constraint");
     }
 }
 vec2_t worldConstr_anchorB(WorldConstraint_t *aConstraint)
@@ -531,7 +531,7 @@ vec2_t worldConstr_anchorB(WorldConstraint_t *aConstraint)
             ret = cpDampedSpringGetAnchr2(aConstraint->cpConstraint);
             break;
         default:
-            debug_log("Invalid constraint");
+            dynamo_log("Invalid constraint");
             ret = cpv(-1,-1);
     }
     return CPV_TO_VEC2(ret);
@@ -549,7 +549,7 @@ void worldConstr_setAnchorB(WorldConstraint_t *aConstraint, vec2_t aAnchor)
             cpDampedSpringSetAnchr2(aConstraint->cpConstraint, VEC2_TO_CPV(aAnchor));
             break;
         default:
-            debug_log("Invalid constraint");
+            dynamo_log("Invalid constraint");
     }
 }
 

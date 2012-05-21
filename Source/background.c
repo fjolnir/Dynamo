@@ -38,8 +38,8 @@ Background_t *background_create()
 	if(!_backgroundShader) {
 		const int maxLen = 1024;
 		char vshPath[maxLen], fshPath[maxLen];
-		assert(util_pathForResource("background", "vsh", "Shaders", vshPath, maxLen));
-		assert(util_pathForResource("background", "fsh", "Shaders", fshPath, maxLen));
+		dynamo_assert(util_pathForResource("background", "vsh", "Shaders", vshPath, maxLen), "background.vsh not found");
+		dynamo_assert(util_pathForResource("background", "fsh", "Shaders", fshPath, maxLen), "background.fsh not found");
 		_backgroundShader = obj_retain(shader_loadFromFiles(vshPath, fshPath));
 		_backgroundShader->uniforms[kBackground_offsetUniform] = shader_getUniformLocation(_backgroundShader, "u_backgroundOffset");
 		_backgroundShader->uniforms[kBackground_layer0DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer0Depth");
@@ -63,7 +63,7 @@ static void background_destroy(Background_t *aBackground)
 }
 
 void background_setLayer(Background_t *aBackground, unsigned int aIndex, BackgroundLayer_t *aLayer) {
-	assert(aIndex < kBackground_maxLayers);
+	dynamo_assert(aIndex < kBackground_maxLayers, "Index beyond max layer count");
 	aBackground->layers[aIndex] = obj_retain(aLayer);
 }
 

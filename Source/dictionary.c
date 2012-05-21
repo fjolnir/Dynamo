@@ -1,7 +1,7 @@
 #include "dictionary.h"
 #include <string.h>
 #include <stdlib.h>
-#include <assert.h>
+#include <util.h>
 
 typedef struct _DictionaryNode DictionaryNode_t;
 
@@ -93,7 +93,7 @@ void *dict_get(Dictionary_t *aDict, const char *aKey)
 
 void dict_set(Dictionary_t *aDict, const char *aKey, void *aValue)
 {
-	assert(strlen(aKey) <= DICT_MAXKEYLEN);
+	dynamo_assert(strlen(aKey) <= DICT_MAXKEYLEN, "Key is too long");
 	if(aDict->insertionCallback)
 		aDict->insertionCallback(aValue);
 	DictionaryNode_t *node = _dict_searchFromNode(&aDict->rootNode, aKey, true);
@@ -112,7 +112,7 @@ bool dict_remove(Dictionary_t *aDict, const char *aKey)
 
 static DictionaryNode_t *_dict_searchFromNode(DictionaryNode_t *aNode, const char *aKey, bool aCreatePath)
 {
-	assert(*aKey >= 0);
+	dynamo_assert(*aKey >= 0, "Invalid key");
 	unsigned char key = *aKey;
 	if(aNode->children[key] != NULL) {
 		if(key == '\0')

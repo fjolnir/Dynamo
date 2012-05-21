@@ -21,7 +21,7 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
 
 	Png_t *png = png_load(aPath);
 	if (!png) {
-		debug_log("Unable to load png file from %s", aPath);
+		dynamo_log("Unable to load png file from %s", aPath);
 		return NULL;
 	}
 

@@ -98,8 +98,8 @@ static SLuint32 _osl_getPlayState(SLPlayItf aPlayInterface)
 // Creates an sfx object
 SoundEffect_t *sfx_load(const char *aFilename)
 {
-	assert(aFilename != NULL);
-	assert(_CurrentSoundManager != NULL);
+	dynamo_assert(aFilename != NULL);
+	dynamo_assert(_CurrentSoundManager != NULL);
 	debug_log("loading sound from %s", aFilename);
 
 	SoundEffect_t *out = obj_create_autoreleased(&Class_SoundEffect);

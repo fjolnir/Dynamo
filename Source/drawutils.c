@@ -12,10 +12,10 @@ void draw_init(Renderer_t *aDefaultRenderer)
 	const int maxLen = 1024;
 	char texturedVSH[maxLen], texturedFSH[maxLen], coloredVSH[maxLen], coloredFSH[maxLen];
 
-	assert(util_pathForResource("textured", "vsh", "Shaders", texturedVSH, maxLen));
-	assert(util_pathForResource("textured", "fsh", "Shaders", texturedFSH, maxLen));
-	assert(util_pathForResource("colored", "vsh", "Shaders", coloredVSH, maxLen));
-	assert(util_pathForResource("colored", "fsh", "Shaders", coloredFSH, maxLen));
+	dynamo_assert(util_pathForResource("textured", "vsh", "Shaders", texturedVSH, maxLen), "Could not find textured.vsh");
+	dynamo_assert(util_pathForResource("textured", "fsh", "Shaders", texturedFSH, maxLen), "Could not find textured.fsh");
+	dynamo_assert(util_pathForResource("colored", "vsh", "Shaders", coloredVSH, maxLen), "Could not find colored.vsh");
+	dynamo_assert(util_pathForResource("colored", "fsh", "Shaders", coloredFSH, maxLen), "Could not find colored.fsh");
 
 	if(!gTexturedShader) {
 		gTexturedShader = obj_retain(shader_loadFromFiles((const char*)texturedVSH, (const char*)texturedFSH));

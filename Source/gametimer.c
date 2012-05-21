@@ -55,7 +55,7 @@ GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer)
 
 void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext)
 {
-    assert(aCallback != NULL);
+    dynamo_assert(aCallback != NULL, "Invalid callback");
     struct ScheduledCallbackWrapper_t *wrapper = malloc(sizeof(struct ScheduledCallbackWrapper_t));
     wrapper->time = aTimer->elapsed + aDelay;
     wrapper->callback = aCallback;

@@ -2,7 +2,6 @@
 #include "util.h"
 #include <yajl/yajl_parse.h>
 #include <yajl/yajl_gen.h>
-#include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -135,7 +134,7 @@ Obj_t *parseJSON(const char *aJsonStr)
 	yajl_status status = yajl_parse(parser, (const unsigned char*)aJsonStr, strlen(aJsonStr));
     if(status != yajl_status_ok) {
         unsigned char *err = yajl_get_error(parser, 1, (unsigned char*)aJsonStr, strlen(aJsonStr));
-        debug_log("Couldn't parse JSON: %s", err);
+        dynamo_log("Couldn't parse JSON: %s", err);
         yajl_free_error(parser, err);
         return NULL;
     }
@@ -146,7 +145,7 @@ Obj_t *parseJSON(const char *aJsonStr)
 		root = ctx->container;
 		array_pop(ctxStack);
 	} else {
-		debug_log("Something went wrong parsing json!");
+		dynamo_log("Something went wrong parsing json!");
 		return NULL;
 	}
 

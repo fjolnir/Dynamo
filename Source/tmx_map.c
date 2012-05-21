@@ -1,7 +1,6 @@
 #include "tmx_map.h"
 #include "util.h"
 #include <stdlib.h>
-#include <assert.h>
 #include <mxml.h>
 #include <string.h>
 #include "drawutils.h"
@@ -33,7 +32,7 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 	FILE *fp = fopen(aFilename, "rb");
 	if(!fp) return NULL;
 	mxml_node_t *tree = mxmlLoadFile(NULL, fp, MXML_OPAQUE_CALLBACK);
-	assert(tree != NULL);
+	dynamo_assert(tree != NULL, "Could not load map XML");
 	fclose(fp);
 
 	TMXMap_t *out = obj_create_autoreleased(&Class_TMXMap);
@@ -41,7 +40,7 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 	mxml_node_t *mapNode = mxmlFindElement(tree, tree, "map", NULL, NULL, MXML_DESCEND);
 
 	const char *mapOrientation = mxmlElementGetAttr(mapNode, "orientation");
-	assert(mapOrientation);
+	dynamo_assert(mapOrientation, "Couldn't detect map orientation");
 	out->orientation = (strstr(mapOrientation, "isometric") != NULL) ? kTMXMap_isometric : kTMXMap_orthogonal;
 
 	out->width      = _mxmlElementGetAttrAsInt(mapNode, "width", 0);
@@ -65,7 +64,7 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 		out->tilesets[i].spacing = _mxmlElementGetAttrAsInt(tempNode, "spacing", 0);
 		out->tilesets[i].margin = _mxmlElementGetAttrAsInt(tempNode, "margin", 0);
 		mxml_node_t *imageNode = mxmlFindElement(tempNode, tree, "image", NULL, NULL, MXML_DESCEND_FIRST);
-		assert(imageNode);
+		dynamo_assert(imageNode, "Couldn't detect tileset image");
 		out->tilesets[i].imageWidth = _mxmlElementGetAttrAsInt(imageNode, "width", 0);
 		out->tilesets[i].imageHeight = _mxmlElementGetAttrAsInt(imageNode, "height", 0);
 		out->tilesets[i].imagePath = strdup(mxmlElementGetAttr(imageNode, "source"));
@@ -84,9 +83,9 @@ TMXMap_t *tmx_readMapFile(const char *aFilename)
 
 		// Parse the tiles and resolve the global tile ids
 		mxml_node_t *dataNode = mxmlFindElement(tempNode, tree, "data", NULL, NULL, MXML_DESCEND_FIRST);
-		assert(dataNode);
+		dynamo_assert(dataNode, "Data node not found");
 		mxml_node_t **tileNodes = _mxmlFindChildren(dataNode, tree, "tile", &out->layers[i].numberOfTiles);
-		assert(out->layers[i].numberOfTiles == out->width*out->height);
+		dynamo_assert(out->layers[i].numberOfTiles == out->width*out->height, "Number of tiles does not match map dimensions");
 
 		out->layers[i].tiles = malloc(sizeof(TMXTile_t)*out->layers[i].numberOfTiles);
 		for(int j = 0; j < out->layers[i].numberOfTiles; ++j) {
@@ -240,7 +239,7 @@ static void _mxmlElementPrintAttrs(mxml_node_t *aNode)
 	mxml_attr_t *attr;
 	for(int i = 0; i < element->num_attrs; ++i) {
 		attr = &element->attrs[i];
-		debug_log("%s: %s=%s", element->name, attr->name, attr->value);
+		dynamo_log("%s: %s=%s", element->name, attr->name, attr->value);
 	}
 }
 
@@ -368,13 +367,14 @@ vec2_t tmx_tileset_texCoordFromId(TMXTileset_t *aTileset, int id)
 
 	int u = id % tilesPerRow;
 	int v = rows - (id / tilesPerRow) - 1;
+
 	return vec2_create(u, v);
 }
 
 TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int aLayerIdx)
 {
-	assert(aMap != NULL);
-	assert(aLayerIdx < aMap->numberOfLayers);
+	dynamo_assert(aMap != NULL, "Invalid map");
+	dynamo_assert(aLayerIdx < aMap->numberOfLayers, "Invalid layer index");
 	obj_retain(aMap);
 
 	TMXLayerRenderable_t *out = obj_create_autoreleased(&Class_TMXLayerRenderable);
@@ -387,18 +387,18 @@ TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int 
 	for(int i = 0; i < out->layer->numberOfTiles && tileset == NULL; ++i) {
 		tileset = out->layer->tiles[i].tileset;
 	}
-	assert(tileset != NULL);
+	dynamo_assert(tileset != NULL, "No tileset found");
 
 	// Open a texture atlas for the tileset
 	vec2_t tileSize = vec2_create(out->map->tileWidth, out->map->tileHeight);
 	char texPath[512];
 	util_pathForResource(tileset->imagePath, NULL, NULL, texPath, 512);
-	debug_log("map texture path: %s", texPath);
+	dynamo_log("map texture path: %s", texPath);
 	Texture_t *tex = texture_loadFromPng((const char*)texPath, false, false);
-	assert(tex != NULL);
+	dynamo_assert(tex != NULL, "Couldn't load layer texture");
 	TextureAtlas_t *atlas = texAtlas_create(tex, vec2_create(tileset->margin, tileset->margin), tileSize);
 	atlas->margin = vec2_create(tileset->spacing, tileset->spacing);
-	assert(atlas != NULL);
+	dynamo_assert(atlas != NULL, "Could not load layer texture atlas");
 	out->atlas = obj_retain(atlas);
 
 	// Generate & store the tile mesh

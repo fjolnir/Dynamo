@@ -75,7 +75,7 @@ Class_t Class_SoundManager = {
 SoundEffect_t *sfx_load(const char *aFilename)
 {
 #define _CHECK_ERR(msg...) if(status != noErr) { \
-	debug_log(msg); \
+	dynamo_log(msg); \
 	return NULL; \
 }
 
@@ -92,7 +92,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
 	UInt32 propSize = sizeof(inputFormat);
 	status = ExtAudioFileGetProperty(AFID, kExtAudioFileProperty_FileDataFormat, &propSize, &inputFormat);
 	_CHECK_ERR("Error getting file format");
-    assert(inputFormat.mChannelsPerFrame <= 2);
+    dynamo_assert(inputFormat.mChannelsPerFrame <= 2, ">2 audio channels are not supported");
 	out->channels = inputFormat.mChannelsPerFrame;
 	out->rate = inputFormat.mSampleRate;
 
@@ -119,7 +119,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
 
     UInt32 dataSize = dataLengthInFrames*outputFormat.mBytesPerFrame;
 	void *data = malloc(dataSize);
-	assert(data);
+	dynamo_assert(data, "Insufficient memory to load audio");
     memset(data, 0, dataSize);
     
     AudioBufferList dataBuffer;
@@ -211,7 +211,7 @@ bool sfx_isPlaying(SoundEffect_t *aSound)
 
 BackgroundMusic_t *bgm_load(const char *aFilename)
 {
-    assert(aFilename);
+    dynamo_assert(aFilename, "Invalid filename");
     NSString *path = [NSString stringWithUTF8String:aFilename];
     NSURL *fileURL = [NSURL fileURLWithPath:path isDirectory:NO];
 
@@ -315,7 +315,7 @@ static bool _checkForOpenAlError()
 {
 	int error = alGetError();
 	if(error != AL_NO_ERROR) {
-		debug_log("OpenAL error occurred(%d): %s", error, _openAlErrorString(error));
+		dynamo_log("OpenAL error occurred(%d): %s", error, _openAlErrorString(error));
 		return true;
 	}
 	return false;
