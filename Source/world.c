@@ -116,12 +116,12 @@ WorldEntity_t *world_pointQuery(World_t *aWorld, vec2_t aPoint)
 
 #pragma mark - World entities
 
-WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat aMomentum)
+WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat amoment)
 {
     WorldEntity_t *out = obj_create_autoreleased(&Class_WorldEntity);
     out->world = aWorld;
     out->owner = aOwner;
-    out->cpBody = cpBodyNew(aMass, aMomentum);
+    out->cpBody = cpBodyNew(aMass, amoment);
     out->cpBody->data = out;
 
     out->shapes = obj_retain(llist_create((InsertionCallback_t)&obj_retain, &obj_release));

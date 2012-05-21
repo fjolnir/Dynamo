@@ -1,6 +1,10 @@
 #include "gametimer.h"
 #include "util.h"
 
+#ifdef __APPLE__
+#include <mach/mach_time.h>
+#endif
+
 struct ScheduledCallbackWrapper_t {
     GLMFloat time;
     GameTimer_scheduledCallback_t callback;
@@ -57,7 +61,7 @@ void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_schedu
 {
     dynamo_assert(aCallback != NULL, "Invalid callback");
     struct ScheduledCallbackWrapper_t *wrapper = malloc(sizeof(struct ScheduledCallbackWrapper_t));
-    wrapper->time = aTimer->elapsed + aDelay;
+    wrapper->time = dynamo_time() + aDelay;
     wrapper->callback = aCallback;
     wrapper->context = aContext;
     llist_pushValue(aTimer->scheduledCallbacks, wrapper);
@@ -69,4 +73,34 @@ static void _callScheduledCallbackIfNeeded(struct ScheduledCallbackWrapper_t *aW
         return;
     aWrapper->callback(aTimer, aWrapper->context);
     llist_deleteValue(aTimer->scheduledCallbacks, aWrapper);
+}
+
+
+#pragma mark - General time functions
+
+GLMFloat dynamo_globalTime()
+{
+    GLMFloat ret = -1.0;
+#ifdef __APPLE__
+    mach_timebase_info_data_t timebase;
+    mach_timebase_info(&timebase);
+    uint64_t absolute = mach_absolute_time();
+    GLMFloat nanoSecs = absolute * timebase.numer / timebase.denom;
+    ret = nanoSecs / NSEC_PER_SEC;
+#elif defined(ANDROID)
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    ret = now.tv_sec + now.tv_nsec/1000000000.0
+#else
+    #error "Time functions not yet implemented for this platform"
+#endif
+    return ret;
+}
+
+GLMFloat dynamo_time()
+{
+    static GLMFloat startTime = -1.0;
+    if(startTime < -1.0)
+        startTime = dynamo_globalTime();
+    return dynamo_globalTime() - startTime;
 }

@@ -11,16 +11,35 @@ gl.glClearColor(0,0,0,0)
 local d = dynamo
 local dw = d.world
 
-local map = dynamo.loadMap(dynamo.pathForResource("maptest.tmx"))
+local map = dynamo.map.load(dynamo.pathForResource("maptest.tmx"))
 dynamo.renderer:pushRenderable(map:createLayerRenderable(0))
---dynamo.renderer:pushRenderable(map:createLayerRenderable(1))
---dynamo.renderer:pushRenderable(map:createLayerRenderable(2))
+dynamo.renderer:pushRenderable(map:createLayerRenderable(1))
+dynamo.renderer:pushRenderable(map:createLayerRenderable(2))
+
+dynamo.input.manager:addObserver({
+	type = dynamo.input.types.touch.pan1,
+	callback = function()
+		print("pan1")
+	end
+})
+
+dynamo.input.manager:addObserver({
+	type = dynamo.input.types.touch.pan2,
+	callback = function()
+		print("pan2")
+	end
+})
 
 
-function redraw()
-	dynamo.cycle()
-end
+dynamo.timer:afterDelay(4.0, function()
+	print("delay over", dynamo.time())
+end)
 
-function cleanup()
-	dynamo.cleanup()
-end
+dynamo.timer:afterDelay(8.0, function()
+	print("2nd delay over", dynamo.time())
+
+	dynamo.timer:afterDelay(4.0, function()
+	print("delay over AGAIN", dynamo.time())
+end)
+
+end)

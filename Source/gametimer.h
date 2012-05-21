@@ -60,4 +60,9 @@ extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 	Executes the given callback after the given delay.
 */
 extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
+
+// Returns the time in seconds
+extern GLMFloat dynamo_globalTime();
+// Returns the duration since the application launch in seconds
+extern GLMFloat dynamo_time();
 #endif

@@ -185,7 +185,7 @@ extern void world_removeJoint(World_t *aWorld, WorldConstraint_t *aJoint);
 /*!
 	Creates a world entity.
 */
-extern WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat aMomentum);
+extern WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat amoment);
 /*!
 	Gets the location of an entity.
 */

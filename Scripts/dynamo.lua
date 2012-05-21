@@ -59,6 +59,8 @@ extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t a
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
+extern GLMFloat dynamo_globalTime();
+extern GLMFloat dynamo_time();
 typedef struct _Texture { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; vec3_t location;  GLuint id; vec2_t size; vec2_t pxAlignInset; } Texture_t;
 typedef union _TextureRect { vec4_t v; float *f; struct { 	vec2_t origin; 	vec2_t size; }; struct { 	float u, v; 	float w, h; }; } TextureRect_t;
 extern const TextureRect_t kTextureRectEntire;
@@ -216,16 +218,13 @@ extern void _dynamo_log(const char *str);
 ]]
 
 dynamo.platforms = {
-	mac = 0,
-	ios = 1,
-	android = 2,
-	windows = 3,
-	other = 4
+	mac     = lib.kPlatformMac,
+	ios     = lib.kPlatformIOS,
+	android = lib.kPlatformAndroid,
+	windows = lib.kPlatformWindows,
+	other   = lib.kPlatformOther
 }
-dynamo.platform = tonumber(lib.util_platform())
-
-dynamo.kBackground_maxLayers = 4
-
+dynamo.platform = lib.util_platform()
 
 --
 -- Utilities
@@ -265,7 +264,10 @@ end
 
 --
 -- Textures
-function dynamo.loadTexture(path)
+
+dynamo.texture = {}
+
+function dynamo.texture.load(path)
 	local tex = lib.texture_loadFromPng(path, false, false)
 	if tex == nil then
 		print("Couldn't find texture at path", path)
@@ -277,15 +279,18 @@ end
 
 --
 -- Texture atlases
+
+dynamo.atlas = {}
+
 ffi.metatype("TextureAtlas_t", {
 	__index = {
 		getTextureRect = lib.texAtlas_getTextureRect,
 	}
 })
 
-dynamo.createTextureAtlas = function(...) return _obj_addToGC(lib.texAtlas_create(...)) end
+dynamo.atlas.create = function(...) return _obj_addToGC(lib.texAtlas_create(...)) end
 
-function dynamo.loadTextureAtlas(path, origin, size)
+function dynamo.atlas.load(path, origin, size)
 	local tex = dynamo.loadTexture(path)
 	return dynamo.createTextureAtlas(tex, origin, size)
 end
@@ -293,13 +298,16 @@ end
 
 --
 -- Sprites
+
+dynamo.sprite = {}
+
 ffi.metatype("Sprite_t", {
 	__index = {
 		step = lib.sprite_step
 	}
 })
 
-function dynamo.createSprite(location, size, atlas, animations)
+function dynamo.sprite.create(location, size, atlas, animations)
 	animations = animations or {}
 	local sprite = lib.sprite_create(location, size, atlas, #animations)
 	lib.obj_retain(sprite)
@@ -315,6 +323,7 @@ end
 
 --
 -- The Renderer
+
 ffi.metatype("Renderer_t", {
 	__index = {
 		display = lib.renderer_display,
@@ -338,6 +347,8 @@ end
 --
 -- Scenes
 
+dynamo.scene = {}
+
 ffi.metatype("Scene_t", {
 	__index = {
 		pushRenderable = lib.scene_pushRenderable,
@@ -359,7 +370,7 @@ ffi.metatype("Scene_t", {
 	}
 })
 
-function dynamo.createScene(renderables, initialTransform)
+function dynamo.scene.create(renderables, initialTransform)
 	objects = objects or {}
 	initialTransform = initialTransform or mat4_identity
 
@@ -376,6 +387,37 @@ end
 --
 -- Input manager
 
+dynamo.input = {
+	types = {
+		key = {
+			arrowLeft  = lib.kInputKey_arrowLeft,
+			arrowRight = lib.kInputKey_arrowRight,
+			arrowUp    = lib.kInputKey_arrowUp,
+			arrowDown  = lib.kInputKey_arrowDown,
+			ascii      = lib.kInputKey_ascii,
+		},
+		mouse = {
+			leftClick  = lib.kInputMouse_leftClick,
+			rightClick = lib.kInputMouse_rightClick,
+			leftDrag   = lib.kInputMouse_leftDrag,
+			rightDrag  = lib.kInputMouse_rightDrag,
+			move       = lib.kInputMouse_move
+		},
+		touch = {
+			tap1 = lib.InputTouch_tap1,
+			tap2 = lib.kInputTouch_tap2,
+			tap3 = lib.kInputTouch_tap3,
+			tap4 = lib.kInputTouch_tap4,
+			tap5 = lib.kInputTouch_tap5,
+			pan1 = lib.kInputTouch_pan1,
+			pan2 = lib.kInputTouch_pan2,
+			pan3 = lib.kInputTouch_pan3,
+			pan4 = lib.kInputTouch_pan4,
+			pan5 = lib.kInputTouch_pan5
+		}
+	}
+}
+
 ffi.metatype("InputManager_t", {
 	__index = {
 		addObserver = function(self, desc)
@@ -387,7 +429,25 @@ ffi.metatype("InputManager_t", {
 		postActiveEvents = lib.input_postActiveEvents,
 		postMomentaryEvent = lib.input_postMomentaryEvent,
 		beginEvent = lib.input_beginEvent,
-		endEvent = lib.input_endEvent
+		endEvent = lib.input_endEvent,
+		postTapEvent = function(self, finger, isDown, x, y)
+			finger = finger or 0
+			local pos = vec2(x or 0, y or 0)
+			local state = lib.kInputState_up
+			if isDown == true then
+				state = lib.kInputState_down
+			end
+			self:postMomentaryEvent(dynamo.input.types.touch.tap1 + finger, nil, pos, state)
+		end,
+		postPanEvent = function(self, finger, isDown, x, y)
+			finger = finger or 0
+			local pos = vec2(x or 0, y or 0)
+			local state = lib.kInputState_up
+			if isDown == 1 or isDown == true then
+				state = lib.kInputState_down
+			end
+			self:postMomentaryEvent(dynamo.input.types.touch.pan1 + finger, nil, pos, state)
+		end
 	}
 })
 
@@ -409,59 +469,12 @@ ffi.metatype("GameTimer_t", {
 
 local _createTimer = function(...) return _obj_addToGC(lib.gameTimer_create(...)) end
 
--- Apple variant
-if dynamo.platform == dynamo.platforms.ios or dynamo.platform == dynamo.platforms.mac then
-	ffi.cdef[[
-	struct mach_timebase_info {
-		uint32_t numer;
-		uint32_t denom;
-	};
-	typedef struct mach_timebase_info *mach_timebase_info_t;
-	typedef struct mach_timebase_info	mach_timebase_info_data_t;
+dynamo.globalTime = lib.dynamo_globalTime
+dynamo.time = lib.dynamo_time
 
-	void mach_timebase_info(mach_timebase_info_t info);
-	uint64_t mach_absolute_time(void);
-	]]
-	local C = ffi.C
-	function dynamo.globalTime()
-		local timebase = ffi.new("mach_timebase_info_data_t[1]")
-		C.mach_timebase_info(timebase)
-		local absolute = C.mach_absolute_time()
-		local nanosec = (absolute * timebase[0].numer) / timebase[0].denom
 
-		return tonumber(nanosec)/1000000000
-	end
-
-	dynamo.startTime = dynamo.globalTime()
-	function dynamo.time()
-		return dynamo.globalTime() - dynamo.startTime
-	end
--- Linux variant
-elseif dynamo.platform == dynamo.platforms.android then
-	ffi.cdef[[
-		typedef int32_t clockid_t;
-		typedef long time_t;
-		struct timespec {
-			time_t tv_sec;  /* seconds */
-			long tv_nsec; /* nanoseconds */
-		};
-		int clock_gettime(clockid_t clk_id, struct timespec *tp);
-	]]
-	local CLOCK_MONOTONIC = 1
-
-	function dynamo.globalTime()
-		local now = ffi.new("struct timespec[1]")
-		C.clock_gettime(CLOCK_MONOTONIC, now);
-		return tonumber(now[0].tv_sec) + tonumber(now[0].tv_nsec)/1000000000
-	end
-
-	dynamo.startTime = dynamo.globalTime()
-	function dynamo.time()
-		return dynamo.globalTime() - dynamo.startTime
-	end
-else
-	error("Unsupported platform (Time function not yet ported) "..tostring(tonumber(dynamo.platform)))
-end
+--
+-- Custom renderables
 
 function dynamo.renderable(lambda)
 	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.cast("Class_t*", lib.Class_Renderable)))
@@ -472,6 +485,9 @@ end
 
 --
 -- Maps
+
+dynamo.map = {}
+
 ffi.metatype("TMXMap_t", {
 	__index = {
 		getProperty           = lib.tmx_mapGetPropertyNamed,
@@ -530,12 +546,13 @@ ffi.metatype("TMXTileset_t", {
 	}
 })
 
-dynamo.loadMap = function(...) return _obj_addToGC(lib.tmx_readMapFile(...)) end
+dynamo.map.load = function(...) return _obj_addToGC(lib.tmx_readMapFile(...)) end
 
 
 --
 -- Sound
 
+dynamo.sound = { sfx = {}, bgm = {} }
 local _createSoundManager = function(...) return _obj_addToGC(lib.soundManager_create(...)) end
 
 ffi.metatype("SoundEffect_t", {
@@ -577,8 +594,8 @@ ffi.metatype("BackgroundMusic_t", {
 	end
 })
 
-dynamo.loadSFX = function(...) return _obj_addToGC(lib.sfx_load(...)) end
-dynamo.loadBGM = function(...) return _obj_addToGC(lib.bgm_load(...)) end
+dynamo.sound.sfx.load = function(...) return _obj_addToGC(lib.sfx_load(...)) end
+dynamo.sound.bgm.load = function(...) return _obj_addToGC(lib.bgm_load(...)) end
 
 
 --
@@ -712,7 +729,7 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	lib.obj_retain(dynamo.renderer)
 	lib.obj_retain(dynamo.timer)
 
-	dynamo.inputManager = _createInputManager()
+	dynamo.input.manager = _createInputManager()
 
 	dynamo.soundManager = _createSoundManager()
 	lib.soundManager_makeCurrent(dynamo.soundManager)
@@ -720,41 +737,21 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	dynamo.world = _createWorld()
 	dynamo.world.gravity = vec2(0,-100)
 
-	return dynamo.renderer, dynamo.timer
+	return true
 end
 
 function dynamo.cleanup()
 	-- Release all resources
 	dynamo.renderer = nil
 	dynamo.timer = nil
-	dynamo.inputManager = nil
+	dynamo.input.manager = nil
 	dynamo.world = nil
 	dynamo.soundManager = nil
 	lib.draw_cleanup()
 end
 
-function dynamo.postTapEvent(finger, isDown, x, y)
-	finger = finger or 0
-	local pos = vec2(x or 0, y or 0)
-	local state = lib.kInputState_up
-	if isDown == true then
-		state = lib.kInputState_down
-	end
-	dynamo.inputManager:postMomentaryEvent(lib.kInputTouch_tap1+finger, nil, pos, state)
-end
-
-function dynamo.postPanEvent(finger, isDown, x, y)
-	finger = finger or 0
-	local pos = vec2(x or 0, y or 0)
-	local state = lib.kInputState_up
-	if isDown == 1 or isDown == true then
-		state = lib.kInputState_down
-	end
-	dynamo.inputManager:postMomentaryEvent(lib.kInputTouch_pan1+finger, nil, pos, state)
-end
-
 function dynamo.cycle()
-	dynamo.inputManager:postActiveEvents()
+	dynamo.input.manager:postActiveEvents()
 	dynamo.timer:step(dynamo.time())
 	dynamo.world:step(dynamo.timer)
 	dynamo.renderer:display(dynamo.timer.timeSinceLastUpdate, dynamo.timer:interpolation())
