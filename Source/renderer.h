@@ -1,14 +1,13 @@
-/*!
-	@header Renderer
-	@abstract
-	@discussion Simple 2.5D renderer with a "camera"
+// Simple 2.5D renderer with a "camera"
+// Draws the area defined by viewport.
+// CameraOffset defines the center of the viewport
 
-	The actual drawing of objects is handled by Renderables, whose display callbacks are implemented in their appropriate files.
-*/
+// The actual drawing of objects is handled by Renderables, whose display callbacks
+// are implemented in their appropriate files.
 
 #include "object.h"
 #include "glutils.h"
-#include "GLMath/GLMath.h"
+#include <GLMath/GLMath.h>
 #include "linkedlist.h"
 
 #ifndef _RENDERER_H_
