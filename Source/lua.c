@@ -1,6 +1,7 @@
 #include "lua.h"
 #include "util.h"
 #include <string.h>
+#include <stdlib.h>
 
 static void luaCtx_destroy(LuaContext_t *aCtx);
 
@@ -63,11 +64,17 @@ bool luaCtx_executeString(LuaContext_t *aCtx, const char *aScript)
 
 bool luaCtx_addSearchPath(LuaContext_t *aCtx, const char *aPath)
 {
-    const char *format = "package.path = package.path .. ';%s/?.lua;%s/?/init.lua'";
-    size_t pathLen = strlen(aPath);
-    size_t scriptLen = strlen(format) + pathLen*2 + 1;
-    char script[scriptLen];
-    sprintf(script, format, aPath, aPath);
-
-    return luaCtx_executeString(aCtx, script);
+    size_t appendLen = 20 + strlen(aPath)*2;
+    char *strToAppend = malloc(appendLen);
+    snprintf(strToAppend, appendLen, ";%s/?.lua;%s/?/init.lua", aPath, aPath);
+    
+    lua_State *ls = aCtx->luaState;
+    lua_getglobal(ls, "package");
+        lua_getfield(ls, -1, "path");
+        lua_pushlstring(ls, strToAppend, strlen(strToAppend));
+        lua_concat(ls, 2);
+        lua_setfield(ls, -2, "path");
+    lua_pop(ls, 1);
+        
+    return true;
 }
