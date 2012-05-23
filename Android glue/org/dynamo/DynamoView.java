@@ -10,8 +10,6 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
-
 import org.keplerproject.luajava.LuaState;
 import org.keplerproject.luajava.LuaStateFactory;
 
@@ -24,6 +22,7 @@ public class DynamoView extends GLSurfaceView {
 			return;
 		this.setEGLContextClientVersion(2);
 		this.renderer = new DynamoRenderer();
+		
 		this.setRenderer(this.renderer);
 	}
 
@@ -82,7 +81,8 @@ public class DynamoView extends GLSurfaceView {
 	public static class DynamoRenderer implements GLSurfaceView.Renderer
 	{
 		public LuaState luaState;
-
+		public String bootScriptPath;
+		
 		@Override
 		public void onDrawFrame(GL10 unused)
 		{
@@ -101,6 +101,16 @@ public class DynamoView extends GLSurfaceView {
 			GLES20.glViewport(0, 0, width, height);
 		}
 
+		private void _addLuaSearchPath(String searchPath)
+		{
+			this.luaState.getGlobal("package");
+			this.luaState.getField(-1, "path");
+			this.luaState.pushString(";"+searchPath+"/?.lua;"+searchPath+"/?/init.lua");
+			this.luaState.concat(2);
+			this.luaState.setField(-2, "path");
+			this.luaState.pop(1);
+		}
+		
 		@Override
 		public void onSurfaceCreated(GL10 unused, EGLConfig config)
 		{
@@ -113,17 +123,10 @@ public class DynamoView extends GLSurfaceView {
 				this.luaState.openLibs();
 
 				// Add the resource directory to the search path
-				String searchPath = ResourceManager.resourceDirPath() + "/Scripts";
-				Log.d("Dynamo", "Search path: "+searchPath);
-				this.luaState.getGlobal("package");
-				this.luaState.getField(-1, "path");
-				this.luaState.pushString(";"+searchPath+"/?.lua;"+searchPath+"/?/init.lua");
-				this.luaState.concat(2);
-				this.luaState.setField(-2, "path");
-				this.luaState.pop(1);
+				_addLuaSearchPath(ResourceManager.resourceDirPath() + "/DynamoScripts");
 
-				if(this.luaState.LdoFile(ResourceManager.pathForResource("test", "lua", "Scripts")) != 0)
-					Log.e("Dynamo", "Error initializing: "+this.luaState.toString(-1));
+				if(this.luaState.LdoFile(bootScriptPath) != 0)
+					Log.e("Dynamo", "Error initializing using "+bootScriptPath+": "+this.luaState.toString(-1));
 			}
 		}
 
