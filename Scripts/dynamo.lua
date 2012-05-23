@@ -251,14 +251,14 @@ end
 function dynamo.log(...)
 	prefix = ""
 	if debug ~= nil then
-		local info = debug.getinfo(1, "Sln")
+		local info = debug.getinfo(2, "Sln")
 		if info.what == "C" then
 			prefix = "<C function>: "
 		else
-			prefix = string.format("%s:%s (%s): ", info.short_src, info.currentline, info.name)
+			prefix = string.format("%s:%s: ", info.short_src, info.currentline)
 		end
 	end
-	lib._dynamo_log(prefix..table.concat({...}))
+	lib._dynamo_log(prefix..table.concat({...}, ", "))
 end
 
 
