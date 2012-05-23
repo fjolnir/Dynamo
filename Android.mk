@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 DEPS_PATH = $(LOCAL_PATH)/Dependencies
-LOCAL_CFLAGS := -I$(DEPS_PATH) -std=gnu99 -I$(DEPS_PATH)/png -I$(DEPS_PATH)/mxml -I$(DEPS_PATH)/Chipmunk/include -I$(DEPS_PATH)/Chipmunk/include/chipmunk  -g -DDYNAMO_DEBUG -DCP_USE_DOUBLES=0
+LOCAL_CFLAGS := -I$(DEPS_PATH) -std=gnu99 -I$(DEPS_PATH)/png -I$(DEPS_PATH)/mxml -I$(DEPS_PATH)/Chipmunk/include -I$(DEPS_PATH)/Chipmunk/include/chipmunk  -g -DDYNAMO_DEBUG -DCP_USE_DOUBLES=0 -DANDROID_APP_IDENTIFIER=\"$(APP_IDENTIFIER)\"
 LOCAL_CXXFLAGS := -std=gnu++98
 LOCAL_ARM_MODE := arm
 TARGET_PLATFORM := android-9

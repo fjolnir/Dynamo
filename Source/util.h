@@ -8,11 +8,10 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
-#define ANDROID_APP_IDENTIFIER "jp.panasonic.GeminiTest"
-
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef void (*InsertionCallback_t)(void *aVal);
 typedef void (*RemovalCallback_t)(void *aVal);
