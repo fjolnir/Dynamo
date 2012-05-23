@@ -272,6 +272,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C719A2A0156CCDFE00C7D094 /* DynamoScripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = DynamoScripts; sourceTree = SOURCE_ROOT; };
+		C719A2A1156CCDFE00C7D094 /* DynamoShaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = DynamoShaders; sourceTree = SOURCE_ROOT; };
 		C71E0B6C155A40E000CB6F37 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
 		C71E0B6E155A40E500CB6F37 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		C71E0B70155A40E900CB6F37 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
@@ -350,7 +352,6 @@
 		C78B8E451558AB5500B8E5CE /* libyajl_s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libyajl_s.a; path = /usr/local/Cellar/yajl/2.0.4/lib/libyajl_s.a; sourceTree = "<absolute>"; };
 		C78B8E471558AB6D00B8E5CE /* libmxml.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmxml.a; path = /usr/local/Cellar/libmxml/2.6/lib/libmxml.a; sourceTree = "<absolute>"; };
 		C799E481155908780009C0A7 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "/usr/local/lib/libluajit-5.1.a"; sourceTree = "<absolute>"; };
-		C7A190F315469C1900B266A6 /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Shaders; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -530,7 +531,8 @@
 				C78B8DB41558A69600B8E5CE /* util.h */,
 				C78B8DB31558A69600B8E5CE /* util.c */,
 				C78B8D921558A69600B8E5CE /* glutils.h */,
-				C7A190F315469C1900B266A6 /* Shaders */,
+				C719A2A0156CCDFE00C7D094 /* DynamoScripts */,
+				C719A2A1156CCDFE00C7D094 /* DynamoShaders */,
 			);
 			path = Dynamo;
 			sourceTree = "<group>";

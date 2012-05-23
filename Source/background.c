@@ -38,8 +38,8 @@ Background_t *background_create()
 	if(!_backgroundShader) {
 		const int maxLen = 1024;
 		char vshPath[maxLen], fshPath[maxLen];
-		dynamo_assert(util_pathForResource("background", "vsh", "Shaders", vshPath, maxLen), "background.vsh not found");
-		dynamo_assert(util_pathForResource("background", "fsh", "Shaders", fshPath, maxLen), "background.fsh not found");
+		dynamo_assert(util_pathForResource("background", "vsh", "DynamoShaders", vshPath, maxLen), "background.vsh not found");
+		dynamo_assert(util_pathForResource("background", "fsh", "DynamoShaders", fshPath, maxLen), "background.fsh not found");
 		_backgroundShader = obj_retain(shader_loadFromFiles(vshPath, fshPath));
 		_backgroundShader->uniforms[kBackground_offsetUniform] = shader_getUniformLocation(_backgroundShader, "u_backgroundOffset");
 		_backgroundShader->uniforms[kBackground_layer0DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer0Depth");
