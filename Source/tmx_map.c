@@ -393,7 +393,7 @@ TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int 
 	vec2_t tileSize = vec2_create(out->map->tileWidth, out->map->tileHeight);
 	char texPath[512];
 	util_pathForResource(tileset->imagePath, NULL, NULL, texPath, 512);
-	dynamo_log("map texture path: %s", texPath);
+
 	Texture_t *tex = texture_loadFromPng((const char*)texPath, false, false);
 	dynamo_assert(tex != NULL, "Couldn't load layer texture");
 	TextureAtlas_t *atlas = texAtlas_create(tex, vec2_create(tileset->margin, tileset->margin), tileSize);
