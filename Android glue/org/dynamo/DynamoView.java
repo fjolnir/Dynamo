@@ -45,7 +45,7 @@ public class DynamoView extends GLSurfaceView {
 		case MotionEvent.ACTION_DOWN: { // First touch
 			final int id = event.getPointerId(0);
 			final float x = xs[0];
-			final float y = height - ys[0];
+			final float y = ys[0];
 			queueEvent(new Runnable() { @Override public void run() { renderer.handleActionDown(id, x, y); } });
 			break; }
 		case MotionEvent.ACTION_POINTER_DOWN: { // Additional touch
@@ -59,14 +59,14 @@ public class DynamoView extends GLSurfaceView {
 			queueEvent(new Runnable() { public void run() { renderer.handleActionMove(ids, xs, ys); } });
 			break;
 		 case MotionEvent.ACTION_POINTER_UP: { // One (out of many) touches ended
-			final int idx = event.getAction() >> MotionEvent.ACTION_POINTER_ID_SHIFT;
-			final int id = event.getPointerId(idx);
+			 final int idx = event.getAction() >> MotionEvent.ACTION_POINTER_ID_SHIFT;
+			 final int id = event.getPointerId(idx);
 			 final float x = event.getX(idx);
 			 final float y = height - event.getY(idx);
 			 queueEvent(new Runnable() { public void run() { renderer.handleActionUp(id, x, y); } });
 			 break; }
 		 case MotionEvent.ACTION_UP: {  // Last touch ended
-			final int id = event.getPointerId(0);
+			 final int id = event.getPointerId(0);
 			 final float x = xs[0];
 			 final float y = ys[0];
 			 queueEvent(new Runnable() { public void run() { renderer.handleActionUp(id, x, y); } });
