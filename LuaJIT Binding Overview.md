@@ -206,10 +206,7 @@ Available input types are
 			<left,right>Drag
 			move
 		}
-		touch = {
-			tap1-5
-			pan1-5
-		}
+		touch = { 1-5 } -- Array
 	}
 
 
