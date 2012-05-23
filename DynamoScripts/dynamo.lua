@@ -5,7 +5,7 @@ local ffi = require("ffi")
 local lib = ffi.C
 local gl = require("OpenGLES")
 
-local dynamo = setmetatable({}, { __index = lib })
+dynamo = setmetatable({}, { __index = lib })
 
 ffi.cdef[[
 typedef float GLMFloat;
@@ -706,6 +706,11 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	assert(dynamo.initialized == false)
 	dynamo.initialized = true
 
+    gl.glEnable(gl.GL_BLEND);
+    gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+    gl.glDisable(gl.GL_CULL_FACE);
+    gl.glDisable(gl.GL_DEPTH_TEST);
+    
 	dynamo.renderer = _createRenderer(viewport)
 	lib.draw_init(dynamo.renderer)
 	dynamo.renderer:handleResize(viewport)

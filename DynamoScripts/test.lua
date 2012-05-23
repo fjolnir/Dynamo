@@ -2,7 +2,7 @@ jit.off() -- iOS doesn't allow jit (and there are some bugs with it)
 ffi = require("ffi")
 C = ffi.C
 require("glmath")
-dynamo = require("dynamo")
+require("dynamo")
 local gl = require("OpenGLES")
 
 dynamo.init(vec2(640, 980), 24)
