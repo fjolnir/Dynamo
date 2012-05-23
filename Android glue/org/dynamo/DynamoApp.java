@@ -12,7 +12,7 @@ public class DynamoApp extends Application {
 	{
 		if(sharedInstance == null)
 			throw new IllegalStateException("Application not created yet!");
-		return instance.getApplicationContext();
+		return sharedInstance.getApplicationContext();
 	}
 
 	@Override
