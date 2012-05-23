@@ -74,7 +74,7 @@ Class_t Class_SoundManager = {
 static bool _osl_checkResult(const char *aMsg, SLresult aResult)
 {
     if(aResult != SL_RESULT_SUCCESS )
-        debug_log("%s", aMsg);
+        dynamo_log("%s", aMsg);
     return aResult == SL_RESULT_SUCCESS;
 }
 
@@ -98,9 +98,9 @@ static SLuint32 _osl_getPlayState(SLPlayItf aPlayInterface)
 // Creates an sfx object
 SoundEffect_t *sfx_load(const char *aFilename)
 {
-	dynamo_assert(aFilename != NULL);
-	dynamo_assert(_CurrentSoundManager != NULL);
-	debug_log("loading sound from %s", aFilename);
+	dynamo_assert(aFilename != NULL, "Invalid filename");
+	dynamo_assert(_CurrentSoundManager != NULL, "Current sound manager not set");
+	dynamo_log("loading sound from %s", aFilename);
 
 	SoundEffect_t *out = obj_create_autoreleased(&Class_SoundEffect);
 	out->soundManager = _CurrentSoundManager;
@@ -117,7 +117,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
 		}
 	}
 	if(channel == -1) {
-		debug_log("No free channels in current sound manager");
+		dynamo_log("No free channels in current sound manager");
 		return NULL;
 	}
 	out->channel = channel;
@@ -234,7 +234,7 @@ void _sfx_pause(SoundEffect_t *aSound)
 
 void sfx_play(SoundEffect_t *aSound)
 {
-	debug_log("Playing sound %p? %d", aSound, aSound->loaded);
+	dynamo_log("Playing sound %p? %d", aSound, aSound->loaded);
 	if(!aSound->loaded) return;
 	_osl_setPlayState(aSound->oslPlayerPlayInterface, SL_PLAYSTATE_PLAYING);
 }
@@ -301,7 +301,7 @@ SoundManager_t *soundManager_create()
 {
 	void* handle = dlopen("libOpenSLES.so", RTLD_LAZY);
 	if (handle == NULL){
-		debug_log("OpenSLES not available");
+		dynamo_log("OpenSLES not available");
 		exit(EXIT_FAILURE);
 	}
 	

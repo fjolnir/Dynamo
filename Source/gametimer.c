@@ -5,6 +5,10 @@
 #include <mach/mach_time.h>
 #endif
 
+#ifdef ANDROID
+#include <time.h>
+#endif
+
 struct ScheduledCallbackWrapper_t {
     GLMFloat time;
     GameTimer_scheduledCallback_t callback;
@@ -90,7 +94,7 @@ GLMFloat dynamo_globalTime()
 #elif defined(ANDROID)
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
-    ret = now.tv_sec + now.tv_nsec/1000000000.0
+    ret = now.tv_sec + now.tv_nsec/1000000000.0;
 #else
     #error "Time functions not yet implemented for this platform"
 #endif

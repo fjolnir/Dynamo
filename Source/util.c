@@ -40,7 +40,7 @@ bool util_pathForResource(const char *name, const char *ext, const char *dir, ch
     #if defined(ANDROID)
         APPEND("/data/data/")
         APPEND(ANDROID_APP_IDENTIFIER)
-		APPEND("/files/game_assets/")
+		APPEND("/files/GameResources/")
     #endif
     APPEND(dir)
 	if(dir && dir[strlen(dir)-1] != '/')
