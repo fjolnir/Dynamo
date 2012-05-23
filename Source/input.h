@@ -25,7 +25,7 @@ extern Class_t Class_InputObserver;
 	Indicates the type of an event.
 */
 typedef enum {
-	kInputKey_arrowLeft,
+	kInputKey_arrowLeft = 0,
 	kInputKey_arrowRight,
 	kInputKey_arrowUp,
 	kInputKey_arrowDown,
@@ -37,16 +37,11 @@ typedef enum {
 	kInputMouse_move,
 
 	// Touch events
-	kInputTouch_tap1,
-	kInputTouch_tap2,
-	kInputTouch_tap3,
-	kInputTouch_tap4,
-	kInputTouch_tap5,
-	kInputTouch_pan1,
-	kInputTouch_pan2,
-	kInputTouch_pan3,
-	kInputTouch_pan4,
-	kInputTouch_pan5
+	kInputTouch1,
+	kInputTouch2,
+	kInputTouch3,
+	kInputTouch4,
+	kInputTouch5
 } Input_type_t;
 
 /*!

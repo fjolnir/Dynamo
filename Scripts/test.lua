@@ -17,16 +17,16 @@ dynamo.renderer:pushRenderable(map:createLayerRenderable(1))
 dynamo.renderer:pushRenderable(map:createLayerRenderable(2))
 
 dynamo.input.manager:addObserver({
-	type = dynamo.input.types.touch.pan1,
+	type = dynamo.input.types.touch[1],
 	callback = function()
-		print("pan1")
+		dynamo.log("1")
 	end
 })
 
 dynamo.input.manager:addObserver({
-	type = dynamo.input.types.touch.pan2,
+	type = dynamo.input.types.touch[2],
 	callback = function()
-		print("pan2")
+		dynamo.log("2")
 	end
 })
 

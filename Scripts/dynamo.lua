@@ -95,8 +95,7 @@ typedef struct _Background { _Obj_guts _guts; RenderableDisplayCallback_t displa
 extern Background_t *background_create();
 extern void background_setLayer(Background_t *aBackground, unsigned int aIndex, BackgroundLayer_t *aLayer);
 extern BackgroundLayer_t *background_createLayer(Texture_t *aTexture, float aDepth);
-typedef enum { kInputKey_arrowLeft, kInputKey_arrowRight, kInputKey_arrowUp, kInputKey_arrowDown, kInputKey_ascii,	kInputMouse_leftClick,	kInputMouse_rightClick,	kInputMouse_leftDrag,	kInputMouse_rightDrag,	kInputMouse_move,	InputTouch_tap1, kInputTouch_tap2, kInputTouch_tap3, kInputTouch_tap4, kInputTouch_tap5,	kInputTouch_pan1,	kInputTouch_pan2,	kInputTouch_pan3,	kInputTouch_pan4,	kInputTouch_pan5
-} Input_type_t;
+typedef enum { kInputKey_arrowLeft,kInputKey_arrowRight, kInputKey_arrowUp,kInputKey_arrowDown, kInputKey_ascii,kInputMouse_leftClick,kInputMouse_rightClick,kInputMouse_leftDrag,kInputMouse_rightDrag,kInputMouse_move,kInputTouch1,kInputTouch2,kInputTouch3,kInputTouch4,kInputTouch5 } Input_type_t;
 typedef enum { kInputState_down, kInputState_up } Input_state_t;
 typedef struct _InputManager InputManager_t;
 typedef struct _InputObserver InputObserver_t;
@@ -404,16 +403,11 @@ dynamo.input = {
 			move       = lib.kInputMouse_move
 		},
 		touch = {
-			tap1 = lib.InputTouch_tap1,
-			tap2 = lib.kInputTouch_tap2,
-			tap3 = lib.kInputTouch_tap3,
-			tap4 = lib.kInputTouch_tap4,
-			tap5 = lib.kInputTouch_tap5,
-			pan1 = lib.kInputTouch_pan1,
-			pan2 = lib.kInputTouch_pan2,
-			pan3 = lib.kInputTouch_pan3,
-			pan4 = lib.kInputTouch_pan4,
-			pan5 = lib.kInputTouch_pan5
+			lib.kInputTouch1,
+			lib.kInputTouch2,
+			lib.kInputTouch3,
+			lib.kInputTouch4,
+			lib.kInputTouch5
 		}
 	}
 }
@@ -430,23 +424,14 @@ ffi.metatype("InputManager_t", {
 		postMomentaryEvent = lib.input_postMomentaryEvent,
 		beginEvent = lib.input_beginEvent,
 		endEvent = lib.input_endEvent,
-		postTapEvent = function(self, finger, isDown, x, y)
+		postTouchEvent = function(self, finger, isDown, x, y)
 			finger = finger or 0
 			local pos = vec2(x or 0, y or 0)
 			local state = lib.kInputState_up
 			if isDown == true then
 				state = lib.kInputState_down
 			end
-			self:postMomentaryEvent(dynamo.input.types.touch.tap1 + finger, nil, pos, state)
-		end,
-		postPanEvent = function(self, finger, isDown, x, y)
-			finger = finger or 0
-			local pos = vec2(x or 0, y or 0)
-			local state = lib.kInputState_up
-			if isDown == 1 or isDown == true then
-				state = lib.kInputState_down
-			end
-			self:postMomentaryEvent(dynamo.input.types.touch.pan1 + finger, nil, pos, state)
+			self:postMomentaryEvent(dynamo.input.types.touch[1] + finger, nil, pos, state)
 		end
 	}
 })
