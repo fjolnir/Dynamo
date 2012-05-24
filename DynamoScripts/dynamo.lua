@@ -170,6 +170,7 @@ extern void world_step(World_t *aWorld, GameTimer_t *aTimer);
 extern void world_setGravity(World_t *aWorld, vec2_t aGravity);
 extern vec2_t world_gravity(World_t *aWorld);
 extern void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity);
+extern void world_removeEntity(World_t *aWorld, WorldEntity_t *aEntity);
 extern void world_addStaticEntity(World_t *aWorld, WorldEntity_t *aEntity);
 extern WorldEntity_t *world_pointQuery(World_t *aWorld, vec2_t aPoint);
 extern vec2_t worldEnt_location(WorldEntity_t *aEntity);
@@ -589,6 +590,7 @@ dynamo.sound.bgm.load = function(...) return _obj_addToGC(lib.bgm_load(...)) end
 ffi.metatype("World_t", {
 	__index = {
 		addEntity        = lib.world_addEntity,
+		removeEntity        = lib.world_removeEntity,
 		gravity          = lib.world_gravity,
 		step             = lib.world_step,
 		momentForCircle  = lib.world_momentForCircle,
