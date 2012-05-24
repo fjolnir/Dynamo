@@ -7,7 +7,6 @@ import java.io.InputStream;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 public class ResourceManager {
 	public static String RESOURCE_PATH = "GameResources";

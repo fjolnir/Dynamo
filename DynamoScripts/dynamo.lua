@@ -1,5 +1,5 @@
--- There's a crasher bug in JIT that I haven't figured out a way to work around
---jit.off()
+-- There's a crasher bug in JIT that I haven't figured out a way to work around, also, iOS disallows JIT
+jit.off()
 
 local ffi = require("ffi")
 local lib = ffi.C
