@@ -8,9 +8,9 @@
 #define _LUACTX_H_
 
 #include "object.h"
-#import <lua.h>
-#import <lauxlib.h>
-#import <lualib.h>
+#import "lua.h"
+#import "lauxlib.h"
+#import "lualib.h"
 
 extern Class_t Class_LuaContext;
 /*!

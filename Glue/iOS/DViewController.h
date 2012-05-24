@@ -2,7 +2,7 @@
 
 // Sets up an GLKView and initializes dynamo using the supplied boot script
 #import <GLKit/GLKit.h>
-#import <dynamo/lua.h>
+#import <dynamo/luacontext.h>
 
 @interface DViewController : GLKViewController {
     EAGLContext *_context;

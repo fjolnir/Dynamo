@@ -1,4 +1,4 @@
-#include "lua.h"
+#include "luacontext.h"
 #include "util.h"
 #include <string.h>
 #include <stdlib.h>

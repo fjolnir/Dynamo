@@ -25,9 +25,9 @@
 		C73EFC58155A423700FD64CA /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC57155A423700FD64CA /* ApplicationServices.framework */; };
 		C73EFC5A155A424000FD64CA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC59155A424000FD64CA /* AudioToolbox.framework */; };
 		C73EFC5E155A427800FD64CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC5D155A427800FD64CA /* Foundation.framework */; };
-		C76454161564C6E7004D99E8 /* lua.c in Sources */ = {isa = PBXBuildFile; fileRef = C76454141564C6E7004D99E8 /* lua.c */; };
-		C76454171564C6E7004D99E8 /* lua.c in Sources */ = {isa = PBXBuildFile; fileRef = C76454141564C6E7004D99E8 /* lua.c */; };
-		C76454191564C6E7004D99E8 /* lua.h in Headers */ = {isa = PBXBuildFile; fileRef = C76454151564C6E7004D99E8 /* lua.h */; };
+		C76454161564C6E7004D99E8 /* luacontext.c in Sources */ = {isa = PBXBuildFile; fileRef = C76454141564C6E7004D99E8 /* luacontext.c */; };
+		C76454171564C6E7004D99E8 /* luacontext.c in Sources */ = {isa = PBXBuildFile; fileRef = C76454141564C6E7004D99E8 /* luacontext.c */; };
+		C76454191564C6E7004D99E8 /* luacontext.h in Headers */ = {isa = PBXBuildFile; fileRef = C76454151564C6E7004D99E8 /* luacontext.h */; };
 		C764541E1564CA0A004D99E8 /* dynamo.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D8F1558A69600B8E5CE /* dynamo.h */; };
 		C764541F1564CA0A004D99E8 /* world.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C7650D48155B640B00A0C86D /* world.h */; };
 		C76454201564CA0A004D99E8 /* array.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D881558A69600B8E5CE /* array.h */; };
@@ -49,7 +49,7 @@
 		C76454301564CA0A004D99E8 /* texture_atlas.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DAE1558A69600B8E5CE /* texture_atlas.h */; };
 		C76454311564CA0A004D99E8 /* texture.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB01558A69600B8E5CE /* texture.h */; };
 		C76454321564CA0A004D99E8 /* tmx_map.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB21558A69600B8E5CE /* tmx_map.h */; };
-		C76454331564CA0A004D99E8 /* lua.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C76454151564C6E7004D99E8 /* lua.h */; };
+		C76454331564CA0A004D99E8 /* luacontext.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C76454151564C6E7004D99E8 /* luacontext.h */; };
 		C76454341564CA0A004D99E8 /* util.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8DB41558A69600B8E5CE /* util.h */; };
 		C76454351564CA0A004D99E8 /* glutils.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D921558A69600B8E5CE /* glutils.h */; };
 		C7650D43155B629900A0C86D /* libChipmunk-iPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7650D3E155B628000A0C86D /* libChipmunk-iPhone.a */; };
@@ -124,6 +124,10 @@
 		C78B8E461558AB5500B8E5CE /* libyajl_s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E451558AB5500B8E5CE /* libyajl_s.a */; };
 		C78B8E481558AB6D00B8E5CE /* libmxml.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C78B8E471558AB6D00B8E5CE /* libmxml.a */; };
 		C799E482155908780009C0A7 /* libluajit-5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C799E481155908780009C0A7 /* libluajit-5.1.a */; };
+		C7CEC8F4156DCC53004B8D6C /* lauxlib.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D761558A60200B8E5CE /* lauxlib.h */; };
+		C7CEC8F5156DCC54004B8D6C /* lua.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D791558A60200B8E5CE /* lua.h */; };
+		C7CEC8F6156DCC58004B8D6C /* luaconf.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7A1558A60200B8E5CE /* luaconf.h */; };
+		C7CEC8F7156DCC5D004B8D6C /* lualib.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7B1558A60200B8E5CE /* lualib.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -250,8 +254,12 @@
 				C76454241564CA0A004D99E8 /* gametimer.h in Copy Headers */,
 				C76454251564CA0A004D99E8 /* input.h in Copy Headers */,
 				C76454261564CA0A004D99E8 /* json.h in Copy Headers */,
+				C7CEC8F5156DCC54004B8D6C /* lua.h in Copy Headers */,
+				C7CEC8F6156DCC58004B8D6C /* luaconf.h in Copy Headers */,
+				C7CEC8F7156DCC5D004B8D6C /* lualib.h in Copy Headers */,
 				C76454271564CA0A004D99E8 /* linkedlist.h in Copy Headers */,
 				C76454281564CA0A004D99E8 /* object.h in Copy Headers */,
+				C7CEC8F4156DCC53004B8D6C /* lauxlib.h in Copy Headers */,
 				C76454291564CA0A004D99E8 /* png_loader.h in Copy Headers */,
 				C764542A1564CA0A004D99E8 /* primitive_types.h in Copy Headers */,
 				C764542B1564CA0A004D99E8 /* renderer.h in Copy Headers */,
@@ -262,7 +270,7 @@
 				C76454301564CA0A004D99E8 /* texture_atlas.h in Copy Headers */,
 				C76454311564CA0A004D99E8 /* texture.h in Copy Headers */,
 				C76454321564CA0A004D99E8 /* tmx_map.h in Copy Headers */,
-				C76454331564CA0A004D99E8 /* lua.h in Copy Headers */,
+				C76454331564CA0A004D99E8 /* luacontext.h in Copy Headers */,
 				C76454341564CA0A004D99E8 /* util.h in Copy Headers */,
 				C76454351564CA0A004D99E8 /* glutils.h in Copy Headers */,
 			);
@@ -292,8 +300,8 @@
 		C73EFC59155A424000FD64CA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		C73EFC5D155A427800FD64CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		C75AFCF0153FA9F500FE8623 /* libdynamo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdynamo.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		C76454141564C6E7004D99E8 /* lua.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lua.c; path = Source/lua.c; sourceTree = SOURCE_ROOT; };
-		C76454151564C6E7004D99E8 /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lua.h; path = Source/lua.h; sourceTree = SOURCE_ROOT; };
+		C76454141564C6E7004D99E8 /* luacontext.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = luacontext.c; path = Source/luacontext.c; sourceTree = SOURCE_ROOT; };
+		C76454151564C6E7004D99E8 /* luacontext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = luacontext.h; path = Source/luacontext.h; sourceTree = SOURCE_ROOT; };
 		C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Chipmunk6.xcodeproj; path = Chipmunk/xcode/Chipmunk6.xcodeproj; sourceTree = "<group>"; };
 		C7650D47155B640B00A0C86D /* world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = world.c; path = Source/world.c; sourceTree = SOURCE_ROOT; };
 		C7650D48155B640B00A0C86D /* world.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = world.h; path = Source/world.h; sourceTree = SOURCE_ROOT; };
@@ -526,8 +534,8 @@
 				C78B8DAF1558A69600B8E5CE /* texture.c */,
 				C78B8DB21558A69600B8E5CE /* tmx_map.h */,
 				C78B8DB11558A69600B8E5CE /* tmx_map.c */,
-				C76454151564C6E7004D99E8 /* lua.h */,
-				C76454141564C6E7004D99E8 /* lua.c */,
+				C76454151564C6E7004D99E8 /* luacontext.h */,
+				C76454141564C6E7004D99E8 /* luacontext.c */,
 				C78B8DB41558A69600B8E5CE /* util.h */,
 				C78B8DB31558A69600B8E5CE /* util.c */,
 				C78B8D921558A69600B8E5CE /* glutils.h */,
@@ -612,7 +620,7 @@
 				C78B8E231558A75000B8E5CE /* tmx_map.h in Headers */,
 				C78B8E251558A75000B8E5CE /* util.h in Headers */,
 				C7650D4C155B640B00A0C86D /* world.h in Headers */,
-				C76454191564C6E7004D99E8 /* lua.h in Headers */,
+				C76454191564C6E7004D99E8 /* luacontext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -805,7 +813,7 @@
 				C78B8DDF1558A69700B8E5CE /* tmx_map.c in Sources */,
 				C78B8DE11558A69700B8E5CE /* util.c in Sources */,
 				C7650D49155B640B00A0C86D /* world.c in Sources */,
-				C76454161564C6E7004D99E8 /* lua.c in Sources */,
+				C76454161564C6E7004D99E8 /* luacontext.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,7 +842,7 @@
 				C78B8E221558A75000B8E5CE /* tmx_map.c in Sources */,
 				C78B8E241558A75000B8E5CE /* util.c in Sources */,
 				C7650D4A155B640B00A0C86D /* world.c in Sources */,
-				C76454171564C6E7004D99E8 /* lua.c in Sources */,
+				C76454171564C6E7004D99E8 /* luacontext.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
