@@ -71,6 +71,8 @@ void _dynamo_log(const char *str)
 // TODO: Add graceful error handling (Was failing with a mysterious sigsegv on missing files on android)
 void util_readFile(const char *aFilePath, size_t *aoLength, char **aoOutput)
 {
+    dynamo_assert(aoOutput != NULL && aoLength != NULL, "Output buffer required");
+    
 	FILE *fd = fopen(aFilePath, "r");
 	if(!fd) {
         if(aoLength) *aoLength = 0;
@@ -78,10 +80,11 @@ void util_readFile(const char *aFilePath, size_t *aoLength, char **aoOutput)
     }
     
 	fseek(fd, 0, SEEK_END);
-	if(aoLength) *aoLength = ftell(fd);
-	if(*aoLength <= 0) return;
+    size_t len = ftell(fd);
+	*aoLength = len;
+	if(len <= 0) return;
 	rewind(fd);
     
-	*aoOutput = calloc(*aoLength+1, sizeof(char));
-	fread(*aoOutput, sizeof(char), *aoLength, fd);
+	*aoOutput = calloc(len+1, sizeof(char));
+	fread(*aoOutput, sizeof(char), len, fd);
 }
