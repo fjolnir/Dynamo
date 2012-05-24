@@ -11,7 +11,7 @@ bool util_pathForResource(const char *name, const char *ext, const char *dir, ch
 {
     dynamo_assert(output != NULL && maxLen > 0, "Invalid output buffer");
 
-#if defined(__APPLE__) // iOS
+#if defined(__APPLE__)
 
     CFBundleRef bundle = CFBundleGetMainBundle();
     CFStringRef cfName = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
