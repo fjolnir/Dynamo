@@ -1,6 +1,6 @@
 [submodule "Dependencies/GLMath"]
 	path = Dependencies/GLMath
-	url = git://github.com/aptiva/GLMath.git
+	url = git://github.com/fjolnir/GLMath.git
 [submodule "Dependencies/Chipmunk"]
 	path = Dependencies/Chipmunk
 	url = https://github.com/slembcke/Chipmunk-Physics.git
