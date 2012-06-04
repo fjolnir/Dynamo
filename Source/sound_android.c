@@ -152,11 +152,12 @@ SoundEffect_t *sfx_load(const char *aFilename)
 	if(!_osl_checkResult("Couldn't get audio volume interface", result))
 		return NULL;
 	result = (*out->oslPlayerObject)->GetInterface(out->oslPlayerObject, SL_IID_3DLOCATION, &out->oslPlayer3DLocationInterface);
-	if(!_osl_checkResult("Couldn't get audio location interface", result))
-		return NULL;
+	if(!_osl_checkResult("3D Audio location unsupported", result))
+		out->oslPlayer3DLocationInterface = NULL;
+	
 	result = (*out->oslPlayerObject)->GetInterface(out->oslPlayerObject, SL_IID_PITCH, &out->oslPlayerPitchInterface);
-	if(!_osl_checkResult("Couldn't get audio pitch interface", result))
-		return NULL;
+	if(!_osl_checkResult("Adio pitch not supported", result))
+		out->oslPlayerPitchInterface = NULL;
 
 
 	out->loaded = true;
@@ -185,6 +186,8 @@ void sfx_destroy(SoundEffect_t *aSound)
 
 void sfx_setPosition(SoundEffect_t *aSound, vec3_t aPos)
 {
+	if(!aSound->oslPlayer3DLocationInterface)
+		return;
 	SLVec3D slVec = { (SLint32)aPos.x, (SLint32)aPos.y, (SLint32)aPos.z };
 	SLresult result = (*aSound->oslPlayer3DLocationInterface)->SetLocationCartesian(aSound->oslPlayer3DLocationInterface, &slVec);
 	_osl_checkResult("Couldn't set audio position", result);
@@ -202,6 +205,8 @@ void sfx_setLooping(SoundEffect_t *aSound, bool aShouldLoop)
 
 void sfx_setPitch(SoundEffect_t *aSound, float aPitch)
 {
+	if(!aSound->oslPlayerPitchInterface)
+		return;
 	SLpermille pitch = aPitch * 1000.0f;
 	SLresult result = (*aSound->oslPlayerPitchInterface)->SetPitch(aSound->oslPlayerPitchInterface, pitch);
 	_osl_checkResult("Couldn't set audio pitch", result);
