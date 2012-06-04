@@ -103,8 +103,10 @@
 {
 	[EAGLContext setCurrentContext:_context];
 	
-	NSString *scriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"DynamoScripts"];
-	luaCtx_addSearchPath(_luaCtx, [scriptsPath fileSystemRepresentation]);
+	NSString *dynamoScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"DynamoScripts"];
+	NSString *localScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
+	luaCtx_addSearchPath(_luaCtx, [dynamoScriptsPath fileSystemRepresentation]);
+	luaCtx_addSearchPath(_luaCtx, [localScriptsPath fileSystemRepresentation]);
 	dynamo_assert(luaCtx_executeFile(_luaCtx, [_bootScriptPath fileSystemRepresentation]), "Lua error");
 }
 
