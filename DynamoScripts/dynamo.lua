@@ -87,9 +87,14 @@ extern void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor
 extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
 typedef struct _SpriteAnimation { int numberOfFrames; int currentFrame; bool loops; } SpriteAnimation_t;
 typedef struct _Sprite { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; TextureAtlas_t *atlas; vec3_t location; vec2_t size; float scale, angle; bool flippedHorizontally; bool flippedVertically; int activeAnimation;  SpriteAnimation_t *animations; } Sprite_t;
+typedef struct _SpriteBatch { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; TextureAtlas_t *atlas; int spriteCount; LinkedList_t *sprites; } SpriteBatch_t;
+extern Class_t Class_SpriteBatch;
 extern Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity);
 extern SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames);
 extern void sprite_step(Sprite_t *aSprite);
+extern SpriteBatch_t *spriteBatch_create();
+extern void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
+extern bool spriteBatch_deleteSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
 typedef struct _BackgroundLayer { _Obj_guts _guts; Texture_t *texture; float depth;} BackgroundLayer_t;
 typedef struct _Background { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; BackgroundLayer_t *layers[4]; vec2_t offset;} Background_t;
 extern Background_t *background_create();
@@ -99,7 +104,7 @@ typedef enum { kInputKey_arrowLeft,kInputKey_arrowRight, kInputKey_arrowUp,kInpu
 typedef enum { kInputState_down, kInputState_up } Input_state_t;
 typedef struct _InputManager InputManager_t;
 typedef struct _InputObserver InputObserver_t;
-typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *aMetaData);
+typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, bool aState, void *aMetaData);
 struct _InputObserver { _Obj_guts _guts; Input_handler_t handlerCallback; Input_type_t type; unsigned char code;  void *metaData;  Input_state_t lastKnownState;};
 struct _InputManager { _Obj_guts _guts; LinkedList_t *observers; LinkedList_t *activeEvents;};
 extern InputManager_t *input_createManager();
@@ -193,6 +198,8 @@ extern GLMFloat worldShape_elasticity(WorldShape_t *aEntity);
 extern void worldShape_setElasticity(WorldShape_t *aEntity, GLMFloat aVal);
 extern WorldShapeGroup_t worldShape_group(WorldShape_t *aShape);
 extern void worldShape_setGroup(WorldShape_t *aShape, WorldShapeGroup_t aGroup);
+extern void worldShape_setCollides(WorldShape_t *aShape, bool aCollides);
+extern bool worldShape_collides(WorldShape_t *aShape);
 extern GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLMFloat aOuterRadius, vec2_t aOffset);
 extern GLMFloat world_momentForSegment(GLMFloat aMass, vec2_t a, vec2_t b);
 extern GLMFloat world_momentForPoly(GLMFloat aMass, unsigned aVertCount, vec2_t *aVerts, vec2_t aOffset);
@@ -291,8 +298,8 @@ ffi.metatype("TextureAtlas_t", {
 dynamo.atlas.create = function(...) return _obj_addToGC(lib.texAtlas_create(...)) end
 
 function dynamo.atlas.load(path, origin, size)
-	local tex = dynamo.loadTexture(path)
-	return dynamo.createTextureAtlas(tex, origin, size)
+	local tex = dynamo.texture.load(path)
+	return dynamo.atlas.create(tex, origin, size)
 end
 
 
@@ -319,6 +326,23 @@ function dynamo.sprite.create(location, size, atlas, animations)
 
 	return _obj_addToGC(sprite)
 end
+
+ffi.metatype("SpriteBatch_t", {
+	__index = {
+		addSprite = lib.spriteBatch_addSprite,
+		deleteSprite = lib.spriteBatch_deleteSprite
+	}
+})
+
+function dynamo.sprite.createBatch(sprites)
+	sprites = sprites or {}
+	local batch = lib.spriteBatch_create()
+	for i, sprite in pairs(sprites) do
+		batch:addSprite(sprite)
+	end
+	return _obj_addToGC(batch)
+end
+
 
 
 --
@@ -681,7 +705,8 @@ ffi.metatype("WorldShape_t", {
 	__index = {
 		friction = lib.worldShape_friction,
 		elasticity = lib.worldShape_elasticity,
-		group = lib.worldShape_group
+		group = lib.worldShape_group,
+		collides = lib.worldShape_collides
 	},
 	__newindex = function(self, key, val)
 		if key == "friction" then
@@ -690,6 +715,8 @@ ffi.metatype("WorldShape_t", {
 			lib.worldShape_setElasticity(self, val)
 		elseif key == "group" then
 			lib.worldShape_setGroup(self, val)
+		elseif key == "collides" then
+			lib.worldShape_setCollides(self, val)
 		end
 	end
 })

@@ -48,6 +48,16 @@ typedef struct _Sprite {
 } Sprite_t;
 extern Class_t Class_Sprite;
 
+// A sprite batch enables multiple sprites sharing a texture atlas to be drawn in a single draw call
+// (Uses the atlas of the first sprite in the batch)
+typedef struct _SpriteBatch {
+	OBJ_GUTS
+    RENDERABLE_GUTS
+    int spriteCount;
+	LinkedList_t *sprites;
+} SpriteBatch_t;
+extern Class_t Class_SpriteBatch;
+
 /*!
 	Creates a sprite
 */
@@ -61,4 +71,20 @@ extern SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames);
 	Increments a sprite's animation frame.
 */
 extern void sprite_step(Sprite_t *aSprite);
+
+/*!
+ Creates a sprite batch
+*/
+extern SpriteBatch_t *spriteBatch_create();
+/*!
+ Addse the given sprite to the batch.
+*/
+extern void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
+
+/*!
+ Removes the given sprite from the batch.
+*/
+extern bool spriteBatch_deleteSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
+
+
 #endif
