@@ -48,8 +48,8 @@ typedef enum {
 	Indicates the state of an event.
 */
 typedef enum {
-	kInputState_down,
-	kInputState_up
+	kInputState_up,
+	kInputState_down
 } Input_state_t;
 
 typedef struct _InputManager InputManager_t;
