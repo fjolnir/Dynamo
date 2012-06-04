@@ -360,18 +360,26 @@ matrix_stack_t = ffi.metatype("matrix_stack_t",
 	}
 })
 
+vec2_type = ffi.typeof("vec2_t")
+vec3_type = ffi.typeof("vec3_t")
+vec4_type = ffi.typeof("vec4_t")
+quat_type = ffi.typeof("quat_t")
 
-
-vec2 = C._vec2_create
-vec3 = C._vec3_create
-vec4 = C._vec4_create
-rgba = vec4
-quat = C._quat_createf
-
--- There's some weirdness with luajit ffi and vec2_create, the other create functions work fine though
--- I need to figure this out (Only an issue in the iOS simulator(i386). Not necessary on arm)
 vec2 = function(x,y)
-    return vec3(x,y,0).xy
+    return ffi.new(vec2_type, {{x,y}})
+end
+
+vec3 = function(x,y,z)
+    return ffi.new(vec3_type, {{x,y,z}})
+end
+
+vec4 = function(x,y,z,w)
+    return ffi.new(vec4_type, {{x,y,z,w}})
+end
+rgba = vec4
+
+quat = function(x,y,z,w)
+    return ffi.new(quat_type, {{x,y,z,w}})
 end
 
 function rgb(r,g,b,a)
