@@ -104,7 +104,7 @@
 	[EAGLContext setCurrentContext:_context];
 	
 	NSString *dynamoScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"DynamoScripts"];
-	NSString *localScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
+	NSString *localScriptsPath  = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
 	luaCtx_addSearchPath(_luaCtx, [dynamoScriptsPath fileSystemRepresentation]);
 	luaCtx_addSearchPath(_luaCtx, [localScriptsPath fileSystemRepresentation]);
 	dynamo_assert(luaCtx_executeFile(_luaCtx, [_bootScriptPath fileSystemRepresentation]), "Lua error");
@@ -127,21 +127,27 @@
 {    
 	for(UITouch *touch in touches) { 
 		[_activeTouches addObject:touch];
-		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]isDown:YES location:[touch locationInView:self.view]];
+		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
+                                 isDown:YES
+                               location:[touch locationInView:self.view]];
 	}
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	for(UITouch *touch in touches) {        
-		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch] isDown:YES location:[touch locationInView:self.view]];
+		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
+                                 isDown:YES
+                               location:[touch locationInView:self.view]];
 	}
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	for(UITouch *touch in touches) {        
-		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch] isDown:NO location:[touch locationInView:self.view]];
+		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
+                                 isDown:NO
+                               location:[touch locationInView:self.view]];
 		// If this is the last event, reset the active event so that the next touch starts at index 0
 		if([event touchesForView:self.view].count == 1)
 			[_activeTouches removeAllObjects];
