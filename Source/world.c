@@ -244,6 +244,14 @@ void worldShape_setGroup(WorldShape_t *aShape, WorldShapeGroup_t aGroup)
 {
     cpShapeSetGroup(aShape->cpShape, aGroup);
 }
+void worldShape_setCollides(WorldShape_t *aShape, bool aCollides)
+{
+    cpShapeSetSensor(aShape->cpShape, aCollides);
+}
+bool worldShape_collides(WorldShape_t *aShape)
+{
+    return cpShapeGetSensor(aShape->cpShape);
+}
 
 
 GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLMFloat aOuterRadius, vec2_t aOffset)

@@ -271,6 +271,16 @@ extern WorldShapeGroup_t worldShape_group(WorldShape_t *aShape);
 extern void worldShape_setGroup(WorldShape_t *aShape, WorldShapeGroup_t aGroup);
 
 /*!
+	Sets whether or not a shape generates collisions (even if not, it still calls it's collision callbacks)
+*/
+extern void worldShape_setCollides(WorldShape_t *aShape, bool aCollides);
+
+/*!
+	Gets whether or not a shape generates collisions (even if not, it still calls it's collision callbacks)
+*/
+extern bool worldShape_collides(WorldShape_t *aShape);
+
+/*!
 	Calculates the correct moment of inertia for a circle shape.
 */
 extern GLMFloat world_momentForCircle(GLMFloat aMass, GLMFloat aInnerRadius, GLMFloat aOuterRadius, vec2_t aOffset);
