@@ -19,6 +19,8 @@
 	@field location The location to use if the texture is drawn directly as a renderable
 	@field id The OpenGL texture id
 	@field size The image size in pixels
+	@field subtextures Contains information about subtextures packed within the image data of this texture. (NULL by default)
+                       Packed textures can be generated using JSON export in TexturePacker. (http://texturepacker.com)
 */
 typedef struct _Texture {
 	OBJ_GUTS
@@ -29,6 +31,8 @@ typedef struct _Texture {
 	// We need to inset the texture rectangle ever so slightly in order
 	// to prevent bleeding when using texture atlases
 	vec2_t pxAlignInset;
+
+	Dictionary_t *subtextures;
 } Texture_t;
 extern Class_t Class_Texture;
 
@@ -52,21 +56,6 @@ typedef union _TextureRect {
 extern const TextureRect_t kTextureRectEntire;
 
 /*!
-	Texture packing info
-
- 	A helper for getting the TextureRect of a subtexture packed within a larger
-	texture. (Different from an atlas in that the subtextures are neither the same size, or part of an animation)
- 
-    Packed textures can be generated using JSON export in TexturePacker. (http://texturepacker.com)
- */
-typedef struct _TexturePackingInfo {
-	OBJ_GUTS
-    RENDERABLE_GUTS
-	Dictionary_t *subtextures;
-} TexturePackingInfo_t;
-extern Class_t Class_TexturePackingInfo;
-
-/*!
 	Loads a texture from a PNG file.
 */
 extern Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical);
@@ -84,23 +73,23 @@ extern TextureRect_t textureRectangle_createWithSizeInPixels(Texture_t *aTexture
 extern TextureRect_t textureRectangle_create(float aX, float aY, float aWidth, float aHeight);
 
 /*!
-	Creates a texture packing info object from a JSON file.
+	Loads texture packing info from a JSON file.
 */
-extern TexturePackingInfo_t *texturePacking_load(const char *aPath);
+extern bool texture_loadPackingInfo(Texture_t *aTexture, const char *aPath);
 /*!
 	Returns the texture rect for a subtexture matching aTexName.
 */
-extern TextureRect_t texturePacking_getRect(TexturePackingInfo_t *aPacking, Texture_t *aSourceTex, const char *aTexName);
+extern TextureRect_t texture_getSubTextureRect(Texture_t *aTexture, const char *aTexName);
 /*!
  Returns the origin for a subtexture matching aTexName in pixels.
  */
-extern vec2_t texturePacking_getPixelOrigin(TexturePackingInfo_t *aPacking, Texture_t *aSourceTex, const char *aTexName);
+extern vec2_t texture_getSubTextureOrigin(Texture_t *aTexture, const char *aTexName);
 
 
 #include "texture_atlas.h"
 /*!
  Returns an atlas matching aTexName in aSourceTex
 */
-extern TextureAtlas_t *texturePacking_getAtlas(TexturePackingInfo_t *aPacking, Texture_t *aSourceTex, const char *aTexName, vec2_t aAtlasSize);
+extern TextureAtlas_t *texture_getSubTextureAtlas(Texture_t *aTexture, const char *aTexName, vec2_t aAtlasSize);
 
 #endif
