@@ -126,8 +126,13 @@ vec2_t texture_getSubTextureOrigin(Texture_t *aTexture, const char *aTexName)
     if(!frameDef)
         return vec2_create(-1, -1);
     
-    return vec2_create(((Number_t*)dict_get(frameDef, "x"))->floatValue,
-                       ((Number_t*)dict_get(frameDef, "y"))->floatValue);
+    float texHeight = aTexture->size.h;
+    float subTexHeight = ((Number_t*)dict_get(frameDef, "h"))->floatValue;
+    vec2_t origin = vec2_create(((Number_t*)dict_get(frameDef, "x"))->floatValue,
+                                ((Number_t*)dict_get(frameDef, "y"))->floatValue);
+    origin.y = texHeight - origin.y - subTexHeight;
+    
+    return origin;
 }
 
 TextureAtlas_t *texture_getSubTextureAtlas(Texture_t *aTexture, const char *aTexName, vec2_t aAtlasSize)
