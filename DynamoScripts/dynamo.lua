@@ -336,8 +336,9 @@ ffi.metatype("Sprite_t", {
 	}
 })
 
-function dynamo.sprite.create(location, size, atlas, animations)
-	animations = animations or {}
+function dynamo.sprite.create(location, atlas, size, animations)
+	animations = animations or {{1,0,false}}
+	size = size or atlas.size
 	local sprite = lib.sprite_create(location, size, atlas, #animations)
 	lib.obj_retain(sprite)
 
@@ -353,6 +354,10 @@ ffi.metatype("SpriteBatch_t", {
 	__index = {
 		addSprite = lib.spriteBatch_addSprite,
 		insertSprite = lib.spriteBatch_insertSprite,
+		replaceSprite = function(self, spriteToInsert, spriteToDelete)
+			self:insertSprite(spriteToInsert, spriteToDelete)
+			self:deleteSprite(spriteToDelete)
+		end,
 		deleteSprite = lib.spriteBatch_deleteSprite
 	}
 })
