@@ -765,7 +765,7 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	dynamo.initialized = true
 
     gl.glEnable(gl.GL_BLEND);
-    gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+    gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA);
     gl.glDisable(gl.GL_CULL_FACE);
     gl.glDisable(gl.GL_DEPTH_TEST);
     
