@@ -2,6 +2,7 @@
 #include "png_loader.h"
 #include "util.h"
 #include "drawutils.h"
+#include "json.h"
 
 static void texture_destroy(Texture_t *aTexture);
 static void _texture_draw(Renderer_t *aRenderer, Texture_t *aTexture, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
@@ -74,4 +75,75 @@ TextureRect_t textureRectangle_create(float aX, float aY, float aWidth, float aH
 static void _texture_draw(Renderer_t *aRenderer, Texture_t *aTexture, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
 {
 	draw_texture(aTexture->location, aTexture, 1.0, 0.0, false, false);
+}
+
+static void _texturePacking_destroy(TexturePackingInfo_t *aPacking);
+
+Class_t Class_TexturePackingInfo = {
+	"TexturePackingInfo",
+	sizeof(TexturePackingInfo_t),
+	(Obj_destructor_t)&_texturePacking_destroy
+};
+
+TexturePackingInfo_t *texturePacking_load(const char *aPath)
+{
+    TexturePackingInfo_t *out = obj_create_autoreleased(&Class_TexturePackingInfo);
+    char *jsonInput;
+    util_readFile(aPath, NULL, &jsonInput);
+    dynamo_assert(jsonInput != NULL, "No file at %s", aPath);
+    Dictionary_t *info = parseJSON(jsonInput);
+    dynamo_assert(info != NULL && dict_get(info, "frames") != NULL, "Could not load texture packing info from %s", aPath);
+    
+    out->subtextures = obj_retain(dict_get(info, "frames"));
+    
+    return out;
+}
+
+void _texturePacking_destroy(TexturePackingInfo_t *aPacking)
+{
+    obj_release(aPacking->subtextures);
+}
+
+static Dictionary_t *_texturePacking_getInfoDict(TexturePackingInfo_t *aPacking, const char *aTexName)
+{
+    Dictionary_t *info = dict_get(aPacking->subtextures, aTexName);
+    dynamo_assert(info != NULL, "Subtexture %s not found", aTexName);
+    if(!info) return NULL;
+    
+    Dictionary_t *frameDef = dict_get(info, "frame");
+    dynamo_assert(frameDef != NULL, "Invalid texture packing data!");
+
+    return frameDef;
+}
+
+TextureRect_t texturePacking_getRect(TexturePackingInfo_t *aPacking, Texture_t *aSourceTex, const char *aTexName)
+{
+    Dictionary_t *frameDef = _texturePacking_getInfoDict(aPacking, aTexName);
+    if(!frameDef)
+        return textureRectangle_create(-1, -1, 0, 0);
+    
+    vec2_t origin = vec2_create(((Number_t*)dict_get(frameDef, "x"))->floatValue,
+                                ((Number_t*)dict_get(frameDef, "y"))->floatValue);
+    vec2_t size   = vec2_create(((Number_t*)dict_get(frameDef, "w"))->floatValue,
+                                ((Number_t*)dict_get(frameDef, "h"))->floatValue);
+    
+    return textureRectangle_createWithPixelCoordinates(aSourceTex, origin, size);
+}
+
+vec2_t texturePacking_getPixelOrigin(TexturePackingInfo_t *aPacking, Texture_t *aSourceTex, const char *aTexName)
+{
+    Dictionary_t *frameDef = _texturePacking_getInfoDict(aPacking, aTexName);
+    if(!frameDef)
+        return vec2_create(-1, -1);
+    
+    return vec2_create(((Number_t*)dict_get(frameDef, "x"))->floatValue,
+                       ((Number_t*)dict_get(frameDef, "y"))->floatValue);
+}
+
+TextureAtlas_t *texturePacking_getAtlas(TexturePackingInfo_t *aPacking, Texture_t *aSourceTex, const char *aTexName, vec2_t aAtlasSize)
+{
+    vec2_t origin = texturePacking_getPixelOrigin(aPacking, aSourceTex, aTexName);
+    dynamo_assert(origin.x > -1.0 && origin.y > -1.0, "Atlas not found in texture");
+    
+    return texAtlas_create(aSourceTex, origin, aAtlasSize);
 }
