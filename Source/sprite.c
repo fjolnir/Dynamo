@@ -107,8 +107,8 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
     Sprite_t *sprite = item->value;
     SpriteAnimation_t *animation;
     TextureRect_t cropRect;
-    TextureAtlas_t *atlas = sprite->atlas;
-    Texture_t *tex = atlas->texture;
+    Texture_t *tex = sprite->atlas->texture;
+    TextureAtlas_t *atlas;
     float maxTexX, maxTexY;
     quat_t rot;
     
@@ -118,6 +118,7 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
     int ofs = 0;
     do {
         sprite = item->value;
+        atlas = sprite->atlas;
         animation = &sprite->animations[sprite->activeAnimation];
         cropRect = texAtlas_getTextureRect(atlas, animation->currentFrame, sprite->activeAnimation);
         
@@ -132,12 +133,14 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
         vertices[ofs+2].loc = (vec3_t){  sprite->size.w/2, -sprite->size.h/2, 0 };
         vertices[ofs+3].loc = (vec3_t){  sprite->size.w/2,  sprite->size.h/2, 0 };
         
-        
-        rot = quat_createv((vec3_t){0,0,1}, sprite->angle);
-        vertices[ofs+0].loc = quat_rotateVec3(rot, vertices[ofs+0].loc);
-        vertices[ofs+1].loc = quat_rotateVec3(rot, vertices[ofs+1].loc);
-        vertices[ofs+2].loc = quat_rotateVec3(rot, vertices[ofs+2].loc);
-        vertices[ofs+3].loc = quat_rotateVec3(rot, vertices[ofs+3].loc);
+        // Rotate if necessary
+        if(fabs(sprite->angle) > 0.01) {
+            rot = quat_createv((vec3_t){0,0,1}, sprite->angle);
+            vertices[ofs+0].loc = quat_rotateVec3(rot, vertices[ofs+0].loc);
+            vertices[ofs+1].loc = quat_rotateVec3(rot, vertices[ofs+1].loc);
+            vertices[ofs+2].loc = quat_rotateVec3(rot, vertices[ofs+2].loc);
+            vertices[ofs+3].loc = quat_rotateVec3(rot, vertices[ofs+3].loc);
+        }
         
         vertices[ofs+0].loc = vec3_add(vertices[ofs+0].loc, sprite->location);
         vertices[ofs+1].loc = vec3_add(vertices[ofs+1].loc, sprite->location);
