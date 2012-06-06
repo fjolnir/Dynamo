@@ -100,8 +100,13 @@ extern Platform_t util_platform(void);
         } \
     } while(0)
 #else
-	#define dynamo_log(fmt, ...)
-    #define dynamo_assert(cond, fmt, ...)
+	#define dynamo_log(fmt, ...) 
+    #define dynamo_log_min(fmt, ...)
+    #define dynamo_assert(cond, fmt, ...) \
+    do { \
+        if(!(cond)) \
+            fprintf(stderr, "Assertion failed: " fmt "\n", ## __VA_ARGS__); \
+    } while(0)
 #endif
 
 // For FFI
