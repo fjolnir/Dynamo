@@ -61,14 +61,19 @@ extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
 extern GLMFloat dynamo_globalTime();
 extern GLMFloat dynamo_time();
-typedef struct _Texture { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; vec3_t location;  GLuint id; vec2_t size; vec2_t pxAlignInset; } Texture_t;
+typedef struct _Texture { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; vec3_t location;  GLuint id; vec2_t size; vec2_t pxAlignInset; void *subtextures; } Texture_t;
 typedef union _TextureRect { vec4_t v; float *f; struct { 	vec2_t origin; 	vec2_t size; }; struct { 	float u, v; 	float w, h; }; } TextureRect_t;
 extern const TextureRect_t kTextureRectEntire;
 extern Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical);
 extern TextureRect_t textureRectangle_createWithPixelCoordinates(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize);
 extern TextureRect_t textureRectangle_createWithSizeInPixels(Texture_t *aTexture, vec2_t aSize);
 extern TextureRect_t textureRectangle_create(float aX, float aY, float aWidth, float aHeight);
+extern bool texture_loadPackingInfo(Texture_t *aTexture, const char *aPath);
+extern TextureRect_t texture_getSubTextureRect(Texture_t *aTexture, const char *aTexName);
+extern vec2_t texture_getSubTextureOrigin(Texture_t *aTexture, const char *aTexName);
+extern vec2_t texture_getSubTextureSize(Texture_t *aTexture, const char *aTexName);
 typedef struct _TextureAtlas { _Obj_guts _guts; vec2_t origin;  vec2_t size;  vec2_t margin;  Texture_t *texture; } TextureAtlas_t;
+extern TextureAtlas_t *texture_getSubTextureAtlas(Texture_t *aTexture, const char *aTexName, vec2_t aAtlasSize);
 extern TextureAtlas_t *texAtlas_create(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize);
 extern TextureRect_t texAtlas_getTextureRect(TextureAtlas_t *aAtlas, int x, int y);
 union _rect_t { float f[4]; struct { vec2_t o; vec2_t s; }; struct { vec2_t origin; vec2_t size; }; };
@@ -94,6 +99,7 @@ extern SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames);
 extern void sprite_step(Sprite_t *aSprite);
 extern SpriteBatch_t *spriteBatch_create();
 extern void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
+extern bool spriteBatch_insertSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite, Sprite_t *aSpriteToShift);
 extern bool spriteBatch_deleteSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
 typedef struct _BackgroundLayer { _Obj_guts _guts; Texture_t *texture; float depth;} BackgroundLayer_t;
 typedef struct _Background { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; BackgroundLayer_t *layers[4]; vec2_t offset;} Background_t;
@@ -274,11 +280,27 @@ end
 
 dynamo.texture = {}
 
-function dynamo.texture.load(path)
+ffi.metatype("Texture_t", {
+	__index = {
+		getSubTextureRect = lib.texture_getSubTextureRect,
+		getSubTextureOrigin = lib.texture_getSubTextureOrigin,
+		getSubTextureSize = lib.texture_getSubTextureSize,
+		getSubTextureAtlas = function(self, name, size)
+			size = size or self:getSubTextureSize(name)
+			local atlas = lib.texture_getSubTextureAtlas(self, name, size)
+			return _obj_addToGC(atlas)
+		end
+	}
+})
+
+function dynamo.texture.load(path, packingInfoPath)
 	local tex = lib.texture_loadFromPng(path, false, false)
 	if tex == nil then
 		print("Couldn't find texture at path", path)
 		return nil
+	end
+	if packingInfoPath ~= nil then
+		lib.texture_loadPackingInfo(tex, packingInfoPath)
 	end
 	return _obj_addToGC(tex)
 end
@@ -330,6 +352,7 @@ end
 ffi.metatype("SpriteBatch_t", {
 	__index = {
 		addSprite = lib.spriteBatch_addSprite,
+		insertSprite = lib.spriteBatch_insertSprite,
 		deleteSprite = lib.spriteBatch_deleteSprite
 	}
 })
@@ -352,6 +375,9 @@ ffi.metatype("Renderer_t", {
 	__index = {
 		display = lib.renderer_display,
 		pushRenderable = lib.renderer_pushRenderable,
+		pushRenderableFunction = function(self, lambda)
+			self:pushRenderable(dynamo.renderable(lambda))
+		end,
 		popRenderable = lib.renderer_popRenderable,
 		insertRenderable = lib.renderer_pushRenderable,
 		deleteRenderable = lib.renderer_deleteRenderable,
@@ -376,6 +402,9 @@ dynamo.scene = {}
 ffi.metatype("Scene_t", {
 	__index = {
 		pushRenderable = lib.scene_pushRenderable,
+		pushRenderableFunction = function(self, lambda)
+			self:pushRenderable(dynamo.renderable(lambda))
+		end,
 		popRenderable = lib.scene_popRenderable,
 		insertRenderable = lib.scene_pushRenderable,
 		deleteRenderable = lib.scene_deleteRenderable,
