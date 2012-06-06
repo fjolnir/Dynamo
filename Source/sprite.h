@@ -82,6 +82,11 @@ extern SpriteBatch_t *spriteBatch_create();
 extern void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
 
 /*!
+ Inserts aSprite before aSpriteToShift
+ */
+extern bool spriteBatch_insertSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite, Sprite_t *aSpriteToShift);
+
+/*!
  Removes the given sprite from the batch.
 */
 extern bool spriteBatch_deleteSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
