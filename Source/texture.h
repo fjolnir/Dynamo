@@ -84,11 +84,14 @@ extern TextureRect_t texture_getSubTextureRect(Texture_t *aTexture, const char *
  Returns the origin for a subtexture matching aTexName in pixels.
  */
 extern vec2_t texture_getSubTextureOrigin(Texture_t *aTexture, const char *aTexName);
-
+/*!
+ Returns the size for a subtexture matching aTexName in pixels.
+ */
+extern vec2_t texture_getSubTextureSize(Texture_t *aTexture, const char *aTexName);
 
 #include "texture_atlas.h"
 /*!
- Returns an atlas matching aTexName in aSourceTex
+ Returns an atlas matching aTexName
 */
 extern TextureAtlas_t *texture_getSubTextureAtlas(Texture_t *aTexture, const char *aTexName, vec2_t aAtlasSize);
 
