@@ -25,10 +25,10 @@
 	GLKView *view =[[GLKView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
 	self.view = view;
 	[view release];
-	view.drawableColorFormat = GLKViewDrawableColorFormatRGB565;
-	view.drawableDepthFormat = GLKViewDrawableDepthFormatNone;
+	view.drawableColorFormat   = GLKViewDrawableColorFormatRGB565;
+	view.drawableDepthFormat   = GLKViewDrawableDepthFormatNone;
 	view.drawableStencilFormat = GLKViewDrawableStencilFormatNone;
-	view.drawableMultisample = GLKViewDrawableMultisampleNone;
+	view.drawableMultisample   = GLKViewDrawableMultisampleNone;
 }
 
 - (void)dealloc
@@ -85,7 +85,7 @@
 	float scaleFactor = self.view.contentScaleFactor;
 	
 	lua_getglobal(ls, "dynamo");
-	lua_getfield(ls, -1, "input");
+    lua_getfield(ls, -1, "input");
 	lua_getfield(ls, -1, "manager");
 	lua_getfield(ls, -1, "postTouchEvent");
 	
