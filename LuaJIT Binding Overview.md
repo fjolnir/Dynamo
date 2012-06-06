@@ -53,13 +53,20 @@ From your application's draw handler
 
 To load a texture you use
 
-`dynamo.texture.load(path)`
+`dynamo.texture.load(path, packingInfoPath)`
 
-* Path(string): The path to the image file to load. (PNGs preferred, but different platforms may support additional formats)
+* path(string): The path to the image file to load. (PNGs preferred, but different platforms may support additional formats)
+* packingInfoPath(string, optional): Path to a JSON file containing information about subtextures packed into the file to be loaded (Can be generated using the JSON export setting in TexturePacker)
 
 Returns a texture object which you can either push directly as a renderable, or pass to a different object such as a sprite or a texture atlas.
 
-* `texture.location = vec3`
+A Texture has the following methods/properties
+
+* `texture.location = vec3` 
+* `texture:getSubTextureRect(texName)`
+* `texture:getSubTextureOrigin(texName)`
+* `texture:getSubTextureSize(texName)`
+* `texture:getSubTextureAtlas(texName)` Returns an Atlas originating at the location of `texName` within `texture`
 
 
 <a name="atlas"></a>
@@ -134,12 +141,29 @@ To create a sprite you'd use
 Returns a sprite object with the following methods/properties
 
 * `sprite:step()` Steps one frame forward in the sprite's current animation
-* `sprite.size = vec2` Sets the size of the sprite
+* `sprite.location = vec3`
+* `sprite.size = vec2` Sets the size of the sprite (Texture is stretched to fit)
 * `sprite.scale = number`
 * `sprite.angle = number` (In radians)
 * `sprite.flippedVertically = boolean`
 * `sprite.flippedHorizontally = boolean`
 * `sprite.activeAnimation = number` The active animation (0 being the bottom one)
+
+
+## Batch sprite
+A batch sprite allows multiple sprites that share the same texture to be rendered in a single draw call.
+
+To create a batch sprite you'd use
+
+`dynamo.sprite.createBatch(sprites)`
+
+* `sprites` is an optional array of sprites to initialize the batch with
+
+Returns a BatchSprite object with the following methods
+
+* `batch:addSprite(sprite)`
+* `batch:insertSprite(sprite, spriteToShift)`
+* `batch:deleteSprite(sprite)`
 
 
 <a name="renderer"></a>
@@ -313,7 +337,7 @@ For a detailed description of the different joint/constraint types I recommend l
 <a name="utils"></a>
 # Utilities
 
-* `dynamo.log(arguments)` Prints a description of the passed arguments when building with -DDYNAMO_DEBUG (Outputs nothing in release builds)
+* `dynamo.log(arguments)` Prints a description of the passed arguments when building the host app with `-DDYNAMO_DEBUG` (Outputs nothing in release builds)
 * `dynamo.pathForResource(name, ext, folder)` Returns the path for a resource matching the passed criteria (ext & folder are optional)
 * `dynamo.platform()` Returns the platform you are currently running on
 	* Currently available are: dynamo.platforms.<mac,ios,android,windows,other>
