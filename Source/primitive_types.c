@@ -196,10 +196,10 @@ size_t string_getUnicodeStr(String_t *aStr, unsigned short *aoOut, size_t aMaxLe
 
 #pragma mark - Numbers
 
-Number_t *number_create(double num)
+Number_t *number_create(GLMFloat num)
 {
 	Number_t *self = obj_create_autoreleased(&Class_Number);
-	self->doubleValue = num;
+	self->floatValue = num;
 
 	return self;
 }

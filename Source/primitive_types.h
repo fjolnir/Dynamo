@@ -9,6 +9,7 @@
 #define _PRIMITIVE_TYPES_
 
 #include "object.h"
+#include <GLMath/GLMath.h>
 #include <string.h>
 
 extern Class_t Class_String;
@@ -54,12 +55,12 @@ size_t string_getUnicodeStr(String_t *aStr, unsigned short *aoOut, size_t aMaxLe
 */
 typedef struct _Number {
 	OBJ_GUTS
-	double doubleValue;
+	GLMFloat floatValue;
 } Number_t;
 
 /*!
 	Creates a number from the given double.
 */
-Number_t *number_create(double num);
+Number_t *number_create(GLMFloat num);
 
 #endif

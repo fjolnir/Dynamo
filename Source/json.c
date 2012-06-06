@@ -38,7 +38,7 @@ static int handle_boolean(void *ctxStack_, int boolean)
 static int handle_int(void *ctxStack_, long long integerVal)
 {
 	struct _ParseContext *ctx = array_top(ctxStack_);
-	Number_t *num = number_create((double)integerVal);
+	Number_t *num = number_create((GLMFloat)integerVal);
 	_CTX_SET(ctx, num)
 	return true;
 }
@@ -46,7 +46,7 @@ static int handle_int(void *ctxStack_, long long integerVal)
 static int handle_double(void *ctxStack_, double doubleVal)
 {
 	struct _ParseContext *ctx = array_top(ctxStack_);
-	Number_t *num = number_create(doubleVal);
+	Number_t *num = number_create((GLMFloat)doubleVal);
 	_CTX_SET(ctx, num)
 	return true;
 }
@@ -182,7 +182,7 @@ bool _objToJSON(Obj_t *aObj, yajl_gen g)
 		yajl_gen_string(g, (unsigned char*)str->cString, str->length);
 	} else if(obj_isClass(aObj, &Class_Number)) {
 		Number_t *num = aObj;
-		yajl_gen_double(g, num->doubleValue);
+		yajl_gen_double(g, (double)num->floatValue);
 	} else
 		return false;
 	return true;
