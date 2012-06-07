@@ -66,7 +66,7 @@ void obj_release(Obj_t *aObj)
 			self->isa->destructor(aObj);
 		if(!ENABLE_ZOMBIES)
 			free(self);
-		else if (self->referenceCount < 0)
+		else if(self->referenceCount < 0)
 			obj_zombie_error(self);
 	}
 }
