@@ -91,6 +91,8 @@ bool llist_insertValue(LinkedList_t *aList, void *aValueToInsert, void *aValueTo
 	if(itemToShift) {
 		itemToInsert->next = itemToShift;
 		itemToInsert->previous = itemToShift->previous;
+        if(itemToInsert->previous)
+            itemToInsert->previous->next = itemToInsert;
 		itemToShift->previous = itemToInsert;
 		if(aList->head == itemToShift) aList->head = itemToInsert;
 
