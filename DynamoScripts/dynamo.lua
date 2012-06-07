@@ -532,6 +532,7 @@ local _createTimer = function(...) return _obj_addToGC(lib.gameTimer_create(...)
 dynamo.globalTime = lib.dynamo_globalTime
 dynamo.time = lib.dynamo_time
 
+math.randomseed(dynamo.globalTime())
 
 --
 -- Custom renderables
