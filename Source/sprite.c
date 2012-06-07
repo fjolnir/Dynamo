@@ -141,6 +141,13 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
             vertices[ofs+2].loc = quat_rotateVec3(rot, vertices[ofs+2].loc);
             vertices[ofs+3].loc = quat_rotateVec3(rot, vertices[ofs+3].loc);
         }
+        // Scale if necessary
+        if(sprite->scale != 1.0) {
+            vertices[ofs+0].loc = vec3_scalarMul(vertices[ofs+0].loc, sprite->scale);
+            vertices[ofs+1].loc = vec3_scalarMul(vertices[ofs+1].loc, sprite->scale);
+            vertices[ofs+2].loc = vec3_scalarMul(vertices[ofs+2].loc, sprite->scale);
+            vertices[ofs+3].loc = vec3_scalarMul(vertices[ofs+3].loc, sprite->scale);
+        }
         
         vertices[ofs+0].loc = vec3_add(vertices[ofs+0].loc, sprite->location);
         vertices[ofs+1].loc = vec3_add(vertices[ofs+1].loc, sprite->location);
