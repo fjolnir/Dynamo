@@ -61,7 +61,7 @@ void obj_release(Obj_t *aObj)
 {
 	dynamo_assert(aObj != NULL, "Invalid object");
 	_Obj_guts *self = aObj;
-	if(__sync_sub_and_fetch(&self->referenceCount, 1) == 0 && !ENABLE_ZOMBIES) {
+	if(__sync_sub_and_fetch(&self->referenceCount, 1) == 0) {
 		if(self->isa->destructor)
 			self->isa->destructor(aObj);
 		if(!ENABLE_ZOMBIES)

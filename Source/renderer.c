@@ -84,8 +84,5 @@ bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert,
 
 bool renderer_deleteRenderable(Renderer_t *aRenderer, void *aRenderable)
 {
-	bool didDelete = llist_deleteValue(aRenderer->renderables, aRenderable);
-	if(didDelete && aRenderable)
-		obj_release(aRenderable);
-	return didDelete;
+    return llist_deleteValue(aRenderer->renderables, aRenderable);
 }

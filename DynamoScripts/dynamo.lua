@@ -245,7 +245,11 @@ dynamo.platform = lib.util_platform()
 -- Retains an object and tells the gc to release it when it's no longer referenced
 local function _obj_addToGC(obj)
 	lib.obj_retain(obj)
-	ffi.gc(obj, lib.obj_release)
+	--ffi.gc(obj, lib.obj_release)
+	ffi.gc(obj, function(obj)
+		dynamo.log("Collecting ", tostring(obj))
+		lib.obj_release(obj)
+	end)
 	return obj
 end
 function dynamo.pathForResource(name, type, directory)
@@ -527,7 +531,7 @@ dynamo.time = lib.dynamo_time
 function dynamo.renderable(lambda)
 	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.cast("Class_t*", lib.Class_Renderable)))
 	drawable.displayCallback = lambda
-	return drawable
+	return _obj_addToGC(drawable)
 end
 
 
