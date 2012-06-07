@@ -394,7 +394,7 @@ ffi.metatype("Renderer_t", {
 			self:pushRenderable(dynamo.renderable(lambda))
 		end,
 		popRenderable = lib.renderer_popRenderable,
-		insertRenderable = lib.renderer_pushRenderable,
+		insertRenderable = lib.renderer_insertRenderable,
 		deleteRenderable = lib.renderer_deleteRenderable,
 		handleResize = function(self, viewport)
 			self.viewportSize = viewport
@@ -421,7 +421,7 @@ ffi.metatype("Scene_t", {
 			self:pushRenderable(dynamo.renderable(lambda))
 		end,
 		popRenderable = lib.scene_popRenderable,
-		insertRenderable = lib.scene_pushRenderable,
+		insertRenderable = lib.scene_insertRenderable,
 		deleteRenderable = lib.scene_deleteRenderable,
 		rotate = function(self, angle, axis)
 			axis = axis or vec3(0, 0, 1)
