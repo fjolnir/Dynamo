@@ -340,9 +340,15 @@ ffi.metatype("Sprite_t", {
 	}
 })
 
+local _vec2Type = ffi.typeof("vec2_t")
 function dynamo.sprite.create(location, atlas, size, animations)
 	animations = animations or {{1,0,false}}
 	size = size or atlas.size
+
+	if(ffi.istype(location, vec2_t)) then
+		location = vec3(location.x, location.y, 0)
+	end
+
 	local sprite = lib.sprite_create(location, size, atlas, #animations)
 	lib.obj_retain(sprite)
 
