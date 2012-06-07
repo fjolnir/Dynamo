@@ -107,10 +107,10 @@ extern Background_t *background_create();
 extern void background_setLayer(Background_t *aBackground, unsigned int aIndex, BackgroundLayer_t *aLayer);
 extern BackgroundLayer_t *background_createLayer(Texture_t *aTexture, float aDepth);
 typedef enum { kInputKey_arrowLeft,kInputKey_arrowRight, kInputKey_arrowUp,kInputKey_arrowDown, kInputKey_ascii,kInputMouse_leftClick,kInputMouse_rightClick,kInputMouse_leftDrag,kInputMouse_rightDrag,kInputMouse_move,kInputTouch1,kInputTouch2,kInputTouch3,kInputTouch4,kInputTouch5 } Input_type_t;
-typedef enum { kInputState_down, kInputState_up } Input_state_t;
+typedef enum { kInputState_up, kInputState_down } Input_state_t;
 typedef struct _InputManager InputManager_t;
 typedef struct _InputObserver InputObserver_t;
-typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, bool aState, void *aMetaData);
+typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, int aState, void *aMetaData);
 struct _InputObserver { _Obj_guts _guts; Input_handler_t handlerCallback; Input_type_t type; unsigned char code;  void *metaData;  Input_state_t lastKnownState;};
 struct _InputManager { _Obj_guts _guts; LinkedList_t *observers; LinkedList_t *activeEvents;};
 extern InputManager_t *input_createManager();
@@ -468,6 +468,10 @@ dynamo.input = {
 			lib.kInputTouch4,
 			lib.kInputTouch5
 		}
+	},
+	states = {
+		down = lib.kInputState_down,
+		up   = lib.kInputState_up
 	}
 }
 

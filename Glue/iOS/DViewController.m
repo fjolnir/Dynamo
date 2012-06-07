@@ -91,7 +91,7 @@
 	
 	lua_pushvalue(ls, -2);
 	lua_pushinteger(ls, aFinger);
-	lua_pushboolean(ls, !aIsDown);
+	lua_pushboolean(ls, aIsDown);
 	lua_pushnumber(ls, aLoc.x*scaleFactor);
 	lua_pushnumber(ls, aLoc.y*scaleFactor);
 	luaCtx_pcall(_luaCtx, 5, 0, 0);
