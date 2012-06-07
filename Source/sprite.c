@@ -209,10 +209,8 @@ void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite)
 bool spriteBatch_insertSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite, Sprite_t *aSpriteToShift)
 {
     bool ret = llist_insertValue(aBatch->sprites, aSprite, aSpriteToShift);
-    if(!ret)
-        return false;
     ++aBatch->spriteCount;
-    return true;
+    return ret;
 }
 
 bool spriteBatch_deleteSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite)
