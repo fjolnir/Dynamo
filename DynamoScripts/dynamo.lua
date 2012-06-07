@@ -228,6 +228,9 @@ extern bool util_pathForResource(const char *name, const char *ext, const char *
 typedef enum { kPlatformMac, kPlatformIOS, kPlatformAndroid, kPlatformWindows, kPlatformOther } Platform_t;
 extern Platform_t util_platform(void);
 extern void _dynamo_log(const char *str);
+typedef LinkedList_t Obj_autoReleasePool_t;
+Obj_autoReleasePool_t *autoReleasePool_getGlobal();
+void autoReleasePool_drain(Obj_autoReleasePool_t *aPool);
 ]]
 
 dynamo.platforms = {
@@ -350,7 +353,6 @@ function dynamo.sprite.create(location, atlas, size, animations)
 	end
 
 	local sprite = lib.sprite_create(location, size, atlas, #animations)
-	lib.obj_retain(sprite)
 
 	-- Add the animations to the sprite
 	for i, animation in pairs(animations) do
@@ -793,8 +795,6 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	dynamo.renderer:handleResize(viewport)
 
 	dynamo.timer = _createTimer(desiredFPS, updateCallback)
-	lib.obj_retain(dynamo.renderer)
-	lib.obj_retain(dynamo.timer)
 
 	dynamo.input.manager = _createInputManager()
 
@@ -822,6 +822,7 @@ function dynamo.cycle()
 	dynamo.timer:step(dynamo.time())
 	dynamo.world:step(dynamo.timer)
 	dynamo.renderer:display(dynamo.timer.timeSinceLastUpdate, dynamo.timer:interpolation())
+	lib.autoReleasePool_drain(lib.autoReleasePool_getGlobal())
 end
 
 return dynamo
