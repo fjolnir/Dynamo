@@ -156,10 +156,18 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
         maxTexX = cropRect.origin.x + cropRect.size.w;
         maxTexY = cropRect.origin.y + cropRect.size.h;
 
-        vertices[ofs+0].texCoord = (vec2_t) { sprite->flippedHorizontally ? maxTexX : cropRect.origin.x, sprite->flippedVertically ? maxTexY : cropRect.origin.y };
-        vertices[ofs+1].texCoord = (vec2_t) { sprite->flippedHorizontally ? maxTexX : cropRect.origin.x, sprite->flippedVertically ? cropRect.origin.y : maxTexY };
-        vertices[ofs+2].texCoord = (vec2_t) { sprite->flippedHorizontally ? cropRect.origin.x : maxTexX, sprite->flippedVertically ? maxTexY : cropRect.origin.y };
-        vertices[ofs+3].texCoord = (vec2_t) { sprite->flippedHorizontally ? cropRect.origin.x : maxTexX, sprite->flippedVertically ? cropRect.origin.y : maxTexY };
+        vertices[ofs+0].texCoord = (vec2_t) {
+            sprite->flippedHorizontally ? maxTexX           : cropRect.origin.x,
+            sprite->flippedVertically   ? maxTexY           : cropRect.origin.y };
+        vertices[ofs+1].texCoord = (vec2_t) {
+            sprite->flippedHorizontally ? maxTexX           : cropRect.origin.x,
+            sprite->flippedVertically   ? cropRect.origin.y : maxTexY };
+        vertices[ofs+2].texCoord = (vec2_t) {
+            sprite->flippedHorizontally ? cropRect.origin.x : maxTexX,
+            sprite->flippedVertically   ? maxTexY           : cropRect.origin.y };
+        vertices[ofs+3].texCoord = (vec2_t) {
+            sprite->flippedHorizontally ? cropRect.origin.x : maxTexX,
+            sprite->flippedVertically   ? cropRect.origin.y : maxTexY };
 
         i += (i==0 || i == vertCount-6) ? 5 : 6;
     } while((item = item->next));
