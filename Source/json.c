@@ -62,8 +62,11 @@ static int handle_string(void *ctxStack_, const unsigned char *stringVal, size_t
 static int handle_map_key(void *ctxStack_, const unsigned char *stringVal, size_t stringLen)
 {
 	struct _ParseContext *ctx = array_top(ctxStack_);
+    if(ctx->key)
+        free(ctx->key);
 	ctx->key = calloc(1, stringLen+1);
     strncpy(ctx->key, (char*)stringVal, stringLen);
+
 	return true;
 }
 
@@ -77,6 +80,7 @@ static int handle_start_map(void *ctxStack_)
         struct _ParseContext *parenCtx = array_top(ctxStack);
         _CTX_SET(parenCtx, newCtx->container)
     }
+    
 	array_push(ctxStack, newCtx);
 	return true;
 }
@@ -135,9 +139,11 @@ Obj_t *parseJSON(const char *aJsonStr)
     if(status != yajl_status_ok) {
         unsigned char *err = yajl_get_error(parser, 1, (unsigned char*)aJsonStr, strlen(aJsonStr));
         dynamo_log("Couldn't parse JSON: %s", err);
+        obj_release(ctxStack);
         yajl_free_error(parser, err);
         return NULL;
     }
+    yajl_free(parser);
 
 	Obj_t *root = NULL;
 	if(ctxStack->count == 1) {
@@ -145,10 +151,11 @@ Obj_t *parseJSON(const char *aJsonStr)
 		root = ctx->container;
 		array_pop(ctxStack);
 	} else {
-		dynamo_log("Something went wrong parsing json!");
+	    obj_release(ctxStack);
+        dynamo_log("Something went wrong parsing json!");
 		return NULL;
 	}
-
+    obj_release(ctxStack);
 	return root;
 }
 

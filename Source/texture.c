@@ -86,6 +86,7 @@ extern bool texture_loadPackingInfo(Texture_t *aTexture, const char *aPath)
     util_readFile(aPath, NULL, &jsonInput);
     dynamo_assert(jsonInput != NULL, "No file at %s", aPath);
     Dictionary_t *info = parseJSON(jsonInput);
+    free(jsonInput);
     dynamo_assert(info != NULL && dict_get(info, "frames") != NULL, "Could not load texture packing info from %s", aPath);
     
     aTexture->subtextures = obj_retain(dict_get(info, "frames"));

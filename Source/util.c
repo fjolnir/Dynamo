@@ -25,6 +25,7 @@ bool util_pathForResource(const char *name, const char *ext, const char *dir, ch
     #elif defined(__APPLE__)
         CFURLRef resUrl = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
         CFURLGetFileSystemRepresentation(resUrl, true, (UInt8*)output, maxLen);
+        CFRelease(resUrl);
         APPEND("/")
     #endif
     APPEND(dir)
