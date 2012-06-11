@@ -108,6 +108,7 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 	NSString *localScriptsPath  = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
 	luaCtx_addSearchPath(GlobalLuaContext, [dynamoScriptsPath fileSystemRepresentation]);
 	luaCtx_addSearchPath(GlobalLuaContext, [localScriptsPath fileSystemRepresentation]);
+
 	dynamo_assert(luaCtx_executeFile(GlobalLuaContext, [_bootScriptPath fileSystemRepresentation]), "Lua error");
 }
 
