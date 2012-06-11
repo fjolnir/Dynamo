@@ -1,5 +1,7 @@
 package org.dynamo;
 
+import org.dynamo.jni;
+
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
@@ -10,12 +12,10 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.util.Log;
 import android.view.MotionEvent;
-import org.keplerproject.luajava.LuaState;
-import org.keplerproject.luajava.LuaStateFactory;
 
 public class DynamoView extends GLSurfaceView {
 	public DynamoRenderer renderer;
-
+	
 	public DynamoView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		if(isInEditMode())
@@ -80,19 +80,42 @@ public class DynamoView extends GLSurfaceView {
 
 	public static class DynamoRenderer implements GLSurfaceView.Renderer
 	{
-		public LuaState luaState;
+
+		public interface MessageObserver
+		{
+			public void onDynamoMessage(String key, Object value);
+		}
 		public String bootScriptPath;
+		public Runnable messageHandler;
+		public MessageObserver msgObserver;
 		
 		@Override
 		public void onDrawFrame(GL10 unused)
 		{
-			this.luaState.getGlobal("dynamo");
-			this.luaState.getField(-1, "cycle");
-			int status = this.luaState.pcall(0, 0, 0);
-			if(status != 0)
-				Log.e("Dynamo", this.luaState.toString(-1));
-
-			this.luaState.pop(1);
+			LuaContext_t ctx = jni.getGlobalLuaContext();
+			
+			jni.luaCtx_getglobal(ctx, "dynamo");
+			jni.luaCtx_getfield(ctx, -1, "cycle");
+			jni.luaCtx_pcall(ctx, 0, 1, 0);
+			// Check if there are any messages
+			if(msgObserver != null && jni.luaCtx_isnil(ctx, -1) != 1 && jni.luaCtx_istable(ctx, -1) == 1) {
+				jni.luaCtx_pushnil(ctx); 
+				while(jni.luaCtx_next(ctx, -2) != 0) {
+					// Key is at -2, value at -1
+					String key = jni.luaCtx_tostring(ctx, -2);
+					if(jni.luaCtx_isboolean(ctx, -1) == 1)
+						msgObserver.onDynamoMessage(key, jni.luaCtx_toboolean(ctx, -1) == 1 ? true : false);
+					else if(jni.luaCtx_isnumber(ctx, -1) == 1)
+						msgObserver.onDynamoMessage(key, jni.luaCtx_tonumber(ctx, -1));
+					else if(jni.luaCtx_isstring(ctx, -1) == 1)
+						msgObserver.onDynamoMessage(key, jni.luaCtx_tostring(ctx, -1));
+					else
+						Log.e("Dynamo", "Unhandled message type for key "+key);
+					jni.luaCtx_pop(ctx, 1); // Pop the value
+				}
+				jni.luaCtx_pop(ctx, 1); // Pop the key
+			}
+			jni.luaCtx_pop(ctx, 1);
 		}
 
 		@Override
@@ -101,16 +124,6 @@ public class DynamoView extends GLSurfaceView {
 			GLES20.glViewport(0, 0, width, height);
 		}
 
-		private void _addLuaSearchPath(String searchPath)
-		{
-			this.luaState.getGlobal("package");
-			this.luaState.getField(-1, "path");
-			this.luaState.pushString(";"+searchPath+"/?.lua;"+searchPath+"/?/init.lua");
-			this.luaState.concat(2);
-			this.luaState.setField(-2, "path");
-			this.luaState.pop(1);
-		}
-		
 		@Override
 		public void onSurfaceCreated(GL10 unused, EGLConfig config)
 		{
@@ -118,32 +131,24 @@ public class DynamoView extends GLSurfaceView {
 			GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
 			// We need to initialize Dynamo after the GL surface is initialized, since it calls GL functions during initialization.
-			if(this.luaState == null) {
-				this.luaState=LuaStateFactory.newLuaState();
-				this.luaState.openLibs();
-
-				// Add the resource directory to the search path
-				_addLuaSearchPath(ResourceManager.resourceDirPath() + "/DynamoScripts");
-
-				if(this.luaState.LdoFile(bootScriptPath) != 0)
-					Log.e("Dynamo", "Error initializing using "+bootScriptPath+": "+this.luaState.toString(-1));
-			}
+			jni.luaCtx_init();
+			jni.luaCtx_addSearchPath(jni.getGlobalLuaContext(), ResourceManager.resourceDirPath() + "/DynamoScripts");
+			jni.luaCtx_executeFile(jni.getGlobalLuaContext(), bootScriptPath);
 		}
 
 		private void _postTouchEvent(int finger, boolean isDown, float x, float y)
 		{
-			this.luaState.getGlobal("dynamo");
-			this.luaState.getField(-1, "input");
-			this.luaState.getField(-1, "manager");
-			this.luaState.getField(-1, "postTouchEvent");
-			this.luaState.pushValue(-2);
-			this.luaState.pushNumber(finger); // Finger
-			this.luaState.pushBoolean(isDown); // Down/Not down
-			this.luaState.pushNumber(x);
-			this.luaState.pushNumber(y);
-			if(this.luaState.pcall(5, 0, 0) != 0)
-				Log.e("Dynamo", "Error posting touch event: "+this.luaState.toString(-1));
-			this.luaState.pop(3);
+			jni.luaCtx_getglobal(jni.getGlobalLuaContext(), "dynamo");
+ 			jni.luaCtx_getfield(jni.getGlobalLuaContext(), -1, "input");
+			jni.luaCtx_getfield(jni.getGlobalLuaContext(), -1, "manager");
+			jni.luaCtx_getfield(jni.getGlobalLuaContext(), -1, "postTouchEvent");
+			jni.luaCtx_pushvalue(jni.getGlobalLuaContext(), -2);
+			jni.luaCtx_pushnumber(jni.getGlobalLuaContext(), finger);
+			jni.luaCtx_pushboolean(jni.getGlobalLuaContext(), isDown ? 1 : 0);
+			jni.luaCtx_pushnumber(jni.getGlobalLuaContext(), x);
+			jni.luaCtx_pushnumber(jni.getGlobalLuaContext(), y);
+			jni.luaCtx_pcall(jni.getGlobalLuaContext(), 5, 0, 0);
+			jni.luaCtx_pop(jni.getGlobalLuaContext(), 3);
 		}
 		public void handleActionDown(int id, float x, float y)
 		{

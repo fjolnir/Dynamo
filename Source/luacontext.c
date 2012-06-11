@@ -194,10 +194,74 @@ void luaCtx_unregisterScriptHandler(LuaContext_t *aCtx, int aRefId)
     luaL_unref(aCtx->luaState, LUA_REGISTRYINDEX, aRefId);
 }
 
-extern void luaCtx_concat(LuaContext_t *aCtx, int n)
+void luaCtx_concat(LuaContext_t *aCtx, int n)
 {
     lua_concat(aCtx->luaState, n);
 }
+int luaCtx_next(LuaContext_t *aCtx, int index)
+{
+	return lua_next(aCtx->luaState, index);
+}
+
+int luaCtx_type(LuaContext_t *aCtx, int idx)
+{
+	return lua_type(aCtx->luaState, idx);
+}
+int luaCtx_isnumber(LuaContext_t *aCtx, int idx)
+{
+	return lua_isnumber(aCtx->luaState, idx);
+}
+int luaCtx_isstring(LuaContext_t *aCtx, int idx)
+{
+	return lua_isstring(aCtx->luaState, idx);
+}
+int luaCtx_isuserdata(LuaContext_t *aCtx, int idx)
+{
+	return lua_isuserdata(aCtx->luaState, idx);
+}
+int luaCtx_istable(LuaContext_t *aCtx, int idx)
+{
+	return lua_istable(aCtx->luaState, idx);
+}
+int luaCtx_islightuserdata(LuaContext_t *aCtx, int idx)
+{
+	return lua_islightuserdata(aCtx->luaState, idx);
+}
+int luaCtx_isnil(LuaContext_t *aCtx, int idx)
+{
+	return lua_isnil(aCtx->luaState, idx);
+}
+int luaCtx_isboolean(LuaContext_t *aCtx, int idx)
+{
+	return lua_isboolean(aCtx->luaState, idx);
+}
+int luaCtx_isfunction(LuaContext_t *aCtx, int idx)
+{
+	return lua_isfunction(aCtx->luaState, idx);
+}
+int luaCtx_isnone(LuaContext_t *aCtx, int idx)
+{
+	return lua_isnone(aCtx->luaState, idx);
+}
+
+
+float luaCtx_tonumber(LuaContext_t *aCtx, int idx)
+{
+	return lua_tonumber(aCtx->luaState, idx);
+}
+int luaCtx_tointeger(LuaContext_t *aCtx, int idx)
+{
+	return lua_tointeger(aCtx->luaState, idx);
+}
+int luaCtx_toboolean(LuaContext_t *aCtx, int idx)
+{
+	return lua_toboolean(aCtx->luaState, idx);
+}
+const char *luaCtx_tostring(LuaContext_t *aCtx, int idx)
+{
+	return lua_tostring(aCtx->luaState, idx);
+}
+
 
 #pragma mark - Lua callback utils
 // These are necessary because iOS does not allow an executable stack which breaks luajit ffi callbacks.

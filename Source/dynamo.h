@@ -3,7 +3,8 @@
 	@abstract
 	@discussion Dynamo is a lightweight 2D engine written in C with LuaJIT bindings.
 */
-
+#ifndef _DYNAMO_H_
+#define _DYNAMO_H_
 #include "array.h"
 #include "background.h"
 #include "dictionary.h"
@@ -14,7 +15,7 @@
 #include "input.h"
 #include "json.h"
 #include "linkedlist.h"
-#include "lua.h"
+#include "luacontext.h"
 #include "object.h"
 #include "primitive_types.h"
 #include "renderer.h"
@@ -27,4 +28,4 @@
 #include "tmx_map.h"
 #include "util.h"
 #include "world.h"
-
+#endif

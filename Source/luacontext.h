@@ -114,4 +114,28 @@ extern void luaCtx_unregisterScriptHandler(LuaContext_t *aCtx, int aRefId);
 	Concatenates the 'n' top elements of the lua stack.
 */
 extern void luaCtx_concat(LuaContext_t *aCtx, int n);
+/*!
+	Iterates a lua table. (See http://pgl.yoyo.org/luai/i/lua_next for details)
+*/
+extern int luaCtx_next(LuaContext_t *aCtx, int index);
+
+#pragma mark - Type checkers
+
+extern int luaCtx_type(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isnumber(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isstring(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isuserdata(LuaContext_t *aCtx, int idx);
+extern int luaCtx_istable(LuaContext_t *aCtx, int idx);
+extern int luaCtx_islightuserdata(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isnil(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isboolean(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isfunction(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isnone(LuaContext_t *aCtx, int idx);
+
+#pragma mark - Value getters
+extern float luaCtx_tonumber(LuaContext_t *aCtx, int idx);
+extern int luaCtx_tointeger(LuaContext_t *aCtx, int idx);
+extern int luaCtx_toboolean(LuaContext_t *aCtx, int idx);
+extern const char *luaCtx_tostring(LuaContext_t *aCtx, int idx);
+
 #endif

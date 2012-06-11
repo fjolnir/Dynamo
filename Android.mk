@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 DEPS_PATH = $(LOCAL_PATH)/Dependencies
-LOCAL_CFLAGS := -I$(DEPS_PATH) -std=gnu99 -I$(DEPS_PATH)/png -I$(DEPS_PATH)/mxml -I$(DEPS_PATH)/Chipmunk/include -I$(DEPS_PATH)/Chipmunk/include/chipmunk  -g -DDYNAMO_DEBUG -DCP_USE_DOUBLES=0 -DANDROID_APP_IDENTIFIER=\"$(APP_IDENTIFIER)\"
+LOCAL_CFLAGS := -I$(DEPS_PATH) -std=gnu99 -I$(DEPS_PATH)/png -I$(DEPS_PATH)/mxml -I$(DEPS_PATH)/LuaJIT -I$(DEPS_PATH)/Chipmunk/include -I$(DEPS_PATH)/Chipmunk/include/chipmunk  -g -DDYNAMO_DEBUG -DCP_USE_DOUBLES=0 -DANDROID_APP_IDENTIFIER=\"$(APP_IDENTIFIER)\"
 LOCAL_CXXFLAGS := -std=gnu++98
 LOCAL_ARM_MODE := arm
 TARGET_PLATFORM := android-9
@@ -31,6 +31,7 @@ Source/dictionary.c \
 Source/json.c \
 Source/primitive_types.c \
 Source/world.c \
+Source/luacontext.c \
 Dependencies/GLMath/GLMath.c \
 Dependencies/GLMath/GLMathUtilities.c \
 Dependencies/mxml/mxml-attr.c \
@@ -95,10 +96,11 @@ Dependencies/Chipmunk/src/cpSpaceQuery.c \
 Dependencies/Chipmunk/src/cpSpaceStep.c \
 Dependencies/Chipmunk/src/cpSpatialIndex.c \
 Dependencies/Chipmunk/src/cpSweep1D.c \
-Dependencies/Chipmunk/src/cpVect.c
+Dependencies/Chipmunk/src/cpVect.c \
+dynamo_wrap.c
 
 LIBS+=bps screen EGL GLESv2 freetype
-LOCAL_LDLIBS := -lz -llog -ldl -lGLESv2 -lOpenSLES
+LOCAL_LDLIBS := -lz -llog -ldl -lGLESv2 -lOpenSLES -L$(DEPS_PATH)/LuaJIT -lluajit_android
 
 include $(BUILD_SHARED_LIBRARY)
 

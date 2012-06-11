@@ -833,12 +833,31 @@ function dynamo.cleanup()
 	lib.draw_cleanup()
 end
 
+local _messages = nil
+-- Passes a message to the host application
+function dynamo.passMessage(key, value)
+	local t = type(value)
+	print("Type:----------- ", t)
+	if t ~= "string" and t ~= "number" and t ~= "boolean" then
+		error("Invalid type for message")
+	elseif type(key) ~= "string" then
+		error("Invalid type for message key")
+	end
+	_messages = _messages or {}
+	_messages[key] = value
+end
+
+
 function dynamo.cycle()
 	dynamo.input.manager:postActiveEvents()
 	dynamo.timer:step(dynamo.time())
 	dynamo.world:step(dynamo.timer)
 	dynamo.renderer:display(dynamo.timer.timeSinceLastUpdate, dynamo.timer:interpolation())
 	lib.autoReleasePool_drain(lib.autoReleasePool_getGlobal())
+
+	local ret = _messages
+	_messages = nil
+	return ret
 end
 
 return dynamo

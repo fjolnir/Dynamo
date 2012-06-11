@@ -1,6 +1,6 @@
 %module dynamo
 %{
-	#include "dynamo.h"
+	#include "Source/dynamo.h"
 %}
 typedef void (*Obj_destructor_t)(void *aSelf);
 
@@ -58,9 +58,7 @@ Class_t *obj_getClass(Obj_t *aObj);
 bool obj_isClass(Obj_t *aObj, Class_t *aClass);
 
 extern Class_t Class_LuaContext;
-/*!
-	Encapsulates a LuaJIT context. (Essentially just provides memory management)
-*/
+
 typedef struct _LuaContext {
     OBJ_GUTS
     lua_State *luaState;
@@ -155,4 +153,27 @@ extern bool luaCtx_pushScriptHandler(LuaContext_t *aCtx, int aRefId);
 	Deletes a script handler from the lua registry.
 */
 extern void luaCtx_unregisterScriptHandler(LuaContext_t *aCtx, int aRefId);
+/*!
+	Concatenates the 'n' top elements of the lua stack.
+*/
+extern void luaCtx_concat(LuaContext_t *aCtx, int n);
+
+extern int luaCtx_next(LuaContext_t *aCtx, int index);
+
+
+extern int luaCtx_type(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isnumber(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isstring(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isuserdata(LuaContext_t *aCtx, int idx);
+extern int luaCtx_istable(LuaContext_t *aCtx, int idx);
+extern int luaCtx_islightuserdata(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isnil(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isboolean(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isfunction(LuaContext_t *aCtx, int idx);
+extern int luaCtx_isnone(LuaContext_t *aCtx, int idx);
+
+extern float luaCtx_tonumber(LuaContext_t *aCtx, int idx);
+extern int luaCtx_tointeger(LuaContext_t *aCtx, int idx);
+extern int luaCtx_toboolean(LuaContext_t *aCtx, int idx);
+extern const char *luaCtx_tostring(LuaContext_t *aCtx, int idx);
 
