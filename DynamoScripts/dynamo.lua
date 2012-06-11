@@ -62,7 +62,7 @@ extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 extern void gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback);
 extern GLMFloat dynamo_globalTime();
 extern GLMFloat dynamo_time();
-typedef struct _Texture { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; vec3_t location;  GLuint id; vec2_t size; vec2_t pxAlignInset; void *subtextures; } Texture_t;
+typedef struct _Texture { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; vec3_t location;  GLuint id; vec2_t size; vec2_t pxAlignInset; void *subtextures; } Texture_t;
 typedef union _TextureRect { vec4_t v; float *f; struct { 	vec2_t origin; 	vec2_t size; }; struct { 	float u, v; 	float w, h; }; } TextureRect_t;
 extern const TextureRect_t kTextureRectEntire;
 extern Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical);
@@ -92,8 +92,8 @@ extern void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t 
 extern void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool aShouldFill);
 extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
 typedef struct _SpriteAnimation { int numberOfFrames; int currentFrame; bool loops; } SpriteAnimation_t;
-typedef struct _Sprite { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; TextureAtlas_t *atlas; vec3_t location; vec2_t size; float scale, angle; bool flippedHorizontally; bool flippedVertically; int activeAnimation;  SpriteAnimation_t *animations; } Sprite_t;
-typedef struct _SpriteBatch { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; TextureAtlas_t *atlas; int spriteCount; LinkedList_t *sprites; } SpriteBatch_t;
+typedef struct _Sprite { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TextureAtlas_t *atlas; vec3_t location; vec2_t size; float scale, angle; bool flippedHorizontally; bool flippedVertically; int activeAnimation;  SpriteAnimation_t *animations; } Sprite_t;
+typedef struct _SpriteBatch { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TextureAtlas_t *atlas; int spriteCount; LinkedList_t *sprites; } SpriteBatch_t;
 extern Class_t Class_SpriteBatch;
 extern Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity);
 extern SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames);
@@ -103,7 +103,7 @@ extern void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
 extern bool spriteBatch_insertSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite, Sprite_t *aSpriteToShift);
 extern bool spriteBatch_deleteSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
 typedef struct _BackgroundLayer { _Obj_guts _guts; Texture_t *texture; float depth;} BackgroundLayer_t;
-typedef struct _Background { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; BackgroundLayer_t *layers[4]; vec2_t offset;} Background_t;
+typedef struct _Background { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; BackgroundLayer_t *layers[4]; vec2_t offset;} Background_t;
 extern Background_t *background_create();
 extern void background_setLayer(Background_t *aBackground, unsigned int aIndex, BackgroundLayer_t *aLayer);
 extern BackgroundLayer_t *background_createLayer(Texture_t *aTexture, float aDepth);
@@ -131,7 +131,7 @@ typedef struct _TMXObject { char *name; char *type; int x, y;  int width, height
 typedef struct _TMXObjectGroup { char *name; int numberOfObjects; TMXObject_t *objects; int numberOfProperties; TMXProperty_t *properties; } TMXObjectGroup_t;
 typedef struct _TMXMap { _Obj_guts _guts; TMXMap_orientation orientation; int width, height;  int tileWidth, tileHeight;  int numberOfLayers; TMXLayer_t *layers; int numberOfTilesets; TMXTileset_t *tilesets; int numberOfObjectGroups; TMXObjectGroup_t *objectGroups; int numberOfProperties; TMXProperty_t *properties;} TMXMap_t;
 extern TMXMap_t *tmx_readMapFile(const char *aFilename);
-typedef struct _TMXLayerRenderable { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; TMXLayer_t *layer; TMXMap_t *map;  TextureAtlas_t *atlas; GLuint posVBO, texCoordVBO, indexVBO; int indexCount;} TMXLayerRenderable_t;
+typedef struct _TMXLayerRenderable { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TMXLayer_t *layer; TMXMap_t *map;  TextureAtlas_t *atlas; GLuint posVBO, texCoordVBO, indexVBO; int indexCount;} TMXLayerRenderable_t;
 extern TMXLayerRenderable_t *tmx_createRenderableForLayer(TMXMap_t *aMap, unsigned int aLayerIdx);
 extern const char *tmx_mapGetPropertyNamed(TMXMap_t *aMap, const char *aPropertyName);
 extern TMXLayer_t *tmx_mapGetLayerNamed(TMXMap_t *aMap, const char *aLayerName);
@@ -524,7 +524,7 @@ ffi.metatype("GameTimer_t", {
 		step = lib.gameTimer_step,
 		interpolation = lib.gameTimer_interpolationSinceLastUpdate,
 		afterDelay = function(self, delay, lambda)
-			lib.gameTimer_afterDelay_luaCallback(self, delay, dynamo_registerCallback(lambda), nil)
+			lib.gameTimer_afterDelay_luaCallback(self, delay, dynamo_registerCallback(lambda))
 		end,
         setUpdateHandler = function(self, lambda)
             local oldHandler = self.luaUpdateCallback
@@ -837,7 +837,6 @@ local _messages = nil
 -- Passes a message to the host application
 function dynamo.passMessage(key, value)
 	local t = type(value)
-	print("Type:----------- ", t)
 	if t ~= "string" and t ~= "number" and t ~= "boolean" then
 		error("Invalid type for message")
 	elseif type(key) ~= "string" then

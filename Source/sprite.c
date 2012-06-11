@@ -84,6 +84,7 @@ SpriteBatch_t *spriteBatch_create(TextureAtlas_t *aAtlas)
     out->spriteCount = 0;
     out->sprites = obj_retain(llist_create((InsertionCallback_t)&obj_retain, (RemovalCallback_t)&obj_release));
     out->displayCallback = (RenderableDisplayCallback_t)&_spriteBatch_draw;
+    out->luaDisplayCallback = -1;
 	return out;
 }
 

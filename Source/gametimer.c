@@ -91,6 +91,7 @@ void gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int 
     dynamo_assert(aCallback != -1, "Invalid callback");
     struct ScheduledCallbackWrapper_t *wrapper = malloc(sizeof(struct ScheduledCallbackWrapper_t));
     wrapper->time = dynamo_time() + aDelay;
+    wrapper->callback = NULL;
     wrapper->luaCallback = aCallback;
     wrapper->context = NULL;
     llist_pushValue(aTimer->scheduledCallbacks, wrapper);
@@ -100,8 +101,10 @@ static void _callScheduledCallbackIfNeeded(struct ScheduledCallbackWrapper_t *aW
 {
     if(aWrapper->time > aTimer->elapsed)
         return;
+
     if(aWrapper->callback)
         aWrapper->callback(aTimer, aWrapper->context);
+
     if(aWrapper->luaCallback != -1) {
         luaCtx_pushScriptHandler(GlobalLuaContext, aWrapper->luaCallback);
         luaCtx_pcall(GlobalLuaContext, 0, 0, 0);

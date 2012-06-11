@@ -79,7 +79,6 @@ void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsi
 	int count;
 	InputObserver_t **observers = _input_observersForEvent(aManager, aType, aCode, &count);
 	for(int i = 0; i < count; ++i) {
-        dynamo_log("callback: %p",observers[i]->handlerCallback);
         if(observers[i]->handlerCallback)
             observers[i]->handlerCallback(aManager, observers[i], aLocation, aState, observers[i]->metaData);
         if(observers[i]->luaHandlerCallback) {
