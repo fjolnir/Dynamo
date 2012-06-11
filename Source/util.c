@@ -10,27 +10,8 @@ typedef signed char BOOL;
 bool util_pathForResource(const char *name, const char *ext, const char *dir, char *output, int maxLen)
 {
     dynamo_assert(output != NULL && maxLen > 0, "Invalid output buffer");
+    dynamo_assert(name != NULL || dir != NULL, "You must provide either a name or directory to look up");
 
-#if defined(__APPLE__)
-
-    CFBundleRef bundle = CFBundleGetMainBundle();
-    CFStringRef cfName = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
-    CFStringRef cfExt = ext ? CFStringCreateWithCString(NULL, ext, kCFStringEncodingUTF8) : NULL;
-    CFStringRef cfDir = dir ? CFStringCreateWithCString(NULL, dir, kCFStringEncodingUTF8) : NULL;
-    CFURLRef url = CFBundleCopyResourceURL(bundle, cfName, cfExt, cfDir);
-    
-    if(cfName) CFRelease(cfName);
-    if(cfExt) CFRelease(cfExt);
-    if(cfDir) CFRelease(cfDir);
-    if(!url)
-        return false;
-    
-    BOOL ret = CFURLGetFileSystemRepresentation(url, true, (UInt8*)output, maxLen);
-    CFRelease(url);
-    return ret;
-    
-#else
-    
     output[0] = '\0';
     #define APPEND(strToAppend) { \
         off_t __ofs = strlen(output); \
@@ -41,6 +22,10 @@ bool util_pathForResource(const char *name, const char *ext, const char *dir, ch
         APPEND("/data/data/")
         APPEND(ANDROID_APP_IDENTIFIER)
 		APPEND("/files/GameResources/")
+    #elif defined(__APPLE__)
+        CFURLRef resUrl = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+        CFURLGetFileSystemRepresentation(resUrl, true, (UInt8*)output, maxLen);
+        APPEND("/")
     #endif
     APPEND(dir)
 	if(dir && dir[strlen(dir)-1] != '/')
@@ -54,8 +39,6 @@ bool util_pathForResource(const char *name, const char *ext, const char *dir, ch
     struct stat unused;
     return stat(output, &unused) == 0;
     #undef APPEND
-    
-#endif
 }
 
 extern Platform_t util_platform(void)
