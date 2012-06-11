@@ -110,4 +110,8 @@ extern bool luaCtx_pushScriptHandler(LuaContext_t *aCtx, int aRefId);
 	Deletes a script handler from the lua registry.
 */
 extern void luaCtx_unregisterScriptHandler(LuaContext_t *aCtx, int aRefId);
+/*!
+	Concatenates the 'n' top elements of the lua stack.
+*/
+extern void luaCtx_concat(LuaContext_t *aCtx, int n);
 #endif
