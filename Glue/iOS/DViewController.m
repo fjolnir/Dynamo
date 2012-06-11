@@ -2,6 +2,8 @@
 #import <dynamo/input.h>
 #import <dynamo/luacontext.h>
 
+const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
+
 @interface DViewController (Private)
 - (void)setupGL;
 - (void)tearDownGL;
@@ -118,8 +120,29 @@
 {
 	luaCtx_getglobal(GlobalLuaContext, "dynamo");
 	luaCtx_getfield(GlobalLuaContext, -1, "cycle");
-	luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
-	luaCtx_pop(GlobalLuaContext, 1);
+	luaCtx_pcall(GlobalLuaContext, 0, 1, 0);
+    if(luaCtx_istable(GlobalLuaContext, -1)) {
+        luaCtx_pushnil(GlobalLuaContext);
+        NSString *key;
+        id value;
+        while(luaCtx_next(GlobalLuaContext, -2) != 0) {
+            key = [NSString stringWithUTF8String:luaCtx_tostring(GlobalLuaContext, -2)];
+            if(luaCtx_isnumber(GlobalLuaContext, -1))
+                value = [NSNumber numberWithFloat:luaCtx_tonumber(GlobalLuaContext, -1)];
+            else if(luaCtx_isstring(GlobalLuaContext, -1))
+                value = [NSString stringWithUTF8String:luaCtx_tostring(GlobalLuaContext, -1)];
+            else {
+                dynamo_log("Unhandled message type for key %s", [key UTF8String]);
+                continue;
+            }
+            NSDictionary *notDic = [NSDictionary dictionaryWithObject:value forKey:key];
+            [[NSNotificationCenter defaultCenter] postNotificationName:(NSString*)kDynamoMessageNotification
+                                                                object:self
+                                                              userInfo:notDic];
+            luaCtx_pop(GlobalLuaContext, 1);
+        }
+    }
+	luaCtx_pop(GlobalLuaContext, 2);
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
