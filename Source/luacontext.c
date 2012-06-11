@@ -194,6 +194,10 @@ void luaCtx_unregisterScriptHandler(LuaContext_t *aCtx, int aRefId)
     luaL_unref(aCtx->luaState, LUA_REGISTRYINDEX, aRefId);
 }
 
+extern void luaCtx_concat(LuaContext_t *aCtx, int n)
+{
+    lua_concat(aCtx->luaState, n);
+}
 
 #pragma mark - Lua callback utils
 // These are necessary because iOS does not allow an executable stack which breaks luajit ffi callbacks.
