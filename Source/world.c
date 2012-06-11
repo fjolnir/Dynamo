@@ -1,6 +1,7 @@
 // Note: Assumes cpFloat is the same type as GLMFloat
 #include "world.h"
 #include "input.h"
+#include "luacontext.h"
 
 #define VEC2_TO_CPV(v) ((cpVect){ v.x, v.y })
 #define CPV_TO_VEC2(v) ((vec2_t){ v.x, v.y })
@@ -126,8 +127,14 @@ WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, G
 
     out->shapes = obj_retain(llist_create((InsertionCallback_t)&obj_retain, &obj_release));
     
+    out->luaUpdateHandler = -1;
+    out->luaPreCollisionHandler = -1;
+    out->luaCollisionHandler = -1;
+    out->luaPostCollisionHandler = -1;
+    
     return out;
 }
+
 void worldEnt_destroy(WorldEntity_t *aEntity)
 {
     if(aEntity != aEntity->world->staticEntity)
@@ -289,6 +296,17 @@ static World_CollisionInfo _collisionInfoForArbiter(cpArbiter *aArbiter)
         aArbiter
     };
 }
+
+static void _callLuaCollisionHandler(int aCallback, WorldEntity_t *aCollider, World_CollisionInfo *aCollisionInfo)
+{
+    if(aCallback == -1)
+        return;
+    luaCtx_pushScriptHandler(GlobalLuaContext, aCallback);
+    luaCtx_pushlightuserdata(GlobalLuaContext, aCollider);
+    luaCtx_pushlightuserdata(GlobalLuaContext, aCollisionInfo);
+    luaCtx_pcall(GlobalLuaContext, 2, 0, 0);
+}
+
 static int collisionWillBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void *aData)
 {
     World_CollisionInfo collInfo = _collisionInfoForArbiter(aArbiter);
@@ -296,6 +314,10 @@ static int collisionWillBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void 
         collInfo.a->preCollisionHandler(collInfo.a, &collInfo);
     if(collInfo.b->preCollisionHandler)
         collInfo.b->preCollisionHandler(collInfo.b, &collInfo);
+    
+    _callLuaCollisionHandler(collInfo.a->luaPreCollisionHandler, collInfo.b, &collInfo);
+    _callLuaCollisionHandler(collInfo.b->luaPreCollisionHandler, collInfo.a, &collInfo);
+
     return true;
 }
 static void collisionDidBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void *aData)
@@ -305,6 +327,9 @@ static void collisionDidBegin(cpArbiter *aArbiter, struct cpSpace *aSpace, void 
         collInfo.a->collisionHandler(collInfo.a, &collInfo);
     if(collInfo.b->collisionHandler)
         collInfo.b->collisionHandler(collInfo.b, &collInfo);
+    
+    _callLuaCollisionHandler(collInfo.a->luaCollisionHandler, collInfo.b, &collInfo);
+    _callLuaCollisionHandler(collInfo.b->luaCollisionHandler, collInfo.a, &collInfo);
 }
 static void collisionDidEnd(cpArbiter *aArbiter, struct cpSpace *aSpace, void *aData)
 {
@@ -313,6 +338,9 @@ static void collisionDidEnd(cpArbiter *aArbiter, struct cpSpace *aSpace, void *a
         collInfo.a->postCollisionHandler(collInfo.a, &collInfo);
     if(collInfo.b->postCollisionHandler)
         collInfo.b->postCollisionHandler(collInfo.b, &collInfo);
+    
+    _callLuaCollisionHandler(collInfo.a->luaPostCollisionHandler, collInfo.b, &collInfo);
+    _callLuaCollisionHandler(collInfo.b->luaPostCollisionHandler, collInfo.a, &collInfo);
 }
 
 #pragma mark -
@@ -336,6 +364,11 @@ static void _callEntityUpdateCallback(WorldEntity_t *aEntity, World_t *aWorld)
 {
     if(aEntity->updateHandler)
         aEntity->updateHandler(aEntity);
+    if(aEntity->luaUpdateHandler != -1) {
+        luaCtx_pushScriptHandler(GlobalLuaContext, aEntity->luaUpdateHandler);
+        luaCtx_pushlightuserdata(GlobalLuaContext, aEntity);
+        luaCtx_pcall(GlobalLuaContext, 1, 0, 0);
+    }
 }
 
 #pragma mark - Joints

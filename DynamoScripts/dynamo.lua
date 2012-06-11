@@ -35,7 +35,7 @@ typedef void (*LinkedListApplier_t)(void *aValue);
 extern void llist_apply(LinkedList_t *aList, LinkedListApplier_t aApplier);
 typedef struct _Renderer Renderer_t;
 typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, void *aOwner, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
-typedef struct _Renderable { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; } Renderable_t;
+typedef struct _Renderable { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; } Renderable_t;
 extern Class_t Class_Renderable;
 struct _Renderer { _Obj_guts _guts; GLuint frameBufferId; vec2_t viewportSize; vec3_t cameraOffset; matrix_stack_t
 *worldMatrixStack; matrix_stack_t *projectionMatrixStack; LinkedList_t *renderables;  };
@@ -54,11 +54,12 @@ extern bool scene_deleteRenderable(Scene_t *aScene, void *aRenderable);
 typedef struct _GameTimer GameTimer_t;
 typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
 typedef void (*GameTimer_scheduledCallback_t)(GameTimer_t *aTimer, void *aContext);
-struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpdate; GLMFloat desiredInterval;  long ticks; GameTimer_updateCallback_t updateCallback; LinkedList_t *scheduledCallbacks;};
+struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpdate; GLMFloat desiredInterval;  long ticks; GameTimer_updateCallback_t updateCallback; int luaUpdateCallback; LinkedList_t *scheduledCallbacks;};
 extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
-extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
+//extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
+extern void gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback);
 extern GLMFloat dynamo_globalTime();
 extern GLMFloat dynamo_time();
 typedef struct _Texture { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; vec3_t location;  GLuint id; vec2_t size; vec2_t pxAlignInset; void *subtextures; } Texture_t;
@@ -111,7 +112,7 @@ typedef enum { kInputState_up, kInputState_down } Input_state_t;
 typedef struct _InputManager InputManager_t;
 typedef struct _InputObserver InputObserver_t;
 typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, int aState, void *aMetaData);
-struct _InputObserver { _Obj_guts _guts; Input_handler_t handlerCallback; Input_type_t type; unsigned char code;  void *metaData;  Input_state_t lastKnownState;};
+struct _InputObserver { _Obj_guts _guts; Input_handler_t handlerCallback; int luaHandlerCallback; Input_type_t type; unsigned char code;  void *metaData;  Input_state_t lastKnownState;};
 struct _InputManager { _Obj_guts _guts; LinkedList_t *observers; LinkedList_t *activeEvents;};
 extern InputManager_t *input_createManager();
 extern InputObserver_t *input_createObserver(Input_type_t aObservedType, Input_handler_t aHandlerCallback, char *aCode, void *aMetaData);
@@ -170,7 +171,7 @@ typedef struct _World_CollisionInfo { WorldEntity_t *a; WorldEntity_t *b; bool f
 typedef void (*WorldEntity_CollisionHandler)(WorldEntity_t *aEntity, World_CollisionInfo *aCollisionInfo);
 typedef void (*WorldEntity_UpdateHandler)(WorldEntity_t *aEntity);
 extern Class_t Class_WorldEntity;
-struct _WorldEntity { _Obj_guts _guts; World_t *world;  Obj_t *owner;  void *cpBody; LinkedList_t *shapes; WorldEntity_UpdateHandler updateHandler; WorldEntity_CollisionHandler preCollisionHandler; WorldEntity_CollisionHandler collisionHandler; WorldEntity_CollisionHandler postCollisionHandler;};
+struct _WorldEntity { _Obj_guts _guts; World_t *world;  Obj_t *owner;  void *cpBody; LinkedList_t *shapes; WorldEntity_UpdateHandler updateHandler; WorldEntity_CollisionHandler preCollisionHandler; WorldEntity_CollisionHandler collisionHandler; WorldEntity_CollisionHandler postCollisionHandler; int luaUpdateHandler; int luaPreCollisionHandler; int luaCollisionHandler; int luaPostCollisionHandler; };
 struct _WorldShape { _Obj_guts _guts; void *cpShape;};
 struct _World { _Obj_guts _guts; void *cpSpace; LinkedList_t *entities; WorldEntity_t *staticEntity;};
 typedef enum { kWorldJointType_Pin,    kWorldJointType_Slide,    kWorldJointType_Pivot,    kWorldJointType_Groove,    kWorldJointType_DampedSpring,    kWorldJointType_DampedRotarySpring,    kWorldJointType_RotaryLimit,    kWorldJointType_Ratchet,    kWorldJointType_Gear,    kWorldJointType_SimpleMotor } WorldJointType_t;
@@ -269,7 +270,7 @@ function dynamo.pathForResource(name, type, directory)
 end
 
 function dynamo.log(...)
-	prefix = ""
+	local prefix = ""
 	if debug ~= nil then
 		local info = debug.getinfo(2, "Sln")
 		if info.what == "C" then
@@ -490,7 +491,8 @@ dynamo.input = {
 ffi.metatype("InputManager_t", {
 	__index = {
 		addObserver = function(self, desc)
-			local observer = lib.input_createObserver(desc.type, desc.callback, desc.charCode, desc.metaData)
+			local observer = lib.input_createObserver(desc.type, nil, desc.charCode, desc.metaData)
+            observer.luaHandlerCallback = dynamo_registerCallback(desc.callback)
 			lib.input_addObserver(self, observer)
 			return _obj_addToGC(observer)
 		end,
@@ -522,12 +524,25 @@ ffi.metatype("GameTimer_t", {
 		step = lib.gameTimer_step,
 		interpolation = lib.gameTimer_interpolationSinceLastUpdate,
 		afterDelay = function(self, delay, lambda)
-			lib.gameTimer_afterDelay(self, delay, lambda, nil)
-		end
+			lib.gameTimer_afterDelay_luaCallback(self, delay, dynamo_registerCallback(lambda), nil)
+		end,
+        setUpdateHandler = function(self, lambda)
+            local oldHandler = self.luaUpdateCallback
+            self.luaUpdateCallback = dynamo_registerCallback(lambda)
+            if oldHandler ~= -1 then
+                dynamo_unregisterCallback(oldHandler)
+            end
+        end
 	}
 })
 
-local _createTimer = function(...) return _obj_addToGC(lib.gameTimer_create(...)) end
+local _createTimer = function(desiredFPS, updateCallback)
+    local timer = lib.gameTimer_create(desiredFPS, nil)
+    if updateCallback then
+        timer:setUpdateHandler(updateCallback)
+    end
+    return _obj_addToGC(timer)
+end
 
 dynamo.globalTime = lib.dynamo_globalTime
 dynamo.time = lib.dynamo_time
@@ -539,7 +554,7 @@ math.randomseed(dynamo.globalTime())
 
 function dynamo.renderable(lambda)
 	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.cast("Class_t*", lib.Class_Renderable)))
-	drawable.displayCallback = lambda
+	drawable.luaDisplayCallback = dynamo_registerCallback(lambda)
 	return _obj_addToGC(drawable)
 end
 

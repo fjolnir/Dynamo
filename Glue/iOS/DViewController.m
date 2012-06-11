@@ -1,5 +1,6 @@
 #import "DViewController.h"
-#import <Dynamo/input.h>
+#import <dynamo/input.h>
+#import <dynamo/luacontext.h>
 
 @interface DViewController (Private)
 - (void)setupGL;
@@ -14,7 +15,6 @@
 	if(!(self = [super init]))
 		return nil;
 
-	_luaCtx = obj_retain(luaCtx_createContext());
 	_bootScriptPath = [aPath copy];
 	
 	return self;
@@ -33,13 +33,12 @@
 
 - (void)dealloc
 {
-	lua_State *ls = _luaCtx->luaState;
-	lua_getglobal(ls, "dynamo");
-	lua_getfield(ls, -1, "cleanup");
-	luaCtx_pcall(_luaCtx, 0, 0, 0);
-	lua_pop(_luaCtx->luaState, 1);
+	luaCtx_getglobal(GlobalLuaContext, "dynamo");
+	luaCtx_getfield(GlobalLuaContext, -1, "cleanup");
+	luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
+	luaCtx_pop(GlobalLuaContext, 1);
 	
-	obj_release(_luaCtx), _luaCtx = nil; 
+    luaCtx_teardown();
 	
 	[_context release], _context = nil;
 	[_activeTouches release]; _activeTouches = nil;
@@ -81,33 +80,33 @@
 - (void)_postTouchEventWithFinger:(int)aFinger isDown:(BOOL)aIsDown location:(CGPoint)aLoc
 {
 	aLoc.y = self.view.bounds.size.height - aLoc.y;
-	lua_State *ls = _luaCtx->luaState;
 	float scaleFactor = self.view.contentScaleFactor;
 	
-	lua_getglobal(ls, "dynamo");
-    lua_getfield(ls, -1, "input");
-	lua_getfield(ls, -1, "manager");
-	lua_getfield(ls, -1, "postTouchEvent");
+	luaCtx_getglobal(GlobalLuaContext, "dynamo");
+    luaCtx_getfield(GlobalLuaContext, -1, "input");
+	luaCtx_getfield(GlobalLuaContext, -1, "manager");
+	luaCtx_getfield(GlobalLuaContext, -1, "postTouchEvent");
 	
-	lua_pushvalue(ls, -2);
-	lua_pushinteger(ls, aFinger);
-	lua_pushboolean(ls, aIsDown);
-	lua_pushnumber(ls, aLoc.x*scaleFactor);
-	lua_pushnumber(ls, aLoc.y*scaleFactor);
-	luaCtx_pcall(_luaCtx, 5, 0, 0);
+	luaCtx_pushvalue(GlobalLuaContext, -2);
+	luaCtx_pushinteger(GlobalLuaContext, aFinger);
+	luaCtx_pushboolean(GlobalLuaContext, aIsDown);
+	luaCtx_pushnumber(GlobalLuaContext, aLoc.x*scaleFactor);
+	luaCtx_pushnumber(GlobalLuaContext, aLoc.y*scaleFactor);
+	luaCtx_pcall(GlobalLuaContext, 5, 0, 0);
 	
-	lua_pop(_luaCtx->luaState, 3);
+	luaCtx_pop(GlobalLuaContext, 3);
 }
 
 - (void)setupGL
 {
 	[EAGLContext setCurrentContext:_context];
 	
+    luaCtx_init();
 	NSString *dynamoScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"DynamoScripts"];
 	NSString *localScriptsPath  = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
-	luaCtx_addSearchPath(_luaCtx, [dynamoScriptsPath fileSystemRepresentation]);
-	luaCtx_addSearchPath(_luaCtx, [localScriptsPath fileSystemRepresentation]);
-	dynamo_assert(luaCtx_executeFile(_luaCtx, [_bootScriptPath fileSystemRepresentation]), "Lua error");
+	luaCtx_addSearchPath(GlobalLuaContext, [dynamoScriptsPath fileSystemRepresentation]);
+	luaCtx_addSearchPath(GlobalLuaContext, [localScriptsPath fileSystemRepresentation]);
+	dynamo_assert(luaCtx_executeFile(GlobalLuaContext, [_bootScriptPath fileSystemRepresentation]), "Lua error");
 }
 
 - (void)tearDownGL
@@ -117,10 +116,10 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-	lua_getglobal(_luaCtx->luaState, "dynamo");
-	lua_getfield(_luaCtx->luaState, -1, "cycle");
-	luaCtx_pcall(_luaCtx, 0, 0, 0);
-	lua_pop(_luaCtx->luaState, 1);
+	luaCtx_getglobal(GlobalLuaContext, "dynamo");
+	luaCtx_getfield(GlobalLuaContext, -1, "cycle");
+	luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
+	luaCtx_pop(GlobalLuaContext, 1);
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

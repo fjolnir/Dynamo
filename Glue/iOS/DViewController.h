@@ -2,11 +2,9 @@
 
 // Sets up an GLKView and initializes dynamo using the supplied boot script
 #import <GLKit/GLKit.h>
-#import <dynamo/luacontext.h>
 
 @interface DViewController : GLKViewController {
     EAGLContext *_context;
-    LuaContext_t *_luaCtx;
     NSMutableArray *_activeTouches;
     NSString *_bootScriptPath;
 }

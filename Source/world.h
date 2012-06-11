@@ -73,6 +73,11 @@ struct _WorldEntity {
     WorldEntity_CollisionHandler preCollisionHandler;
     WorldEntity_CollisionHandler collisionHandler;    
     WorldEntity_CollisionHandler postCollisionHandler;
+    
+    int luaUpdateHandler;
+    int luaPreCollisionHandler;
+    int luaCollisionHandler;    
+    int luaPostCollisionHandler;
 };
 extern Class_t Class_WorldEntity;
 

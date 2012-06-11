@@ -40,7 +40,8 @@ struct _GameTimer {
 	GLMFloat desiredInterval; // The minimum interval between updates
 	long ticks;
 	GameTimer_updateCallback_t updateCallback;
-    LinkedList_t *scheduledCallbacks;
+    int luaUpdateCallback;
+    LinkedList_t *scheduledCallbacks;    
 };
 
 /*!
@@ -57,9 +58,13 @@ extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 */
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 /*!
-	Executes the given callback after the given delay.
+	Executes the given callback after a given delay.
 */
 extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
+/*!
+    Executes the given Lua callback after a given delay.
+*/
+extern void gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback);
 
 // Returns the time in seconds
 extern GLMFloat dynamo_globalTime();

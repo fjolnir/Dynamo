@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include "glutils.h"
 #include "util.h"
+#include "luacontext.h"
 
 static void renderer_destroy(Renderer_t *aRenderer);
 Class_t Class_Renderer = {
@@ -56,8 +57,16 @@ void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFl
 	if(currentItem) {
 		do {
 			renderable = (Renderable_t *)currentItem->value;
-			if(renderable && renderable->displayCallback)
-				renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
+			if(renderable) {
+                if(renderable->displayCallback)
+                    renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
+                if(renderable->luaDisplayCallback != -1) {
+                    luaCtx_pushScriptHandler(GlobalLuaContext, renderable->luaDisplayCallback);
+                    luaCtx_pushnumber(GlobalLuaContext, aTimeSinceLastFrame);
+                    luaCtx_pushnumber(GlobalLuaContext, aInterpolation);
+                    luaCtx_pcall(GlobalLuaContext, 2, 0, 0);
+                }
+            }
 		} while((currentItem = currentItem->next));
 	}
     

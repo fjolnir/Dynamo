@@ -1,5 +1,6 @@
 #include "input.h"
 #include "util.h"
+#include "luacontext.h"
 
 static void input_destroyManager(InputManager_t *aManager);
 Class_t Class_InputManager = {
@@ -78,10 +79,23 @@ void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsi
 	int count;
 	InputObserver_t **observers = _input_observersForEvent(aManager, aType, aCode, &count);
 	for(int i = 0; i < count; ++i) {
-		observers[i]->handlerCallback(aManager, observers[i], aLocation, aState, observers[i]->metaData);
+        dynamo_log("callback: %p",observers[i]->handlerCallback);
+        if(observers[i]->handlerCallback)
+            observers[i]->handlerCallback(aManager, observers[i], aLocation, aState, observers[i]->metaData);
+        if(observers[i]->luaHandlerCallback) {
+            luaCtx_pushScriptHandler(GlobalLuaContext, observers[i]->luaHandlerCallback);
+            luaCtx_createtable(GlobalLuaContext, 0, 2);
+            luaCtx_pushnumber(GlobalLuaContext, aLocation->x);
+            luaCtx_setfield(GlobalLuaContext, -2, "x");
+            luaCtx_pushnumber(GlobalLuaContext, aLocation->y);
+            luaCtx_setfield(GlobalLuaContext, -2, "y");
+            luaCtx_pushinteger(GlobalLuaContext, aState);
+            luaCtx_pcall(GlobalLuaContext, 2, 0, 0);
+        }
 		observers[i]->lastKnownState = aState;
 	}
-	free(observers);
+    if(observers)
+        free(observers);
 }
 
 typedef struct _InputEvent {

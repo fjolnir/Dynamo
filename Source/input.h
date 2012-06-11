@@ -68,6 +68,7 @@ typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *
 struct _InputObserver {
 	OBJ_GUTS
 	Input_handler_t handlerCallback;
+    int luaHandlerCallback;
 	Input_type_t type;
 	unsigned char code;
 	void *metaData;

@@ -20,7 +20,8 @@ typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, Renderable_t 
 
 // To make an Object renderable, include RENDERABLE_GUTS immediately after OBJ_GUTS
 #define RENDERABLE_GUTS \
-    RenderableDisplayCallback_t displayCallback;
+    RenderableDisplayCallback_t displayCallback; \
+    int luaDisplayCallback;
 
 /*!
 	For defining an object you wish to have rendered
