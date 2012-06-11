@@ -813,7 +813,6 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	dynamo.timer = _createTimer(desiredFPS, updateCallback)
 
 	dynamo.input.manager = _createInputManager()
-
 	dynamo.soundManager = _createSoundManager()
 	lib.soundManager_makeCurrent(dynamo.soundManager)
 
@@ -848,6 +847,9 @@ end
 
 
 function dynamo.cycle()
+	if dynamo.initialized ~= true then
+		return
+	end
 	dynamo.input.manager:postActiveEvents()
 	dynamo.timer:step(dynamo.time())
 	dynamo.world:step(dynamo.timer)
