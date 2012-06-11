@@ -98,7 +98,7 @@ public class DynamoView extends GLSurfaceView {
 			jni.luaCtx_getfield(ctx, -1, "cycle");
 			jni.luaCtx_pcall(ctx, 0, 1, 0);
 			// Check if there are any messages
-			if(msgObserver != null && jni.luaCtx_isnil(ctx, -1) != 1 && jni.luaCtx_istable(ctx, -1) == 1) {
+			if(msgObserver != null && jni.luaCtx_istable(ctx, -1) == 1) {
 				jni.luaCtx_pushnil(ctx); 
 				while(jni.luaCtx_next(ctx, -2) != 0) {
 					// Key is at -2, value at -1
