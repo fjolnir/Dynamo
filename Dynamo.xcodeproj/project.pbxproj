@@ -925,7 +925,6 @@
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DYNAMO_DEBUG=1",
@@ -946,9 +945,13 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
 				);
+				OTHER_CFLAGS = "";
+				"OTHER_CFLAGS[sdk=iphonesimulator*]" = "-fno-reg-struct-return";
+				OTHER_CPLUSPLUSFLAGS = "";
 				PRODUCT_NAME = dynamo;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Debug;
 		};
@@ -979,10 +982,14 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
 				);
+				OTHER_CFLAGS = "";
+				"OTHER_CFLAGS[sdk=iphonesimulator*]" = "-fno-reg-struct-return";
+				OTHER_CPLUSPLUSFLAGS = "";
 				PRODUCT_NAME = dynamo;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv6 armv7";
 			};
 			name = Release;
 		};
