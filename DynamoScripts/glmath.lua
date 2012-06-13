@@ -54,6 +54,19 @@ struct _matrix_stack_t {
 };
 typedef struct _matrix_stack_t matrix_stack_t;
 
+union _bezier_t {
+	GLMFloat f[12];
+	vec3_t controlPoints[4];
+	vec3_t cp[4];
+};
+typedef union _bezier_t bezier_t;
+enum _bezierAxis {
+	kBezierAxisX = 0,
+	kBezierAxisY,
+	kBezierAxisZ
+};
+typedef enum _bezierAxis bezierAxis_t;
+
 vec2_t (*_vec2_create)(GLMFloat x, GLMFloat y);
 vec2_t (*_vec2_add)(const vec2_t v1, const vec2_t v2);
 vec2_t (*_vec2_sub)(const vec2_t v1, const vec2_t v2);
@@ -158,6 +171,15 @@ mat3_t (*_matrix_stack_get_mat3)(matrix_stack_t *stack);
 void (*_matrix_stack_translate)(matrix_stack_t *stack, GLMFloat x, GLMFloat y, GLMFloat z);
 void (*_matrix_stack_rotate)(matrix_stack_t *stack, GLMFloat angle, GLMFloat x, GLMFloat y, GLMFloat z);
 void (*_matrix_stack_scale)(matrix_stack_t *stack, GLMFloat x, GLMFloat y, GLMFloat z);
+bezier_t (*_bezier_create)(vec3_t c1, vec3_t c2, vec3_t c3, vec3_t c4);
+vec3_t (*_bezier_getPoint)(bezier_t curve, GLMFloat t);
+GLMFloat (*_bezier_getCoordForAxis)(bezier_t curve, GLMFloat t, bezierAxis_t axis);
+vec3_t (*_bezier_firstDerivative)(bezier_t curve, GLMFloat t);
+vec2_t (*_bezier_firstDerivativeRoots)(bezier_t curve, bezierAxis_t axis);
+void (*_bezier_extremes)(bezier_t curve, vec3_t *outMinimums, vec3_t *outMaximums);
+vec3_t (*_bezier_getPointWithOffset)(bezier_t curve, GLMFloat t, vec3_t offset);
+void (*_bezier_getLineSegments)(bezier_t curve, int count, vec3_t *outPoints, GLMFloat *outLengths, GLMFloat *outDeltas, GLMFloat *outTotalLength);
+vec3_t (*_bezier_getPointUsingLineSegments)(GLMFloat t, int count, vec3_t *points, GLMFloat *lengths, GLMFloat *deltas, GLMFloat totalLength);
 
 extern const vec2_t GLMVec2_zero;
 extern const vec3_t GLMVec3_zero;
