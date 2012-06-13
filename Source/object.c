@@ -31,7 +31,8 @@ static void _print_trace(void)
 
 void obj_zombie_error(Obj_t *aObj)
 {
-	dynamo_log("*** TRIED TO FREE ZOMBIE OBJECT (%p). Break on obj_zombie_error to debug", aObj);
+    _Obj_guts *guts = aObj;
+	dynamo_log("*** TRIED TO FREE ZOMBIE OBJECT (%p). Break on obj_zombie_error to debug", guts);
 	_print_trace();
 }
 
@@ -57,17 +58,25 @@ Obj_t *obj_retain(Obj_t *aObj)
 	__sync_add_and_fetch(&self->referenceCount, 1);
 	return aObj;
 }
+
 void obj_release(Obj_t *aObj)
 {
 	dynamo_assert(aObj != NULL, "Invalid object");
 	_Obj_guts *self = aObj;
+    if(ENABLE_ZOMBIES && self->referenceCount == 0xDEA110CD) {
+        obj_zombie_error(self);
+        return;
+    }
+        
 	if(__sync_sub_and_fetch(&self->referenceCount, 1) == 0) {
 		if(self->isa->destructor)
 			self->isa->destructor(aObj);
 		if(!ENABLE_ZOMBIES)
 			free(self);
-		else if(self->referenceCount < 0)
+		else if(self->referenceCount < 0 || self->referenceCount == 0xDEA110CD)
 			obj_zombie_error(self);
+        else
+            self->referenceCount = 0xDEA110CD;
 	}
 }
 
