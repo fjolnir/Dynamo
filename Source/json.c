@@ -18,8 +18,10 @@ struct _ParseContext {
 		array_push(ctx->container, val); \
 	else if(obj_isClass(ctx->container, &Class_Dictionary)) \
 		dict_set(ctx->container, ctx->key, val); \
-	else \
-		return yajl_status_error;
+	else { \
+        free(ctx); \
+		return yajl_status_error; \
+    }
 
 static int handle_null(void *ctxStack_)
 {
@@ -139,7 +141,6 @@ Obj_t *parseJSON(const char *aJsonStr)
     if(status != yajl_status_ok) {
         unsigned char *err = yajl_get_error(parser, 1, (unsigned char*)aJsonStr, strlen(aJsonStr));
         dynamo_log("Couldn't parse JSON: %s", err);
-        obj_release(ctxStack);
         yajl_free_error(parser, err);
         return NULL;
     }
@@ -151,11 +152,9 @@ Obj_t *parseJSON(const char *aJsonStr)
 		root = ctx->container;
 		array_pop(ctxStack);
 	} else {
-	    obj_release(ctxStack);
         dynamo_log("Something went wrong parsing json!");
 		return NULL;
 	}
-    obj_release(ctxStack);
 	return root;
 }
 
