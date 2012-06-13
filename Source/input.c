@@ -145,6 +145,7 @@ void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned cha
 	InputObserver_t **observers = _input_observersForEvent(aManager, aType, aCode, &observerCount);
 	_InputEvent_t *existingEvent;
 	bool isActive = _input_eventIsActive(aManager, aType, aCode, &existingEvent);
+
 	// Keep the location up to date if the event is already active
 	if(isActive && aLocation) existingEvent->location = *aLocation;
 

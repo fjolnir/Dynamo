@@ -103,6 +103,8 @@ void dict_set(Dictionary_t *aDict, const char *aKey, void *aValue)
 bool dict_remove(Dictionary_t *aDict, const char *aKey)
 {
 	DictionaryNode_t *node = _dict_searchFromNode(&aDict->rootNode, aKey, false);
+    if(!node)
+        return false;
 	void *value = node->value;
 	node->value = NULL;
 	if(value && aDict->removalCallback)

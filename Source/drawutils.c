@@ -99,7 +99,7 @@ void draw_textureAtlas_getVertices(TextureAtlas_t *aAtlas, int aNumberOfTiles, v
 {
 	int numberOfVertices = 4*aNumberOfTiles;
 	int numberOfIndices = 6*aNumberOfTiles;
-	vec2_t *vertices = calloc(numberOfVertices, sizeof(vec3_t));
+	vec2_t *vertices = calloc(numberOfVertices, sizeof(vec2_t));
 	vec2_t *texCoords = calloc(numberOfVertices, sizeof(vec2_t));
 	GLuint *indices = calloc(numberOfIndices, sizeof(GLuint));
 	

@@ -13,7 +13,7 @@ Array_t *array_create(int aCapacity, InsertionCallback_t aInsertionCallback, Rem
 {
 	Array_t *out = obj_create_autoreleased(&Class_Array);
 	out->capacity = aCapacity ? aCapacity : 4;
-	out->items = calloc(aCapacity, sizeof(void*));
+	out->items = calloc(1, aCapacity);
 	out->count = 0;
 	out->insertionCallback = aInsertionCallback;
 	out->removalCallback = aRemovalCallback;
