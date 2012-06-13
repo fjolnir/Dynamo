@@ -127,7 +127,7 @@
 		C72C871715591261001EF047 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = C72C871A15591261001EF047 /* Build configuration list for PBXProject "mxml" */;
 			compatibilityVersion = "Xcode 3.2";

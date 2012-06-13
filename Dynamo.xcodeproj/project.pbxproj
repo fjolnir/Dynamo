@@ -675,7 +675,7 @@
 		C75AFCE2153FA9D800FE8623 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = C75AFCE5153FA9D800FE8623 /* Build configuration list for PBXProject "Dynamo" */;
 			compatibilityVersion = "Xcode 3.2";

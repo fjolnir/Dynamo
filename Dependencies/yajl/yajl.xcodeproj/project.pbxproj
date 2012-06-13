@@ -31,7 +31,6 @@
 		C72C86F0155911B8001EF047 /* yajl_gen.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C86EC155911B8001EF047 /* yajl_gen.h */; };
 		C72C86F1155911B8001EF047 /* yajl_parse.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C86ED155911B8001EF047 /* yajl_parse.h */; };
 		C72C86F2155911B8001EF047 /* yajl_tree.h in Headers */ = {isa = PBXBuildFile; fileRef = C72C86EE155911B8001EF047 /* yajl_tree.h */; };
-		C73EFC9C155A46D200FD64CA /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C73EFC9B155A46D200FD64CA /* libc.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,7 +68,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C73EFC9C155A46D200FD64CA /* libc.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,7 +174,7 @@
 		C72C86A01559113E001EF047 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = C72C86A31559113E001EF047 /* Build configuration list for PBXProject "yajl" */;
 			compatibilityVersion = "Xcode 3.2";
