@@ -49,7 +49,6 @@ extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
 		if(aTimer->updateCallback)
 			aTimer->updateCallback(aTimer);
         if(aTimer->luaUpdateCallback != -1) {
-            printf("foo\n");
             luaCtx_pushScriptHandler(GlobalLuaContext, aTimer->luaUpdateCallback);
             luaCtx_pushnumber(GlobalLuaContext, aTimer->ticks);
             luaCtx_pushnumber(GlobalLuaContext, aTimer->elapsed);
@@ -77,6 +76,7 @@ GameTimer_ScheduledCallback_t *gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloa
     wrapper->luaCallback = -1;
     wrapper->context = aContext;
     wrapper->repeats = aRepeats;
+    wrapper->lastFired = aRepeats ? aTimer->elapsed : -1;
     llist_pushValue(aTimer->scheduledCallbacks, wrapper);
     
     return wrapper;
@@ -86,12 +86,15 @@ GameTimer_ScheduledCallback_t *gameTimer_afterDelay_luaCallback(GameTimer_t *aTi
 {
     dynamo_assert(aCallback != -1, "Invalid callback");
     GameTimer_ScheduledCallback_t *wrapper = malloc(sizeof(GameTimer_ScheduledCallback_t));
-    wrapper->time = dynamo_time() + aDelay;
+    if(aRepeats)
+        wrapper->time = aDelay;
+    else
+        wrapper->time = aTimer->elapsed + aDelay;
     wrapper->callback = NULL;
     wrapper->luaCallback = aCallback;
     wrapper->context = NULL;
     wrapper->repeats = aRepeats;
-    wrapper->lastFired = aTimer->elapsed;
+    wrapper->lastFired = aRepeats ? aTimer->elapsed : -1;
     llist_pushValue(aTimer->scheduledCallbacks, wrapper);
     
     return wrapper;
@@ -104,13 +107,19 @@ bool gameTimer_unscheduleCallback(GameTimer_t *aTimer, GameTimer_ScheduledCallba
 
 static void _callScheduledCallbackIfNeeded(GameTimer_ScheduledCallback_t *aWrapper, GameTimer_t *aTimer)
 {
-    if(aWrapper->repeats) {
-        if((aTimer->elapsed - aWrapper->lastFired) > aWrapper->time)
-            aWrapper->lastFired = aTimer->elapsed;
-        else
+    if(!aWrapper->repeats && aWrapper->lastFired >= 0) {
+        // A callback could be unscheduled within itself which would cause a crash if we were to
+        // Check if we should delete it after it's been run. so we must do it here, on the following iteration,
+        // before the callback is run again.
+        llist_deleteValue(aTimer->scheduledCallbacks, aWrapper);
+        return;
+    } if(aWrapper->repeats) {
+        if((aTimer->elapsed - aWrapper->lastFired) < aWrapper->time)
             return;
     } else if(aWrapper->time > aTimer->elapsed)
         return;
+    
+    aWrapper->lastFired = aTimer->elapsed;
 
     if(aWrapper->callback)
         aWrapper->callback(aTimer, aWrapper->context);
@@ -119,8 +128,6 @@ static void _callScheduledCallbackIfNeeded(GameTimer_ScheduledCallback_t *aWrapp
         luaCtx_pushScriptHandler(GlobalLuaContext, aWrapper->luaCallback);
         luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
     }
-    if(!aWrapper->repeats)
-        llist_deleteValue(aTimer->scheduledCallbacks, aWrapper);
 }
 
 
