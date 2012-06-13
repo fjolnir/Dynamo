@@ -40,7 +40,12 @@ LuaContext_t *luaCtx_createContext()
     
     out->luaState = lua_open();
     luaL_openlibs(out->luaState);
-        
+    
+    lua_pushcfunction(out->luaState, &luaApi_dynamo_registerCallback);
+    lua_setglobal(out->luaState, "dynamo_registerCallback");
+    lua_pushcfunction(out->luaState, &luaApi_dynamo_unregisterCallback);
+    lua_setglobal(out->luaState, "dynamo_unregisterCallback");
+    
     char buf[1024];
     dynamo_assert(util_pathForResource(NULL, NULL, "DynamoScripts", buf, 1024), "Couldn't find dynamo scripts");
     luaCtx_addSearchPath(out, buf);
@@ -49,11 +54,6 @@ LuaContext_t *luaCtx_createContext()
 	dynamo_assert(luaCtx_executeFile(out, buf), "Error initializing GLMath");
     dynamo_assert(util_pathForResource("dynamo", "lua", "DynamoScripts", buf, 1024), "Couldn't find dynamo init script");
 	dynamo_assert(luaCtx_executeFile(out, buf), "Error initializing dynamo");
-    
-    lua_pushcfunction(out->luaState, &luaApi_dynamo_registerCallback);
-    lua_setglobal(out->luaState, "dynamo_registerCallback");
-    lua_pushcfunction(out->luaState, &luaApi_dynamo_unregisterCallback);
-    lua_setglobal(out->luaState, "dynamo_unregisterCallback");
     
     return out;
 }

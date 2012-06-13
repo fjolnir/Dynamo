@@ -10,14 +10,7 @@
 #include <time.h>
 #endif
 
-struct ScheduledCallbackWrapper_t {
-    GLMFloat time;
-    GameTimer_scheduledCallback_t callback;
-    int luaCallback;
-    void *context;
-};
-
-static void _callScheduledCallbackIfNeeded(struct ScheduledCallbackWrapper_t *aWrapper, GameTimer_t *aTimer);
+static void _callScheduledCallbackIfNeeded(GameTimer_ScheduledCallback_t *aWrapper, GameTimer_t *aTimer);
 static void gameTimer_destroy(GameTimer_t *aGameTimer);
 
 Class_t Class_GameTimer = {
@@ -75,31 +68,48 @@ GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer)
 
 #pragma mark - Scheduled callbacks
 
-void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext)
+GameTimer_ScheduledCallback_t *gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallbackInvoke_t aCallback, bool aRepeats, void *aContext)
 {
     dynamo_assert(aCallback != NULL, "Invalid callback");
-    struct ScheduledCallbackWrapper_t *wrapper = malloc(sizeof(struct ScheduledCallbackWrapper_t));
+    GameTimer_ScheduledCallback_t *wrapper = malloc(sizeof(GameTimer_ScheduledCallback_t));
     wrapper->time = dynamo_time() + aDelay;
     wrapper->callback = aCallback;
     wrapper->luaCallback = -1;
     wrapper->context = aContext;
+    wrapper->repeats = aRepeats;
     llist_pushValue(aTimer->scheduledCallbacks, wrapper);
+    
+    return wrapper;
 }
 
-void gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback)
+GameTimer_ScheduledCallback_t *gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback, bool aRepeats)
 {
     dynamo_assert(aCallback != -1, "Invalid callback");
-    struct ScheduledCallbackWrapper_t *wrapper = malloc(sizeof(struct ScheduledCallbackWrapper_t));
+    GameTimer_ScheduledCallback_t *wrapper = malloc(sizeof(GameTimer_ScheduledCallback_t));
     wrapper->time = dynamo_time() + aDelay;
     wrapper->callback = NULL;
     wrapper->luaCallback = aCallback;
     wrapper->context = NULL;
+    wrapper->repeats = aRepeats;
+    wrapper->lastFired = aTimer->elapsed;
     llist_pushValue(aTimer->scheduledCallbacks, wrapper);
+    
+    return wrapper;
 }
 
-static void _callScheduledCallbackIfNeeded(struct ScheduledCallbackWrapper_t *aWrapper, GameTimer_t *aTimer)
+bool gameTimer_unscheduleCallback(GameTimer_t *aTimer, GameTimer_ScheduledCallback_t *aCallback)
 {
-    if(aWrapper->time > aTimer->elapsed)
+    return llist_deleteValue(aTimer->scheduledCallbacks, aCallback);
+}
+
+static void _callScheduledCallbackIfNeeded(GameTimer_ScheduledCallback_t *aWrapper, GameTimer_t *aTimer)
+{
+    if(aWrapper->repeats) {
+        if((aTimer->elapsed - aWrapper->lastFired) > aWrapper->time)
+            aWrapper->lastFired = aTimer->elapsed;
+        else
+            return;
+    } else if(aWrapper->time > aTimer->elapsed)
         return;
 
     if(aWrapper->callback)
@@ -109,7 +119,8 @@ static void _callScheduledCallbackIfNeeded(struct ScheduledCallbackWrapper_t *aW
         luaCtx_pushScriptHandler(GlobalLuaContext, aWrapper->luaCallback);
         luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
     }
-    llist_deleteValue(aTimer->scheduledCallbacks, aWrapper);
+    if(!aWrapper->repeats)
+        llist_deleteValue(aTimer->scheduledCallbacks, aWrapper);
 }
 
 

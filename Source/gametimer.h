@@ -21,7 +21,16 @@ typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
 /*!
 	A callback that is called after a specified duration.
 */
-typedef void (*GameTimer_scheduledCallback_t)(GameTimer_t *aTimer, void *aContext);
+typedef void (*GameTimer_scheduledCallbackInvoke_t)(GameTimer_t *aTimer, void *aContext);
+
+typedef struct _GameTimer_ScheduledCallback {
+    GLMFloat time; // Interpreted as an interval if the callback repeats
+    bool repeats;
+    GameTimer_scheduledCallbackInvoke_t callback;
+    int luaCallback;
+    void *context;
+    GLMFloat lastFired;
+} GameTimer_ScheduledCallback_t;
 
 /*!
 	A game timer
@@ -60,11 +69,15 @@ extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 /*!
 	Executes the given callback after a given delay.
 */
-extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
+extern GameTimer_ScheduledCallback_t *gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallbackInvoke_t aCallback, bool aRepeats, void *aContext);
 /*!
     Executes the given Lua callback after a given delay.
 */
-extern void gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback);
+extern GameTimer_ScheduledCallback_t *gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback, bool aRepeats);
+/*
+    Unschedules a callback.
+*/
+extern bool gameTimer_unscheduleCallback(GameTimer_t *aTimer, GameTimer_ScheduledCallback_t *aCallback);
 
 // Returns the time in seconds
 extern GLMFloat dynamo_globalTime();

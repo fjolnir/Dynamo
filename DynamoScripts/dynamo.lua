@@ -53,13 +53,13 @@ extern bool scene_insertRenderable(Scene_t *aScene, void *aRenderableToInsert, v
 extern bool scene_deleteRenderable(Scene_t *aScene, void *aRenderable);
 typedef struct _GameTimer GameTimer_t;
 typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
-typedef void (*GameTimer_scheduledCallback_t)(GameTimer_t *aTimer, void *aContext);
 struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpdate; GLMFloat desiredInterval;  long ticks; GameTimer_updateCallback_t updateCallback; int luaUpdateCallback; LinkedList_t *scheduledCallbacks;};
 extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
-//extern void gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallback_t aCallback, void *aContext);
-extern void gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback);
+typedef struct _GameTimer_ScheduledCallback GameTimer_ScheduledCallback_t;
+extern GameTimer_ScheduledCallback_t *gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback, bool aRepeats);
+bool gameTimer_unscheduleCallback(GameTimer_t *aTimer, GameTimer_ScheduledCallback_t *aCallback);
 extern GLMFloat dynamo_globalTime();
 extern GLMFloat dynamo_time();
 typedef struct _Texture { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; vec3_t location;  GLuint id; vec2_t size; vec2_t pxAlignInset; void *subtextures; } Texture_t;
@@ -282,7 +282,8 @@ function dynamo.log(...)
 	lib._dynamo_log(prefix..table.concat({...}, ", "))
 end
 
-
+dynamo.registerCallback = function(lambda) return dynamo_registerCallback(lambda) end
+dynamo.unregisterCallback = function(id) return dynamo_unregisterCallback(id) end
 --
 -- Textures
 
@@ -492,7 +493,7 @@ ffi.metatype("InputManager_t", {
 	__index = {
 		addObserver = function(self, desc)
 			local observer = lib.input_createObserver(desc.type, nil, desc.charCode, desc.metaData)
-            observer.luaHandlerCallback = dynamo_registerCallback(desc.callback)
+			observer.luaHandlerCallback = dynamo.registerCallback(desc.callback)
 			lib.input_addObserver(self, observer)
 			return _obj_addToGC(observer)
 		end,
@@ -523,25 +524,32 @@ ffi.metatype("GameTimer_t", {
 	__index = {
 		step = lib.gameTimer_step,
 		interpolation = lib.gameTimer_interpolationSinceLastUpdate,
-		afterDelay = function(self, delay, lambda)
-			lib.gameTimer_afterDelay_luaCallback(self, delay, dynamo_registerCallback(lambda))
+		afterDelay = function(self, delay, callback, repeats)
+			repeats = repeats or false
+			if type(callback) ~= "number" then
+				callback = dynamo.registerCallback(callback)
+			end
+			return lib.gameTimer_afterDelay_luaCallback(self, delay, callback, repeats)
 		end,
-        setUpdateHandler = function(self, lambda)
-            local oldHandler = self.luaUpdateCallback
-            self.luaUpdateCallback = dynamo_registerCallback(lambda)
-            if oldHandler ~= -1 then
-                dynamo_unregisterCallback(oldHandler)
-            end
-        end
+		unschedule = function(self, callback)
+			return lib.gameTimer_unscheduleCallback(self, callback)
+		end,
+		setUpdateHandler = function(self, lambda)
+			local oldHandler = self.luaUpdateCallback
+			self.luaUpdateCallback = dynamo.registerCallback(lambda)
+			if oldHandler ~= -1 then
+				dynamo_unregisterCallback(oldHandler)
+			end
+		end
 	}
 })
 
 local _createTimer = function(desiredFPS, updateCallback)
-    local timer = lib.gameTimer_create(desiredFPS, nil)
-    if updateCallback then
-        timer:setUpdateHandler(updateCallback)
-    end
-    return _obj_addToGC(timer)
+	local timer = lib.gameTimer_create(desiredFPS, nil)
+	if updateCallback then
+		timer:setUpdateHandler(updateCallback)
+	end
+	return _obj_addToGC(timer)
 end
 
 dynamo.globalTime = lib.dynamo_globalTime
@@ -554,7 +562,7 @@ math.randomseed(dynamo.globalTime())
 
 function dynamo.renderable(lambda)
 	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.cast("Class_t*", lib.Class_Renderable)))
-	drawable.luaDisplayCallback = dynamo_registerCallback(lambda)
+	drawable.luaDisplayCallback = dynamo.registerCallback(lambda)
 	return _obj_addToGC(drawable)
 end
 
@@ -801,11 +809,11 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	assert(dynamo.initialized == false)
 	dynamo.initialized = true
 
-    gl.glEnable(gl.GL_BLEND);
-    gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA);
-    gl.glDisable(gl.GL_CULL_FACE);
-    gl.glDisable(gl.GL_DEPTH_TEST);
-    
+	gl.glEnable(gl.GL_BLEND);
+	gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA);
+	gl.glDisable(gl.GL_CULL_FACE);
+	gl.glDisable(gl.GL_DEPTH_TEST);
+
 	dynamo.renderer = _createRenderer(viewport)
 	lib.draw_init(dynamo.renderer)
 	dynamo.renderer:handleResize(viewport)
@@ -862,4 +870,3 @@ function dynamo.cycle()
 end
 
 return dynamo
-
