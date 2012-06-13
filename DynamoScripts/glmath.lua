@@ -382,26 +382,43 @@ matrix_stack_t = ffi.metatype("matrix_stack_t",
 	}
 })
 
-vec2_type = ffi.typeof("vec2_t")
-vec3_type = ffi.typeof("vec3_t")
-vec4_type = ffi.typeof("vec4_t")
-quat_type = ffi.typeof("quat_t")
+-- Bezier curve
+bezier_t = ffi.metatype("bezier_t",
+{
+	__index = {
+		getPoint = function(curve, t, offset)
+			if offset == nil then
+				return C._bezier_getPoint(curve, t)
+			else
+				return C._bezier_getPointWithOffset(curve, t, offset)
+			end
+		end,
+		getFirstDerivative = C._bezier_firstDerivative,
+		
+	}
+})
+
+bezier = function(c1, c2, c3, c4)
+	local curve = ffi.new(bezier_t)
+	curve.controlPoints = {c1, c2, c3, c4}
+	return curve
+end
 
 vec2 = function(x,y)
-    return ffi.new(vec2_type, {{x,y}})
+    return ffi.new(vec2_t, {{x,y}})
 end
 
 vec3 = function(x,y,z)
-    return ffi.new(vec3_type, {{x,y,z}})
+    return ffi.new(vec3_t, {{x,y,z}})
 end
 
 vec4 = function(x,y,z,w)
-    return ffi.new(vec4_type, {{x,y,z,w}})
+    return ffi.new(vec4_t, {{x,y,z,w}})
 end
 rgba = vec4
 
 quat = function(x,y,z,w)
-    return ffi.new(quat_type, {{x,y,z,w}})
+    return ffi.new(quat_t, {{x,y,z,w}})
 end
 
 function rgb(r,g,b,a)
