@@ -20,10 +20,18 @@ void draw_init(Renderer_t *aDefaultRenderer)
 	if(!gTexturedShader) {
 		gTexturedShader = obj_retain(shader_loadFromFiles((const char*)texturedVSH, (const char*)texturedFSH));
 		gTexturedShader->uniforms[kShader_colorUniform] = shader_getUniformLocation(gTexturedShader, "u_color");
-	}
+        shader_makeActive(gTexturedShader);
+        glEnableVertexAttribArray(gTexturedShader->attributes[kShader_positionAttribute]);
+        glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
+        shader_makeInactive(gTexturedShader);
+    }
 	if(!gColoredShader) {
 		gColoredShader = obj_retain(shader_loadFromFiles((const char*)coloredVSH, (const char*)coloredFSH));
 		gColoredShader->attributes[kShader_colorAttribute] = shader_getAttributeLocation(gColoredShader, "a_color");
+        shader_makeActive(gColoredShader);
+        glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
+        glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
+        shader_makeInactive(gColoredShader);
 	}
 }
 
@@ -70,9 +78,7 @@ void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t 
 	glUniform4fv(gTexturedShader->uniforms[kShader_colorUniform], 1, aColor.f);
 
 	glVertexAttribPointer(gTexturedShader->attributes[kShader_positionAttribute], 3, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_positionAttribute]);
 	glVertexAttribPointer(gTexturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
-	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -155,9 +161,7 @@ void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffs
 	glUniform4fv(gTexturedShader->uniforms[kShader_colorUniform], 1, white.f);
 
 	glVertexAttribPointer(gTexturedShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_positionAttribute]);
 	glVertexAttribPointer(gTexturedShader->attributes[kShader_texCoord0Attribute], 2, GL_FLOAT, GL_FALSE, 0, texCoords);
-	glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
 
 	glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, indices);
 
@@ -196,9 +200,7 @@ void draw_rect(vec2_t aCenter, vec2_t aSize, float aAngle, vec4_t aColor, bool a
 	shader_updateMatrices(gColoredShader, _renderer);
 
 	glVertexAttribPointer(gColoredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
 	glVertexAttribPointer(gColoredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
-	glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
 
 	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, 4);
 
@@ -214,12 +216,11 @@ void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle
 	vec4_t colors[aSubdivisions];
 	float twoPi = 2.0f*M_PI;
 	int count = 0;
-	for(float theta = 0.0f; (twoPi - theta) > 0.001; theta += twoPi/(float)aSubdivisions) {
+	for(float theta = twoPi; theta > 0.001; theta -= twoPi/(float)aSubdivisions) {
 		colors[count/2] = aColor;
 		vertices[count++] = cosf(theta) * aRadii.w;
 		vertices[count++] = sinf(theta) * aRadii.h;
 	}
-
 
 	// Translate&rotate the ellipse into it's target location
 	matrix_stack_push(_renderer->worldMatrixStack);
@@ -230,9 +231,9 @@ void draw_ellipse(vec2_t aCenter, vec2_t aRadii, int aSubdivisions, float aAngle
 	shader_updateMatrices(gColoredShader, _renderer);
 
 	glVertexAttribPointer(gColoredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
+    glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
 	glVertexAttribPointer(gColoredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
-	glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
+    glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
 
 	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, aSubdivisions);
 
@@ -269,9 +270,7 @@ void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool 
 	shader_updateMatrices(gColoredShader, _renderer);
 
 	glVertexAttribPointer(gColoredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, aVertices);
-	glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
 	glVertexAttribPointer(gColoredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
-	glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
 
 	glDrawArrays(aShouldFill ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, aNumberOfVertices);
 
@@ -287,9 +286,7 @@ void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor)
 	shader_updateMatrices(gColoredShader, _renderer);
 
 	glVertexAttribPointer(gColoredShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(gColoredShader->attributes[kShader_positionAttribute]);
 	glVertexAttribPointer(gColoredShader->attributes[kShader_colorAttribute], 4, GL_FLOAT, GL_FALSE, 0, colors);
-	glEnableVertexAttribArray(gColoredShader->attributes[kShader_colorAttribute]);
 
 	glDrawArrays(GL_LINE_STRIP, 0, 2);
 
