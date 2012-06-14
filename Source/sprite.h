@@ -55,6 +55,7 @@ typedef struct _SpriteBatch {
     RENDERABLE_GUTS
     int spriteCount;
 	LinkedList_t *sprites;
+    unsigned vbo, ibo, idxCount, idxCapacity;
 } SpriteBatch_t;
 extern Class_t Class_SpriteBatch;
 
@@ -77,7 +78,7 @@ extern void sprite_step(Sprite_t *aSprite);
 */
 extern SpriteBatch_t *spriteBatch_create();
 /*!
- Addse the given sprite to the batch.
+ Adds the given sprite to the batch.
 */
 extern void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
 
@@ -90,6 +91,4 @@ extern bool spriteBatch_insertSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite, S
  Removes the given sprite from the batch.
 */
 extern bool spriteBatch_deleteSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
-
-
 #endif
