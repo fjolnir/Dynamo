@@ -93,7 +93,7 @@ extern void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor
 extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
 typedef struct _SpriteAnimation { int numberOfFrames; int currentFrame; bool loops; } SpriteAnimation_t;
 typedef struct _Sprite { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TextureAtlas_t *atlas; vec3_t location; vec2_t size; float scale, angle; bool flippedHorizontally; bool flippedVertically; int activeAnimation;  SpriteAnimation_t *animations; } Sprite_t;
-typedef struct _SpriteBatch { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TextureAtlas_t *atlas; int spriteCount; LinkedList_t *sprites; } SpriteBatch_t;
+typedef struct _SpriteBatch { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; int spriteCount; LinkedList_t *sprites; unsigned vao, vbo, vertCount, vertCapacity; } SpriteBatch_t;
 extern Class_t Class_SpriteBatch;
 extern Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity);
 extern SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames);
@@ -811,7 +811,8 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 
 	gl.glEnable(gl.GL_BLEND);
 	gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA);
-	gl.glDisable(gl.GL_CULL_FACE);
+	gl.glEnable(gl.GL_CULL_FACE);
+    gl.glFrontFace(gl.GL_CW);
 	gl.glDisable(gl.GL_DEPTH_TEST);
 
 	dynamo.renderer = _createRenderer(viewport)
