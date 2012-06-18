@@ -67,6 +67,10 @@ extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 */
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
 /*!
+    Resets the timer to 0.
+*/
+extern void gameTimer_reset(GameTimer_t *aTimer);
+/*!
 	Executes the given callback after a given delay.
 */
 extern GameTimer_ScheduledCallback_t *gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallbackInvoke_t aCallback, bool aRepeats, void *aContext);

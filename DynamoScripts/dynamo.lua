@@ -57,6 +57,7 @@ struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpd
 extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
+extern void gameTimer_reset(GameTimer_t *aTimer);
 typedef struct _GameTimer_ScheduledCallback GameTimer_ScheduledCallback_t;
 extern GameTimer_ScheduledCallback_t *gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback, bool aRepeats);
 bool gameTimer_unscheduleCallback(GameTimer_t *aTimer, GameTimer_ScheduledCallback_t *aCallback);
@@ -540,7 +541,8 @@ ffi.metatype("GameTimer_t", {
 			if oldHandler ~= -1 then
 				dynamo_unregisterCallback(oldHandler)
 			end
-		end
+		end,
+		reset = lib.gameTimer_reset
 	}
 })
 

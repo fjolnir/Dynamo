@@ -65,6 +65,13 @@ GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer)
 	return aTimer->timeSinceLastUpdate / aTimer->desiredInterval;
 }
 
+void gameTimer_reset(GameTimer_t *aTimer)
+{
+    aTimer->elapsed = 0;
+    aTimer->ticks = 0;
+    aTimer->timeSinceLastUpdate = 0;
+}
+
 #pragma mark - Scheduled callbacks
 
 GameTimer_ScheduledCallback_t *gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallbackInvoke_t aCallback, bool aRepeats, void *aContext)
