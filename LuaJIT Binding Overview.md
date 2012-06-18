@@ -131,12 +131,12 @@ Which returns a BGM object with the following methods/properties
 # Sprite
 To create a sprite you'd use
 
-`dynamo.sprite.create(location, size, atlas, animations)`
+`dynamo.sprite.create(location, atlas, size, animations)`
 
-* location(vec3): The location of the sprite in game space
-* size(vec2): The size of the sprite in game space (Texture is stretched to fit)
-* atlas: The texture atlas to sample
-* animations: An array of animation descriptions each one as follows: `{ numberOfFrames=number, currentFrame=number, loops=boolean }`
+* location(vec3/2): The location of the sprite in game space
+* atlas: The texture atlas to sample 
+* size(vec2): The size of the sprite in game space (Texture is stretched to fit) – Optional, if omitted the atlas size is used
+* animations: An array of animation descriptions each one as follows: `{ numberOfFrames=number, currentFrame=number, loops=boolean }` – Optional, if omitted a single, single frame animation is created
 
 Returns a sprite object with the following methods/properties
 
@@ -148,6 +148,7 @@ Returns a sprite object with the following methods/properties
 * `sprite.flippedVertically = boolean`
 * `sprite.flippedHorizontally = boolean`
 * `sprite.activeAnimation = number` The active animation (0 being the bottom one)
+* `sprite.opacity = number` The opacity the sprite is drawn at (0.0-1.0)
 
 
 ## Batch sprite
@@ -246,7 +247,7 @@ The time component consists of the `GameTimer` object & the `time` function. Gam
 * `dynamo.timer.updateCallback` a callback function that is called once per game iteration
 * `dynamo.timer:interpolation()` Calculates the current interpolation between game updates. (Useful for renderables to calculate a smooth interpolation)
 * `dynamo.timer:afterDelay(delay, function)` Calls a `function` after a set `delay`
-
+* `dynamo.timer:reset()` Resets the timer to 0
 
 <a name="map"></a>
 # Map
