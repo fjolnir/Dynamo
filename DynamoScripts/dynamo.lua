@@ -805,9 +805,8 @@ ffi.metatype("WorldConstraint_t", {
 
 --
 -- Lifecycle/HighLevelInterface functions
-
 dynamo.initialized = false
-function dynamo.init(viewport, desiredFPS, updateCallback)
+function dynamo.init(viewport, desiredFPS, ...)
 	assert(dynamo.initialized == false)
 	dynamo.initialized = true
 
@@ -821,14 +820,19 @@ function dynamo.init(viewport, desiredFPS, updateCallback)
 	lib.draw_init(dynamo.renderer)
 	dynamo.renderer:handleResize(viewport)
 
-	dynamo.timer = _createTimer(desiredFPS, updateCallback)
+	dynamo.timer = _createTimer(desiredFPS, nil)
 
 	dynamo.input.manager = _createInputManager()
-	dynamo.soundManager = _createSoundManager()
+	dynamo.soundManager  = _createSoundManager()
 	lib.soundManager_makeCurrent(dynamo.soundManager)
 
 	dynamo.world = _createWorld()
 	dynamo.world.gravity = vec2(0,-100)
+
+	local startCallback = rawget(_G, "dynamoStartCallback")
+	if startCallback ~= nil then
+		startCallback(...)
+	end
 
 	return true
 end
