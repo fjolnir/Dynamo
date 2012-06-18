@@ -88,16 +88,17 @@ void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t 
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void draw_texturePortion(vec3_t aCenter, Texture_t *aTexture, TextureRect_t aTextureArea, float aScale, float aAngle, bool aFlipHorizontal, bool aFlipVertical)
+void draw_texturePortion(vec3_t aCenter, Texture_t *aTexture, TextureRect_t aTextureArea, float aScale, float aAngle, float aAlpha, bool aFlipHorizontal, bool aFlipVertical)
 {
+    vec4_t color = { 1.0f, 1.0f, 1.0f, aAlpha };
 	vec2_t quadSize = vec2_mul(aTexture->size, aTextureArea.size);
 	quadSize = vec2_scalarMul(quadSize, aScale);
-	draw_quad(aCenter, quadSize, aTexture, aTextureArea, kColorWhite, aAngle, aFlipHorizontal, aFlipVertical);
+	draw_quad(aCenter, quadSize, aTexture, aTextureArea, color, aAngle, aFlipHorizontal, aFlipVertical);
 }
 
 void draw_texture(vec3_t aCenter, Texture_t *aTexture, float aScale, float aAngle, bool aFlipHorizontal, bool aFlipVertical)
 {
-	draw_texturePortion(aCenter, aTexture, kTextureRectEntire, aScale, aAngle, aFlipHorizontal, aFlipVertical);
+	draw_texturePortion(aCenter, aTexture, kTextureRectEntire, aScale, aAngle, 1.0, aFlipHorizontal, aFlipVertical);
 }
 
 void draw_textureAtlas_getVertices(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints,

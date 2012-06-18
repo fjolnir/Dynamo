@@ -36,7 +36,7 @@ extern void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, Texture
 /*!
 	Draws a specified portion of a texture onto a quad of the same size as the portion sampled
 */
-extern void draw_texturePortion(vec3_t aCenter, Texture_t *aTexture, TextureRect_t aTextureArea, float aScale, float aAngle, bool aFlipHorizontal, bool aFlipVertical);
+extern void draw_texturePortion(vec3_t aCenter, Texture_t *aTexture, TextureRect_t aTextureArea, float aScale, float aAngle, float aAlpha, bool aFlipHorizontal, bool aFlipVertical);
 
 /*!
 	Draws a texture onto a quad of the same size

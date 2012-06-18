@@ -83,7 +83,7 @@ typedef union _rect_t rect_t;
 extern void draw_init(Renderer_t *aDefaultRenderer);
 extern void draw_cleanup();
 extern void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t aTextureArea, vec4_t aColor, float aAngle, bool aFlipHorizontal, bool aFlipVertical);
-extern void draw_texturePortion(vec3_t aCenter, Texture_t *aTexture, TextureRect_t aTextureArea, float aScale, float aAngle, bool aFlipHorizontal, bool aFlipVertical);
+extern void draw_texturePortion(vec3_t aCenter, Texture_t *aTexture, TextureRect_t aTextureArea, float aScale, float aAngle, float aAlpha, bool aFlipHorizontal, bool aFlipVertical);
 extern void draw_texture(vec3_t aCenter, Texture_t *aTexture, float aScale, float aAngle, bool aFlipHorizontal, bool aFlipVertical);
 extern void draw_textureAtlas(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints);
 extern void draw_textureAtlas_getVertices(TextureAtlas_t *aAtlas, int aNumberOfTiles, vec2_t *aOffsets, vec2_t *aCenterPoints, vec2_t **aoVertices, vec2_t **aoTexCoords, int *aoNumberOfVertices, GLuint **aoIndices, int *aoNumberOfIndices);
@@ -93,7 +93,7 @@ extern void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t 
 extern void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool aShouldFill);
 extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
 typedef struct _SpriteAnimation { int numberOfFrames; int currentFrame; bool loops; } SpriteAnimation_t;
-typedef struct _Sprite { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TextureAtlas_t *atlas; vec3_t location; vec2_t size; float scale, angle; bool flippedHorizontally; bool flippedVertically; int activeAnimation;  SpriteAnimation_t *animations; } Sprite_t;
+typedef struct _Sprite { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TextureAtlas_t *atlas; vec3_t location; vec2_t size; float scale, angle, opacity; bool flippedHorizontally; bool flippedVertically; int activeAnimation;  SpriteAnimation_t *animations; } Sprite_t;
 typedef struct _SpriteBatch { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; int spriteCount; LinkedList_t *sprites; unsigned vao, vbo, vertCount, vertCapacity; } SpriteBatch_t;
 extern Class_t Class_SpriteBatch;
 extern Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity);

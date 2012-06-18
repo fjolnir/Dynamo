@@ -28,6 +28,7 @@ Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, 
 	out->size = aSize;
 	out->scale = 1.0f;
 	out->angle = 0.0f;
+    out->opacity = 1.0f;
 	out->atlas = obj_retain(aAtlas);
 	out->flippedHorizontally = false;
 	out->flippedVertically = false;
@@ -72,7 +73,7 @@ void _sprite_draw(Renderer_t *aRenderer, Sprite_t *aSprite, GLMFloat aTimeSinceL
 	SpriteAnimation_t *animation = &aSprite->animations[aSprite->activeAnimation];
 
 	TextureRect_t cropRect = texAtlas_getTextureRect(aSprite->atlas, animation->currentFrame, aSprite->activeAnimation);
-	draw_texturePortion(aSprite->location, aSprite->atlas->texture, cropRect, aSprite->scale, aSprite->angle, aSprite->flippedHorizontally, aSprite->flippedVertically);
+	draw_texturePortion(aSprite->location, aSprite->atlas->texture, cropRect, aSprite->scale, aSprite->angle, aSprite->opacity, aSprite->flippedHorizontally, aSprite->flippedVertically);
 }
 
 

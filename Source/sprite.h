@@ -40,7 +40,7 @@ typedef struct _Sprite {
 	TextureAtlas_t *atlas;
 	vec3_t location;
 	vec2_t size;
-	float scale, angle;
+	float scale, angle, opacity;
 	bool flippedHorizontally;
 	bool flippedVertically;
 	int activeAnimation; // The y offset of the active animation
@@ -49,7 +49,7 @@ typedef struct _Sprite {
 extern Class_t Class_Sprite;
 
 // A sprite batch enables multiple sprites sharing a texture atlas to be drawn in a single draw call
-// (Uses the atlas of the first sprite in the batch)
+// (Uses the atlas of the first sprite in the batch and does not support sprite opacity)
 typedef struct _SpriteBatch {
 	OBJ_GUTS
     RENDERABLE_GUTS
