@@ -47,6 +47,7 @@ struct _GameTimer {
 	GLMFloat elapsed;
 	GLMFloat timeSinceLastUpdate;
 	GLMFloat desiredInterval; // The minimum interval between updates
+    GLMFloat resetAt; // This value is subtracted from the elapsed time
 	long ticks;
 	GameTimer_updateCallback_t updateCallback;
     int luaUpdateCallback;

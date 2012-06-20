@@ -26,6 +26,7 @@ GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateC
 	out->updateCallback = aUpdateCallback;
     out->scheduledCallbacks = obj_retain(llist_create(NULL, &free));
     out->luaUpdateCallback = -1;
+    out->resetAt = 0;
 
 	return out;
 }
@@ -40,7 +41,7 @@ extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
 {
 	GLMFloat delta = aElapsed - aTimer->elapsed;
 	aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+delta);
-	aTimer->elapsed = aElapsed;
+	aTimer->elapsed = aElapsed - aTimer->resetAt;
     
     // Execute any scheduled callbacks
     llist_apply(aTimer->scheduledCallbacks, (LinkedListApplier_t)&_callScheduledCallbackIfNeeded, aTimer);
@@ -67,6 +68,7 @@ GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer)
 
 void gameTimer_reset(GameTimer_t *aTimer)
 {
+    aTimer->resetAt = dynamo_time();
     aTimer->elapsed = 0;
     aTimer->ticks = 0;
     aTimer->timeSinceLastUpdate = 0;
