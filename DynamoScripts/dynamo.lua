@@ -53,7 +53,7 @@ extern bool scene_insertRenderable(Scene_t *aScene, void *aRenderableToInsert, v
 extern bool scene_deleteRenderable(Scene_t *aScene, void *aRenderable);
 typedef struct _GameTimer GameTimer_t;
 typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
-struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpdate; GLMFloat desiredInterval;  long ticks; GameTimer_updateCallback_t updateCallback; int luaUpdateCallback; LinkedList_t *scheduledCallbacks;};
+struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpdate; GLMFloat desiredInterval; GLMFloat resetAt; long ticks; GameTimer_updateCallback_t updateCallback; int luaUpdateCallback; LinkedList_t *scheduledCallbacks;};
 extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);

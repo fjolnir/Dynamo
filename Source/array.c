@@ -13,7 +13,7 @@ Array_t *array_create(int aCapacity, InsertionCallback_t aInsertionCallback, Rem
 {
 	Array_t *out = obj_create_autoreleased(&Class_Array);
 	out->capacity = aCapacity ? aCapacity : 4;
-	out->items = calloc(1, aCapacity);
+	out->items = malloc(aCapacity*sizeof(void*));
 	out->count = 0;
 	out->insertionCallback = aInsertionCallback;
 	out->removalCallback = aRemovalCallback;
@@ -52,8 +52,11 @@ void array_pop(Array_t *aArray)
 
 void array_resize(Array_t *aArray, int aNewCapacity)
 {
+  int oldCapacity = aArray->capacity;
 	aArray->capacity = aNewCapacity;
-	aArray->items = realloc(aArray->items, sizeof(void*)*aNewCapacity);
+  // We don't need to bother shrinking the array if the capacity is insignificantly small
+  if(aArray->capacity > oldCapacity || oldCapacity > 32)
+    aArray->items = realloc(aArray->items, sizeof(void*)*aNewCapacity);
 }
 
 bool array_containsPtr(Array_t *aArray, void *aPtr)
