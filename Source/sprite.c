@@ -24,6 +24,7 @@ Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, 
 {
 	Sprite_t *out = (Sprite_t*)obj_create_autoreleased(&Class_Sprite);
 	out->displayCallback = (RenderableDisplayCallback_t)&_sprite_draw;
+    out->luaDisplayCallback = -1;
 	out->location = aLocation;
 	out->size = aSize;
 	out->scale = 1.0f;
