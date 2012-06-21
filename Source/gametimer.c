@@ -39,9 +39,10 @@ void gameTimer_destroy(GameTimer_t *aTimer)
 
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
 {
+	aElapsed -= aTimer->resetAt;
 	GLMFloat delta = aElapsed - aTimer->elapsed;
 	aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+delta);
-	aTimer->elapsed = aElapsed - aTimer->resetAt;
+	aTimer->elapsed = aElapsed;
     
     // Execute any scheduled callbacks
     llist_apply(aTimer->scheduledCallbacks, (LinkedListApplier_t)&_callScheduledCallbackIfNeeded, aTimer);
