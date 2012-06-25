@@ -31,7 +31,7 @@ Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 	// Initialize the transform matrices
 	matrix_stack_push(out->worldMatrixStack);
 	matrix_stack_push(out->projectionMatrixStack);
-
+    
 	return out;
 }
 
