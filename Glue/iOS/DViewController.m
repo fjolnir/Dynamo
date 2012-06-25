@@ -24,9 +24,9 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 - (void)loadView
 {
-	GLKView *view =[[GLKView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+	GLKView *view = [[[GLKView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]] autorelease];
 	self.view = view;
-	[view release];
+
 	view.drawableColorFormat   = GLKViewDrawableColorFormatRGB565;
 	view.drawableDepthFormat   = GLKViewDrawableDepthFormatNone;
 	view.drawableStencilFormat = GLKViewDrawableStencilFormatNone;
@@ -109,7 +109,14 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 	luaCtx_addSearchPath(GlobalLuaContext, [dynamoScriptsPath fileSystemRepresentation]);
 	luaCtx_addSearchPath(GlobalLuaContext, [localScriptsPath fileSystemRepresentation]);
 
+    [self prepareLuaContext];
+    
 	dynamo_assert(luaCtx_executeFile(GlobalLuaContext, [_bootScriptPath fileSystemRepresentation]), "Lua error");
+}
+
+- (void)prepareLuaContext
+{
+    // Subclasses can hook in  here to initialize the lua context before the boot script is run
 }
 
 - (void)tearDownGL
