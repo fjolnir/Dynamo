@@ -58,6 +58,10 @@ World_t *world_create(void)
     out->staticEntity->world = out;
     out->staticEntity->owner = out;
     out->staticEntity->cpBody = out->cpSpace->staticBody;
+	out->staticEntity->luaUpdateHandler = -1;
+    out->staticEntity->luaPreCollisionHandler = -1;
+    out->staticEntity->luaCollisionHandler = -1;
+    out->staticEntity->luaPostCollisionHandler = -1;
     out->cpSpace->staticBody->data = out->staticEntity;
     out->staticEntity->shapes = obj_retain(llist_create((InsertionCallback_t)&obj_retain, &obj_release));
     

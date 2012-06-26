@@ -1,4 +1,5 @@
 #include "scene.h"
+#include "luacontext.h"
 
 static void scene_destroy(Scene_t *self);
 static void scene_draw(Renderer_t *aRenderer, Scene_t *aScene, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
@@ -15,6 +16,7 @@ Scene_t *scene_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 	out->transform = GLMMat4_identity;
     out->renderables = obj_retain(llist_create((InsertionCallback_t)&obj_retain, (RemovalCallback_t)&obj_release));
     out->displayCallback = (RenderableDisplayCallback_t)&scene_draw;
+	out->luaDisplayCallback = -1;
 	return out;
 }
 
@@ -31,7 +33,14 @@ static void scene_draw(Renderer_t *aRenderer, Scene_t *aScene, GLMFloat aTimeSin
 	if(item) {
 		do {
             Renderable_t *renderable = item->value;
-            renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
+            if(renderable->displayCallback)
+				renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
+			if(renderable->luaDisplayCallback != -1) {
+				luaCtx_pushScriptHandler(GlobalLuaContext, renderable->luaDisplayCallback);
+				luaCtx_pushnumber(GlobalLuaContext, aTimeSinceLastFrame);
+				luaCtx_pushnumber(GlobalLuaContext, aInterpolation);
+				luaCtx_pcall(GlobalLuaContext, 2, 0, 0);
+			}
 		} while( (item = item->next));
 	}
     matrix_stack_pop(aRenderer->worldMatrixStack);

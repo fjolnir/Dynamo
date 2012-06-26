@@ -45,7 +45,7 @@ extern void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable);
 extern void renderer_popRenderable(Renderer_t *aRenderer);
 extern bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift);
 extern bool renderer_deleteRenderable(Renderer_t *aRenderer, void *aRenderable);
-typedef struct _Scene { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; LinkedList_t *renderables; mat4_t transform; } Scene_t;
+typedef struct _Scene { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; LinkedList_t *renderables; mat4_t transform; } Scene_t;
 extern Scene_t *scene_create();
 extern void scene_pushRenderable(Scene_t *aScene, void *aRenderable);
 extern void scene_popRenderable(Scene_t *aScene);
@@ -444,7 +444,7 @@ ffi.metatype("Scene_t", {
 })
 
 function dynamo.scene.create(renderables, initialTransform)
-	objects = objects or {}
+	renderables = renderables or {}
 	initialTransform = initialTransform or mat4_identity
 
 	local scene = lib.scene_create()
