@@ -15,37 +15,51 @@ Class_t Class_Texture = {
 
 const TextureRect_t kTextureRectEntire = { 0.0f, 0.0f, 1.0f, 1.0f };
 
+static inline bool _isPowerOfTwo(int n)
+{
+    return (n != 0) && ((n & (n - 1)) == 0);
+}
+
 Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical)
 {
 	Texture_t *out = obj_create_autoreleased(&Class_Texture);
 	out->displayCallback = (RenderableDisplayCallback_t)&_texture_draw;
-
+    
 	Png_t *png = png_load(aPath);
 	if (!png) {
 		dynamo_log("Unable to load png file from %s", aPath);
 		return NULL;
 	}
-
+    
 	glGenTextures(1, &out->id);
 	glBindTexture(GL_TEXTURE_2D, out->id);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
+    
 	glTexImage2D(GL_TEXTURE_2D, 0, png->hasAlpha ? GL_RGBA : GL_RGB, png->width, png->height,
 	             0, png->hasAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, png->data);
     glError()
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, aRepeatHorizontal ? GL_REPEAT : GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, aRepeatVertical   ? GL_REPEAT : GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    // Mipmaps can only be generated if the texture size is a power of 2
+    if(_isPowerOfTwo(png->width) && _isPowerOfTwo(png->height)
+       && !aRepeatHorizontal && !aRepeatVertical) {
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glError()
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        if(!_isPowerOfTwo(png->width) || !_isPowerOfTwo(png->height))
+            dynamo_assert(false, "Repeating textures must have power of 2 dimensions");
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    }
+    glError()
     
-    glGenerateMipmap(GL_TEXTURE_2D);
-
 	out->size = vec2_create(png->width, png->height);
 	out->pxAlignInset = vec2_create(
-		(1.0f/out->size.w) * 0.5,
-		(1.0f/out->size.h) * 0.5
-	);
-
+                                    (1.0f/out->size.w) * 0.5,
+                                    (1.0f/out->size.h) * 0.5
+                                    );
+    
 	return out;
 }
 
@@ -60,10 +74,10 @@ void texture_destroy(Texture_t *aTexture)
 TextureRect_t textureRectangle_createWithPixelCoordinates(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize)
 {
 	return textureRectangle_create(
-		aTexture->pxAlignInset.w + aOrigin.x/aTexture->size.w,
-		aTexture->pxAlignInset.h + aOrigin.y/aTexture->size.h,
-		aSize.w/aTexture->size.w - aTexture->pxAlignInset.w,
-		aSize.h/aTexture->size.h - aTexture->pxAlignInset.h);
+                                   aTexture->pxAlignInset.w + aOrigin.x/aTexture->size.w,
+                                   aTexture->pxAlignInset.h + aOrigin.y/aTexture->size.h,
+                                   aSize.w/aTexture->size.w - aTexture->pxAlignInset.w,
+                                   aSize.h/aTexture->size.h - aTexture->pxAlignInset.h);
 }
 TextureRect_t textureRectangle_createWithSizeInPixels(Texture_t *aTexture, vec2_t aSize)
 {
@@ -105,7 +119,7 @@ static Dictionary_t *_texture_getSubTexInfoDict(Texture_t *aTexture, const char 
     
     Dictionary_t *frameDef = dict_get(info, "frame");
     dynamo_assert(frameDef != NULL, "Invalid texture packing data!");
-
+    
     return frameDef;
 }
 

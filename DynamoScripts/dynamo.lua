@@ -174,10 +174,10 @@ typedef void (*WorldEntity_UpdateHandler)(WorldEntity_t *aEntity);
 extern Class_t Class_WorldEntity;
 struct _WorldEntity { _Obj_guts _guts; World_t *world;  Obj_t *owner;  void *cpBody; LinkedList_t *shapes; WorldEntity_UpdateHandler updateHandler; WorldEntity_CollisionHandler preCollisionHandler; WorldEntity_CollisionHandler collisionHandler; WorldEntity_CollisionHandler postCollisionHandler; int luaUpdateHandler; int luaPreCollisionHandler; int luaCollisionHandler; int luaPostCollisionHandler; };
 struct _WorldShape { _Obj_guts _guts; void *cpShape;};
-struct _World { _Obj_guts _guts; void *cpSpace; LinkedList_t *entities; WorldEntity_t *staticEntity;};
+struct _World { _Obj_guts _guts; void *cpSpace; LinkedList_t *entities; WorldEntity_t *staticEntity; bool isPaused; };
 typedef enum { kWorldJointType_Pin,    kWorldJointType_Slide,    kWorldJointType_Pivot,    kWorldJointType_Groove,    kWorldJointType_DampedSpring,    kWorldJointType_DampedRotarySpring,    kWorldJointType_RotaryLimit,    kWorldJointType_Ratchet,    kWorldJointType_Gear,    kWorldJointType_SimpleMotor } WorldJointType_t;
 extern Class_t Class_WorldConstraint;
-typedef struct _WorldConstraint {    World_t *world;     WorldEntity_t *a, *b;    WorldJointType_t type;    void *cpConstraint;} WorldConstraint_t;
+typedef struct _WorldConstraint {    World_t *world;     WorldEntity_t *a, *b;    WorldJointType_t type;    void *cpConstraint; } WorldConstraint_t;
 extern World_t *world_create(void);
 extern void world_step(World_t *aWorld, GameTimer_t *aTimer);
 extern void world_setGravity(World_t *aWorld, vec2_t aGravity);
@@ -303,8 +303,10 @@ ffi.metatype("Texture_t", {
 	}
 })
 
-function dynamo.texture.load(path, packingInfoPath)
-	local tex = lib.texture_loadFromPng(path, false, false)
+function dynamo.texture.load(path, packingInfoPath, tile)
+	tile = tile or false
+
+	local tex = lib.texture_loadFromPng(path, tile, tile)
 	if tex == nil then
 		print("Couldn't find texture at path", path)
 		return nil
@@ -634,6 +636,26 @@ ffi.metatype("TMXTileset_t", {
 
 dynamo.map.load = function(...) return _obj_addToGC(lib.tmx_readMapFile(...)) end
 
+--
+-- Backgrounds
+
+dynamo.background = {}
+dynamo.background.create = function(layers)
+	if layers == nil or #layers == 0 then
+		error("No layers provided for background")
+	elseif #layers >= 4 then
+		error("Backgrounds only support up to 4 layers")
+	end
+	
+	local bg = lib.background_create()
+	local i = 0;
+	for _,layerInfo in pairs(layers) do
+		local layer = lib.background_createLayer(layerInfo.texture, layerInfo.depth)
+		lib.background_setLayer(bg, i, layer)
+		i = i+1
+	end
+	return _obj_addToGC(bg)
+end
 
 --
 -- Sound
@@ -809,9 +831,9 @@ dynamo.initialized = false
 function dynamo.init(viewport, desiredFPS, ...)
 	assert(dynamo.initialized == false)
 	dynamo.initialized = true
-
+	
 	gl.glEnable(gl.GL_BLEND);
-	gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
+	gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA)
 	gl.glEnable(gl.GL_CULL_FACE);
     gl.glFrontFace(gl.GL_CW);
 	gl.glDisable(gl.GL_DEPTH_TEST);
@@ -877,3 +899,4 @@ function dynamo.cycle()
 end
 
 return dynamo
+ynamo
