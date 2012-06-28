@@ -28,7 +28,7 @@ extern Class_t Class_BackgroundLayer;
 typedef struct _BackgroundLayer {
 	OBJ_GUTS;
 	Texture_t *texture;
-	float depth;
+	float depth, opacity;
 } BackgroundLayer_t;
 
 /*!

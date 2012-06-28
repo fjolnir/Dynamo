@@ -26,7 +26,11 @@ enum {
 	kBackground_layer0DepthUniform,
 	kBackground_layer1DepthUniform,
 	kBackground_layer2DepthUniform,
-	kBackground_layer3DepthUniform
+	kBackground_layer3DepthUniform,
+	kBackground_layer0OpacityUniform,
+	kBackground_layer1OpacityUniform,
+	kBackground_layer2OpacityUniform,
+	kBackground_layer3OpacityUniform
 };
 
 Background_t *background_create()
@@ -47,6 +51,10 @@ Background_t *background_create()
 		_backgroundShader->uniforms[kBackground_layer1DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer1Depth");
 		_backgroundShader->uniforms[kBackground_layer2DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer2Depth");
 		_backgroundShader->uniforms[kBackground_layer3DepthUniform] = shader_getUniformLocation(_backgroundShader, "u_layer3Depth");
+		_backgroundShader->uniforms[kBackground_layer0OpacityUniform] = shader_getUniformLocation(_backgroundShader, "u_layer0Opacity");
+		_backgroundShader->uniforms[kBackground_layer1OpacityUniform] = shader_getUniformLocation(_backgroundShader, "u_layer1Opacity");
+		_backgroundShader->uniforms[kBackground_layer2OpacityUniform] = shader_getUniformLocation(_backgroundShader, "u_layer2Opacity");
+		_backgroundShader->uniforms[kBackground_layer3OpacityUniform] = shader_getUniformLocation(_backgroundShader, "u_layer3Opacity");
 		_backgroundShader->uniforms[kShader_colormap1Uniform] = shader_getUniformLocation(_backgroundShader, "u_colormap1");
 		_backgroundShader->uniforms[kShader_colormap2Uniform] = shader_getUniformLocation(_backgroundShader, "u_colormap2");
 		_backgroundShader->uniforms[kShader_colormap3Uniform] = shader_getUniformLocation(_backgroundShader, "u_colormap3");
@@ -73,6 +81,7 @@ BackgroundLayer_t *background_createLayer(Texture_t *aTexture, float aDepth)
 	BackgroundLayer_t *out = obj_create_autoreleased(&Class_BackgroundLayer);
 	out->texture = obj_retain(aTexture);
 	out->depth = aDepth;
+	out->opacity = 1.0;
     
 	return out;
 }
@@ -111,35 +120,47 @@ static void _background_draw(Renderer_t *aRenderer, Background_t *aBackground, G
 	glUniform2f(_backgroundShader->uniforms[kBackground_offsetUniform], uvOffset.x, uvOffset.y);
 	glUniform2f(_backgroundShader->uniforms[kBackground_sizeUniform], textureSize.w, textureSize.h);
     
-	if(aBackground->layers[0]) {
+	BackgroundLayer_t *layer;
+	if((layer = aBackground->layers[0])) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, aBackground->layers[0]->texture->id);
+		glBindTexture(GL_TEXTURE_2D, layer->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap0Uniform],  0);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer0OpacityUniform], layer->opacity);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer0DepthUniform], layer->depth);
+	} else {
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer0OpacityUniform], 0.0);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer0DepthUniform], -1.0f);
 	}
-	if(aBackground->layers[1]) {
+	if((layer = aBackground->layers[1])) {
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, aBackground->layers[1]->texture->id);
+		glBindTexture(GL_TEXTURE_2D, layer->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap1Uniform], 1);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer1OpacityUniform], layer->opacity);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer1DepthUniform], layer->depth);
+	} else {
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer1OpacityUniform], 0.0);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer1DepthUniform], -1.0f);
 	}
-	if(aBackground->layers[2]) {
+	if((layer = aBackground->layers[2])) {
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, aBackground->layers[2]->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap2Uniform], 2);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer2OpacityUniform], layer->opacity);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer2DepthUniform], layer->depth);
+	} else {
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer2OpacityUniform], 0.0);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer2DepthUniform], -1.0f);
 	}
-	if(aBackground->layers[3]) {
+	if((layer = aBackground->layers[3])) {
 		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, aBackground->layers[3]->texture->id);
+		glBindTexture(GL_TEXTURE_2D, layer->texture->id);
 		glUniform1i(_backgroundShader->uniforms[kShader_colormap3Uniform], 3);
-	}
-    
-	glUniform1f(_backgroundShader->uniforms[kBackground_layer0DepthUniform],
-	            aBackground->layers[0] != NULL ? aBackground->layers[0]->depth : -1.0f);
-	glUniform1f(_backgroundShader->uniforms[kBackground_layer1DepthUniform],
-	            aBackground->layers[1] != NULL ? aBackground->layers[1]->depth : -1.0f);
-	glUniform1f(_backgroundShader->uniforms[kBackground_layer2DepthUniform],
-	            aBackground->layers[2] != NULL ? aBackground->layers[2]->depth : -1.0f);
-	glUniform1f(_backgroundShader->uniforms[kBackground_layer3DepthUniform],
-	            aBackground->layers[3] != NULL ? aBackground->layers[3]->depth : -1.0f);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer3OpacityUniform], layer->opacity);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer3DepthUniform], layer->depth);
+	} else {
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer3OpacityUniform], 0.0);
+		glUniform1f(_backgroundShader->uniforms[kBackground_layer3DepthUniform], -1.0f);
+    }
     
 	glVertexAttribPointer(_backgroundShader->attributes[kShader_positionAttribute], 2, GL_FLOAT, GL_FALSE, 0, vertices);
 	glEnableVertexAttribArray(_backgroundShader->attributes[kShader_positionAttribute]);

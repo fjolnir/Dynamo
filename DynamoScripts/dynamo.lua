@@ -103,7 +103,7 @@ extern SpriteBatch_t *spriteBatch_create();
 extern void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
 extern bool spriteBatch_insertSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite, Sprite_t *aSpriteToShift);
 extern bool spriteBatch_deleteSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite);
-typedef struct _BackgroundLayer { _Obj_guts _guts; Texture_t *texture; float depth;} BackgroundLayer_t;
+typedef struct _BackgroundLayer { _Obj_guts _guts; Texture_t *texture; float depth, opacity;} BackgroundLayer_t;
 typedef struct _Background { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; BackgroundLayer_t *layers[4]; vec2_t offset;} Background_t;
 extern Background_t *background_create();
 extern void background_setLayer(Background_t *aBackground, unsigned int aIndex, BackgroundLayer_t *aLayer);
@@ -651,6 +651,9 @@ dynamo.background.create = function(layers)
 	local i = 0;
 	for _,layerInfo in pairs(layers) do
 		local layer = lib.background_createLayer(layerInfo.texture, layerInfo.depth)
+		if layerInfo.opacity ~= nil then
+		     layer.opacity = layerInfo.opacity
+	    end
 		lib.background_setLayer(bg, i, layer)
 		i = i+1
 	end
@@ -899,4 +902,3 @@ function dynamo.cycle()
 end
 
 return dynamo
-ynamo
