@@ -70,6 +70,9 @@ World_t *world_create(void)
 
 void world_step(World_t *aWorld, GameTimer_t *aTimer)
 {
+	if(aWorld->isPaused == true)
+		return;
+
     float dt = 1.0/60.0;
     for(float t = 0.0f; t < aTimer->desiredInterval; t += dt)
         cpSpaceStep(aWorld->cpSpace, dt);

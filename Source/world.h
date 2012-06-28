@@ -108,6 +108,7 @@ struct _World {
     cpSpace *cpSpace;
     LinkedList_t *entities;
     WorldEntity_t *staticEntity;
+	bool isPaused;
 };
 
 /*!
