@@ -8,8 +8,8 @@ varying vec4 v_color;
 
 void main()
 {
-	mat4 mvp = u_projectionMatrix * u_worldMatrix;
-	gl_Position = mvp * a_position;
+    mat4 mvp = u_projectionMatrix * u_worldMatrix;
+    gl_Position = mvp * a_position;
 
-	v_color = a_color;
+    v_color = a_color;
 }

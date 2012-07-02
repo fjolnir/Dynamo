@@ -2,7 +2,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #if defined(__APPLE__)
-	#include <CoreFoundation/CoreFoundation.h>
+    #include <CoreFoundation/CoreFoundation.h>
 #endif
 
 typedef signed char BOOL;
@@ -21,7 +21,7 @@ bool util_pathForResource(const char *name, const char *ext, const char *dir, ch
     #if defined(ANDROID)
         APPEND("/data/data/")
         APPEND(ANDROID_APP_IDENTIFIER)
-		APPEND("/files/GameResources/")
+        APPEND("/files/GameResources/")
     #elif defined(__APPLE__)
         CFURLRef resUrl = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
         CFURLGetFileSystemRepresentation(resUrl, true, (UInt8*)output, maxLen);
@@ -29,8 +29,8 @@ bool util_pathForResource(const char *name, const char *ext, const char *dir, ch
         APPEND("/")
     #endif
     APPEND(dir)
-	if(dir && dir[strlen(dir)-1] != '/')
-		APPEND("/")
+    if(dir && dir[strlen(dir)-1] != '/')
+        APPEND("/")
     APPEND(name)
     if(ext) {
         APPEND(".")
@@ -44,12 +44,12 @@ bool util_pathForResource(const char *name, const char *ext, const char *dir, ch
 
 extern Platform_t util_platform(void)
 {
-	return DYNAMO_PLATFORM;
+    return DYNAMO_PLATFORM;
 }
 
 void _dynamo_log(const char *str)
 {
-	dynamo_log_min("%s", str);
+    dynamo_log_min("%s", str);
 }
 
 // TODO: Add graceful error handling (Was failing with a mysterious sigsegv on missing files on android)
@@ -57,19 +57,19 @@ void util_readFile(const char *aFilePath, size_t *aoLength, char **aoOutput)
 {
     dynamo_assert(aoOutput != NULL, "Output buffer required");
     
-	FILE *fd = fopen(aFilePath, "r");
-	if(!fd) {
+    FILE *fd = fopen(aFilePath, "r");
+    if(!fd) {
         if(aoLength) *aoLength = 0;
         return;
     }
     
-	fseek(fd, 0, SEEK_END);
+    fseek(fd, 0, SEEK_END);
     size_t len = ftell(fd);
     if(aoLength)
         *aoLength = len;
-	if(len <= 0) return;
-	rewind(fd);
+    if(len <= 0) return;
+    rewind(fd);
     
-	*aoOutput = calloc(len+1, sizeof(char));
-	fread(*aoOutput, sizeof(char), len, fd);
+    *aoOutput = calloc(len+1, sizeof(char));
+    fread(*aoOutput, sizeof(char), len, fd);
 }

@@ -14,21 +14,21 @@ static void _callScheduledCallbackIfNeeded(GameTimer_ScheduledCallback_t *aWrapp
 static void gameTimer_destroy(GameTimer_t *aGameTimer);
 
 Class_t Class_GameTimer = {
-	"GameTimer",
-	sizeof(GameTimer_t),
-	(Obj_destructor_t)&gameTimer_destroy
+    "GameTimer",
+    sizeof(GameTimer_t),
+    (Obj_destructor_t)&gameTimer_destroy
 };
 
 GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback)
 {
-	GameTimer_t *out = obj_create_autoreleased(&Class_GameTimer);
-	out->desiredInterval = 1.0/(aFps > 0.0 ? aFps : 60.0);
-	out->updateCallback = aUpdateCallback;
+    GameTimer_t *out = obj_create_autoreleased(&Class_GameTimer);
+    out->desiredInterval = 1.0/(aFps > 0.0 ? aFps : 60.0);
+    out->updateCallback = aUpdateCallback;
     out->scheduledCallbacks = obj_retain(llist_create(NULL, &free));
     out->luaUpdateCallback = -1;
     out->resetAt = 0;
 
-	return out;
+    return out;
 }
 void gameTimer_destroy(GameTimer_t *aTimer)
 {
@@ -39,17 +39,17 @@ void gameTimer_destroy(GameTimer_t *aTimer)
 
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
 {
-	aElapsed -= aTimer->resetAt;
-	GLMFloat delta = aElapsed - aTimer->elapsed;
-	aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+delta);
-	aTimer->elapsed = aElapsed;
+    aElapsed -= aTimer->resetAt;
+    GLMFloat delta = aElapsed - aTimer->elapsed;
+    aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+delta);
+    aTimer->elapsed = aElapsed;
     
     // Execute any scheduled callbacks
     llist_apply(aTimer->scheduledCallbacks, (LinkedListApplier_t)&_callScheduledCallbackIfNeeded, aTimer);
     
-	for(; aTimer->timeSinceLastUpdate > aTimer->desiredInterval; aTimer->timeSinceLastUpdate -= aTimer->desiredInterval) {
-		if(aTimer->updateCallback)
-			aTimer->updateCallback(aTimer);
+    for(; aTimer->timeSinceLastUpdate > aTimer->desiredInterval; aTimer->timeSinceLastUpdate -= aTimer->desiredInterval) {
+        if(aTimer->updateCallback)
+            aTimer->updateCallback(aTimer);
         if(aTimer->luaUpdateCallback != -1) {
             luaCtx_pushScriptHandler(GlobalLuaContext, aTimer->luaUpdateCallback);
             luaCtx_pushnumber(GlobalLuaContext, aTimer->ticks);
@@ -58,13 +58,13 @@ extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
             luaCtx_pushnumber(GlobalLuaContext, aTimer->desiredInterval);
             luaCtx_pcall(GlobalLuaContext, 4, 0, 0);
         }
-		++aTimer->ticks;
-	}
+        ++aTimer->ticks;
+    }
 }
 
 GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer)
 {
-	return aTimer->timeSinceLastUpdate / aTimer->desiredInterval;
+    return aTimer->timeSinceLastUpdate / aTimer->desiredInterval;
 }
 
 void gameTimer_reset(GameTimer_t *aTimer)

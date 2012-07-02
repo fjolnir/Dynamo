@@ -5,5 +5,5 @@ varying highp vec2 v_texCoord0;
 
 void main()
 {
-	gl_FragColor = u_color * texture2D(u_colormap0, v_texCoord0);
+    gl_FragColor = u_color * texture2D(u_colormap0, v_texCoord0);
 }

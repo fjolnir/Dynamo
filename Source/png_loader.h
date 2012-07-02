@@ -1,7 +1,7 @@
 /*!
-	@header PNG Loader
-	@abstract
-	@discussion Provides loading of PNGs.
+    @header PNG Loader
+    @abstract
+    @discussion Provides loading of PNGs.
 */
 
 #ifndef _PNGLOADER_H_
@@ -9,7 +9,7 @@
 #include "object.h"
 
 /*!
-	Representation of a png image.
+    Representation of a png image.
 */
 typedef struct {
     OBJ_GUTS
@@ -20,7 +20,7 @@ typedef struct {
 } Png_t;
 
 /*!
-	Loads a png from the given path
+    Loads a png from the given path
 */
 extern Png_t *png_load(const char *aPath);
 #endif

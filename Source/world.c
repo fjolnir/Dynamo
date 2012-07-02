@@ -58,7 +58,7 @@ World_t *world_create(void)
     out->staticEntity->world = out;
     out->staticEntity->owner = out;
     out->staticEntity->cpBody = out->cpSpace->staticBody;
-	out->staticEntity->luaUpdateHandler = -1;
+    out->staticEntity->luaUpdateHandler = -1;
     out->staticEntity->luaPreCollisionHandler = -1;
     out->staticEntity->luaCollisionHandler = -1;
     out->staticEntity->luaPostCollisionHandler = -1;
@@ -70,8 +70,8 @@ World_t *world_create(void)
 
 void world_step(World_t *aWorld, GameTimer_t *aTimer)
 {
-	if(aWorld->isPaused == true)
-		return;
+    if(aWorld->isPaused == true)
+        return;
 
     float dt = 1.0/60.0;
     for(float t = 0.0f; t < aTimer->desiredInterval; t += dt)

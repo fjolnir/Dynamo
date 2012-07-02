@@ -1,7 +1,7 @@
 #if defined(__APPLE__)
-	#include <TargetConditionals.h>
-	#include <sys/time.h>
-	#include <unistd.h>
+    #include <TargetConditionals.h>
+    #include <sys/time.h>
+    #include <unistd.h>
     #if TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
         #include <OpenGLES/ES2/gl.h>
         #include <OpenGLES/ES2/glext.h>
@@ -13,12 +13,12 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #elif defined(WIN32)
-	#include <windows.h>
-	#error "Windows currently not being maintained, you'll have to add GLee, glfw or the like to get opengl function pointers"
+    #include <windows.h>
+    #error "Windows currently not being maintained, you'll have to add GLee, glfw or the like to get opengl function pointers"
 #else
-	//#include <EGL/egl.h>
-	#include <GL/gl.h>
-	#include <GL/glext.h>
+    //#include <EGL/egl.h>
+    #include <GL/gl.h>
+    #include <GL/glext.h>
 #endif
 
 #ifdef DEBUG

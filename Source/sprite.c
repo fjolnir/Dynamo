@@ -9,47 +9,47 @@ static void spriteBatch_destroy(SpriteBatch_t *aBatch);
 static void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
 Class_t Class_Sprite = {
-	"Sprite",
-	sizeof(Sprite_t),
-	(Obj_destructor_t)&sprite_destroy
+    "Sprite",
+    sizeof(Sprite_t),
+    (Obj_destructor_t)&sprite_destroy
 };
 
 Class_t Class_SpriteBatch = {
-	"SpriteBatch",
-	sizeof(SpriteBatch_t),
-	(Obj_destructor_t)&spriteBatch_destroy
+    "SpriteBatch",
+    sizeof(SpriteBatch_t),
+    (Obj_destructor_t)&spriteBatch_destroy
 };
 
 Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity)
 {
-	Sprite_t *out = (Sprite_t*)obj_create_autoreleased(&Class_Sprite);
-	out->displayCallback = (RenderableDisplayCallback_t)&_sprite_draw;
+    Sprite_t *out = (Sprite_t*)obj_create_autoreleased(&Class_Sprite);
+    out->displayCallback = (RenderableDisplayCallback_t)&_sprite_draw;
     out->luaDisplayCallback = -1;
-	out->location = aLocation;
-	out->size = aSize;
-	out->scale = 1.0f;
-	out->angle = 0.0f;
+    out->location = aLocation;
+    out->size = aSize;
+    out->scale = 1.0f;
+    out->angle = 0.0f;
     out->opacity = 1.0f;
-	out->atlas = obj_retain(aAtlas);
-	out->flippedHorizontally = false;
-	out->flippedVertically = false;
-	out->activeAnimation = 0;
-	out->animations = calloc(aAnimationCapacity, sizeof(SpriteAnimation_t));
+    out->atlas = obj_retain(aAtlas);
+    out->flippedHorizontally = false;
+    out->flippedVertically = false;
+    out->activeAnimation = 0;
+    out->animations = calloc(aAnimationCapacity, sizeof(SpriteAnimation_t));
 
-	return out;
+    return out;
 }
 void sprite_destroy(Sprite_t *aSprite)
 {
-	obj_release(aSprite->atlas);
-	aSprite->atlas = NULL;
-	free(aSprite->animations);
-	aSprite->animations = NULL;
+    obj_release(aSprite->atlas);
+    aSprite->atlas = NULL;
+    free(aSprite->animations);
+    aSprite->animations = NULL;
 }
 
 SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames)
 {
-	SpriteAnimation_t out = { aNumberOfFrames, 0, true };
-	return out;
+    SpriteAnimation_t out = { aNumberOfFrames, 0, true };
+    return out;
 }
 
 
@@ -57,24 +57,24 @@ SpriteAnimation_t sprite_createAnimation(int aNumberOfFrames)
 
 void sprite_step(Sprite_t *aSprite)
 {
-	SpriteAnimation_t *animation = &aSprite->animations[aSprite->activeAnimation];
-	animation->currentFrame += 1;
-	if(animation->currentFrame >= animation->numberOfFrames) {
-		if(animation->loops)
-			animation->currentFrame = 0;
-		else
-			animation->currentFrame -= 1;
-	}
+    SpriteAnimation_t *animation = &aSprite->animations[aSprite->activeAnimation];
+    animation->currentFrame += 1;
+    if(animation->currentFrame >= animation->numberOfFrames) {
+        if(animation->loops)
+            animation->currentFrame = 0;
+        else
+            animation->currentFrame -= 1;
+    }
 }
 
 #pragma mark - Rendering
 
 void _sprite_draw(Renderer_t *aRenderer, Sprite_t *aSprite, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
 {
-	SpriteAnimation_t *animation = &aSprite->animations[aSprite->activeAnimation];
+    SpriteAnimation_t *animation = &aSprite->animations[aSprite->activeAnimation];
 
-	TextureRect_t cropRect = texAtlas_getTextureRect(aSprite->atlas, animation->currentFrame, aSprite->activeAnimation);
-	draw_texturePortion(aSprite->location, aSprite->atlas->texture, cropRect, aSprite->scale, aSprite->angle, aSprite->opacity, aSprite->flippedHorizontally, aSprite->flippedVertically);
+    TextureRect_t cropRect = texAtlas_getTextureRect(aSprite->atlas, animation->currentFrame, aSprite->activeAnimation);
+    draw_texturePortion(aSprite->location, aSprite->atlas->texture, cropRect, aSprite->scale, aSprite->angle, aSprite->opacity, aSprite->flippedHorizontally, aSprite->flippedVertically);
 }
 
 
@@ -95,7 +95,7 @@ SpriteBatch_t *spriteBatch_create(TextureAtlas_t *aAtlas)
     
     glGenBuffers(2, &out->vbo);
     
-	return out;
+    return out;
 }
 
 void spriteBatch_destroy(SpriteBatch_t *aBatch)
@@ -233,7 +233,7 @@ void _spriteBatch_updateVbo(SpriteBatch_t *aBatch)
 
     glUnmapBufferOES(GL_ARRAY_BUFFER);
     glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     aBatch->idxCount = indexCount;
 }

@@ -64,7 +64,7 @@ bool gameTimer_unscheduleCallback(GameTimer_t *aTimer, GameTimer_ScheduledCallba
 extern GLMFloat dynamo_globalTime();
 extern GLMFloat dynamo_time();
 typedef struct _Texture { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; vec3_t location;  GLuint id; vec2_t size; vec2_t pxAlignInset; void *subtextures; } Texture_t;
-typedef union _TextureRect { vec4_t v; float *f; struct { 	vec2_t origin; 	vec2_t size; }; struct { 	float u, v; 	float w, h; }; } TextureRect_t;
+typedef union _TextureRect { vec4_t v; float *f; struct {     vec2_t origin;     vec2_t size; }; struct {     float u, v;     float w, h; }; } TextureRect_t;
 extern const TextureRect_t kTextureRectEntire;
 extern Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool aRepeatVertical);
 extern TextureRect_t textureRectangle_createWithPixelCoordinates(Texture_t *aTexture, vec2_t aOrigin, vec2_t aSize);
@@ -167,7 +167,7 @@ typedef struct _World World_t;
 typedef struct _WorldShape WorldShape_t;
 typedef uintptr_t WorldShapeGroup_t;
 typedef struct _WorldEntity WorldEntity_t;
-typedef struct _World_ContactPointSet { int count; struct { 	vec2_t point; 	vec2_t normal; 	GLMFloat depth; } points[4];} World_ContactPointSet;
+typedef struct _World_ContactPointSet { int count; struct {     vec2_t point;     vec2_t normal;     GLMFloat depth; } points[4];} World_ContactPointSet;
 typedef struct _World_CollisionInfo { WorldEntity_t *a; WorldEntity_t *b; bool firstContact; World_ContactPointSet contactPoints; void *cpArbiter;} World_CollisionInfo;
 typedef void (*WorldEntity_CollisionHandler)(WorldEntity_t *aEntity, World_CollisionInfo *aCollisionInfo);
 typedef void (*WorldEntity_UpdateHandler)(WorldEntity_t *aEntity);
@@ -236,11 +236,11 @@ void autoReleasePool_drain(Obj_autoReleasePool_t *aPool);
 ]]
 
 dynamo.platforms = {
-	mac     = lib.kPlatformMac,
-	ios     = lib.kPlatformIOS,
-	android = lib.kPlatformAndroid,
-	windows = lib.kPlatformWindows,
-	other   = lib.kPlatformOther
+    mac     = lib.kPlatformMac,
+    ios     = lib.kPlatformIOS,
+    android = lib.kPlatformAndroid,
+    windows = lib.kPlatformWindows,
+    other   = lib.kPlatformOther
 }
 dynamo.platform = lib.util_platform()
 
@@ -249,38 +249,38 @@ dynamo.platform = lib.util_platform()
 
 -- Retains an object and tells the gc to release it when it's no longer referenced
 local function _obj_addToGC(obj)
-	lib.obj_retain(obj)
-	ffi.gc(obj, lib.obj_release)
-	--ffi.gc(obj, function(obj)
-		--dynamo.log("Collecting ", tostring(obj))
-		--lib.obj_release(obj)
-	--end)
-	return obj
+    lib.obj_retain(obj)
+    ffi.gc(obj, lib.obj_release)
+    --ffi.gc(obj, function(obj)
+        --dynamo.log("Collecting ", tostring(obj))
+        --lib.obj_release(obj)
+    --end)
+    return obj
 end
 function dynamo.pathForResource(name, type, directory)
-	type = type or nil
-	directory = directory or nil
-	local maxLen = 1024
-	local strPtr = ffi.new("char[?]", maxLen)
-	local exists = lib.util_pathForResource(name, type, directory, strPtr, maxLen)
-	if exists then
-		return ffi.string(strPtr)
-	else
-		return nil
-	end
+    type = type or nil
+    directory = directory or nil
+    local maxLen = 1024
+    local strPtr = ffi.new("char[?]", maxLen)
+    local exists = lib.util_pathForResource(name, type, directory, strPtr, maxLen)
+    if exists then
+        return ffi.string(strPtr)
+    else
+        return nil
+    end
 end
 
 function dynamo.log(...)
-	local prefix = ""
-	if debug ~= nil then
-		local info = debug.getinfo(2, "Sln")
-		if info.what == "C" then
-			prefix = "<C function>: "
-		else
-			prefix = string.format("%s:%s: ", info.short_src, info.currentline)
-		end
-	end
-	lib._dynamo_log(prefix..table.concat({...}, ", "))
+    local prefix = ""
+    if debug ~= nil then
+        local info = debug.getinfo(2, "Sln")
+        if info.what == "C" then
+            prefix = "<C function>: "
+        else
+            prefix = string.format("%s:%s: ", info.short_src, info.currentline)
+        end
+    end
+    lib._dynamo_log(prefix..table.concat({...}, ", "))
 end
 
 dynamo.registerCallback = function(lambda) return dynamo_registerCallback(lambda) end
@@ -291,30 +291,30 @@ dynamo.unregisterCallback = function(id) return dynamo_unregisterCallback(id) en
 dynamo.texture = {}
 
 ffi.metatype("Texture_t", {
-	__index = {
-		getSubTextureRect = lib.texture_getSubTextureRect,
-		getSubTextureOrigin = lib.texture_getSubTextureOrigin,
-		getSubTextureSize = lib.texture_getSubTextureSize,
-		getSubTextureAtlas = function(self, name, size)
-			size = size or self:getSubTextureSize(name)
-			local atlas = lib.texture_getSubTextureAtlas(self, name, size)
-			return _obj_addToGC(atlas)
-		end
-	}
+    __index = {
+        getSubTextureRect = lib.texture_getSubTextureRect,
+        getSubTextureOrigin = lib.texture_getSubTextureOrigin,
+        getSubTextureSize = lib.texture_getSubTextureSize,
+        getSubTextureAtlas = function(self, name, size)
+            size = size or self:getSubTextureSize(name)
+            local atlas = lib.texture_getSubTextureAtlas(self, name, size)
+            return _obj_addToGC(atlas)
+        end
+    }
 })
 
 function dynamo.texture.load(path, packingInfoPath, tile)
-	tile = tile or false
+    tile = tile or false
 
-	local tex = lib.texture_loadFromPng(path, tile, tile)
-	if tex == nil then
-		print("Couldn't find texture at path", path)
-		return nil
-	end
-	if packingInfoPath ~= nil then
-		lib.texture_loadPackingInfo(tex, packingInfoPath)
-	end
-	return _obj_addToGC(tex)
+    local tex = lib.texture_loadFromPng(path, tile, tile)
+    if tex == nil then
+        print("Couldn't find texture at path", path)
+        return nil
+    end
+    if packingInfoPath ~= nil then
+        lib.texture_loadPackingInfo(tex, packingInfoPath)
+    end
+    return _obj_addToGC(tex)
 end
 
 
@@ -324,16 +324,16 @@ end
 dynamo.atlas = {}
 
 ffi.metatype("TextureAtlas_t", {
-	__index = {
-		getTextureRect = lib.texAtlas_getTextureRect,
-	}
+    __index = {
+        getTextureRect = lib.texAtlas_getTextureRect,
+    }
 })
 
 dynamo.atlas.create = function(...) return _obj_addToGC(lib.texAtlas_create(...)) end
 
 function dynamo.atlas.load(path, origin, size)
-	local tex = dynamo.texture.load(path)
-	return dynamo.atlas.create(tex, origin, size)
+    local tex = dynamo.texture.load(path)
+    return dynamo.atlas.create(tex, origin, size)
 end
 
 
@@ -343,49 +343,49 @@ end
 dynamo.sprite = {}
 
 ffi.metatype("Sprite_t", {
-	__index = {
-		step = lib.sprite_step
-	}
+    __index = {
+        step = lib.sprite_step
+    }
 })
 
 local _vec2Type = ffi.typeof("vec2_t")
 function dynamo.sprite.create(location, atlas, size, animations)
-	animations = animations or {{1,0,false}}
-	size = size or atlas.size
+    animations = animations or {{1,0,false}}
+    size = size or atlas.size
 
-	if(ffi.istype(location, vec2_t)) then
-		location = vec3(location.x, location.y, 0)
-	end
+    if(ffi.istype(location, vec2_t)) then
+        location = vec3(location.x, location.y, 0)
+    end
 
-	local sprite = lib.sprite_create(location, size, atlas, #animations)
+    local sprite = lib.sprite_create(location, size, atlas, #animations)
 
-	-- Add the animations to the sprite
-	for i, animation in pairs(animations) do
-		sprite.animations[i-1] = animation
-	end
+    -- Add the animations to the sprite
+    for i, animation in pairs(animations) do
+        sprite.animations[i-1] = animation
+    end
 
-	return _obj_addToGC(sprite)
+    return _obj_addToGC(sprite)
 end
 
 ffi.metatype("SpriteBatch_t", {
-	__index = {
-		addSprite = lib.spriteBatch_addSprite,
-		insertSprite = lib.spriteBatch_insertSprite,
-		replaceSprite = function(self, spriteToInsert, spriteToDelete)
-			self:insertSprite(spriteToInsert, spriteToDelete)
-			self:deleteSprite(spriteToDelete)
-		end,
-		deleteSprite = lib.spriteBatch_deleteSprite
-	}
+    __index = {
+        addSprite = lib.spriteBatch_addSprite,
+        insertSprite = lib.spriteBatch_insertSprite,
+        replaceSprite = function(self, spriteToInsert, spriteToDelete)
+            self:insertSprite(spriteToInsert, spriteToDelete)
+            self:deleteSprite(spriteToDelete)
+        end,
+        deleteSprite = lib.spriteBatch_deleteSprite
+    }
 })
 
 function dynamo.sprite.createBatch(sprites)
-	sprites = sprites or {}
-	local batch = lib.spriteBatch_create()
-	for i, sprite in pairs(sprites) do
-		batch:addSprite(sprite)
-	end
-	return _obj_addToGC(batch)
+    sprites = sprites or {}
+    local batch = lib.spriteBatch_create()
+    for i, sprite in pairs(sprites) do
+        batch:addSprite(sprite)
+    end
+    return _obj_addToGC(batch)
 end
 
 
@@ -394,25 +394,25 @@ end
 -- The Renderer
 
 ffi.metatype("Renderer_t", {
-	__index = {
-		display = lib.renderer_display,
-		pushRenderable = lib.renderer_pushRenderable,
-		pushRenderableFunction = function(self, lambda)
-			self:pushRenderable(dynamo.renderable(lambda))
-		end,
-		popRenderable = lib.renderer_popRenderable,
-		insertRenderable = lib.renderer_insertRenderable,
-		deleteRenderable = lib.renderer_deleteRenderable,
-		handleResize = function(self, viewport)
-			self.viewportSize = viewport
-			self.projectionMatrixStack:pushItem(mat4_ortho(0, viewport.w, 0, viewport.h, -1, 1));
-		end
-	}
+    __index = {
+        display = lib.renderer_display,
+        pushRenderable = lib.renderer_pushRenderable,
+        pushRenderableFunction = function(self, lambda)
+            self:pushRenderable(dynamo.renderable(lambda))
+        end,
+        popRenderable = lib.renderer_popRenderable,
+        insertRenderable = lib.renderer_insertRenderable,
+        deleteRenderable = lib.renderer_deleteRenderable,
+        handleResize = function(self, viewport)
+            self.viewportSize = viewport
+            self.projectionMatrixStack:pushItem(mat4_ortho(0, viewport.w, 0, viewport.h, -1, 1));
+        end
+    }
 })
 
 local function _createRenderer(viewportSize)
-	local renderer = lib.renderer_create(viewportSize, {{0,0,0}})
-	return _obj_addToGC(renderer)
+    local renderer = lib.renderer_create(viewportSize, {{0,0,0}})
+    return _obj_addToGC(renderer)
 end
 
 
@@ -422,40 +422,40 @@ end
 dynamo.scene = {}
 
 ffi.metatype("Scene_t", {
-	__index = {
-		pushRenderable = lib.scene_pushRenderable,
-		pushRenderableFunction = function(self, lambda)
-			self:pushRenderable(dynamo.renderable(lambda))
-		end,
-		popRenderable = lib.scene_popRenderable,
-		insertRenderable = lib.scene_insertRenderable,
-		deleteRenderable = lib.scene_deleteRenderable,
-		rotate = function(self, angle, axis)
-			axis = axis or vec3(0, 0, 1)
-			self.transform = mat4_rotate(self.transform, angle, axis.x, axis.y, axis.z)
-		end,
-		scale = function(self, x, y, z)
-			z = z or 1
-			self.transform = mat4_scale(self.transform, x, y, 1)
-		end,
-		translate = function(self, x, y, z)
-			z = z or 0
-			self.transform = mat4_translate(self.transform, x, y, 0)
-		end
-	}
+    __index = {
+        pushRenderable = lib.scene_pushRenderable,
+        pushRenderableFunction = function(self, lambda)
+            self:pushRenderable(dynamo.renderable(lambda))
+        end,
+        popRenderable = lib.scene_popRenderable,
+        insertRenderable = lib.scene_insertRenderable,
+        deleteRenderable = lib.scene_deleteRenderable,
+        rotate = function(self, angle, axis)
+            axis = axis or vec3(0, 0, 1)
+            self.transform = mat4_rotate(self.transform, angle, axis.x, axis.y, axis.z)
+        end,
+        scale = function(self, x, y, z)
+            z = z or 1
+            self.transform = mat4_scale(self.transform, x, y, 1)
+        end,
+        translate = function(self, x, y, z)
+            z = z or 0
+            self.transform = mat4_translate(self.transform, x, y, 0)
+        end
+    }
 })
 
 function dynamo.scene.create(renderables, initialTransform)
-	renderables = renderables or {}
-	initialTransform = initialTransform or mat4_identity
+    renderables = renderables or {}
+    initialTransform = initialTransform or mat4_identity
 
-	local scene = lib.scene_create()
-	for i,renderable in pairs(renderables) do
-		scene:pushRenderable(renderable)
-	end
-	scene.transform = initialTransform
+    local scene = lib.scene_create()
+    for i,renderable in pairs(renderables) do
+        scene:pushRenderable(renderable)
+    end
+    scene.transform = initialTransform
 
-	return _obj_addToGC(scene)
+    return _obj_addToGC(scene)
 end
 
 
@@ -463,58 +463,58 @@ end
 -- Input manager
 
 dynamo.input = {
-	types = {
-		key = {
-			arrowLeft  = lib.kInputKey_arrowLeft,
-			arrowRight = lib.kInputKey_arrowRight,
-			arrowUp    = lib.kInputKey_arrowUp,
-			arrowDown  = lib.kInputKey_arrowDown,
-			ascii      = lib.kInputKey_ascii,
-		},
-		mouse = {
-			leftClick  = lib.kInputMouse_leftClick,
-			rightClick = lib.kInputMouse_rightClick,
-			leftDrag   = lib.kInputMouse_leftDrag,
-			rightDrag  = lib.kInputMouse_rightDrag,
-			move       = lib.kInputMouse_move
-		},
-		touch = {
-			lib.kInputTouch1,
-			lib.kInputTouch2,
-			lib.kInputTouch3,
-			lib.kInputTouch4,
-			lib.kInputTouch5
-		}
-	},
-	states = {
-		down = lib.kInputState_down,
-		up   = lib.kInputState_up
-	}
+    types = {
+        key = {
+            arrowLeft  = lib.kInputKey_arrowLeft,
+            arrowRight = lib.kInputKey_arrowRight,
+            arrowUp    = lib.kInputKey_arrowUp,
+            arrowDown  = lib.kInputKey_arrowDown,
+            ascii      = lib.kInputKey_ascii,
+        },
+        mouse = {
+            leftClick  = lib.kInputMouse_leftClick,
+            rightClick = lib.kInputMouse_rightClick,
+            leftDrag   = lib.kInputMouse_leftDrag,
+            rightDrag  = lib.kInputMouse_rightDrag,
+            move       = lib.kInputMouse_move
+        },
+        touch = {
+            lib.kInputTouch1,
+            lib.kInputTouch2,
+            lib.kInputTouch3,
+            lib.kInputTouch4,
+            lib.kInputTouch5
+        }
+    },
+    states = {
+        down = lib.kInputState_down,
+        up   = lib.kInputState_up
+    }
 }
 
 ffi.metatype("InputManager_t", {
-	__index = {
-		addObserver = function(self, desc)
-			local observer = lib.input_createObserver(desc.type, nil, desc.charCode, desc.metaData)
-			observer.luaHandlerCallback = dynamo.registerCallback(desc.callback)
-			lib.input_addObserver(self, observer)
-			return _obj_addToGC(observer)
-		end,
-		removeObserver = lib.input_removeObserver,
-		postActiveEvents = lib.input_postActiveEvents,
-		postMomentaryEvent = lib.input_postMomentaryEvent,
-		beginEvent = lib.input_beginEvent,
-		endEvent = lib.input_endEvent,
-		postTouchEvent = function(self, finger, isDown, x, y)
-			finger = finger or 0
-			local pos = vec2(x or 0, y or 0)
-			local state = lib.kInputState_up
-			if isDown == true then
-				state = lib.kInputState_down
-			end
-			self:postMomentaryEvent(dynamo.input.types.touch[1] + finger, nil, pos, state)
-		end
-	}
+    __index = {
+        addObserver = function(self, desc)
+            local observer = lib.input_createObserver(desc.type, nil, desc.charCode, desc.metaData)
+            observer.luaHandlerCallback = dynamo.registerCallback(desc.callback)
+            lib.input_addObserver(self, observer)
+            return _obj_addToGC(observer)
+        end,
+        removeObserver = lib.input_removeObserver,
+        postActiveEvents = lib.input_postActiveEvents,
+        postMomentaryEvent = lib.input_postMomentaryEvent,
+        beginEvent = lib.input_beginEvent,
+        endEvent = lib.input_endEvent,
+        postTouchEvent = function(self, finger, isDown, x, y)
+            finger = finger or 0
+            local pos = vec2(x or 0, y or 0)
+            local state = lib.kInputState_up
+            if isDown == true then
+                state = lib.kInputState_down
+            end
+            self:postMomentaryEvent(dynamo.input.types.touch[1] + finger, nil, pos, state)
+        end
+    }
 })
 
 local _createInputManager = function(...) return _obj_addToGC(lib.input_createManager(...)) end
@@ -524,36 +524,36 @@ local _createInputManager = function(...) return _obj_addToGC(lib.input_createMa
 -- Game timer
 
 ffi.metatype("GameTimer_t", {
-	__index = {
-		step = lib.gameTimer_step,
-		interpolation = lib.gameTimer_interpolationSinceLastUpdate,
-		afterDelay = function(self, delay, callback, repeats)
-			repeats = repeats or false
-			if type(callback) ~= "number" then
-				callback = dynamo.registerCallback(callback)
-			end
-			return lib.gameTimer_afterDelay_luaCallback(self, delay, callback, repeats)
-		end,
-		unschedule = function(self, callback)
-			return lib.gameTimer_unscheduleCallback(self, callback)
-		end,
-		setUpdateHandler = function(self, lambda)
-			local oldHandler = self.luaUpdateCallback
-			self.luaUpdateCallback = dynamo.registerCallback(lambda)
-			if oldHandler ~= -1 then
-				dynamo_unregisterCallback(oldHandler)
-			end
-		end,
-		reset = lib.gameTimer_reset
-	}
+    __index = {
+        step = lib.gameTimer_step,
+        interpolation = lib.gameTimer_interpolationSinceLastUpdate,
+        afterDelay = function(self, delay, callback, repeats)
+            repeats = repeats or false
+            if type(callback) ~= "number" then
+                callback = dynamo.registerCallback(callback)
+            end
+            return lib.gameTimer_afterDelay_luaCallback(self, delay, callback, repeats)
+        end,
+        unschedule = function(self, callback)
+            return lib.gameTimer_unscheduleCallback(self, callback)
+        end,
+        setUpdateHandler = function(self, lambda)
+            local oldHandler = self.luaUpdateCallback
+            self.luaUpdateCallback = dynamo.registerCallback(lambda)
+            if oldHandler ~= -1 then
+                dynamo_unregisterCallback(oldHandler)
+            end
+        end,
+        reset = lib.gameTimer_reset
+    }
 })
 
 local _createTimer = function(desiredFPS, updateCallback)
-	local timer = lib.gameTimer_create(desiredFPS, nil)
-	if updateCallback then
-		timer:setUpdateHandler(updateCallback)
-	end
-	return _obj_addToGC(timer)
+    local timer = lib.gameTimer_create(desiredFPS, nil)
+    if updateCallback then
+        timer:setUpdateHandler(updateCallback)
+    end
+    return _obj_addToGC(timer)
 end
 
 dynamo.globalTime = lib.dynamo_globalTime
@@ -565,9 +565,9 @@ math.randomseed(dynamo.globalTime())
 -- Custom renderables
 
 function dynamo.renderable(lambda)
-	local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.cast("Class_t*", lib.Class_Renderable)))
-	drawable.luaDisplayCallback = dynamo.registerCallback(lambda)
-	return _obj_addToGC(drawable)
+    local drawable = ffi.cast("Renderable_t*", lib.obj_create_autoreleased(ffi.cast("Class_t*", lib.Class_Renderable)))
+    drawable.luaDisplayCallback = dynamo.registerCallback(lambda)
+    return _obj_addToGC(drawable)
 end
 
 
@@ -577,61 +577,61 @@ end
 dynamo.map = {}
 
 ffi.metatype("TMXMap_t", {
-	__index = {
-		getProperty           = lib.tmx_mapGetPropertyNamed,
-		getLayer              = tmx_mapGetLayerNamed,
-		getObjectGroup        = tmx_mapGetObjectGroupNamed,
-		createLayerRenderable = function(...) return _obj_addToGC(lib.tmx_createRenderableForLayer(...)) end
-	}
+    __index = {
+        getProperty           = lib.tmx_mapGetPropertyNamed,
+        getLayer              = tmx_mapGetLayerNamed,
+        getObjectGroup        = tmx_mapGetObjectGroupNamed,
+        createLayerRenderable = function(...) return _obj_addToGC(lib.tmx_createRenderableForLayer(...)) end
+    }
 })
 
 ffi.metatype("TMXLayer_t", {
-	__index = {
-		-- Generates the texture offsets and screen coordinates to draw each tile
-		generateAtlasDrawInfo = function(self, map)
-			local texOffsets = ffi.new("vec2_t[?]", self.numberOfTiles)
-			local screenCoords = ffi.new("vec2_t[?]", self.numberOfTiles)
+    __index = {
+        -- Generates the texture offsets and screen coordinates to draw each tile
+        generateAtlasDrawInfo = function(self, map)
+            local texOffsets = ffi.new("vec2_t[?]", self.numberOfTiles)
+            local screenCoords = ffi.new("vec2_t[?]", self.numberOfTiles)
 
-			for y=0, map.height-1 do
-				for x=0, map.width-1 do
-					local idx = y*map.width + x
-					local tile = self.tiles[idx]
-					texOffsets[idx] = tile.tileset:texCoordForID(tile.id)
-					screenCoords[idx] = vec2(math.floor(map.tileWidth*x + map.tileWidth/2), math.floor(map.tileHeight*y + map.tileHeight/2))
-				end
-			end
-			return screenCoords, texOffsets
-		end
-	}
+            for y=0, map.height-1 do
+                for x=0, map.width-1 do
+                    local idx = y*map.width + x
+                    local tile = self.tiles[idx]
+                    texOffsets[idx] = tile.tileset:texCoordForID(tile.id)
+                    screenCoords[idx] = vec2(math.floor(map.tileWidth*x + map.tileWidth/2), math.floor(map.tileHeight*y + map.tileHeight/2))
+                end
+            end
+            return screenCoords, texOffsets
+        end
+    }
 })
 
 ffi.metatype("TMXObjectGroup_t", {
-	__index = lib.tmx_objGroupGetObjectNamed
+    __index = lib.tmx_objGroupGetObjectNamed
 })
 
 function math.round(num)
-	return math.floor(num+0.5)
+    return math.floor(num+0.5)
 end
 
 ffi.metatype("TMXTileset_t", {
-	__index = {
-		loadAtlas = function(self)
-			local fullPath = dynamo.pathForResource(self.imagePath)
-			assert(fullPath ~= nil)
-			local tex = dynamo.loadTexture(fullPath)
-			assert(tex ~= nil)
-			local atlas = dynamo.createTextureAtlas(tex, vec2(self.margin, self.margin), vec2(self.tileWidth, self.tileHeight))
-			atlas.margin = vec2(self.spacing, self.spacing)
-			return atlas
-		end,
-		texCoordForID = function(self, id)
-			local tilesPerRow = math.floor((self.imageWidth - self.spacing) / (self.tileWidth + self.spacing))
-			local u = id % tilesPerRow
-			local rows = math.floor((self.imageHeight - self.spacing) / (self.tileHeight + self.spacing))
-			local v = math.floor(id / tilesPerRow)
-			return vec2(u,v)
-		end
-	}
+    __index = {
+        loadAtlas = function(self)
+            local fullPath = dynamo.pathForResource(self.imagePath)
+            assert(fullPath ~= nil)
+            local tex = dynamo.loadTexture(fullPath)
+            assert(tex ~= nil)
+            local atlas = dynamo.createTextureAtlas(tex, vec2(self.margin, self.margin), vec2(self.tileWidth, self.tileHeight))
+            atlas.margin = vec2(self.spacing, self.spacing)
+            return atlas
+        end,
+        texCoordForID = function(self, id)
+            local tilesPerRow = math.floor((self.imageWidth - self.spacing) / (self.tileWidth + self.spacing))
+            local u = id % tilesPerRow
+            local rows = math.floor((self.imageHeight - self.spacing) / (self.tileHeight + self.spacing))
+            local v = math.floor(id / tilesPerRow)
+            return vec2(u,v)
+        end
+    }
 })
 
 dynamo.map.load = function(...) return _obj_addToGC(lib.tmx_readMapFile(...)) end
@@ -641,23 +641,23 @@ dynamo.map.load = function(...) return _obj_addToGC(lib.tmx_readMapFile(...)) en
 
 dynamo.background = {}
 dynamo.background.create = function(layers)
-	if layers == nil or #layers == 0 then
-		error("No layers provided for background")
-	elseif #layers >= 4 then
-		error("Backgrounds only support up to 4 layers")
-	end
-	
-	local bg = lib.background_create()
-	local i = 0;
-	for _,layerInfo in pairs(layers) do
-		local layer = lib.background_createLayer(layerInfo.texture, layerInfo.depth)
-		if layerInfo.opacity ~= nil then
-		     layer.opacity = layerInfo.opacity
-	    end
-		lib.background_setLayer(bg, i, layer)
-		i = i+1
-	end
-	return _obj_addToGC(bg)
+    if layers == nil or #layers == 0 then
+        error("No layers provided for background")
+    elseif #layers >= 4 then
+        error("Backgrounds only support up to 4 layers")
+    end
+    
+    local bg = lib.background_create()
+    local i = 0;
+    for _,layerInfo in pairs(layers) do
+        local layer = lib.background_createLayer(layerInfo.texture, layerInfo.depth)
+        if layerInfo.opacity ~= nil then
+             layer.opacity = layerInfo.opacity
+        end
+        lib.background_setLayer(bg, i, layer)
+        i = i+1
+    end
+    return _obj_addToGC(bg)
 end
 
 --
@@ -667,42 +667,42 @@ dynamo.sound = { sfx = {}, bgm = {} }
 local _createSoundManager = function(...) return _obj_addToGC(lib.soundManager_create(...)) end
 
 ffi.metatype("SoundEffect_t", {
-	__index = {
-		play      = lib.sfx_play,
-		stop      = lib.sfx_stop,
-		isPlaying = lib.sfx_isPlaying,
-		unload    = lib.sfx_unload
-	},
-	__newindex = function(self, key, val)
-		if key == "location" then
-			lib.sfx_setLocation(self, val)
-		elseif key == "loops" then
-			lib.sfx_setLooping(self, val)
-		elseif key == "pitch" then
-			lib.sfx_setPitch(self, val)
-		elseif key == "volume" then
-			lib.sfx_setVolume(self, val)
-		else
-			error("Undefined key "..key)
-		end
-	end
+    __index = {
+        play      = lib.sfx_play,
+        stop      = lib.sfx_stop,
+        isPlaying = lib.sfx_isPlaying,
+        unload    = lib.sfx_unload
+    },
+    __newindex = function(self, key, val)
+        if key == "location" then
+            lib.sfx_setLocation(self, val)
+        elseif key == "loops" then
+            lib.sfx_setLooping(self, val)
+        elseif key == "pitch" then
+            lib.sfx_setPitch(self, val)
+        elseif key == "volume" then
+            lib.sfx_setVolume(self, val)
+        else
+            error("Undefined key "..key)
+        end
+    end
 })
 
 ffi.metatype("BackgroundMusic_t", {
-	__index = {
-		play      = lib.bgm_play,
-		stop      = lib.bgm_stop,
-		seek      = lib.bgm_seek,
-		isPlaying = lib.bgm_isPlaying,
-		unload    = lib.bgm_unload
-	},
-	__newindex = function(self, key, val)
-		if key == "volume" then
-			lib.bgm_setVolume(self, val)
-		else
-			error("Undefined key "..key)
-		end
-	end
+    __index = {
+        play      = lib.bgm_play,
+        stop      = lib.bgm_stop,
+        seek      = lib.bgm_seek,
+        isPlaying = lib.bgm_isPlaying,
+        unload    = lib.bgm_unload
+    },
+    __newindex = function(self, key, val)
+        if key == "volume" then
+            lib.bgm_setVolume(self, val)
+        else
+            error("Undefined key "..key)
+        end
+    end
 })
 
 dynamo.sound.sfx.load = function(...) return _obj_addToGC(lib.sfx_load(...)) end
@@ -713,192 +713,192 @@ dynamo.sound.bgm.load = function(...) return _obj_addToGC(lib.bgm_load(...)) end
 -- Game world
 
 ffi.metatype("World_t", {
-	__index = {
-		addEntity        = lib.world_addEntity,
-		removeEntity        = lib.world_removeEntity,
-		gravity          = lib.world_gravity,
-		step             = lib.world_step,
-		momentForCircle  = lib.world_momentForCircle,
-		momentForSegment = lib.world_momentForSegment,
-		momentForPoly    = lib.world_momentForPoly,
-		momentForBox     = lib.world_momentForBox,
-		draw             = lib.draw_world,
-		drawShape        = lib.draw_worldShape,
-		drawEntity       = lib.draw_worldEntity,
-		pointQuery       = lib.world_pointQuery,
-		createEntity     = function(world, owner, mass, momentum, shapes)
-			shapes = shapes or {}
-			local ret = lib.worldEnt_create(world, owner, mass, momentum)
-			for i,shape in ipairs(shapes) do
-				ret:addShape(shape)
-			end
-			return _obj_addToGC(ret)
-		end,
-		createCircleShape  = function(self, ...) return _obj_addToGC(lib.worldShape_createCircle(...)) end,
-		createBoxShape     = function(self, ...) return _obj_addToGC(lib.worldShape_createBox(...)) end,
-		createSegmentShape = function(self, a, b, thickness)
-			return _obj_addToGC(lib.worldShape_createSegment(a, b, (thickness or 1)))
-		end,
-		createPolyShape = function(self, vertices)
-			if #vertices < 3 then
-				error("Too few vertices to create polygon shape")
-			end
-			return _obj_addToGC(lib.worldShape_createPoly(#vertices, vertices))
-		end
-	},
-	__newindex = function(self, key, val)
-		if key == "gravity" then
-			lib.world_setGravity(self, val)
-		end
-	end
+    __index = {
+        addEntity        = lib.world_addEntity,
+        removeEntity        = lib.world_removeEntity,
+        gravity          = lib.world_gravity,
+        step             = lib.world_step,
+        momentForCircle  = lib.world_momentForCircle,
+        momentForSegment = lib.world_momentForSegment,
+        momentForPoly    = lib.world_momentForPoly,
+        momentForBox     = lib.world_momentForBox,
+        draw             = lib.draw_world,
+        drawShape        = lib.draw_worldShape,
+        drawEntity       = lib.draw_worldEntity,
+        pointQuery       = lib.world_pointQuery,
+        createEntity     = function(world, owner, mass, momentum, shapes)
+            shapes = shapes or {}
+            local ret = lib.worldEnt_create(world, owner, mass, momentum)
+            for i,shape in ipairs(shapes) do
+                ret:addShape(shape)
+            end
+            return _obj_addToGC(ret)
+        end,
+        createCircleShape  = function(self, ...) return _obj_addToGC(lib.worldShape_createCircle(...)) end,
+        createBoxShape     = function(self, ...) return _obj_addToGC(lib.worldShape_createBox(...)) end,
+        createSegmentShape = function(self, a, b, thickness)
+            return _obj_addToGC(lib.worldShape_createSegment(a, b, (thickness or 1)))
+        end,
+        createPolyShape = function(self, vertices)
+            if #vertices < 3 then
+                error("Too few vertices to create polygon shape")
+            end
+            return _obj_addToGC(lib.worldShape_createPoly(#vertices, vertices))
+        end
+    },
+    __newindex = function(self, key, val)
+        if key == "gravity" then
+            lib.world_setGravity(self, val)
+        end
+    end
 })
 local _createWorld = function(...)
-	return _obj_addToGC(lib.world_create(...))
+    return _obj_addToGC(lib.world_create(...))
 end
 
 ffi.metatype("WorldEntity_t", {
-	__index = {
-		location     = lib.worldEnt_location,
-		angle        = lib.worldEnt_angle,
-		velocity     = lib.worldEnt_velocity,
-		addShape     = lib.worldEnt_addShape,
-		applyForce   = lib.worldEnt_applyForce,
-		applyImpulse = lib.worldEnt_applyImpulse,
+    __index = {
+        location     = lib.worldEnt_location,
+        angle        = lib.worldEnt_angle,
+        velocity     = lib.worldEnt_velocity,
+        addShape     = lib.worldEnt_addShape,
+        applyForce   = lib.worldEnt_applyForce,
+        applyImpulse = lib.worldEnt_applyImpulse,
 
-		-- Shapes
-		addCircleShape = function(self, center, radius)
-			return self:addShape(self.world:createCircleShape(center, radius))
-		end,
-		addBoxShape = function(self, size)
-			return self:addShape(self.world:createBoxShape(size))
-		end,
-		addSegmentShape = function(self, a, b, thickness)
-			return self:addShape(self.world:createSegmentShape(a, b, thickness))
-		end,
-		addPolyShape = function(self, vertices)
-			return self:addShape(self.world:createPolyShape(vertices))
-		end,
+        -- Shapes
+        addCircleShape = function(self, center, radius)
+            return self:addShape(self.world:createCircleShape(center, radius))
+        end,
+        addBoxShape = function(self, size)
+            return self:addShape(self.world:createBoxShape(size))
+        end,
+        addSegmentShape = function(self, a, b, thickness)
+            return self:addShape(self.world:createSegmentShape(a, b, thickness))
+        end,
+        addPolyShape = function(self, vertices)
+            return self:addShape(self.world:createPolyShape(vertices))
+        end,
 
-		-- Constraints
-		createPinJoint           = function(...) return _obj_addToGC(lib.worldConstr_createPinJoint(...)) end,
-		createSlideJoint         = function(...) return _obj_addToGC(lib.worldConstr_createSlideJoint(...)) end,
-		createPivotJoint         = function(...) return _obj_addToGC(lib.worldConstr_createPivotJoint(...)) end,
-		createGrooveJoint        = function(...) return _obj_addToGC(lib.worldConstr_createGrooveJoint(...)) end,
-		createDampedSpring       = function(...) return _obj_addToGC(lib.worldConstr_createDampedSpringJoint(...)) end,
-		createDampedRotarySpring = function(...) return _obj_addToGC(lib.worldConstr_createDampedRotarySpringJoint(...)) end,
-		creatRotaryLimitJoint    = function(...) return _obj_addToGC(lib.worldConstr_createRotaryLimitJoint(...)) end,
-		createRatchetJoint       = function(...) return _obj_addToGC(lib.worldConstr_createRatchetJoint(...)) end,
-		createGearJoint          = function(...) return _obj_addToGC(lib.worldConstr_createGearJoint(...)) end,
-		createSimpleMotorJoint   = function(...) return _obj_addToGC(lib.worldConstr_createSimpleMotorJoint(...)) end,
-	},
-	__newindex = function(self, key, val)
-		if key == "location" then
-			lib.worldEnt_setLocation(self, val)
-		elseif key == "angle" then
-			lib.worldEnt_setAngle(self, val)
-		elseif key == "velocity" then
-			lib.worldEnt_setVelocity(self, val)
-		end
-	end
+        -- Constraints
+        createPinJoint           = function(...) return _obj_addToGC(lib.worldConstr_createPinJoint(...)) end,
+        createSlideJoint         = function(...) return _obj_addToGC(lib.worldConstr_createSlideJoint(...)) end,
+        createPivotJoint         = function(...) return _obj_addToGC(lib.worldConstr_createPivotJoint(...)) end,
+        createGrooveJoint        = function(...) return _obj_addToGC(lib.worldConstr_createGrooveJoint(...)) end,
+        createDampedSpring       = function(...) return _obj_addToGC(lib.worldConstr_createDampedSpringJoint(...)) end,
+        createDampedRotarySpring = function(...) return _obj_addToGC(lib.worldConstr_createDampedRotarySpringJoint(...)) end,
+        creatRotaryLimitJoint    = function(...) return _obj_addToGC(lib.worldConstr_createRotaryLimitJoint(...)) end,
+        createRatchetJoint       = function(...) return _obj_addToGC(lib.worldConstr_createRatchetJoint(...)) end,
+        createGearJoint          = function(...) return _obj_addToGC(lib.worldConstr_createGearJoint(...)) end,
+        createSimpleMotorJoint   = function(...) return _obj_addToGC(lib.worldConstr_createSimpleMotorJoint(...)) end,
+    },
+    __newindex = function(self, key, val)
+        if key == "location" then
+            lib.worldEnt_setLocation(self, val)
+        elseif key == "angle" then
+            lib.worldEnt_setAngle(self, val)
+        elseif key == "velocity" then
+            lib.worldEnt_setVelocity(self, val)
+        end
+    end
 })
 
 ffi.metatype("WorldShape_t", {
-	__index = {
-		friction = lib.worldShape_friction,
-		elasticity = lib.worldShape_elasticity,
-		group = lib.worldShape_group,
-		collides = lib.worldShape_collides
-	},
-	__newindex = function(self, key, val)
-		if key == "friction" then
-			lib.worldShape_setFriction(self, val)
-		elseif key == "elasticity" then
-			lib.worldShape_setElasticity(self, val)
-		elseif key == "group" then
-			lib.worldShape_setGroup(self, val)
-		elseif key == "collides" then
-			lib.worldShape_setCollides(self, val)
-		end
-	end
+    __index = {
+        friction = lib.worldShape_friction,
+        elasticity = lib.worldShape_elasticity,
+        group = lib.worldShape_group,
+        collides = lib.worldShape_collides
+    },
+    __newindex = function(self, key, val)
+        if key == "friction" then
+            lib.worldShape_setFriction(self, val)
+        elseif key == "elasticity" then
+            lib.worldShape_setElasticity(self, val)
+        elseif key == "group" then
+            lib.worldShape_setGroup(self, val)
+        elseif key == "collides" then
+            lib.worldShape_setCollides(self, val)
+        end
+    end
 })
 
 ffi.metatype("WorldConstraint_t", {
-	__index = {
-		invalidate = lib.worldConstr_invalidate
-	}
+    __index = {
+        invalidate = lib.worldConstr_invalidate
+    }
 })
 
 --
 -- Lifecycle/HighLevelInterface functions
 dynamo.initialized = false
 function dynamo.init(viewport, desiredFPS, ...)
-	assert(dynamo.initialized == false)
-	dynamo.initialized = true
-	
-	gl.glEnable(gl.GL_BLEND);
-	gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA)
-	gl.glEnable(gl.GL_CULL_FACE);
+    assert(dynamo.initialized == false)
+    dynamo.initialized = true
+    
+    gl.glEnable(gl.GL_BLEND);
+    gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA)
+    gl.glEnable(gl.GL_CULL_FACE);
     gl.glFrontFace(gl.GL_CW);
-	gl.glDisable(gl.GL_DEPTH_TEST);
+    gl.glDisable(gl.GL_DEPTH_TEST);
 
-	dynamo.renderer = _createRenderer(viewport)
-	lib.draw_init(dynamo.renderer)
-	dynamo.renderer:handleResize(viewport)
+    dynamo.renderer = _createRenderer(viewport)
+    lib.draw_init(dynamo.renderer)
+    dynamo.renderer:handleResize(viewport)
 
-	dynamo.timer = _createTimer(desiredFPS, nil)
+    dynamo.timer = _createTimer(desiredFPS, nil)
 
-	dynamo.input.manager = _createInputManager()
-	dynamo.soundManager  = _createSoundManager()
-	lib.soundManager_makeCurrent(dynamo.soundManager)
+    dynamo.input.manager = _createInputManager()
+    dynamo.soundManager  = _createSoundManager()
+    lib.soundManager_makeCurrent(dynamo.soundManager)
 
-	dynamo.world = _createWorld()
-	dynamo.world.gravity = vec2(0,-100)
+    dynamo.world = _createWorld()
+    dynamo.world.gravity = vec2(0,-100)
 
-	local startCallback = rawget(_G, "dynamoStartCallback")
-	if startCallback ~= nil then
-		startCallback(...)
-	end
+    local startCallback = rawget(_G, "dynamoStartCallback")
+    if startCallback ~= nil then
+        startCallback(...)
+    end
 
-	return true
+    return true
 end
 
 function dynamo.cleanup()
-	-- Release all resources
-	dynamo.renderer = nil
-	dynamo.timer = nil
-	dynamo.input.manager = nil
-	dynamo.world = nil
-	dynamo.soundManager = nil
-	lib.draw_cleanup()
+    -- Release all resources
+    dynamo.renderer = nil
+    dynamo.timer = nil
+    dynamo.input.manager = nil
+    dynamo.world = nil
+    dynamo.soundManager = nil
+    lib.draw_cleanup()
 end
 
 local _messages = nil
 -- Passes a message to the host application
 function dynamo.passMessage(key, value)
-	local t = type(value)
-	if t ~= "string" and t ~= "number" and t ~= "boolean" then
-		error("Invalid type for message")
-	elseif type(key) ~= "string" then
-		error("Invalid type for message key")
-	end
-	_messages = _messages or {}
-	_messages[key] = value
+    local t = type(value)
+    if t ~= "string" and t ~= "number" and t ~= "boolean" then
+        error("Invalid type for message")
+    elseif type(key) ~= "string" then
+        error("Invalid type for message key")
+    end
+    _messages = _messages or {}
+    _messages[key] = value
 end
 
 
 function dynamo.cycle()
-	if dynamo.initialized ~= true then
-		return
-	end
-	dynamo.input.manager:postActiveEvents()
-	dynamo.timer:step(dynamo.time())
-	dynamo.world:step(dynamo.timer)
-	dynamo.renderer:display(dynamo.timer.timeSinceLastUpdate, dynamo.timer:interpolation())
-	lib.autoReleasePool_drain(lib.autoReleasePool_getGlobal())
+    if dynamo.initialized ~= true then
+        return
+    end
+    dynamo.input.manager:postActiveEvents()
+    dynamo.timer:step(dynamo.time())
+    dynamo.world:step(dynamo.timer)
+    dynamo.renderer:display(dynamo.timer.timeSinceLastUpdate, dynamo.timer:interpolation())
+    lib.autoReleasePool_drain(lib.autoReleasePool_getGlobal())
 
-	local ret = _messages
-	_messages = nil
-	return ret
+    local ret = _messages
+    _messages = nil
+    return ret
 end
 
 return dynamo

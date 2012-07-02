@@ -16,74 +16,74 @@
 #include <stdbool.h>
 
 typedef enum _TMXMap_orientation {
-	kTMXMap_orthogonal,
-	kTMXMap_isometric
+    kTMXMap_orthogonal,
+    kTMXMap_isometric
 } TMXMap_orientation;
 
 typedef struct _TMXProperty {
-	char *name;
-	char *value;
+    char *name;
+    char *value;
 } TMXProperty_t;
 
 typedef struct _TMXTileset {
-	int firstTileGid;
-	int imageWidth, imageHeight;
-	int tileWidth, tileHeight;
-	int spacing;
-	int margin;
-	char *imagePath;
+    int firstTileGid;
+    int imageWidth, imageHeight;
+    int tileWidth, tileHeight;
+    int spacing;
+    int margin;
+    char *imagePath;
 } TMXTileset_t;
 
 typedef struct _TMXTile {
-	TMXTileset_t *tileset;
-	int id;
-	bool flippedVertically;
-	bool flippedHorizontally;
+    TMXTileset_t *tileset;
+    int id;
+    bool flippedVertically;
+    bool flippedHorizontally;
 } TMXTile_t;
 
 typedef struct _TMXLayer {
-	char *name;
-	float opacity;
-	bool isVisible;
-	int numberOfTiles;
-	TMXTile_t *tiles;
-	int numberOfProperties;
-	TMXProperty_t *properties; // Default NULL
+    char *name;
+    float opacity;
+    bool isVisible;
+    int numberOfTiles;
+    TMXTile_t *tiles;
+    int numberOfProperties;
+    TMXProperty_t *properties; // Default NULL
 } TMXLayer_t;
 
 typedef struct _TMXObject {
-	char *name;
-	char *type;
-	int x, y; // in pixels
-	int width, height; // in pixels
-	TMXTile_t tile; // Default -1
-	int numberOfProperties;
-	TMXProperty_t *properties; // Default NULL
+    char *name;
+    char *type;
+    int x, y; // in pixels
+    int width, height; // in pixels
+    TMXTile_t tile; // Default -1
+    int numberOfProperties;
+    TMXProperty_t *properties; // Default NULL
 } TMXObject_t;
 
 typedef struct _TMXObjectGroup {
-	char *name;
-	int numberOfObjects;
-	TMXObject_t *objects;
-	int numberOfProperties;
-	TMXProperty_t *properties; // Default NULL
+    char *name;
+    int numberOfObjects;
+    TMXObject_t *objects;
+    int numberOfProperties;
+    TMXProperty_t *properties; // Default NULL
 } TMXObjectGroup_t;
 
 extern Class_t Class_TMXMap;
 typedef struct _TMXMap {
-	OBJ_GUTS
-	TMXMap_orientation orientation;
-	int width, height; // Dimensions in tiles
-	int tileWidth, tileHeight; // Dimensions of tiles in pixels
-	
-	int numberOfLayers;
-	TMXLayer_t *layers;
-	int numberOfTilesets;
-	TMXTileset_t *tilesets;
-	int numberOfObjectGroups;
-	TMXObjectGroup_t *objectGroups;
-	int numberOfProperties;
-	TMXProperty_t *properties;
+    OBJ_GUTS
+    TMXMap_orientation orientation;
+    int width, height; // Dimensions in tiles
+    int tileWidth, tileHeight; // Dimensions of tiles in pixels
+    
+    int numberOfLayers;
+    TMXLayer_t *layers;
+    int numberOfTilesets;
+    TMXTileset_t *tilesets;
+    int numberOfObjectGroups;
+    TMXObjectGroup_t *objectGroups;
+    int numberOfProperties;
+    TMXProperty_t *properties;
 } TMXMap_t;
 
 extern Class_t Class_TMXLayerRenderable;

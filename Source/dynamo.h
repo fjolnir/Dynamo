@@ -1,7 +1,7 @@
 /*!
-	@framework Dynamo
-	@abstract
-	@discussion Dynamo is a lightweight 2D engine written in C with LuaJIT bindings.
+    @framework Dynamo
+    @abstract
+    @discussion Dynamo is a lightweight 2D engine written in C with LuaJIT bindings.
 */
 #ifndef _DYNAMO_H_
 #define _DYNAMO_H_

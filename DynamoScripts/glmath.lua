@@ -4,66 +4,66 @@ local C = ffi.C
 ffi.cdef[[
 typedef float GLMFloat;
 union _vec2_t {
-	GLMFloat f[2];
-	struct { GLMFloat x; GLMFloat y; };
-	struct { GLMFloat w; GLMFloat h; };
-	struct { GLMFloat u; GLMFloat v; };
+    GLMFloat f[2];
+    struct { GLMFloat x; GLMFloat y; };
+    struct { GLMFloat w; GLMFloat h; };
+    struct { GLMFloat u; GLMFloat v; };
 
 };
 typedef union _vec2_t vec2_t;
 union _vec3_t {
-	GLMFloat f[3];
-	struct { GLMFloat x; GLMFloat y; GLMFloat z; };
-	struct { GLMFloat r; GLMFloat g; GLMFloat b; };
-	struct { vec2_t xy; GLMFloat andY; };
+    GLMFloat f[3];
+    struct { GLMFloat x; GLMFloat y; GLMFloat z; };
+    struct { GLMFloat r; GLMFloat g; GLMFloat b; };
+    struct { vec2_t xy; GLMFloat andY; };
 };
 typedef union _vec3_t vec3_t;
 union _vec4_t {
-	GLMFloat f[4];
-	struct { GLMFloat x; GLMFloat y; GLMFloat z; GLMFloat w; };
-	struct { GLMFloat r; GLMFloat g; GLMFloat b; GLMFloat a; };
-	struct { vec3_t xyz; GLMFloat andW; };
+    GLMFloat f[4];
+    struct { GLMFloat x; GLMFloat y; GLMFloat z; GLMFloat w; };
+    struct { GLMFloat r; GLMFloat g; GLMFloat b; GLMFloat a; };
+    struct { vec3_t xyz; GLMFloat andW; };
 };
 typedef union _vec4_t vec4_t;
 typedef struct _mat3_t {
-	GLMFloat m00, m01, m02;
-	GLMFloat m10, m11, m12;
-	GLMFloat m20, m21, m22;
+    GLMFloat m00, m01, m02;
+    GLMFloat m10, m11, m12;
+    GLMFloat m20, m21, m22;
 } mat3_t;
 union _mat4_t {
-	GLMFloat f[16];
-	struct {
-		GLMFloat m00, m01, m02, m03;
-		GLMFloat m10, m11, m12, m13;
-		GLMFloat m20, m21, m22, m23;
-		GLMFloat m30, m31, m32, m33;
-	};
+    GLMFloat f[16];
+    struct {
+        GLMFloat m00, m01, m02, m03;
+        GLMFloat m10, m11, m12, m13;
+        GLMFloat m20, m21, m22, m23;
+        GLMFloat m30, m31, m32, m33;
+    };
 };
 typedef union _mat4_t mat4_t;
 union _quat_t {
-	GLMFloat f[4];
-	struct { GLMFloat x; GLMFloat y; GLMFloat z; GLMFloat w; };
-	struct { vec3_t vec; GLMFloat scalar; };
+    GLMFloat f[4];
+    struct { GLMFloat x; GLMFloat y; GLMFloat z; GLMFloat w; };
+    struct { vec3_t vec; GLMFloat scalar; };
 };
 typedef union _quat_t quat_t;
 
 struct _matrix_stack_t {
-	mat4_t *items;
-	unsigned int capacity;
-	unsigned int count;
+    mat4_t *items;
+    unsigned int capacity;
+    unsigned int count;
 };
 typedef struct _matrix_stack_t matrix_stack_t;
 
 union _bezier_t {
-	GLMFloat f[12];
-	vec3_t controlPoints[4];
-	vec3_t cp[4];
+    GLMFloat f[12];
+    vec3_t controlPoints[4];
+    vec3_t cp[4];
 };
 typedef union _bezier_t bezier_t;
 enum _bezierAxis {
-	kBezierAxisX = 0,
-	kBezierAxisY,
-	kBezierAxisZ
+    kBezierAxisX = 0,
+    kBezierAxisY,
+    kBezierAxisZ
 };
 typedef enum _bezierAxis bezierAxis_t;
 
@@ -207,201 +207,201 @@ mat4_lookat = C._mat4_lookat
 
 vec2_t = ffi.metatype("vec2_t",
 {
-	__call = C._printVec2,
-	__add = function(a,b)
-		if type(b) == "number" then
-			return C._vec2_scalarAdd(a,b)
-		else
-			return C._vec2_add(a,b)
-		end
-	end,
-	__sub = function(a,b)
-		if type(b) == "number" then
-			return C._vec2_scalarSub(a,b)
-		else
-			return C._vec2_sub(a,b)
-		end
-	end,
-	__mul = function(a,b)
-		if type(b) == "number" then
-			return C._vec2_scalarMul(a,b)
-		else
-			return C._vec2_mul(a,b)
-		end
-	end,
-	__div = function(a,b)
-		if type(b) == "number" then
-			return C._vec2_scalarDiv(a,b)
-		else
-			return C._vec2_div(a,b)
-		end
-	end,
-	__eq = C._vec2_equals,
-	__len = function(a) return C._vec2_mag(a) end,
-	__index = {
-		dot = C._vec2_dot,
-		magSquared = C._vec2_magSquared,
-		mag = C._vec2_mag,
-		dist = C._vec2_dist,
-		negate = C._vec2_negate,
-		floor = C._vec2_floor,
-		normalize = C._vec2_normalize,
-	}
+    __call = C._printVec2,
+    __add = function(a,b)
+        if type(b) == "number" then
+            return C._vec2_scalarAdd(a,b)
+        else
+            return C._vec2_add(a,b)
+        end
+    end,
+    __sub = function(a,b)
+        if type(b) == "number" then
+            return C._vec2_scalarSub(a,b)
+        else
+            return C._vec2_sub(a,b)
+        end
+    end,
+    __mul = function(a,b)
+        if type(b) == "number" then
+            return C._vec2_scalarMul(a,b)
+        else
+            return C._vec2_mul(a,b)
+        end
+    end,
+    __div = function(a,b)
+        if type(b) == "number" then
+            return C._vec2_scalarDiv(a,b)
+        else
+            return C._vec2_div(a,b)
+        end
+    end,
+    __eq = C._vec2_equals,
+    __len = function(a) return C._vec2_mag(a) end,
+    __index = {
+        dot = C._vec2_dot,
+        magSquared = C._vec2_magSquared,
+        mag = C._vec2_mag,
+        dist = C._vec2_dist,
+        negate = C._vec2_negate,
+        floor = C._vec2_floor,
+        normalize = C._vec2_normalize,
+    }
 })
 
 vec3_t = ffi.metatype("vec3_t",
 {
-	__call = C._printVec3,
-	__add = function(a,b)
-		if type(b) == "number" then
-			return C._vec3_scalarAdd(a,b)
-		else
-			return C._vec3_add(a,b)
-		end
-	end,
-	__sub = function(a,b)
-		if type(b) == "number" then
-			return C._vec3_scalarSub(a,b)
-		else
-			return C._vec3_sub(a,b)
-		end
-	end,
-	__mul = function(a,b)
-		if type(b) == "number" then
-			return C._vec3_scalarMul(a,b)
-		else
-			return C._vec3_mul(a,b)
-		end
-	end,
-	__div = function(a,b)
-		if type(b) == "number" then
-			return C._vec3_scalarDiv(a,b)
-		else
-			return C._vec3_div(a,b)
-		end
-	end,
-	__eq = C._vec3_equals,
-	__len = function(a) return C._vec3_mag(a) end,
-	__index = {
-		dot = C._vec3_dot,
-		magSquared = C._vec3_magSquared,
-		mag = C._vec3_mag,
-		dist = C._vec3_dist,
-		cross = C._vec3_cross,
-		negate = C._vec3_negate,
-		floor = C._vec3_floor,
-		normalize = C._vec3_normalize,
-	}
+    __call = C._printVec3,
+    __add = function(a,b)
+        if type(b) == "number" then
+            return C._vec3_scalarAdd(a,b)
+        else
+            return C._vec3_add(a,b)
+        end
+    end,
+    __sub = function(a,b)
+        if type(b) == "number" then
+            return C._vec3_scalarSub(a,b)
+        else
+            return C._vec3_sub(a,b)
+        end
+    end,
+    __mul = function(a,b)
+        if type(b) == "number" then
+            return C._vec3_scalarMul(a,b)
+        else
+            return C._vec3_mul(a,b)
+        end
+    end,
+    __div = function(a,b)
+        if type(b) == "number" then
+            return C._vec3_scalarDiv(a,b)
+        else
+            return C._vec3_div(a,b)
+        end
+    end,
+    __eq = C._vec3_equals,
+    __len = function(a) return C._vec3_mag(a) end,
+    __index = {
+        dot = C._vec3_dot,
+        magSquared = C._vec3_magSquared,
+        mag = C._vec3_mag,
+        dist = C._vec3_dist,
+        cross = C._vec3_cross,
+        negate = C._vec3_negate,
+        floor = C._vec3_floor,
+        normalize = C._vec3_normalize,
+    }
 })
 
 vec4_t = ffi.metatype("vec4_t",
 {
-	__call = C._printVec4,
-	__add = function(a,b)
-		if type(b) == "number" then
-			return C._vec4_scalarAdd(a,b)
-		else
-			return C._vec4_add(a,b)
-		end
-	end,
-	__sub = function(a,b)
-		if type(b) == "number" then
-			return C._vec4_scalarSub(a,b)
-		else
-			return C._vec4_sub(a,b)
-		end
-	end,
-	__mul = function(a,b)
-		if type(b) == "number" then
-			return C._vec4_scalarMul(a,b)
-		else
-			return C._vec4_mul(a,b)
-		end
-	end,
-	__div = function(a,b)
-		if type(b) == "number" then
-			return C._vec4_scalarDiv(a,b)
-		else
-			return C._vec4_div(a,b)
-		end
-	end,
-	__eq = C._vec4_equals,
-	__len = function(a) return C._vec4_mag(a) end,
-	__index = {
-		dot = C._vec4_dot,
-		magSquared = C._vec4_magSquared,
-		mag = C._vec4_mag,
-		dist = C._vec4_dist,
-		cross = C._vec4_cross,
-		negate = C._vec4_negate,
-		floor = C._vec4_floor,
-		normalize = C._vec4_normalize,
-	}
+    __call = C._printVec4,
+    __add = function(a,b)
+        if type(b) == "number" then
+            return C._vec4_scalarAdd(a,b)
+        else
+            return C._vec4_add(a,b)
+        end
+    end,
+    __sub = function(a,b)
+        if type(b) == "number" then
+            return C._vec4_scalarSub(a,b)
+        else
+            return C._vec4_sub(a,b)
+        end
+    end,
+    __mul = function(a,b)
+        if type(b) == "number" then
+            return C._vec4_scalarMul(a,b)
+        else
+            return C._vec4_mul(a,b)
+        end
+    end,
+    __div = function(a,b)
+        if type(b) == "number" then
+            return C._vec4_scalarDiv(a,b)
+        else
+            return C._vec4_div(a,b)
+        end
+    end,
+    __eq = C._vec4_equals,
+    __len = function(a) return C._vec4_mag(a) end,
+    __index = {
+        dot = C._vec4_dot,
+        magSquared = C._vec4_magSquared,
+        mag = C._vec4_mag,
+        dist = C._vec4_dist,
+        cross = C._vec4_cross,
+        negate = C._vec4_negate,
+        floor = C._vec4_floor,
+        normalize = C._vec4_normalize,
+    }
 })
 quat_t = ffi.metatype("quat_t",
 {
-	__call = C._printQuat,
-	__mul = C._quat_multQuat,
-	__eq = C._quat_equals,
-	__index = {
-		magSquared = C._quat_magSquared,
-		mag = C._quat_mag,
-		toOrtho = C._quat_to_ortho,
-		slerp = C._quat_slerp,
-		inverse = C._quat_inverse,
-		computeW = C._quat_computeW,
-		normalize = C._quat_normalize,
-		rotatePoint = C._quat_rotateVec3
-	}
+    __call = C._printQuat,
+    __mul = C._quat_multQuat,
+    __eq = C._quat_equals,
+    __index = {
+        magSquared = C._quat_magSquared,
+        mag = C._quat_mag,
+        toOrtho = C._quat_to_ortho,
+        slerp = C._quat_slerp,
+        inverse = C._quat_inverse,
+        computeW = C._quat_computeW,
+        normalize = C._quat_normalize,
+        rotatePoint = C._quat_rotateVec3
+    }
 })
 mat4_t = ffi.metatype("mat4_t",
 {
-	__call = C._printMat4,
-	__mul = C._mat4_mul,
-	__eq = C._mat4_equals,
-	__index = {
-		det = C._mat4_det,
-		inverse = C._mat4_inverse,
-		transpose = C._mat4_transpose
-	}
+    __call = C._printMat4,
+    __mul = C._mat4_mul,
+    __eq = C._mat4_equals,
+    __index = {
+        det = C._mat4_det,
+        inverse = C._mat4_inverse,
+        transpose = C._mat4_transpose
+    }
 })
 
 
 -- Matrix stack
 matrix_stack_t = ffi.metatype("matrix_stack_t",
 {
-	__index = {
-		push = C._matrix_stack_push,
-		pushItem = C._matrix_stack_push_item,
-		pop = C._matrix_stack_pop,
-		mat4 = C._matrix_stack_get_mat4,
-		mat3 = C._matrix_stack_get_mat3,
-		translate = C._matrix_stack_translate,
-		rotate = C._matrix_stack_rotate,
-		scale = C._matrix_stack_scale
-	}
+    __index = {
+        push = C._matrix_stack_push,
+        pushItem = C._matrix_stack_push_item,
+        pop = C._matrix_stack_pop,
+        mat4 = C._matrix_stack_get_mat4,
+        mat3 = C._matrix_stack_get_mat3,
+        translate = C._matrix_stack_translate,
+        rotate = C._matrix_stack_rotate,
+        scale = C._matrix_stack_scale
+    }
 })
 
 -- Bezier curve
 bezier_t = ffi.metatype("bezier_t",
 {
-	__index = {
-		getPoint = function(curve, t, offset)
-			if offset == nil then
-				return C._bezier_getPoint(curve, t)
-			else
-				return C._bezier_getPointWithOffset(curve, t, offset)
-			end
-		end,
-		getFirstDerivative = C._bezier_firstDerivative,
-		
-	}
+    __index = {
+        getPoint = function(curve, t, offset)
+            if offset == nil then
+                return C._bezier_getPoint(curve, t)
+            else
+                return C._bezier_getPointWithOffset(curve, t, offset)
+            end
+        end,
+        getFirstDerivative = C._bezier_firstDerivative,
+        
+    }
 })
 
 bezier = function(c1, c2, c3, c4)
-	local curve = ffi.new(bezier_t)
-	curve.controlPoints = {c1, c2, c3, c4}
-	return curve
+    local curve = ffi.new(bezier_t)
+    curve.controlPoints = {c1, c2, c3, c4}
+    return curve
 end
 
 vec2 = function(x,y)
@@ -422,8 +422,8 @@ quat = function(x,y,z,w)
 end
 
 function rgb(r,g,b,a)
-	a = a or 1
-	return rgba(r,g,b,a)
+    a = a or 1
+    return rgba(r,g,b,a)
 end
 
 vec2_zero = C.GLMVec2_zero

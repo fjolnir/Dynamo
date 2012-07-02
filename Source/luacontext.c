@@ -51,9 +51,9 @@ LuaContext_t *luaCtx_createContext()
     luaCtx_addSearchPath(out, buf);
     
     dynamo_assert(util_pathForResource("glmath", "lua", "DynamoScripts", buf, 1024), "Couldn't find glmath init script");
-	dynamo_assert(luaCtx_executeFile(out, buf), "Error initializing GLMath");
+    dynamo_assert(luaCtx_executeFile(out, buf), "Error initializing GLMath");
     dynamo_assert(util_pathForResource("dynamo", "lua", "DynamoScripts", buf, 1024), "Couldn't find dynamo init script");
-	dynamo_assert(luaCtx_executeFile(out, buf), "Error initializing dynamo");
+    dynamo_assert(luaCtx_executeFile(out, buf), "Error initializing dynamo");
     
     return out;
 }
@@ -200,66 +200,66 @@ void luaCtx_concat(LuaContext_t *aCtx, int n)
 }
 int luaCtx_next(LuaContext_t *aCtx, int index)
 {
-	return lua_next(aCtx->luaState, index);
+    return lua_next(aCtx->luaState, index);
 }
 
 int luaCtx_type(LuaContext_t *aCtx, int idx)
 {
-	return lua_type(aCtx->luaState, idx);
+    return lua_type(aCtx->luaState, idx);
 }
 int luaCtx_isnumber(LuaContext_t *aCtx, int idx)
 {
-	return lua_isnumber(aCtx->luaState, idx);
+    return lua_isnumber(aCtx->luaState, idx);
 }
 int luaCtx_isstring(LuaContext_t *aCtx, int idx)
 {
-	return lua_isstring(aCtx->luaState, idx);
+    return lua_isstring(aCtx->luaState, idx);
 }
 int luaCtx_isuserdata(LuaContext_t *aCtx, int idx)
 {
-	return lua_isuserdata(aCtx->luaState, idx);
+    return lua_isuserdata(aCtx->luaState, idx);
 }
 int luaCtx_istable(LuaContext_t *aCtx, int idx)
 {
-	return lua_istable(aCtx->luaState, idx);
+    return lua_istable(aCtx->luaState, idx);
 }
 int luaCtx_islightuserdata(LuaContext_t *aCtx, int idx)
 {
-	return lua_islightuserdata(aCtx->luaState, idx);
+    return lua_islightuserdata(aCtx->luaState, idx);
 }
 int luaCtx_isnil(LuaContext_t *aCtx, int idx)
 {
-	return lua_isnil(aCtx->luaState, idx);
+    return lua_isnil(aCtx->luaState, idx);
 }
 int luaCtx_isboolean(LuaContext_t *aCtx, int idx)
 {
-	return lua_isboolean(aCtx->luaState, idx);
+    return lua_isboolean(aCtx->luaState, idx);
 }
 int luaCtx_isfunction(LuaContext_t *aCtx, int idx)
 {
-	return lua_isfunction(aCtx->luaState, idx);
+    return lua_isfunction(aCtx->luaState, idx);
 }
 int luaCtx_isnone(LuaContext_t *aCtx, int idx)
 {
-	return lua_isnone(aCtx->luaState, idx);
+    return lua_isnone(aCtx->luaState, idx);
 }
 
 
 float luaCtx_tonumber(LuaContext_t *aCtx, int idx)
 {
-	return lua_tonumber(aCtx->luaState, idx);
+    return lua_tonumber(aCtx->luaState, idx);
 }
 int luaCtx_tointeger(LuaContext_t *aCtx, int idx)
 {
-	return lua_tointeger(aCtx->luaState, idx);
+    return lua_tointeger(aCtx->luaState, idx);
 }
 int luaCtx_toboolean(LuaContext_t *aCtx, int idx)
 {
-	return lua_toboolean(aCtx->luaState, idx);
+    return lua_toboolean(aCtx->luaState, idx);
 }
 const char *luaCtx_tostring(LuaContext_t *aCtx, int idx)
 {
-	return lua_tostring(aCtx->luaState, idx);
+    return lua_tostring(aCtx->luaState, idx);
 }
 
 

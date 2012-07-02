@@ -1,7 +1,7 @@
 /*!
-	@header Primitive Type Objects
-	@abstract
-	@discussion Provides Objectified primitive types created in order to be able to memory manage/insert them along with Obj_t's into collections/type check them.
+    @header Primitive Type Objects
+    @abstract
+    @discussion Provides Objectified primitive types created in order to be able to memory manage/insert them along with Obj_t's into collections/type check them.
 
 */
 // 
@@ -16,15 +16,15 @@ extern Class_t Class_String;
 extern Class_t Class_Number;
 
 /*!
-	A string
+    A string
 */
 typedef struct _String {
-	OBJ_GUTS
+    OBJ_GUTS
     char *cString;
-	long length; // Length of the string data
+    long length; // Length of the string data
 } String_t;
 /*!
-	Creates a string from the given character array.
+    Creates a string from the given character array.
 */
 String_t *string_create(const char *str, size_t len);
 /*!
@@ -51,15 +51,15 @@ unsigned char char_getUnicodeChar(const char *p);
 size_t string_getUnicodeStr(String_t *aStr, unsigned short *aoOut, size_t aMaxLen);
 
 /*!
-	A number
+    A number
 */
 typedef struct _Number {
-	OBJ_GUTS
-	GLMFloat floatValue;
+    OBJ_GUTS
+    GLMFloat floatValue;
 } Number_t;
 
 /*!
-	Creates a number from the given double.
+    Creates a number from the given double.
 */
 Number_t *number_create(GLMFloat num);
 

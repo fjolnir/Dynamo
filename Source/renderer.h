@@ -24,9 +24,9 @@ typedef void (*RenderableDisplayCallback_t)(Renderer_t *aRenderer, Renderable_t 
     int luaDisplayCallback;
 
 /*!
-	For defining an object you wish to have rendered
-	(You usually wouldn't use this type directly, rather you'd simply add RENDERABLE_GUTS
-	as the first field after the guts of the object you wish to render)
+    For defining an object you wish to have rendered
+    (You usually wouldn't use this type directly, rather you'd simply add RENDERABLE_GUTS
+    as the first field after the guts of the object you wish to render)
 */
 struct _Renderable {
     OBJ_GUTS
@@ -35,49 +35,49 @@ struct _Renderable {
 extern Class_t Class_Renderable;
 
 /*!
-	The renderer object
+    The renderer object
 
-	@field frameBufferId The id of the framebuffer the renderer draws to.
-	@field viewportSize The size of the renderer viewport
-	@field cameraOffset The viewing offset of the renderer
-	@field worldMatrixStack The world matrix stack
-	@field projectionMatrixStack The projection matrix stack
+    @field frameBufferId The id of the framebuffer the renderer draws to.
+    @field viewportSize The size of the renderer viewport
+    @field cameraOffset The viewing offset of the renderer
+    @field worldMatrixStack The world matrix stack
+    @field projectionMatrixStack The projection matrix stack
 */
 struct _Renderer {
-	OBJ_GUTS
-	GLuint frameBufferId; // The FBO the renderer should draw to
-	vec2_t viewportSize;
-	vec3_t cameraOffset;
-	matrix_stack_t *worldMatrixStack;
-	matrix_stack_t *projectionMatrixStack;
-	LinkedList_t *renderables; // For internal use only
+    OBJ_GUTS
+    GLuint frameBufferId; // The FBO the renderer should draw to
+    vec2_t viewportSize;
+    vec3_t cameraOffset;
+    matrix_stack_t *worldMatrixStack;
+    matrix_stack_t *projectionMatrixStack;
+    LinkedList_t *renderables; // For internal use only
 };
 extern Class_t Class_Renderer;
 
 /*!
-	Creates a renderer object
+    Creates a renderer object
 */
 extern Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset);
 
 /*!
-	Draws every renderable in the given renderer.
+    Draws every renderable in the given renderer.
 */
 extern void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation);
 
 /*!
-	Adds a renderable to the top of the renderable stack.
+    Adds a renderable to the top of the renderable stack.
 */
 extern void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable);
 /*!
-	Removes the topmost renderable
+    Removes the topmost renderable
 */
 extern void renderer_popRenderable(Renderer_t *aRenderer);
 /*!
-	Inserts a renderable behind another renderable
+    Inserts a renderable behind another renderable
 */
 extern bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift);
 /*!
-	Removes the given renderable from the renderable stack
+    Removes the given renderable from the renderable stack
 */
 extern bool renderer_deleteRenderable(Renderer_t *aRenderer, void *aRenderable);
 

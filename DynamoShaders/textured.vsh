@@ -10,7 +10,7 @@ varying vec2 v_texCoord0;
 
 void main()
 {
-	mat4 mvp = u_projectionMatrix * u_worldMatrix;
-	gl_Position = mvp * a_position;
-	v_texCoord0 = a_texCoord0;
+    mat4 mvp = u_projectionMatrix * u_worldMatrix;
+    gl_Position = mvp * a_position;
+    v_texCoord0 = a_texCoord0;
 }

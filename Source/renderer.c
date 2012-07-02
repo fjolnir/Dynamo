@@ -5,39 +5,39 @@
 
 static void renderer_destroy(Renderer_t *aRenderer);
 Class_t Class_Renderer = {
-	"Renderer",
-	sizeof(Renderer_t),
-	(Obj_destructor_t)&renderer_destroy
+    "Renderer",
+    sizeof(Renderer_t),
+    (Obj_destructor_t)&renderer_destroy
 };
 
 Class_t Class_Renderable = {
-	"Renderable",
-	sizeof(Renderable_t),
-	NULL
+    "Renderable",
+    sizeof(Renderable_t),
+    NULL
 };
 
 #pragma mark - Creation
 
 Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 {
-	Renderer_t *out = obj_create_autoreleased(&Class_Renderer);
-	out->renderables = obj_retain(llist_create((InsertionCallback_t)&obj_retain, (RemovalCallback_t)&obj_release));
-	out->frameBufferId = 0;
-	out->viewportSize = aViewPortSize;
-	out->cameraOffset = aCameraOffset;
-	out->worldMatrixStack = matrix_stack_create(10);
-	out->projectionMatrixStack = matrix_stack_create(10);
+    Renderer_t *out = obj_create_autoreleased(&Class_Renderer);
+    out->renderables = obj_retain(llist_create((InsertionCallback_t)&obj_retain, (RemovalCallback_t)&obj_release));
+    out->frameBufferId = 0;
+    out->viewportSize = aViewPortSize;
+    out->cameraOffset = aCameraOffset;
+    out->worldMatrixStack = matrix_stack_create(10);
+    out->projectionMatrixStack = matrix_stack_create(10);
 
-	// Initialize the transform matrices
-	matrix_stack_push(out->worldMatrixStack);
-	matrix_stack_push(out->projectionMatrixStack);
+    // Initialize the transform matrices
+    matrix_stack_push(out->worldMatrixStack);
+    matrix_stack_push(out->projectionMatrixStack);
     
-	return out;
+    return out;
 }
 
 void renderer_destroy(Renderer_t *aRenderer)
 {
-	obj_release(aRenderer->renderables), aRenderer->renderables = NULL;
+    obj_release(aRenderer->renderables), aRenderer->renderables = NULL;
 }
 
 
@@ -45,19 +45,19 @@ void renderer_destroy(Renderer_t *aRenderer)
 
 void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFloat aInterpolation)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     
     matrix_stack_push(aRenderer->worldMatrixStack);
     vec3_t ofs = aRenderer->cameraOffset;
     matrix_stack_translate(aRenderer->worldMatrixStack, ofs.x, ofs.y, ofs.z);
     
-	// Render each of the renderer's entities
-	LinkedListItem_t *currentItem = aRenderer->renderables->head;
-	Renderable_t *renderable;
-	if(currentItem) {
-		do {
-			renderable = (Renderable_t *)currentItem->value;
-			if(renderable) {
+    // Render each of the renderer's entities
+    LinkedListItem_t *currentItem = aRenderer->renderables->head;
+    Renderable_t *renderable;
+    if(currentItem) {
+        do {
+            renderable = (Renderable_t *)currentItem->value;
+            if(renderable) {
                 if(renderable->displayCallback)
                     renderable->displayCallback(aRenderer, renderable, aTimeSinceLastFrame, aInterpolation);
                 if(renderable->luaDisplayCallback != -1) {
@@ -67,8 +67,8 @@ void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFl
                     luaCtx_pcall(GlobalLuaContext, 2, 0, 0);
                 }
             }
-		} while((currentItem = currentItem->next));
-	}
+        } while((currentItem = currentItem->next));
+    }
     
     matrix_stack_pop(aRenderer->worldMatrixStack);
 }
@@ -78,7 +78,7 @@ void renderer_display(Renderer_t *aRenderer, GLMFloat aTimeSinceLastFrame, GLMFl
 
 void renderer_pushRenderable(Renderer_t *aRenderer, void *aRenderable)
 {
-	llist_pushValue(aRenderer->renderables, aRenderable);
+    llist_pushValue(aRenderer->renderables, aRenderable);
 }
 
 void renderer_popRenderable(Renderer_t *aRenderer)
@@ -88,7 +88,7 @@ void renderer_popRenderable(Renderer_t *aRenderer)
 
 bool renderer_insertRenderable(Renderer_t *aRenderer, void *aRenderableToInsert, void *aRenderableToShift)
 {
-	return llist_insertValue(aRenderer->renderables, aRenderableToInsert, aRenderableToShift);
+    return llist_insertValue(aRenderer->renderables, aRenderableToInsert, aRenderableToShift);
 }
 
 bool renderer_deleteRenderable(Renderer_t *aRenderer, void *aRenderable)

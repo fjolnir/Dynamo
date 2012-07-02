@@ -21,11 +21,11 @@ varying vec2 v_texCoord3;
 
 void main()
 {
-	gl_Position = a_position; // We don't do any transformation
+    gl_Position = a_position; // We don't do any transformation
 
-	v_texCoord0 = a_texCoord0 + (1.0-u_layer0Depth) * u_backgroundOffset;
-	v_texCoord1 = a_texCoord0 + (1.0-u_layer1Depth) * u_backgroundOffset;
-	v_texCoord2 = a_texCoord0 + (1.0-u_layer2Depth) * u_backgroundOffset;
-	v_texCoord3 = a_texCoord0 + (1.0-u_layer3Depth) * u_backgroundOffset;
+    v_texCoord0 = a_texCoord0 + (1.0-u_layer0Depth) * u_backgroundOffset;
+    v_texCoord1 = a_texCoord0 + (1.0-u_layer1Depth) * u_backgroundOffset;
+    v_texCoord2 = a_texCoord0 + (1.0-u_layer2Depth) * u_backgroundOffset;
+    v_texCoord3 = a_texCoord0 + (1.0-u_layer3Depth) * u_backgroundOffset;
 
 }

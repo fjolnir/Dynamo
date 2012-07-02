@@ -14,104 +14,104 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 - (id)initWithBootScriptPath:(NSString *)aPath;
 {
-	if(!(self = [super init]))
-		return nil;
+    if(!(self = [super init]))
+        return nil;
 
-	_bootScriptPath = [aPath copy];
-	
-	return self;
+    _bootScriptPath = [aPath copy];
+    
+    return self;
 }
 
 - (void)loadView
 {
-	GLKView *view = [[[GLKView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]] autorelease];
-	self.view = view;
+    GLKView *view = [[[GLKView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]] autorelease];
+    self.view = view;
 
-	view.drawableColorFormat   = GLKViewDrawableColorFormatRGB565;
-	view.drawableDepthFormat   = GLKViewDrawableDepthFormatNone;
-	view.drawableStencilFormat = GLKViewDrawableStencilFormatNone;
-	view.drawableMultisample   = GLKViewDrawableMultisampleNone;
+    view.drawableColorFormat   = GLKViewDrawableColorFormatRGB565;
+    view.drawableDepthFormat   = GLKViewDrawableDepthFormatNone;
+    view.drawableStencilFormat = GLKViewDrawableStencilFormatNone;
+    view.drawableMultisample   = GLKViewDrawableMultisampleNone;
 }
 
 - (void)dealloc
 {
-	luaCtx_getglobal(GlobalLuaContext, "dynamo");
-	luaCtx_getfield(GlobalLuaContext, -1, "cleanup");
-	luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
-	luaCtx_pop(GlobalLuaContext, 1);
-	
+    luaCtx_getglobal(GlobalLuaContext, "dynamo");
+    luaCtx_getfield(GlobalLuaContext, -1, "cleanup");
+    luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
+    luaCtx_pop(GlobalLuaContext, 1);
+    
     luaCtx_teardown();
-	
-	[_context release], _context = nil;
-	[_activeTouches release]; _activeTouches = nil;
-	[_bootScriptPath release], _bootScriptPath = nil;
-	
-	[super dealloc];
+    
+    [_context release], _context = nil;
+    [_activeTouches release]; _activeTouches = nil;
+    [_bootScriptPath release], _bootScriptPath = nil;
+    
+    [super dealloc];
 }
 
 - (void)viewDidLoad
 {
-	[super viewDidLoad];
-	
-	self.view.multipleTouchEnabled = YES;
-	
-	_context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-	dynamo_assert(_context != nil, "Couldn't create OpenGL ES 2 context");
-	
-	_activeTouches = [[NSMutableArray alloc] init];
-	
-	self.preferredFramesPerSecond = 60;
-	GLKView *view = (GLKView *)self.view;
-	view.context = _context;
-	
-	[self setupGL];
+    [super viewDidLoad];
+    
+    self.view.multipleTouchEnabled = YES;
+    
+    _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    dynamo_assert(_context != nil, "Couldn't create OpenGL ES 2 context");
+    
+    _activeTouches = [[NSMutableArray alloc] init];
+    
+    self.preferredFramesPerSecond = 60;
+    GLKView *view = (GLKView *)self.view;
+    view.context = _context;
+    
+    [self setupGL];
 }
 
 - (void)viewDidUnload
 {    
-	[super viewDidUnload];
-	[_activeTouches release], _activeTouches = nil;
-	
-	[self tearDownGL];
-	
-	if([EAGLContext currentContext] == _context)
-		[EAGLContext setCurrentContext:nil];
-	[_context release], _context = nil;
+    [super viewDidUnload];
+    [_activeTouches release], _activeTouches = nil;
+    
+    [self tearDownGL];
+    
+    if([EAGLContext currentContext] == _context)
+        [EAGLContext setCurrentContext:nil];
+    [_context release], _context = nil;
 }
 
 - (void)_postTouchEventWithFinger:(int)aFinger isDown:(BOOL)aIsDown location:(CGPoint)aLoc
 {
-	aLoc.y = self.view.bounds.size.height - aLoc.y;
-	float scaleFactor = self.view.contentScaleFactor;
-	
-	luaCtx_getglobal(GlobalLuaContext, "dynamo");
+    aLoc.y = self.view.bounds.size.height - aLoc.y;
+    float scaleFactor = self.view.contentScaleFactor;
+    
+    luaCtx_getglobal(GlobalLuaContext, "dynamo");
     luaCtx_getfield(GlobalLuaContext, -1, "input");
-	luaCtx_getfield(GlobalLuaContext, -1, "manager");
-	luaCtx_getfield(GlobalLuaContext, -1, "postTouchEvent");
-	
-	luaCtx_pushvalue(GlobalLuaContext, -2);
-	luaCtx_pushinteger(GlobalLuaContext, aFinger);
-	luaCtx_pushboolean(GlobalLuaContext, aIsDown);
-	luaCtx_pushnumber(GlobalLuaContext, aLoc.x*scaleFactor);
-	luaCtx_pushnumber(GlobalLuaContext, aLoc.y*scaleFactor);
-	luaCtx_pcall(GlobalLuaContext, 5, 0, 0);
-	
-	luaCtx_pop(GlobalLuaContext, 3);
+    luaCtx_getfield(GlobalLuaContext, -1, "manager");
+    luaCtx_getfield(GlobalLuaContext, -1, "postTouchEvent");
+    
+    luaCtx_pushvalue(GlobalLuaContext, -2);
+    luaCtx_pushinteger(GlobalLuaContext, aFinger);
+    luaCtx_pushboolean(GlobalLuaContext, aIsDown);
+    luaCtx_pushnumber(GlobalLuaContext, aLoc.x*scaleFactor);
+    luaCtx_pushnumber(GlobalLuaContext, aLoc.y*scaleFactor);
+    luaCtx_pcall(GlobalLuaContext, 5, 0, 0);
+    
+    luaCtx_pop(GlobalLuaContext, 3);
 }
 
 - (void)setupGL
 {
-	[EAGLContext setCurrentContext:_context];
-	
+    [EAGLContext setCurrentContext:_context];
+    
     luaCtx_init();
-	NSString *dynamoScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"DynamoScripts"];
-	NSString *localScriptsPath  = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
-	luaCtx_addSearchPath(GlobalLuaContext, [dynamoScriptsPath fileSystemRepresentation]);
-	luaCtx_addSearchPath(GlobalLuaContext, [localScriptsPath fileSystemRepresentation]);
+    NSString *dynamoScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"DynamoScripts"];
+    NSString *localScriptsPath  = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
+    luaCtx_addSearchPath(GlobalLuaContext, [dynamoScriptsPath fileSystemRepresentation]);
+    luaCtx_addSearchPath(GlobalLuaContext, [localScriptsPath fileSystemRepresentation]);
 
     [self prepareLuaContext];
     
-	dynamo_assert(luaCtx_executeFile(GlobalLuaContext, [_bootScriptPath fileSystemRepresentation]), "Lua error");
+    dynamo_assert(luaCtx_executeFile(GlobalLuaContext, [_bootScriptPath fileSystemRepresentation]), "Lua error");
 }
 
 - (void)prepareLuaContext
@@ -121,14 +121,14 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 - (void)tearDownGL
 {
-	[EAGLContext setCurrentContext:_context];
+    [EAGLContext setCurrentContext:_context];
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-	luaCtx_getglobal(GlobalLuaContext, "dynamo");
-	luaCtx_getfield(GlobalLuaContext, -1, "cycle");
-	luaCtx_pcall(GlobalLuaContext, 0, 1, 0);
+    luaCtx_getglobal(GlobalLuaContext, "dynamo");
+    luaCtx_getfield(GlobalLuaContext, -1, "cycle");
+    luaCtx_pcall(GlobalLuaContext, 0, 1, 0);
     if(luaCtx_istable(GlobalLuaContext, -1)) {
         luaCtx_pushnil(GlobalLuaContext);
         NSString *key;
@@ -150,50 +150,50 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
             luaCtx_pop(GlobalLuaContext, 1);
         }
     }
-	luaCtx_pop(GlobalLuaContext, 2);
+    luaCtx_pop(GlobalLuaContext, 2);
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {    
-	for(UITouch *touch in touches) { 
-		[_activeTouches addObject:touch];
-		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
+    for(UITouch *touch in touches) { 
+        [_activeTouches addObject:touch];
+        [self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
                                  isDown:YES
                                location:[touch locationInView:self.view]];
-	}
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	for(UITouch *touch in touches) {        
-		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
+    for(UITouch *touch in touches) {        
+        [self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
                                  isDown:YES
                                location:[touch locationInView:self.view]];
-	}
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	for(UITouch *touch in touches) {        
-		[self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
+    for(UITouch *touch in touches) {        
+        [self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
                                  isDown:NO
                                location:[touch locationInView:self.view]];
-		// If this is the last event, reset the active event so that the next touch starts at index 0
-		if([event touchesForView:self.view].count == 1)
-			[_activeTouches removeAllObjects];
-	}
+        // If this is the last event, reset the active event so that the next touch starts at index 0
+        if([event touchesForView:self.view].count == 1)
+            [_activeTouches removeAllObjects];
+    }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	for(UITouch *touch in touches) {        
-		[_activeTouches removeObject:touch];
-	}
+    for(UITouch *touch in touches) {        
+        [_activeTouches removeObject:touch];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	return interfaceOrientation == UIInterfaceOrientationPortrait;
+    return interfaceOrientation == UIInterfaceOrientationPortrait;
 }
 
 
