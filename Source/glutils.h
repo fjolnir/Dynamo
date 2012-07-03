@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #if defined(__APPLE__)
     #include <TargetConditionals.h>
     #include <sys/time.h>
@@ -24,19 +26,20 @@
 #ifdef DEBUG
 #define glError()\
 {\
-for ( GLenum Error = glGetError( ); ( GL_NO_ERROR != Error ); Error = glGetError( ) )\
-{\
-switch ( Error )\
-{\
-case GL_INVALID_ENUM:      printf( "\n%s\n\n", "GL_INVALID_ENUM"      ); assert( 0 ); break;\
-case GL_INVALID_VALUE:     printf( "\n%s\n\n", "GL_INVALID_VALUE"     ); assert( 0 ); break;\
-case GL_INVALID_OPERATION: printf( "\n%s\n\n", "GL_INVALID_OPERATION" ); assert( 0 ); break;\
-case GL_OUT_OF_MEMORY:     printf( "\n%s\n\n", "GL_OUT_OF_MEMORY"     ); assert( 0 ); break;\
-default:                                                                              break;\
-}\
-}\
+    for ( GLenum Error = glGetError( ); ( GL_NO_ERROR != Error ); Error = glGetError( ) )\
+    {\
+        switch ( Error )\
+        {\
+            case GL_INVALID_ENUM:      printf( "\n%s\n\n", "GL_INVALID_ENUM"      ); assert( 0 ); break;\
+            case GL_INVALID_VALUE:     printf( "\n%s\n\n", "GL_INVALID_VALUE"     ); assert( 0 ); break;\
+            case GL_INVALID_OPERATION: printf( "\n%s\n\n", "GL_INVALID_OPERATION" ); assert( 0 ); break;\
+            case GL_OUT_OF_MEMORY:     printf( "\n%s\n\n", "GL_OUT_OF_MEMORY"     ); assert( 0 ); break;\
+            default:                                                                              break;\
+        }\
+    }\
 }
-
 #else
 #define glError()
 #endif
+
+bool dynamo_glExtSupported(const char *name);

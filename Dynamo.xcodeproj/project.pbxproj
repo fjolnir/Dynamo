@@ -128,6 +128,8 @@
 		C7CEC8F5156DCC54004B8D6C /* lua.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D791558A60200B8E5CE /* lua.h */; };
 		C7CEC8F6156DCC58004B8D6C /* luaconf.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7A1558A60200B8E5CE /* luaconf.h */; };
 		C7CEC8F7156DCC5D004B8D6C /* lualib.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = C78B8D7B1558A60200B8E5CE /* lualib.h */; };
+		C7F8BD5515A28F3B00728E65 /* glutils.c in Sources */ = {isa = PBXBuildFile; fileRef = C7F8BD5415A28F3B00728E65 /* glutils.c */; };
+		C7F8BD5615A28F3B00728E65 /* glutils.c in Sources */ = {isa = PBXBuildFile; fileRef = C7F8BD5415A28F3B00728E65 /* glutils.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -360,6 +362,7 @@
 		C78B8E451558AB5500B8E5CE /* libyajl_s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libyajl_s.a; path = /usr/local/Cellar/yajl/2.0.4/lib/libyajl_s.a; sourceTree = "<absolute>"; };
 		C78B8E471558AB6D00B8E5CE /* libmxml.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmxml.a; path = /usr/local/Cellar/libmxml/2.6/lib/libmxml.a; sourceTree = "<absolute>"; };
 		C799E481155908780009C0A7 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "/usr/local/lib/libluajit-5.1.a"; sourceTree = "<absolute>"; };
+		C7F8BD5415A28F3B00728E65 /* glutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glutils.c; path = Source/glutils.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -539,6 +542,7 @@
 				C78B8DB41558A69600B8E5CE /* util.h */,
 				C78B8DB31558A69600B8E5CE /* util.c */,
 				C78B8D921558A69600B8E5CE /* glutils.h */,
+				C7F8BD5415A28F3B00728E65 /* glutils.c */,
 				C719A2A0156CCDFE00C7D094 /* DynamoScripts */,
 				C719A2A1156CCDFE00C7D094 /* DynamoShaders */,
 			);
@@ -814,6 +818,7 @@
 				C78B8DE11558A69700B8E5CE /* util.c in Sources */,
 				C7650D49155B640B00A0C86D /* world.c in Sources */,
 				C76454161564C6E7004D99E8 /* luacontext.c in Sources */,
+				C7F8BD5515A28F3B00728E65 /* glutils.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -843,6 +848,7 @@
 				C78B8E241558A75000B8E5CE /* util.c in Sources */,
 				C7650D4A155B640B00A0C86D /* world.c in Sources */,
 				C76454171564C6E7004D99E8 /* luacontext.c in Sources */,
+				C7F8BD5615A28F3B00728E65 /* glutils.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -132,7 +132,7 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
     glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, aBatch->ibo);
-    glDrawElements(GL_TRIANGLE_STRIP, aBatch->idxCount, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, aBatch->vertCount, GL_UNSIGNED_SHORT, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -142,7 +142,7 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
 void _spriteBatch_updateVbo(SpriteBatch_t *aBatch)
 {
     if(aBatch->spriteCount == 0)
-        aBatch->idxCount = 0;
+        aBatch->vertCount = 0;
     
     LinkedListItem_t *item = aBatch->sprites->head;
     if(!item) return;
@@ -154,18 +154,27 @@ void _spriteBatch_updateVbo(SpriteBatch_t *aBatch)
     float maxTexX, maxTexY;
     quat_t rot;
 
-    unsigned idxCount = aBatch->spriteCount * 4;
+    unsigned vertCount = aBatch->spriteCount * 4;
     unsigned indexCount = aBatch->spriteCount * 5 + (aBatch->spriteCount - 2);
     glBindBuffer(GL_ARRAY_BUFFER, aBatch->vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, aBatch->ibo);
-    if(idxCount > aBatch->idxCapacity || aBatch->idxCapacity - idxCount > (aBatch->idxCapacity/2)) {
-        glBufferData(GL_ARRAY_BUFFER, idxCount*sizeof(struct _BatchVertex), NULL, GL_DYNAMIC_DRAW);
+    if(vertCount > aBatch->vertCapacity || aBatch->vertCapacity - vertCount > (aBatch->vertCapacity/2)) {
+        glBufferData(GL_ARRAY_BUFFER, vertCount*sizeof(struct _BatchVertex), NULL, GL_DYNAMIC_DRAW);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount*sizeof(GLushort), NULL, GL_DYNAMIC_DRAW);
-        aBatch->idxCapacity = idxCount;
+        aBatch->vertCapacity = vertCount;
     }
     
-    struct _BatchVertex *vertices = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    GLushort *indices = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    struct _BatchVertex *vertices;
+    GLushort *indices;
+    
+    bool usingMapBuffer = dynamo_glExtSupported("GL_OES_mapbuffer");
+    if(usingMapBuffer) {
+        vertices = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+        indices = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+    } else {
+        vertices = malloc(vertCount*sizeof(struct _BatchVertex));
+        indices = malloc(indexCount*sizeof(GLushort));
+    }
     
     int i = 0, iIdx = 0;
     do {
@@ -180,7 +189,7 @@ void _spriteBatch_updateVbo(SpriteBatch_t *aBatch)
         indices[iIdx++] = i + 1;
         indices[iIdx++] = i + 2;
         indices[iIdx++] = i + 3;
-        if(i+3 < idxCount-1)
+        if(i+3 < vertCount-1)
             indices[iIdx++] = i+3;
         
         // Transform the sprite into world position (We can't do this in the vertex shader since each sprite 
@@ -231,11 +240,18 @@ void _spriteBatch_updateVbo(SpriteBatch_t *aBatch)
         i += 4;
     } while((item = item->next));
 
-    glUnmapBufferOES(GL_ARRAY_BUFFER);
-    glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
+    if(usingMapBuffer) {
+        glUnmapBufferOES(GL_ARRAY_BUFFER);
+        glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
+    } else {
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertCount*sizeof(struct _BatchVertex), vertices);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, indexCount*sizeof(GLushort), indices);
+        free(vertices);
+        free(indices);
+    }
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    aBatch->idxCount = indexCount;
+    aBatch->vertCount = indexCount;
 }
 
 void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite)
