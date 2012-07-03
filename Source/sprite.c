@@ -132,7 +132,7 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
     glEnableVertexAttribArray(gTexturedShader->attributes[kShader_texCoord0Attribute]);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, aBatch->ibo);
-    glDrawElements(GL_TRIANGLE_STRIP, aBatch->vertCount, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, aBatch->indexCount, GL_UNSIGNED_SHORT, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -142,7 +142,7 @@ void _spriteBatch_draw(Renderer_t *aRenderer, SpriteBatch_t *aBatch, GLMFloat aT
 void _spriteBatch_updateVbo(SpriteBatch_t *aBatch)
 {
     if(aBatch->spriteCount == 0)
-        aBatch->vertCount = 0;
+        aBatch->indexCount = 0;
     
     LinkedListItem_t *item = aBatch->sprites->head;
     if(!item) return;
@@ -251,7 +251,7 @@ void _spriteBatch_updateVbo(SpriteBatch_t *aBatch)
     }
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    aBatch->vertCount = indexCount;
+    aBatch->indexCount = indexCount;
 }
 
 void spriteBatch_addSprite(SpriteBatch_t *aBatch, Sprite_t *aSprite)

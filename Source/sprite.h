@@ -55,7 +55,7 @@ typedef struct _SpriteBatch {
     RENDERABLE_GUTS
     int spriteCount;
     LinkedList_t *sprites;
-    unsigned vbo, ibo, vertCount, vertCapacity;
+    unsigned vbo, ibo, indexCount, vertCapacity;
 } SpriteBatch_t;
 extern Class_t Class_SpriteBatch;
 
