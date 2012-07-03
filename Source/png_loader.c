@@ -4,7 +4,8 @@
 #include "png_loader.h"
 #include "util.h"
 
-#ifndef __APPLE__
+//#ifndef __APPLE__
+#if 1
     #include <png.h>
 #else
     #include <CoreFoundation/CoreFoundation.h>
@@ -21,7 +22,8 @@ static Class_t Class_Png = {
 
 Png_t *png_load(const char *aPath) {
     Png_t *self = obj_create_autoreleased(&Class_Png);
-#ifndef __APPLE__
+//#ifndef __APPLE__ // Disabled CG loading for now, I don't think it's providing any speed gain => better to use same code path everywhere
+#if 1
     png_structp png_ptr;
     png_infop info_ptr;
     unsigned int sig_read = 0;
