@@ -283,6 +283,11 @@ function dynamo.log(...)
     lib._dynamo_log(prefix..table.concat({...}, ", "))
 end
 
+-- Override rgba to use premultiplied alpha
+rgba = function(r,g,b,a)
+    return vec4(r,g,b,a):premultiply()
+end
+
 dynamo.registerCallback = function(lambda) return dynamo_registerCallback(lambda) end
 dynamo.unregisterCallback = function(id) return dynamo_unregisterCallback(id) end
 --
@@ -863,6 +868,7 @@ function dynamo.init(viewport, desiredFPS, ...)
 end
 
 function dynamo.cleanup()
+    dynamo_log("Dynamo is cleaning up after itself")
     -- Release all resources
     dynamo.renderer = nil
     dynamo.timer = nil

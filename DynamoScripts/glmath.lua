@@ -117,6 +117,7 @@ vec4_t (*_vec4_scalarSub)(const vec4_t v, GLMFloat s);
 vec4_t (*_vec4_cross)(const vec4_t v1, const vec4_t v2);
 vec4_t (*_vec4_negate)(const vec4_t v);
 vec4_t (*_vec4_floor)(vec4_t v);
+vec4_t (*_vec4_premultiplyAlpha)(vec4_t v);
 quat_t (*_quat_createf)(GLMFloat x, GLMFloat y, GLMFloat z, GLMFloat angle);
 quat_t (*_quat_createv)(vec3_t axis, GLMFloat angle);
 mat4_t (*_quat_to_mat4)(const quat_t q);
@@ -336,6 +337,7 @@ vec4_t = ffi.metatype("vec4_t",
         negate = C._vec4_negate,
         floor = C._vec4_floor,
         normalize = C._vec4_normalize,
+        premultiply = C._vec4_premultiplyAlpha
     }
 })
 quat_t = ffi.metatype("quat_t",
@@ -415,12 +417,12 @@ end
 vec4 = function(x,y,z,w)
     return ffi.new(vec4_t, {{x,y,z,w}})
 end
-rgba = vec4
 
 quat = function(x,y,z,w)
     return ffi.new(quat_t, {{x,y,z,w}})
 end
 
+rgba = vec4
 function rgb(r,g,b,a)
     a = a or 1
     return rgba(r,g,b,a)
