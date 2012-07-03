@@ -32,6 +32,7 @@ Source/json.c \
 Source/primitive_types.c \
 Source/world.c \
 Source/luacontext.c \
+Source/glutils.c \
 Dependencies/GLMath/GLMath.c \
 Dependencies/GLMath/GLMathUtilities.c \
 Dependencies/mxml/mxml-attr.c \
