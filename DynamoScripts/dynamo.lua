@@ -349,8 +349,16 @@ dynamo.sprite = {}
 
 ffi.metatype("Sprite_t", {
     __index = {
-        step = lib.sprite_step
-    }
+        step = lib.sprite_step,
+        currentFrame = function(self)
+            return self.animation[self.activeAnimation].currentFrame
+        end
+    },
+    __newindex = function(self, key, val)
+        if key == "currentFrame" then
+            self.animations[self.activeAnimation].currentFrame = val
+        end
+    end
 })
 
 local _vec2Type = ffi.typeof("vec2_t")
