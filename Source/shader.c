@@ -180,7 +180,7 @@ static GLuint _shader_compile(const char *aSrc, GLenum aType, bool *aoSucceeded)
 
     GLint temp;
     glGetShaderiv(shaderObject, GL_INFO_LOG_LENGTH, &temp);
-    if (temp > 0) {
+    if(temp > 0) {
         GLchar *log = (GLchar *)malloc(temp);
         glGetShaderInfoLog(shaderObject, temp, &temp, log);
         dynamo_log(">> %s shader compile log:\n %s\n", aType == GL_FRAGMENT_SHADER ? "Fragment" : "Vertex", log);

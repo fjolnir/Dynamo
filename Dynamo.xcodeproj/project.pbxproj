@@ -945,6 +945,7 @@
 					"Dependencies/**",
 					Dependencies/png,
 					Dependencies/mxml,
+					Dependencies/Chipmunk/include,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
@@ -982,6 +983,7 @@
 					"Dependencies/**",
 					Dependencies/png,
 					Dependencies/mxml,
+					Dependencies/Chipmunk/include,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (

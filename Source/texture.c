@@ -26,7 +26,7 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
     out->displayCallback = (RenderableDisplayCallback_t)&_texture_draw;
     
     Png_t *png = png_load(aPath);
-    if (!png) {
+    if(!png) {
         dynamo_log("Unable to load png file from %s", aPath);
         return NULL;
     }
