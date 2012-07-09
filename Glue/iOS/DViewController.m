@@ -18,7 +18,7 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
         return nil;
 
     _bootScriptPath = [aPath copy];
-    
+
     return self;
 }
 
@@ -39,41 +39,41 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     luaCtx_getfield(GlobalLuaContext, -1, "cleanup");
     luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
     luaCtx_pop(GlobalLuaContext, 1);
-    
+
     luaCtx_teardown();
-    
+
     [_context release], _context = nil;
     [_activeTouches release]; _activeTouches = nil;
     [_bootScriptPath release], _bootScriptPath = nil;
-    
+
     [super dealloc];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.view.multipleTouchEnabled = YES;
-    
+
     _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     dynamo_assert(_context != nil, "Couldn't create OpenGL ES 2 context");
-    
+
     _activeTouches = [[NSMutableArray alloc] init];
-    
+
     self.preferredFramesPerSecond = 60;
     GLKView *view = (GLKView *)self.view;
     view.context = _context;
-    
+
     [self setupGL];
 }
 
 - (void)viewDidUnload
-{    
+{
     [super viewDidUnload];
     [_activeTouches release], _activeTouches = nil;
-    
+
     [self tearDownGL];
-    
+
     if([EAGLContext currentContext] == _context)
         [EAGLContext setCurrentContext:nil];
     [_context release], _context = nil;
@@ -83,26 +83,26 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 {
     aLoc.y = self.view.bounds.size.height - aLoc.y;
     float scaleFactor = self.view.contentScaleFactor;
-    
+
     luaCtx_getglobal(GlobalLuaContext, "dynamo");
     luaCtx_getfield(GlobalLuaContext, -1, "input");
     luaCtx_getfield(GlobalLuaContext, -1, "manager");
     luaCtx_getfield(GlobalLuaContext, -1, "postTouchEvent");
-    
+
     luaCtx_pushvalue(GlobalLuaContext, -2);
     luaCtx_pushinteger(GlobalLuaContext, aFinger);
     luaCtx_pushboolean(GlobalLuaContext, aIsDown);
     luaCtx_pushnumber(GlobalLuaContext, aLoc.x*scaleFactor);
     luaCtx_pushnumber(GlobalLuaContext, aLoc.y*scaleFactor);
     luaCtx_pcall(GlobalLuaContext, 5, 0, 0);
-    
+
     luaCtx_pop(GlobalLuaContext, 3);
 }
 
 - (void)setupGL
 {
     [EAGLContext setCurrentContext:_context];
-    
+
     luaCtx_init();
     NSString *dynamoScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"DynamoScripts"];
     NSString *localScriptsPath  = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
@@ -110,7 +110,7 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     luaCtx_addSearchPath(GlobalLuaContext, [localScriptsPath fileSystemRepresentation]);
 
     [self prepareLuaContext];
-    
+
     dynamo_assert(luaCtx_executeFile(GlobalLuaContext, [_bootScriptPath fileSystemRepresentation]), "Lua error");
 }
 
@@ -154,8 +154,8 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{    
-    for(UITouch *touch in touches) { 
+{
+    for(UITouch *touch in touches) {
         [_activeTouches addObject:touch];
         [self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
                                  isDown:YES
@@ -165,7 +165,7 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    for(UITouch *touch in touches) {        
+    for(UITouch *touch in touches) {
         [self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
                                  isDown:YES
                                location:[touch locationInView:self.view]];
@@ -174,7 +174,7 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    for(UITouch *touch in touches) {        
+    for(UITouch *touch in touches) {
         [self _postTouchEventWithFinger:[_activeTouches indexOfObject:touch]
                                  isDown:NO
                                location:[touch locationInView:self.view]];
@@ -186,7 +186,7 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    for(UITouch *touch in touches) {        
+    for(UITouch *touch in touches) {
         [_activeTouches removeObject:touch];
     }
 }
