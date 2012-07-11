@@ -31,8 +31,7 @@ static void _print_trace(void)
 
 void obj_zombie_error(Obj_t *aObj)
 {
-    _Obj_guts *guts = aObj;
-    dynamo_log("*** TRIED TO FREE ZOMBIE OBJECT (%p). Break on obj_zombie_error to debug", guts);
+    dynamo_log("*** TRIED TO FREE ZOMBIE OBJECT (%p). Break on obj_zombie_error to debug", aObj);
     _print_trace();
 }
 
