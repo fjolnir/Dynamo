@@ -105,7 +105,7 @@ const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
     luaCtx_init();
     NSString *dynamoScriptsPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"DynamoScripts"];
-    NSString *localScriptsPath  = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Scripts"];
+    NSString *localScriptsPath  = [_bootScriptPath stringByDeletingLastPathComponent];
     luaCtx_addSearchPath(GlobalLuaContext, [dynamoScriptsPath fileSystemRepresentation]);
     luaCtx_addSearchPath(GlobalLuaContext, [localScriptsPath fileSystemRepresentation]);
 
