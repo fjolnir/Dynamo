@@ -260,7 +260,7 @@ void worldShape_setGroup(WorldShape_t *aShape, WorldShapeGroup_t aGroup)
 }
 void worldShape_setCollides(WorldShape_t *aShape, bool aCollides)
 {
-    cpShapeSetSensor(aShape->cpShape, aCollides);
+    cpShapeSetSensor(aShape->cpShape, !aCollides);
 }
 bool worldShape_collides(WorldShape_t *aShape)
 {
