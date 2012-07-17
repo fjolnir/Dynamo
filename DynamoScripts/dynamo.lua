@@ -108,11 +108,11 @@ typedef struct _Background { _Obj_guts _guts; RenderableDisplayCallback_t displa
 extern Background_t *background_create();
 extern void background_setLayer(Background_t *aBackground, unsigned int aIndex, BackgroundLayer_t *aLayer);
 extern BackgroundLayer_t *background_createLayer(Texture_t *aTexture, float aDepth);
-typedef enum { kInputKey_arrowLeft,kInputKey_arrowRight, kInputKey_arrowUp,kInputKey_arrowDown, kInputKey_ascii,kInputMouse_leftClick,kInputMouse_rightClick,kInputMouse_leftDrag,kInputMouse_rightDrag,kInputMouse_move,kInputTouch1,kInputTouch2,kInputTouch3,kInputTouch4,kInputTouch5 } Input_type_t;
+typedef enum { kInputKey_arrowLeft,kInputKey_arrowRight, kInputKey_arrowUp,kInputKey_arrowDown, kInputKey_ascii,kInputMouse_leftClick,kInputMouse_rightClick,kInputMouse_leftDrag,kInputMouse_rightDrag,kInputMouse_move,kInputTouch1,kInputTouch2,kInputTouch3,kInputTouch4,kInputTouch5, kInputGyro } Input_type_t;
 typedef enum { kInputState_up, kInputState_down } Input_state_t;
 typedef struct _InputManager InputManager_t;
 typedef struct _InputObserver InputObserver_t;
-typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, int aState, void *aMetaData);
+typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec3_t *aLocation, int aState, void *aMetaData);
 struct _InputObserver { _Obj_guts _guts; Input_handler_t handlerCallback; int luaHandlerCallback; Input_type_t type; unsigned char code;  void *metaData;  Input_state_t lastKnownState;};
 struct _InputManager { _Obj_guts _guts; LinkedList_t *observers; LinkedList_t *activeEvents;};
 extern InputManager_t *input_createManager();
@@ -120,8 +120,8 @@ extern InputObserver_t *input_createObserver(Input_type_t aObservedType, Input_h
 extern void input_addObserver(InputManager_t *aManager, InputObserver_t *aObserver);
 extern bool input_removeObserver(InputManager_t *aManager, InputObserver_t *aObserver);
 extern void input_postActiveEvents(InputManager_t *aManager);
-extern void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation, Input_state_t aState);
-extern void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation);
+extern void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec3_t *aLocation, Input_state_t aState);
+extern void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec3_t *aLocation);
 extern void input_endEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode);
 typedef enum _TMXMap_orientation { kTMXMap_orthogonal, kTMXMap_isometric } TMXMap_orientation;
 typedef struct _TMXProperty { char *name; char *value;} TMXProperty_t;
@@ -497,7 +497,8 @@ dynamo.input = {
             lib.kInputTouch3,
             lib.kInputTouch4,
             lib.kInputTouch5
-        }
+        },
+        gyro = lib.kInputGyro
     },
     states = {
         down = lib.kInputState_down,
@@ -520,12 +521,16 @@ ffi.metatype("InputManager_t", {
         endEvent = lib.input_endEvent,
         postTouchEvent = function(self, finger, isDown, x, y)
             finger = finger or 0
-            local pos = vec2(x or 0, y or 0)
+            local pos = vec3(x or 0, y or 0, 0)
             local state = lib.kInputState_up
             if isDown == true then
                 state = lib.kInputState_down
             end
             self:postMomentaryEvent(dynamo.input.types.touch[1] + finger, nil, pos, state)
+        end,
+        postGyroEvent = function(self, x, y, z)
+            local thetas = vec3(x, y, z)
+            self:postMomentaryEvent(dynamo.input.types.gyro, nil, thetas, lib.kInputState_up)
         end
     }
 })
@@ -756,7 +761,8 @@ ffi.metatype("World_t", {
             if #vertices < 3 then
                 error("Too few vertices to create polygon shape")
             end
-            return _obj_addToGC(lib.worldShape_createPoly(#vertices, vertices))
+            local vertArr = ffi.new("vec2_t[?]", #vertices, unpack(vertices))
+            return _obj_addToGC(lib.worldShape_createPoly(#vertices, vertArr))
         end
     },
     __newindex = function(self, key, val)

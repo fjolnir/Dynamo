@@ -41,7 +41,10 @@ typedef enum {
     kInputTouch2,
     kInputTouch3,
     kInputTouch4,
-    kInputTouch5
+    kInputTouch5,
+
+    // Gyro event (The location vector should be used for per-axis angle diffs)
+    kInputGyro
 } Input_type_t;
 
 /*!
@@ -55,7 +58,7 @@ typedef enum {
 typedef struct _InputManager InputManager_t;
 typedef struct _InputObserver InputObserver_t;
 
-typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec2_t *aLocation, Input_state_t aState, void *aMetaData);
+typedef void (*Input_handler_t)(InputManager_t *aInputManager, InputObserver_t *aInputObserver, vec3_t *aLocation, Input_state_t aState, void *aMetaData);
 
 /*!
     Observes the event stream for a given event and executes it's handler callback when it encounters it.
@@ -108,11 +111,11 @@ extern void input_postActiveEvents(InputManager_t *aManager);
 /*!
     Posts a momentary event (That is, it's observers will only see it once)
 */
-extern void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation, Input_state_t aState);
+extern void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec3_t *aLocation, Input_state_t aState);
 /*!
     Starts an event (That is, it's observers will see it on every iteration until the event is ended)
 */
-extern void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation);
+extern void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec3_t *aLocation);
 /*!
     Ends an event
 */

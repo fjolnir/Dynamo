@@ -74,7 +74,7 @@ static InputObserver_t **_input_observersForEvent(InputManager_t *aManager, Inpu
 
     return out;
 }
-void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation, Input_state_t aState)
+void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec3_t *aLocation, Input_state_t aState)
 {
     int count;
     InputObserver_t **observers = _input_observersForEvent(aManager, aType, aCode, &count);
@@ -100,7 +100,7 @@ void input_postMomentaryEvent(InputManager_t *aManager, Input_type_t aType, unsi
 typedef struct _InputEvent {
     int observerCount;
     InputObserver_t *observers[MAX_SIMUL_OBSERVERS];
-    vec2_t location;
+    vec3_t location;
     int fireCount;
     Input_state_t state;
     Input_type_t type;
@@ -139,7 +139,7 @@ static bool _input_eventIsActive(InputManager_t *aManager, Input_type_t aType, u
     }
     return false;
 }
-void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec2_t *aLocation)
+void input_beginEvent(InputManager_t *aManager, Input_type_t aType, unsigned char *aCode, vec3_t *aLocation)
 {
     int observerCount;
     InputObserver_t **observers = _input_observersForEvent(aManager, aType, aCode, &observerCount);
