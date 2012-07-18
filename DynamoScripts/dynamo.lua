@@ -167,7 +167,7 @@ typedef struct _World World_t;
 typedef struct _WorldShape WorldShape_t;
 typedef uintptr_t WorldShapeGroup_t;
 typedef struct _WorldEntity WorldEntity_t;
-typedef struct _World_ContactPointSet { int count; struct {     vec2_t point;     vec2_t normal;     GLMFloat depth; } points[4];} World_ContactPointSet;
+typedef struct _World_ContactPointSet { int count; struct { vec2_t point; vec2_t normal; GLMFloat depth; } points[4];} World_ContactPointSet;
 typedef struct _World_CollisionInfo { WorldEntity_t *a; WorldEntity_t *b; bool firstContact; World_ContactPointSet contactPoints; void *cpArbiter;} World_CollisionInfo;
 typedef void (*WorldEntity_CollisionHandler)(WorldEntity_t *aEntity, World_CollisionInfo *aCollisionInfo);
 typedef void (*WorldEntity_UpdateHandler)(WorldEntity_t *aEntity);
@@ -882,7 +882,7 @@ function dynamo.init(viewport, desiredFPS, ...)
 end
 
 function dynamo.cleanup()
-    dynamo_log("Dynamo is cleaning up after itself")
+    dynamo.log("Dynamo is cleaning up after itself")
     -- Release all resources
     dynamo.renderer = nil
     dynamo.timer = nil
