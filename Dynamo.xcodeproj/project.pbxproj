@@ -362,6 +362,7 @@
 		C78B8E451558AB5500B8E5CE /* libyajl_s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libyajl_s.a; path = /usr/local/Cellar/yajl/2.0.4/lib/libyajl_s.a; sourceTree = "<absolute>"; };
 		C78B8E471558AB6D00B8E5CE /* libmxml.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmxml.a; path = /usr/local/Cellar/libmxml/2.6/lib/libmxml.a; sourceTree = "<absolute>"; };
 		C799E481155908780009C0A7 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "/usr/local/lib/libluajit-5.1.a"; sourceTree = "<absolute>"; };
+		C7E4787815B9456600E63DAA /* libBlocksKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBlocksKit.a; path = "../DerivedData/Build/Release-iphoneos/libBlocksKit.a"; sourceTree = "<group>"; };
 		C7F8BD5415A28F3B00728E65 /* glutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glutils.c; path = Source/glutils.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -475,6 +476,7 @@
 		C75AFCE0153FA9D800FE8623 = {
 			isa = PBXGroup;
 			children = (
+				C7E4787815B9456600E63DAA /* libBlocksKit.a */,
 				C75AFCF5153FA9F500FE8623 /* Dynamo */,
 				C7A1903315469BC200B266A6 /* Dependencies */,
 				C73EFC5F155A428400FD64CA /* Mac Frameworks */,
@@ -937,6 +939,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -951,6 +954,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
+					"\"$(SRCROOT)/../DerivedData/Build/Release-iphoneos\"",
 				);
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[sdk=iphonesimulator*]" = "-fno-reg-struct-return";
@@ -975,6 +979,7 @@
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -989,6 +994,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Dependencies/LuaJIT\"",
+					"\"$(SRCROOT)/../DerivedData/Build/Release-iphoneos\"",
 				);
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[sdk=iphonesimulator*]" = "-fno-reg-struct-return";
