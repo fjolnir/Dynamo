@@ -38,6 +38,8 @@ Renderer_t *renderer_create(vec2_t aViewPortSize, vec3_t aCameraOffset)
 void renderer_destroy(Renderer_t *aRenderer)
 {
     obj_release(aRenderer->renderables), aRenderer->renderables = NULL;
+    matrix_stack_destroy(aRenderer->worldMatrixStack), aRenderer->worldMatrixStack = NULL;
+    matrix_stack_destroy(aRenderer->projectionMatrixStack), aRenderer->projectionMatrixStack = NULL;
 }
 
 
