@@ -313,7 +313,7 @@ function dynamo.texture.load(path, packingInfoPath, tile)
 
     local tex = lib.texture_loadFromPng(path, tile, tile)
     if tex == nil then
-        print("Couldn't find texture at path", path)
+        dynamo.log("Couldn't find texture at path", path)
         return nil
     end
     if packingInfoPath ~= nil then
@@ -858,7 +858,7 @@ dynamo.initialized = false
 function dynamo.init(viewport, desiredFPS, ...)
     assert(dynamo.initialized == false)
     dynamo.initialized = true
-    
+
     gl.glEnable(gl.GL_BLEND);
     gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA)
     gl.glEnable(gl.GL_CULL_FACE);
@@ -905,6 +905,7 @@ end
 local _messages = nil
 -- Passes a message to the host application
 function dynamo.passMessage(key, value)
+    value = value or ""
     local t = type(value)
     if t ~= "string" and t ~= "number" and t ~= "boolean" then
         error("Invalid type for message")
