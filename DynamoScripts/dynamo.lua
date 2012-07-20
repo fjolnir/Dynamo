@@ -352,6 +352,11 @@ ffi.metatype("Sprite_t", {
         step = lib.sprite_step,
         currentFrame = function(self)
             return self.animation[self.activeAnimation].currentFrame
+        end,
+        setAtlas = function(self, newAtlas)
+            lib.obj_retain(newAtlas);
+            lib.obj_release(self.atlas)
+            self.atlas = newAtlas
         end
     },
     __newindex = function(self, key, val)
@@ -882,7 +887,12 @@ function dynamo.init(viewport, desiredFPS, ...)
 end
 
 function dynamo.cleanup()
+    dynamo.initialized = false
+    if dynamo.cleanupHandler then
+        dynamo.cleanupHandler()
+    end
     dynamo.log("Dynamo is cleaning up after itself")
+
     -- Release all resources
     dynamo.renderer = nil
     dynamo.timer = nil

@@ -39,6 +39,8 @@ void llist_destroy(LinkedList_t *aList)
 static LinkedListItem_t *_llist_itemForValue(LinkedList_t *aList, void *aValue)
 {
     LinkedListItem_t *currentItem = aList->head;
+    if(!currentItem)
+        return NULL;
     do {
         if(currentItem->value == aValue)
             return currentItem;

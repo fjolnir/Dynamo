@@ -2,7 +2,7 @@
 #import <dynamo/input.h>
 #import <dynamo/luacontext.h>
 
-const NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
+NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 @interface DViewController (Private)
 - (void)setupGL;

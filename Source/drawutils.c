@@ -37,8 +37,8 @@ void draw_init(Renderer_t *aDefaultRenderer)
 
 void draw_cleanup()
 {
-    if(gTexturedShader) obj_release(gTexturedShader);
-    if(gColoredShader) obj_release(gColoredShader);
+    if(gTexturedShader) obj_release(gTexturedShader), gTexturedShader = NULL;
+    if(gColoredShader) obj_release(gColoredShader),   gColoredShader  = NULL;
 }
 
 
@@ -58,7 +58,7 @@ void draw_quad(vec3_t aCenter, vec2_t aSize, Texture_t *aTexture, TextureRect_t 
     GLfloat texCoords[4*2] = {
         aFlipHorizontal ? maxTexX : aTextureArea.origin.x, aFlipVertical ? maxTexY : aTextureArea.origin.y,
         aFlipHorizontal ? maxTexX : aTextureArea.origin.x, aFlipVertical ? aTextureArea.origin.y : maxTexY,
-        aFlipHorizontal ? aTextureArea.origin.x  :maxTexX, aFlipVertical ? maxTexY : aTextureArea.origin.y,
+        aFlipHorizontal ? aTextureArea.origin.x : maxTexX, aFlipVertical ? maxTexY : aTextureArea.origin.y,
         aFlipHorizontal ? aTextureArea.origin.x : maxTexX, aFlipVertical ? aTextureArea.origin.y : maxTexY
     };
 
