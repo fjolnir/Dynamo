@@ -57,8 +57,9 @@ struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpd
 extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
-extern void gextern void gameTimer_pause(GameTimer_t *aTimer);
-extern void gameTimer_resume(GameTimer_t *aTimer);ameTimer_reset(GameTimer_t *aTimer);
+extern void gameTimer_pause(GameTimer_t *aTimer);
+extern void gameTimer_resume(GameTimer_t *aTimer);
+extern void gameTimer_reset(GameTimer_t *aTimer);
 typedef struct _GameTimer_ScheduledCallback GameTimer_ScheduledCallback_t;
 extern GameTimer_ScheduledCallback_t *gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback, bool aRepeats);
 bool gameTimer_unscheduleCallback(GameTimer_t *aTimer, GameTimer_ScheduledCallback_t *aCallback);
@@ -94,7 +95,7 @@ extern void draw_circle(vec2_t aCenter, float radius, int aSubdivisions, vec4_t 
 extern void draw_polygon(int aNumberOfVertices, vec2_t *aVertices, vec4_t aColor, bool aShouldFill);
 extern void draw_lineSeg(vec2_t aPointA, vec2_t aPointB, vec4_t aColor);
 typedef struct _SpriteAnimation { int numberOfFrames; int currentFrame; bool loops; } SpriteAnimation_t;
-typedef struct _Sprite { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TextureAtlas_t *atlas; vec3_t location; vec2_t size; float scale, angle, opacity; bool flippedHorizontally; bool flippedVertically; int activeAnimation;  SpriteAnimation_t *animations; } Sprite_t;
+typedef struct _Sprite { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; TextureAtlas_t *_atlas; vec3_t location; vec2_t size; float scale, angle, opacity; bool flippedHorizontally; bool flippedVertically; int activeAnimation;  SpriteAnimation_t *animations; } Sprite_t;
 typedef struct _SpriteBatch { _Obj_guts _guts; RenderableDisplayCallback_t displayCallback; int luaDisplayCallback; int spriteCount; LinkedList_t *sprites; unsigned vao, vbo, vertCount, vertCapacity; } SpriteBatch_t;
 extern Class_t Class_SpriteBatch;
 extern Sprite_t *sprite_create(vec3_t aLocation, vec2_t aSize, TextureAtlas_t *aAtlas, int aAnimationCapacity);
@@ -173,7 +174,7 @@ typedef struct _World_CollisionInfo { WorldEntity_t *a; WorldEntity_t *b; bool f
 typedef void (*WorldEntity_CollisionHandler)(WorldEntity_t *aEntity, World_CollisionInfo *aCollisionInfo);
 typedef void (*WorldEntity_UpdateHandler)(WorldEntity_t *aEntity);
 extern Class_t Class_WorldEntity;
-struct _WorldEntity { _Obj_guts _guts; World_t *world;  Obj_t *owner;  void *cpBody; LinkedList_t *shapes; WorldEntity_UpdateHandler updateHandler; WorldEntity_CollisionHandler preCollisionHandler; WorldEntity_CollisionHandler collisionHandler; WorldEntity_CollisionHandler postCollisionHandler; int luaUpdateHandler; int luaPreCollisionHandler; int luaCollisionHandler; int luaPostCollisionHandler; };
+struct _WorldEntity { _Obj_guts _guts; World_t *world;  Obj_t *owner;  void *cpBody; LinkedList_t *shapes; WorldEntity_UpdateHandler cUpdateHandler; WorldEntity_CollisionHandler cPreCollisionHandler; WorldEntity_CollisionHandler cCollisionHandler; WorldEntity_CollisionHandler cPostCollisionHandler; int luaUpdateHandler; int luaPreCollisionHandler; int luaCollisionHandler; int luaPostCollisionHandler; };
 struct _WorldShape { _Obj_guts _guts; void *cpShape;};
 struct _World { _Obj_guts _guts; void *cpSpace; LinkedList_t *entities; WorldEntity_t *staticEntity; bool isPaused; };
 typedef enum { kWorldJointType_Pin,    kWorldJointType_Slide,    kWorldJointType_Pivot,    kWorldJointType_Groove,    kWorldJointType_DampedSpring,    kWorldJointType_DampedRotarySpring,    kWorldJointType_RotaryLimit,    kWorldJointType_Ratchet,    kWorldJointType_Gear,    kWorldJointType_SimpleMotor } WorldJointType_t;
@@ -361,16 +362,15 @@ ffi.metatype("Sprite_t", {
         step = lib.sprite_step,
         currentFrame = function(self)
             return self.animation[self.activeAnimation].currentFrame
-        end,
-        setAtlas = function(self, newAtlas)
-            lib.obj_retain(newAtlas);
-            lib.obj_release(self.atlas)
-            self.atlas = newAtlas
         end
     },
     __newindex = function(self, key, val)
         if key == "currentFrame" then
             self.animations[self.activeAnimation].currentFrame = val
+        elseif key == "atlas" then
+            lib.obj_retain(val);
+            lib.obj_release(self._atlas)
+            self._atlas = val
         end
     end
 })
