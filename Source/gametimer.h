@@ -32,6 +32,13 @@ typedef struct _GameTimer_ScheduledCallback {
     GLMFloat lastFired;
 } GameTimer_ScheduledCallback_t;
 
+
+enum {
+    kGameTimerStatusNormal,
+    kGameTimerStatusPaused,
+    kGameTimerStatusAboutToResume
+};
+
 /*!
     A game timer
     (All values are in seconds)
@@ -48,10 +55,11 @@ struct _GameTimer {
     GLMFloat timeSinceLastUpdate;
     GLMFloat desiredInterval; // The minimum interval between updates
     GLMFloat resetAt; // This value is subtracted from the elapsed time
+    short status;
     long ticks;
     GameTimer_updateCallback_t updateCallback;
     int luaUpdateCallback;
-    LinkedList_t *scheduledCallbacks;    
+    LinkedList_t *scheduledCallbacks;
 };
 
 /*!
@@ -67,6 +75,15 @@ extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
     Returns a value from 0-1 indicating the current interpolation between game updates.
 */
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
+/*!
+    Pauses the timer (Calling step does nothing until resume is called)
+*/
+extern void gameTimer_pause(GameTimer_t *aTimer);
+/*!
+    Resumes a paused timer. Elapsed time will continue from the time at which it was paused.
+*/
+extern void gameTimer_resume(GameTimer_t *aTimer);
+
 /*!
     Resets the timer to 0.
 */

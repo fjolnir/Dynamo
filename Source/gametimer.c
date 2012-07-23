@@ -27,6 +27,7 @@ GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateC
     out->scheduledCallbacks = obj_retain(llist_create(NULL, &free));
     out->luaUpdateCallback = -1;
     out->resetAt = 0;
+    out->status = kGameTimerStatusNormal;
 
     return out;
 }
@@ -39,14 +40,22 @@ void gameTimer_destroy(GameTimer_t *aTimer)
 
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat aElapsed)
 {
+    if(aTimer->status == kGameTimerStatusPaused)
+        return;
+
     aElapsed -= aTimer->resetAt;
+    if(aTimer->status == kGameTimerStatusAboutToResume) {
+        aTimer->status = kGameTimerStatusNormal;
+        aTimer->resetAt += aElapsed - aTimer->elapsed;
+    }
+
     GLMFloat delta = aElapsed - aTimer->elapsed;
     aTimer->timeSinceLastUpdate = MAX(0.0, aTimer->timeSinceLastUpdate+delta);
     aTimer->elapsed = aElapsed;
-    
+
     // Execute any scheduled callbacks
     llist_apply(aTimer->scheduledCallbacks, (LinkedListApplier_t)&_callScheduledCallbackIfNeeded, aTimer);
-    
+
     for(; aTimer->timeSinceLastUpdate > aTimer->desiredInterval; aTimer->timeSinceLastUpdate -= aTimer->desiredInterval) {
         if(aTimer->updateCallback)
             aTimer->updateCallback(aTimer);
@@ -75,6 +84,17 @@ void gameTimer_reset(GameTimer_t *aTimer)
     aTimer->timeSinceLastUpdate = 0;
 }
 
+void gameTimer_pause(GameTimer_t *aTimer)
+{
+    aTimer->status = kGameTimerStatusPaused;
+}
+
+void gameTimer_resume(GameTimer_t *aTimer)
+{
+    if(aTimer->status == kGameTimerStatusPaused)
+        aTimer->status = kGameTimerStatusAboutToResume;
+}
+
 #pragma mark - Scheduled callbacks
 
 GameTimer_ScheduledCallback_t *gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloat aDelay, GameTimer_scheduledCallbackInvoke_t aCallback, bool aRepeats, void *aContext)
@@ -88,7 +108,7 @@ GameTimer_ScheduledCallback_t *gameTimer_afterDelay(GameTimer_t *aTimer, GLMFloa
     wrapper->repeats = aRepeats;
     wrapper->lastFired = aRepeats ? aTimer->elapsed : -1;
     llist_pushValue(aTimer->scheduledCallbacks, wrapper);
-    
+
     return wrapper;
 }
 
@@ -106,7 +126,7 @@ GameTimer_ScheduledCallback_t *gameTimer_afterDelay_luaCallback(GameTimer_t *aTi
     wrapper->repeats = aRepeats;
     wrapper->lastFired = aRepeats ? aTimer->elapsed : -1;
     llist_pushValue(aTimer->scheduledCallbacks, wrapper);
-    
+
     return wrapper;
 }
 
@@ -128,7 +148,7 @@ static void _callScheduledCallbackIfNeeded(GameTimer_ScheduledCallback_t *aWrapp
             return;
     } else if(aWrapper->time > aTimer->elapsed)
         return;
-    
+
     aWrapper->lastFired = aTimer->elapsed;
 
     if(aWrapper->callback)
@@ -155,7 +175,7 @@ GLMFloat dynamo_globalTime()
 #elif defined(ANDROID) // This should work on any linux distro. Verify.
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
-    ret = now.tv_sec + now.tv_nsec/1000000000.0;
+    ret = now.tv_sec + (double)now.tv_nsec/(double)NSEC_PER_SEC;
 #else
     #error "Time functions not yet implemented for this platform"
 #endif

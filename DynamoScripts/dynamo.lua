@@ -1,4 +1,4 @@
--- There's a crasher bug in JIT that I haven't figured out a way to work around, also, iOS disallows JIT
+-- iOS does not allow JIT (But the LuaJIT interpreter is still plenty fast)
 jit.off()
 
 local ffi = require("ffi")
@@ -53,11 +53,12 @@ extern bool scene_insertRenderable(Scene_t *aScene, void *aRenderableToInsert, v
 extern bool scene_deleteRenderable(Scene_t *aScene, void *aRenderable);
 typedef struct _GameTimer GameTimer_t;
 typedef void (*GameTimer_updateCallback_t)(GameTimer_t *aTimer);
-struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpdate; GLMFloat desiredInterval; GLMFloat resetAt; long ticks; GameTimer_updateCallback_t updateCallback; int luaUpdateCallback; LinkedList_t *scheduledCallbacks;};
+struct _GameTimer { _Obj_guts _guts; GLMFloat elapsed; GLMFloat timeSinceLastUpdate; GLMFloat desiredInterval; GLMFloat resetAt; short status; long ticks; GameTimer_updateCallback_t updateCallback; int luaUpdateCallback; LinkedList_t *scheduledCallbacks;};
 extern GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateCallback);
 extern void gameTimer_step(GameTimer_t *aTimer, GLMFloat elapsed);
 extern GLMFloat gameTimer_interpolationSinceLastUpdate(GameTimer_t *aTimer);
-extern void gameTimer_reset(GameTimer_t *aTimer);
+extern void gextern void gameTimer_pause(GameTimer_t *aTimer);
+extern void gameTimer_resume(GameTimer_t *aTimer);ameTimer_reset(GameTimer_t *aTimer);
 typedef struct _GameTimer_ScheduledCallback GameTimer_ScheduledCallback_t;
 extern GameTimer_ScheduledCallback_t *gameTimer_afterDelay_luaCallback(GameTimer_t *aTimer, GLMFloat aDelay, int aCallback, bool aRepeats);
 bool gameTimer_unscheduleCallback(GameTimer_t *aTimer, GameTimer_ScheduledCallback_t *aCallback);
@@ -567,7 +568,9 @@ ffi.metatype("GameTimer_t", {
                 dynamo_unregisterCallback(oldHandler)
             end
         end,
-        reset = lib.gameTimer_reset
+        pause  = lib.gameTimer_pause,
+        resume = lib.gameTimer_resume,
+        reset  = lib.gameTimer_reset
     }
 })
 
@@ -583,6 +586,7 @@ dynamo.globalTime = lib.dynamo_globalTime
 dynamo.time = lib.dynamo_time
 
 math.randomseed(dynamo.globalTime())
+
 
 --
 -- Custom renderables
@@ -917,6 +921,13 @@ function dynamo.passMessage(key, value)
     _messages[key] = value
 end
 
+function dynamo.pause()
+    dynamo.timer:pause()
+end
+
+function dynamo.resume()
+    dynamo.timer:resume()
+end
 
 function dynamo.cycle()
     if dynamo.initialized ~= true then
