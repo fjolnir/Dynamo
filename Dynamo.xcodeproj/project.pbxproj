@@ -57,6 +57,8 @@
 		C7650D49155B640B00A0C86D /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = C7650D47155B640B00A0C86D /* world.c */; };
 		C7650D4A155B640B00A0C86D /* world.c in Sources */ = {isa = PBXBuildFile; fileRef = C7650D47155B640B00A0C86D /* world.c */; };
 		C7650D4C155B640B00A0C86D /* world.h in Headers */ = {isa = PBXBuildFile; fileRef = C7650D48155B640B00A0C86D /* world.h */; };
+		C76CCE8215BD32440069CA3B /* util_apple.m in Sources */ = {isa = PBXBuildFile; fileRef = C76CCE8115BD32440069CA3B /* util_apple.m */; };
+		C76CCE8315BD32440069CA3B /* util_apple.m in Sources */ = {isa = PBXBuildFile; fileRef = C76CCE8115BD32440069CA3B /* util_apple.m */; };
 		C78B8DB51558A69600B8E5CE /* array.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D871558A69600B8E5CE /* array.c */; };
 		C78B8DB71558A69600B8E5CE /* background.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D891558A69600B8E5CE /* background.c */; };
 		C78B8DB91558A69600B8E5CE /* dictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = C78B8D8B1558A69600B8E5CE /* dictionary.c */; };
@@ -307,6 +309,7 @@
 		C7650D2F155B628000A0C86D /* Chipmunk6.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Chipmunk6.xcodeproj; path = Chipmunk/xcode/Chipmunk6.xcodeproj; sourceTree = "<group>"; };
 		C7650D47155B640B00A0C86D /* world.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = world.c; path = Source/world.c; sourceTree = SOURCE_ROOT; };
 		C7650D48155B640B00A0C86D /* world.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = world.h; path = Source/world.h; sourceTree = SOURCE_ROOT; };
+		C76CCE8115BD32440069CA3B /* util_apple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = util_apple.m; path = Source/util_apple.m; sourceTree = SOURCE_ROOT; };
 		C78B8D761558A60200B8E5CE /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		C78B8D791558A60200B8E5CE /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
 		C78B8D7A1558A60200B8E5CE /* luaconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = luaconf.h; sourceTree = "<group>"; };
@@ -543,6 +546,7 @@
 				C76454141564C6E7004D99E8 /* luacontext.c */,
 				C78B8DB41558A69600B8E5CE /* util.h */,
 				C78B8DB31558A69600B8E5CE /* util.c */,
+				C76CCE8115BD32440069CA3B /* util_apple.m */,
 				C78B8D921558A69600B8E5CE /* glutils.h */,
 				C7F8BD5415A28F3B00728E65 /* glutils.c */,
 				C719A2A0156CCDFE00C7D094 /* DynamoScripts */,
@@ -821,6 +825,7 @@
 				C7650D49155B640B00A0C86D /* world.c in Sources */,
 				C76454161564C6E7004D99E8 /* luacontext.c in Sources */,
 				C7F8BD5515A28F3B00728E65 /* glutils.c in Sources */,
+				C76CCE8215BD32440069CA3B /* util_apple.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -851,6 +856,7 @@
 				C7650D4A155B640B00A0C86D /* world.c in Sources */,
 				C76454171564C6E7004D99E8 /* luacontext.c in Sources */,
 				C7F8BD5615A28F3B00728E65 /* glutils.c in Sources */,
+				C76CCE8315BD32440069CA3B /* util_apple.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -971,7 +977,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Dynamo.dst;
 				FRAMEWORK_SEARCH_PATHS = (

@@ -83,10 +83,14 @@ extern Platform_t util_platform(void);
 #pragma mark - Debug logging
 
 #ifdef DYNAMO_DEBUG
-    #ifdef ANDROID
+    #if defined(ANDROID)
         #include <android/log.h>
         #define dynamo_log(fmt, ...) __android_log_print(ANDROID_LOG_DEBUG, "Dynamo", "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
         #define dynamo_log_min(fmt, ...)  __android_log_print(ANDROID_LOG_DEBUG, "Dynamo", fmt "\n", ## __VA_ARGS__)
+    #elif defined(__APPLE__)
+        extern void _dynamo_wrapped_NSLog(const char *format, ...);
+        #define dynamo_log(fmt, ...) _dynamo_wrapped_NSLog("%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
+        #define dynamo_log_min(fmt, ...)  _dynamo_wrapped_NSLog(fmt "\n", ## __VA_ARGS__)
     #else
         #define dynamo_log(fmt, ...) fprintf(stderr, "%s:%u (%s): " fmt "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__)
         #define dynamo_log_min(fmt, ...)  fprintf(stderr, fmt "\n", ## __VA_ARGS__)
