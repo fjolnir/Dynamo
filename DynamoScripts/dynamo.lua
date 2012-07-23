@@ -858,6 +858,7 @@ dynamo.initialized = false
 function dynamo.init(viewport, desiredFPS, ...)
     assert(dynamo.initialized == false)
     dynamo.initialized = true
+    dynamo.cleanupHandler = nil
 
     gl.glEnable(gl.GL_BLEND);
     gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA)
