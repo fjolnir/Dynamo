@@ -289,7 +289,15 @@ rgba = function(r,g,b,a)
     return vec4(r,g,b,a):premultiply()
 end
 
-dynamo.registerCallback = function(lambda) return dynamo_registerCallback(lambda) end
+dynamo.registerCallback = function(lambda)
+    if type(lambda) == "function" then
+        return dynamo_registerCallback(lambda)
+    elseif type(lambda) == "number" then
+        return lambda
+    else
+        error("Invalid callback")
+    end
+end
 dynamo.unregisterCallback = function(id) return dynamo_unregisterCallback(id) end
 --
 -- Textures
@@ -553,9 +561,7 @@ ffi.metatype("GameTimer_t", {
         interpolation = lib.gameTimer_interpolationSinceLastUpdate,
         afterDelay = function(self, delay, callback, repeats)
             repeats = repeats or false
-            if type(callback) ~= "number" then
-                callback = dynamo.registerCallback(callback)
-            end
+            callback = dynamo.registerCallback(callback)
             return lib.gameTimer_afterDelay_luaCallback(self, delay, callback, repeats)
         end,
         unschedule = function(self, callback)
@@ -818,6 +824,20 @@ ffi.metatype("WorldEntity_t", {
         createRatchetJoint       = function(...) return _obj_addToGC(lib.worldConstr_createRatchetJoint(...)) end,
         createGearJoint          = function(...) return _obj_addToGC(lib.worldConstr_createGearJoint(...)) end,
         createSimpleMotorJoint   = function(...) return _obj_addToGC(lib.worldConstr_createSimpleMotorJoint(...)) end,
+
+        -- Collision handlers
+        updateHandler = function(self, callback)
+            self.luaUpdateCallback = dynamo.registerCallback(callback)
+        end,
+        preCollisionHandler = function(self, callback)
+            self.luaPreCollisionHandler = dynamo.registerCallback(callback)
+        end,
+        collisionHandler = function(self, callback)
+            self.luaCollisionHandler = dynamo.registerCallback(callback)
+        end,
+        postCollisionHand = function(self, callback)
+            self.luaPostCollisionHandler = dynamo.registerCallback(callback)
+        end
     },
     __newindex = function(self, key, val)
         if key == "location" then
