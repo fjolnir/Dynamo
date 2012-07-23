@@ -859,10 +859,10 @@ ffi.metatype("WorldConstraint_t", {
 --
 -- Lifecycle/HighLevelInterface functions
 dynamo.initialized = false
+
 function dynamo.init(viewport, desiredFPS, ...)
     assert(dynamo.initialized == false)
     dynamo.initialized = true
-    dynamo.cleanupHandler = nil
 
     gl.glEnable(gl.GL_BLEND);
     gl.glBlendFunc(gl.GL_ONE, gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -891,6 +891,7 @@ function dynamo.init(viewport, desiredFPS, ...)
     return true
 end
 
+dynamo.cleanupHandler = nil
 function dynamo.cleanup()
     dynamo.initialized = false
     if dynamo.cleanupHandler then
