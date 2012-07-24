@@ -8,6 +8,7 @@
 
 #ifdef ANDROID
 #include <time.h>
+#define NSEC_PER_SEC 1000000000
 #endif
 
 static void _callScheduledCallbackIfNeeded(GameTimer_ScheduledCallback_t *aWrapper, GameTimer_t *aTimer);
