@@ -163,6 +163,7 @@ extern void bgm_stop(BackgroundMusic_t *aBGM);
 extern bool bgm_isPlaying(BackgroundMusic_t *aBGM);
 extern void bgm_seek(BackgroundMusic_t *aBGM, float aSeconds);
 extern void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume);
+extern void bgm_setLooping(BackgroundMusic_t *aBGM, bool aLoops);
 extern SoundManager_t *soundManager_create();
 extern bool soundManager_makeCurrent(SoundManager_t *aManager);
 typedef struct _World World_t;
@@ -732,6 +733,8 @@ ffi.metatype("BackgroundMusic_t", {
     __newindex = function(self, key, val)
         if key == "volume" then
             lib.bgm_setVolume(self, val)
+        elseif key == "loops" then
+            lib.bgm_setLooping(self, val)
         else
             error("Undefined key "..key)
         end
@@ -914,7 +917,7 @@ end
 dynamo.cleanupHandler = nil
 function dynamo.cleanup()
     dynamo.initialized = false
-    if dynamo.cleanupHandler then
+    if dynamo.cleanupHandler ~= nil then
         dynamo.cleanupHandler()
     end
     dynamo.log("Dynamo is cleaning up after itself")

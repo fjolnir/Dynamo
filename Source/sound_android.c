@@ -300,6 +300,11 @@ void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume)
 	sfx_setVolume(aBGM->soundEffect, aVolume);
 }
 
+void bgm_setLooping(BackgroundMusic_t *aBGM, bool aLoops)
+{
+	sfx_setLooping(aBGM->soundEffect, aLoops);
+}
+
 #pragma mark - Sound manager (OpenSL)
 
 SoundManager_t *soundManager_create()

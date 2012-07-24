@@ -260,6 +260,14 @@ void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume)
     [(AVAudioPlayer *)aBGM->player setVolume:aVolume];
 }
 
+void bgm_setLooping(BackgroundMusic_t *aBGM, bool aLoops)
+{
+    if(aLoops)
+        [(AVAudioPlayer *)aBGM->player setNumberOfLoops:-1];
+    else
+        [(AVAudioPlayer *)aBGM->player setNumberOfLoops:0];
+}
+
 #pragma mark - Sound manager (OpenAL)
 
 SoundManager_t *soundManager_create()

@@ -98,6 +98,11 @@ extern void bgm_seek(BackgroundMusic_t *aBGM, float aSeconds);
     Sets the volume of a BGM object.
 */
 extern void bgm_setVolume(BackgroundMusic_t *aBGM, float aVolume);
+/*!
+    Specifies whether a BGM should loop or not.
+*/
+extern void bgm_setLooping(BackgroundMusic_t *aBGM, bool aLoops);
+
 
 /*!
     Creates a sound manager.
