@@ -100,7 +100,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
     AudioStreamBasicDescription outputFormat;
     outputFormat.mSampleRate = inputFormat.mSampleRate;
     outputFormat.mChannelsPerFrame = inputFormat.mChannelsPerFrame;
-    
+
     outputFormat.mFormatID = kAudioFormatLinearPCM;
     outputFormat.mBytesPerPacket = 2 * inputFormat.mChannelsPerFrame;
     outputFormat.mFramesPerPacket = 1;
@@ -115,13 +115,13 @@ SoundEffect_t *sfx_load(const char *aFilename)
     propSize = sizeof(dataLengthInFrames);
     status = ExtAudioFileGetProperty(AFID, kExtAudioFileProperty_FileLengthFrames, &propSize, &dataLengthInFrames);
     _CHECK_ERR("Error getting audio data length");
-    
+
 
     UInt32 dataSize = dataLengthInFrames*outputFormat.mBytesPerFrame;
     void *data = malloc(dataSize);
     dynamo_assert(data, "Insufficient memory to load audio");
     memset(data, 0, dataSize);
-    
+
     AudioBufferList dataBuffer;
     dataBuffer.mNumberBuffers = 1;
     dataBuffer.mBuffers[0].mDataByteSize = dataSize;
@@ -129,7 +129,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
     dataBuffer.mBuffers[0].mData = data;
     status = ExtAudioFileRead(AFID, (UInt32*)&dataLengthInFrames, &dataBuffer);
     _CHECK_ERR("Error decoding audio file data");
-    
+
     out->format = out->channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
     alGenBuffers(1, &out->buffer);
     alGenSources(1, &out->source);
@@ -220,7 +220,7 @@ BackgroundMusic_t *bgm_load(const char *aFilename)
     if(err) NSLog(@"%@", err);
 
     if(!player) return NULL;
-    
+
     BackgroundMusic_t *out = obj_create_autoreleased(&Class_BackgroundMusic);
     out->player = player;
     return out;
@@ -298,7 +298,9 @@ void soundManager_destroy(SoundManager_t *aManager)
 
 bool soundManager_makeCurrent(SoundManager_t *aManager)
 {
-    return alcMakeContextCurrent(aManager->context);
+    if(aManager)
+        return alcMakeContextCurrent(aManager->context);
+    return false;
 }
 
 #pragma mark - Utilities
