@@ -14,4 +14,5 @@ extern NSString *kDynamoMessageNotification;
 
 - (id)initWithBootScriptPath:(NSString *)aPath;
 - (void)prepareLuaContext; // Don't call this, Dynamo does it for you at the perfect time
+- (void)bootScriptDidExecute; // Same as the line above
 @end

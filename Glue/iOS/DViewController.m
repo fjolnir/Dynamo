@@ -112,6 +112,13 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     [self prepareLuaContext];
 
     dynamo_assert(luaCtx_executeFile(GlobalLuaContext, [_bootScriptPath fileSystemRepresentation]), "Lua error");
+    
+    [self bootScriptDidExecute];
+}
+
+- (void)bootScriptDidExecute
+{
+    // Subclasses can hook in  here to perform game initialization after the boot script has been executed
 }
 
 - (void)prepareLuaContext
