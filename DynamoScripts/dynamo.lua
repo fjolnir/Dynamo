@@ -417,7 +417,6 @@ function dynamo.sprite.createBatch(sprites)
 end
 
 
-
 --
 -- The Renderer
 
@@ -879,6 +878,7 @@ ffi.metatype("WorldConstraint_t", {
     }
 })
 
+
 --
 -- Lifecycle/HighLevelInterface functions
 dynamo.initialized = false
@@ -904,7 +904,7 @@ function dynamo.init(viewport, desiredFPS, ...)
     lib.soundManager_makeCurrent(dynamo.soundManager)
 
     dynamo.world = _createWorld()
-    dynamo.world.gravity = vec2(0,-100)
+    dynamo.world.gravity = vec2(0, -100)
 
     local startCallback = rawget(_G, "dynamoStartCallback")
     if startCallback ~= nil then

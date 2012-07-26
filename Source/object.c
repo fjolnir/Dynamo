@@ -8,6 +8,7 @@
 
 #ifdef __APPLE__
 #include <execinfo.h>
+
 static void _print_trace(void)
 {
     void *array[8];
