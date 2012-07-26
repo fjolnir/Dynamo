@@ -352,8 +352,8 @@ SoundManager_t *soundManager_create()
 
 void soundManager_destroy(SoundManager_t *aManager)
 {
-    (*aManager->oslEngineObject)->Destroy(aManager->oslEngineObject);
     (*aManager->oslOutputMixObject)->Destroy(aManager->oslOutputMixObject);
+    (*aManager->oslEngineObject)->Destroy(aManager->oslEngineObject);
     aManager->oslEngineObject = NULL;
     aManager->oslEngineInterface = NULL;
     aManager->oslOutputMixObject = NULL;
