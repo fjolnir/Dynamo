@@ -241,7 +241,6 @@ void _sfx_pause(SoundEffect_t *aSound)
 
 void sfx_play(SoundEffect_t *aSound)
 {
-    dynamo_log("Playing sound %p? %d", aSound, aSound->loaded);
     if(!aSound->loaded) return;
     _osl_setPlayState(aSound->oslPlayerPlayInterface, SL_PLAYSTATE_PLAYING);
 }
