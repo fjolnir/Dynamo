@@ -928,6 +928,7 @@ function dynamo.cleanup()
     dynamo.input.manager = nil
     dynamo.world = nil
     dynamo.soundManager = nil
+    lib.soundManager_makeCurrent(nil)
     lib.draw_cleanup()
 end
 
