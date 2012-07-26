@@ -103,7 +103,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
     dynamo_log("loading sound from %s", aFilename);
 
     SoundEffect_t *out = obj_create_autoreleased(&Class_SoundEffect);
-    out->soundManager = _CurrentSoundManager;
+    out->soundManager = obj_retain(_CurrentSoundManager);
 
     int pathLen = strlen(aFilename);
     out->path = malloc(sizeof(char) * pathLen);
@@ -176,6 +176,8 @@ void sfx_unload(SoundEffect_t *aSound)
     aSound->oslPlayerPlayInterface = NULL;
     aSound->oslPlayerSeekInterface = NULL;
     aSound->oslPlayerVolumeInterface = NULL;
+
+    obj_release(aSound->soundManager);
     aSound->soundManager = NULL;
 }
 
