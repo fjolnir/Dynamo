@@ -156,7 +156,7 @@ SoundEffect_t *sfx_load(const char *aFilename)
         out->oslPlayer3DLocationInterface = NULL;
 
     result = (*out->oslPlayerObject)->GetInterface(out->oslPlayerObject, SL_IID_PITCH, &out->oslPlayerPitchInterface);
-    if(!_osl_checkResult("Adio pitch not supported", result))
+    if(!_osl_checkResult("Audio pitch not supported", result))
         out->oslPlayerPitchInterface = NULL;
 
 
