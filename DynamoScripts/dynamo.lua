@@ -914,7 +914,10 @@ function dynamo.init(viewport, desiredFPS, ...)
     return true
 end
 
-dynamo.cleanupHandler = nil
+dynamo.cleanupHandler = function()
+    -- Do nothing by default
+end
+
 function dynamo.cleanup()
     dynamo.initialized = false
     if dynamo.cleanupHandler ~= nil then

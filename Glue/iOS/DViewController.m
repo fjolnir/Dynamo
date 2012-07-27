@@ -133,6 +133,10 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
+    // We queue the messages up and send them all once dynamo.cycle has finished executing
+    // (Necessary in case a quit message is sent; in which case the lua context is deallocated)
+    NSMutableArray *messages = [NSMutableArray array];
+    
     luaCtx_getglobal(GlobalLuaContext, "dynamo");
     luaCtx_getfield(GlobalLuaContext, -1, "cycle");
     luaCtx_pcall(GlobalLuaContext, 0, 1, 0);
@@ -150,14 +154,17 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
                 dynamo_log("Unhandled message type for key %s", [key UTF8String]);
                 continue;
             }
-            NSDictionary *notDic = [NSDictionary dictionaryWithObject:value forKey:key];
-            [[NSNotificationCenter defaultCenter] postNotificationName:(NSString*)kDynamoMessageNotification
-                                                                object:self
-                                                              userInfo:notDic];
+            [messages addObject:@{ key: value }];            
             luaCtx_pop(GlobalLuaContext, 1);
         }
     }
     luaCtx_pop(GlobalLuaContext, 2);
+    
+    for(NSDictionary *message in messages) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:(NSString*)kDynamoMessageNotification
+                                                            object:self
+                                                          userInfo:message];
+    }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
