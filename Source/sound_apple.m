@@ -43,7 +43,7 @@ struct _SoundManager {
 };
 
 static void sfx_destroy(SoundEffect_t *aSound);
-static char *_openAlErrorString(int aCode);
+static const char *_openAlErrorString(int aCode);
 static bool _checkForOpenAlError();
 static bool _sound_buf_stream(SoundEffect_t *aSound, ALuint aBuffer);
 static bool _sound_beginPlayback(SoundEffect_t *aSound);
@@ -305,7 +305,7 @@ bool soundManager_makeCurrent(SoundManager_t *aManager)
 
 #pragma mark - Utilities
 
-static char *_openAlErrorString(int aCode)
+static const char *_openAlErrorString(int aCode)
 {
         switch(aCode) {
         case AL_INVALID_NAME:
