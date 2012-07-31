@@ -837,7 +837,7 @@ ffi.metatype("WorldEntity_t", {
 
         -- Collision handlers
         updateHandler = function(self, callback)
-            self.luaUpdateCallback = dynamo.registerCallback(callback)
+            self.luaUpdateHandler = dynamo.registerCallback(callback)
         end,
         preCollisionHandler = function(self, callback)
             self.luaPreCollisionHandler = dynamo.registerCallback(callback)
