@@ -188,7 +188,7 @@ extern vec2_t world_gravity(World_t *aWorld);
 extern void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity);
 extern void world_removeEntity(World_t *aWorld, WorldEntity_t *aEntity);
 extern void world_addStaticEntity(World_t *aWorld, WorldEntity_t *aEntity);
-extern WorldEntity_t *world_pointQuery(World_t *aWorld, vec2_t aPoint);
+void *world_pointQuery(World_t *aWorld, vec2_t aPoint, bool aQueryForShape);
 extern vec2_t worldEnt_location(WorldEntity_t *aEntity);
 extern WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat aMomentum);
 extern void worldEnt_setLocation(WorldEntity_t *aEntity, vec2_t aLocation);
@@ -760,7 +760,15 @@ ffi.metatype("World_t", {
         draw             = lib.draw_world,
         drawShape        = lib.draw_worldShape,
         drawEntity       = lib.draw_worldEntity,
-        pointQuery       = lib.world_pointQuery,
+        pointQuery       = function(self, point, queryForShape)
+            queryForShape = queryForShape or false
+            local result = lib.world_pointQuery(self, point, queryForShape)
+            if queryForShape then
+                return ffi.cast("WorldShape_t*", result)
+            else
+                return ffi.cast("WorldEntity_t*", result)
+            end
+        end,
         createEntity     = function(world, owner, mass, momentum, shapes)
             shapes = shapes or {}
             local ret = lib.worldEnt_create(world, owner, mass, momentum)

@@ -176,9 +176,9 @@ extern void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity);
 */
 extern void world_removeEntity(World_t *aWorld, WorldEntity_t *aEntity);
 /*!
-    Returns the entity at the given point in the given world (if any)
+    Returns the entity or shape at the given point in the given world (if any)
 */
-extern WorldEntity_t *world_pointQuery(World_t *aWorld, vec2_t aPoint);
+void *world_pointQuery(World_t *aWorld, vec2_t aPoint, bool aQueryForShape);
 
 extern void world_addJoint(World_t *aWorld, WorldConstraint_t *aJoint);
 extern void world_removeJoint(World_t *aWorld, WorldConstraint_t *aJoint);
