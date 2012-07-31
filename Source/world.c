@@ -112,9 +112,16 @@ vec2_t world_gravity(World_t *aWorld)
     return CPV_TO_VEC2(gravity);
 }
 
+static void _pointQueryCallback(cpShape *shape, cpShape **outShape)
+{
+    *outShape = shape;
+}
+
 void *world_pointQuery(World_t *aWorld, vec2_t aPoint, bool aQueryForShape)
 {
-    cpShape *cpShape = cpSpacePointQueryFirst(aWorld->cpSpace, VEC2_TO_CPV(aPoint), CP_ALL_LAYERS, CP_NO_GROUP);
+    cpShape *cpShape = NULL;
+    cpSpacePointQuery(aWorld->cpSpace, VEC2_TO_CPV(aPoint), CP_ALL_LAYERS, CP_NO_GROUP, (cpSpacePointQueryFunc)_pointQueryCallback, &cpShape);
+
     if(!cpShape)
         return NULL;
     if(aQueryForShape)
