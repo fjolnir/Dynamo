@@ -833,21 +833,7 @@ ffi.metatype("WorldEntity_t", {
         creatRotaryLimitJoint    = function(...) return _obj_addToGC(lib.worldConstr_createRotaryLimitJoint(...)) end,
         createRatchetJoint       = function(...) return _obj_addToGC(lib.worldConstr_createRatchetJoint(...)) end,
         createGearJoint          = function(...) return _obj_addToGC(lib.worldConstr_createGearJoint(...)) end,
-        createSimpleMotorJoint   = function(...) return _obj_addToGC(lib.worldConstr_createSimpleMotorJoint(...)) end,
-
-        -- Collision handlers
-        updateHandler = function(self, callback)
-            self.luaUpdateHandler = dynamo.registerCallback(callback)
-        end,
-        preCollisionHandler = function(self, callback)
-            self.luaPreCollisionHandler = dynamo.registerCallback(callback)
-        end,
-        collisionHandler = function(self, callback)
-            self.luaCollisionHandler = dynamo.registerCallback(callback)
-        end,
-        postCollisionHandler = function(self, callback)
-            self.luaPostCollisionHandler = dynamo.registerCallback(callback)
-        end
+        createSimpleMotorJoint   = function(...) return _obj_addToGC(lib.worldConstr_createSimpleMotorJoint(...)) end
     },
     __newindex = function(self, key, val)
         if key == "location" then
@@ -856,6 +842,14 @@ ffi.metatype("WorldEntity_t", {
             lib.worldEnt_setAngle(self, val)
         elseif key == "velocity" then
             lib.worldEnt_setVelocity(self, val)
+        elseif key == "updateHandler" then
+            self.luaUpdateHandler = dynamo.registerCallback(val)
+        elseif key == "preCollisionHandler" then
+            self.luaPreCollisionHandler = dynamo.registerCallback(val)
+        elseif key == "collisionHandler" then
+            self.luaCollisionHandler = dynamo.registerCallback(val)
+        elseif key == "postCollisionHandler" then
+            self.luaPostCollisionHandler = dynamo.registerCallback(val)
         end
     end
 })
