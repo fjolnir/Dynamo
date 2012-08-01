@@ -365,7 +365,6 @@
 		C78B8E451558AB5500B8E5CE /* libyajl_s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libyajl_s.a; path = /usr/local/Cellar/yajl/2.0.4/lib/libyajl_s.a; sourceTree = "<absolute>"; };
 		C78B8E471558AB6D00B8E5CE /* libmxml.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmxml.a; path = /usr/local/Cellar/libmxml/2.6/lib/libmxml.a; sourceTree = "<absolute>"; };
 		C799E481155908780009C0A7 /* libluajit-5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libluajit-5.1.a"; path = "/usr/local/lib/libluajit-5.1.a"; sourceTree = "<absolute>"; };
-		C7E4787815B9456600E63DAA /* libBlocksKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libBlocksKit.a; path = "../DerivedData/Build/Release-iphoneos/libBlocksKit.a"; sourceTree = "<group>"; };
 		C7F8BD5415A28F3B00728E65 /* glutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glutils.c; path = Source/glutils.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -374,17 +373,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7650D43155B629900A0C86D /* libChipmunk-iPhone.a in Frameworks */,
 				C73EFC4D155A412400FD64CA /* Foundation.framework in Frameworks */,
 				C71E0B75155A40F700CB6F37 /* OpenGLES.framework in Frameworks */,
 				C71E0B73155A40F300CB6F37 /* AudioToolbox.framework in Frameworks */,
 				C71E0B71155A40E900CB6F37 /* CoreGraphics.framework in Frameworks */,
 				C71E0B6F155A40E500CB6F37 /* AVFoundation.framework in Frameworks */,
+				C734C80315609DE000C49454 /* libluajit_ios.a in Frameworks */,
+				C7650D43155B629900A0C86D /* libChipmunk-iPhone.a in Frameworks */,
 				C72C87D415591547001EF047 /* libglmath.a in Frameworks */,
 				C72C87D515591547001EF047 /* liblibpng.a in Frameworks */,
 				C72C87D615591547001EF047 /* libmxml.a in Frameworks */,
 				C72C87D715591547001EF047 /* libyajl.a in Frameworks */,
-				C734C80315609DE000C49454 /* libluajit_ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,7 +478,6 @@
 		C75AFCE0153FA9D800FE8623 = {
 			isa = PBXGroup;
 			children = (
-				C7E4787815B9456600E63DAA /* libBlocksKit.a */,
 				C75AFCF5153FA9F500FE8623 /* Dynamo */,
 				C7A1903315469BC200B266A6 /* Dependencies */,
 				C73EFC5F155A428400FD64CA /* Mac Frameworks */,

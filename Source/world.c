@@ -135,8 +135,8 @@ void *world_pointQuery(World_t *aWorld, vec2_t aPoint, bool aQueryForShape)
 WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, GLMFloat amoment)
 {
     WorldEntity_t *out = obj_create_autoreleased(&Class_WorldEntity);
-    out->world = aWorld;
-    out->owner = aOwner;
+    out->world  = aWorld;
+    out->owner  = aOwner;
     out->cpBody = cpBodyNew(aMass, amoment);
     out->cpBody->data = out;
 
