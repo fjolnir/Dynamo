@@ -42,14 +42,13 @@ Texture_t *texture_loadFromPng(const char *aPath, bool aRepeatHorizontal, bool a
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, aRepeatVertical   ? GL_REPEAT : GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // Mipmaps can only be generated if the texture size is a power of 2
-    if(_isPowerOfTwo(png->width) && _isPowerOfTwo(png->height)
-       && !aRepeatHorizontal && !aRepeatVertical) {
+    if(_isPowerOfTwo(png->width) && _isPowerOfTwo(png->height) && !aRepeatHorizontal && !aRepeatVertical) {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-        glError()
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
-        if(!_isPowerOfTwo(png->width) || !_isPowerOfTwo(png->height))
-            dynamo_assert(false, "Repeating textures must have power of 2 dimensions");
+            dynamo_assert(!( (!_isPowerOfTwo(png->width) || !_isPowerOfTwo(png->height))
+                              && (aRepeatHorizontal || aRepeatVertical) ),
+                          "Repeating textures must have power of 2 dimensions");
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     }
     glError()
