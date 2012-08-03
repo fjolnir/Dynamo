@@ -5,8 +5,7 @@
 NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 @interface DViewController (Private)
-- (void)setupGL;
-- (void)tearDownGL;
+- (void)_setupGL;
 @end
 
 @implementation DViewController
@@ -39,9 +38,11 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     luaCtx_getfield(GlobalLuaContext, -1, "cleanup");
     luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
     luaCtx_pop(GlobalLuaContext, 1);
-
+    
     luaCtx_teardown();
-
+    
+    if([EAGLContext currentContext] == _context)
+        [EAGLContext setCurrentContext:nil];
     [_context release], _context = nil;
     [_activeTouches release]; _activeTouches = nil;
     [_bootScriptPath release], _bootScriptPath = nil;
@@ -64,15 +65,13 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     GLKView *view = (GLKView *)self.view;
     view.context = _context;
 
-    [self setupGL];
+    [self _setupGL];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     [_activeTouches release], _activeTouches = nil;
-
-    [self tearDownGL];
 
     if([EAGLContext currentContext] == _context)
         [EAGLContext setCurrentContext:nil];
@@ -99,7 +98,7 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     luaCtx_pop(GlobalLuaContext, 3);
 }
 
-- (void)setupGL
+- (void)_setupGL
 {
     [EAGLContext setCurrentContext:_context];
 
@@ -124,11 +123,6 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 - (void)prepareLuaContext
 {
     // Subclasses can hook in  here to initialize the lua context before the boot script is run
-}
-
-- (void)tearDownGL
-{
-    [EAGLContext setCurrentContext:_context];
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -161,7 +155,7 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     luaCtx_pop(GlobalLuaContext, 2);
     
     for(NSDictionary *message in messages) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:(NSString*)kDynamoMessageNotification
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDynamoMessageNotification
                                                             object:self
                                                           userInfo:message];
     }
@@ -209,6 +203,5 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 {
     return interfaceOrientation == UIInterfaceOrientationPortrait;
 }
-
 
 @end
