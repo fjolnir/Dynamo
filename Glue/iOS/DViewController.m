@@ -84,13 +84,10 @@ NSString *kDynamoViewportChangeMessage = @"viewportSize";
 {
     // Apply retina scale, if any
     float scaleFactor = self.view.contentScaleFactor;
-    aLoc.x *= scaleFactor;
-    aLoc.y = scaleFactor * (self.view.bounds.size.height - aLoc.y);
+    aLoc.y = self.view.bounds.size.height - aLoc.y;
     
     // Scale the coordinates to match the game's viewport size
     CGSize viewSize = [self.view bounds].size;
-    viewSize.width  *= scaleFactor;
-    viewSize.height *= scaleFactor;
     if(CGSizeEqualToSize(_viewportSize, (CGSize){-1,-1}))
         _viewportSize = viewSize;
     CGSize viewportRatio = (CGSize) { _viewportSize.width / viewSize.width, _viewportSize.height / viewSize.height };
