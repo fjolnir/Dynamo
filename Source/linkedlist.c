@@ -87,10 +87,10 @@ bool llist_insertValue(LinkedList_t *aList, void *aValueToInsert, void *aValueTo
     if(aList->insertionCallback)
         aList->insertionCallback(aValueToInsert);
 
-    LinkedListItem_t *itemToInsert = calloc(1, sizeof(LinkedListItem_t));
-    itemToInsert->value = aValueToInsert;
     LinkedListItem_t *itemToShift = _llist_itemForValue(aList, aValueToShift);
     if(itemToShift) {
+        LinkedListItem_t *itemToInsert = calloc(1, sizeof(LinkedListItem_t));
+        itemToInsert->value = aValueToInsert;
         itemToInsert->next = itemToShift;
         itemToInsert->previous = itemToShift->previous;
         if(itemToInsert->previous)
@@ -100,9 +100,7 @@ bool llist_insertValue(LinkedList_t *aList, void *aValueToInsert, void *aValueTo
 
         return true;
     } else {
-        free(itemToInsert);
         llist_pushValue(aList, aValueToInsert);
-
         return false;
     }
 }

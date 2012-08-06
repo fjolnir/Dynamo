@@ -401,7 +401,7 @@ ffi.metatype("SpriteBatch_t", {
         insertSprite = lib.spriteBatch_insertSprite,
         replaceSprite = function(self, spriteToInsert, spriteToDelete)
             self:insertSprite(spriteToInsert, spriteToDelete)
-            self:deleteSprite(spriteToDelete)
+            return self:deleteSprite(spriteToDelete)
         end,
         deleteSprite = lib.spriteBatch_deleteSprite
     }
