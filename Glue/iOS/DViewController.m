@@ -2,15 +2,15 @@
 #import <dynamo/input.h>
 #import <dynamo/luacontext.h>
 
-NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
+NSString *kDynamoMessageNotification   = @"DynamoMessageNotification";
+NSString *kDynamoViewportChangeMessage = @"viewportSize";
 
 @interface DViewController (Private)
-- (void)setupGL;
-- (void)tearDownGL;
+- (void)_setupGL;
 @end
 
 @implementation DViewController
-@synthesize bootScriptPath=_bootScriptPath;
+@synthesize bootScriptPath=_bootScriptPath, viewportSize=_viewportSize;
 
 - (id)initWithBootScriptPath:(NSString *)aPath;
 {
@@ -18,6 +18,7 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
         return nil;
 
     _bootScriptPath = [aPath copy];
+    _viewportSize = (CGSize) { -1, -1 };
 
     return self;
 }
@@ -39,9 +40,11 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     luaCtx_getfield(GlobalLuaContext, -1, "cleanup");
     luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
     luaCtx_pop(GlobalLuaContext, 1);
-
+    
     luaCtx_teardown();
-
+    
+    if([EAGLContext currentContext] == _context)
+        [EAGLContext setCurrentContext:nil];
     [_context release], _context = nil;
     [_activeTouches release]; _activeTouches = nil;
     [_bootScriptPath release], _bootScriptPath = nil;
@@ -52,7 +55,7 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     self.view.multipleTouchEnabled = YES;
 
     _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -64,15 +67,13 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     GLKView *view = (GLKView *)self.view;
     view.context = _context;
 
-    [self setupGL];
+    [self _setupGL];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     [_activeTouches release], _activeTouches = nil;
-
-    [self tearDownGL];
 
     if([EAGLContext currentContext] == _context)
         [EAGLContext setCurrentContext:nil];
@@ -81,8 +82,19 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 
 - (void)_postTouchEventWithFinger:(int)aFinger isDown:(BOOL)aIsDown location:(CGPoint)aLoc
 {
-    aLoc.y = self.view.bounds.size.height - aLoc.y;
+    // Apply retina scale, if any
     float scaleFactor = self.view.contentScaleFactor;
+    aLoc.x *= scaleFactor;
+    aLoc.y = scaleFactor * (self.view.bounds.size.height - aLoc.y);
+    
+    // Scale the coordinates to match the game's viewport size
+    CGSize viewSize = [self.view bounds].size;
+    viewSize.x *= scaleFactor;
+    viewSize.y *= scaleFactor;
+    if(CGSizeEqualToSize(_viewportSize, (CGSize){-1,-1}))
+        _viewportSize = viewSize;
+    CGSize viewportRatio = (CGSize) { _viewportSize.width / viewSize.width, _viewportSize.height / viewSize.height };
+    aLoc = (CGPoint){ viewportRatio.width * aLoc.x, viewportRatio.height * aLoc.y };
 
     luaCtx_getglobal(GlobalLuaContext, "dynamo");
     luaCtx_getfield(GlobalLuaContext, -1, "input");
@@ -99,7 +111,7 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     luaCtx_pop(GlobalLuaContext, 3);
 }
 
-- (void)setupGL
+- (void)_setupGL
 {
     [EAGLContext setCurrentContext:_context];
 
@@ -126,11 +138,6 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
     // Subclasses can hook in  here to initialize the lua context before the boot script is run
 }
 
-- (void)tearDownGL
-{
-    [EAGLContext setCurrentContext:_context];
-}
-
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
     // We queue the messages up and send them all once dynamo.cycle has finished executing
@@ -154,14 +161,17 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
                 dynamo_log("Unhandled message type for key %s", [key UTF8String]);
                 continue;
             }
-            [messages addObject:@{ key: value }];            
+            [messages addObject:[NSDictionary dictionaryWithObject:value forKey:key]];
             luaCtx_pop(GlobalLuaContext, 1);
         }
     }
     luaCtx_pop(GlobalLuaContext, 2);
     
     for(NSDictionary *message in messages) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:(NSString*)kDynamoMessageNotification
+        if([message objectForKey:kDynamoViewportChangeMessage])
+            _viewportSize = CGSizeFromString([message objectForKey:kDynamoViewportChangeMessage]);
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDynamoMessageNotification
                                                             object:self
                                                           userInfo:message];
     }
@@ -209,6 +219,5 @@ NSString *kDynamoMessageNotification = @"DynamoMessageNotification";
 {
     return interfaceOrientation == UIInterfaceOrientationPortrait;
 }
-
 
 @end

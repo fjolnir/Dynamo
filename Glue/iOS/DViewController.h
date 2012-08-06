@@ -11,6 +11,7 @@ extern NSString *kDynamoMessageNotification;
     NSString *_bootScriptPath;
 }
 @property(readonly) NSString *bootScriptPath;
+@property(readwrite) CGSize viewportSize;
 
 - (id)initWithBootScriptPath:(NSString *)aPath;
 - (void)prepareLuaContext; // Don't call this, Dynamo does it for you at the perfect time

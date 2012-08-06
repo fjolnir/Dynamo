@@ -82,10 +82,11 @@ void world_step(World_t *aWorld, GameTimer_t *aTimer)
 void world_destroy(World_t *aWorld)
 {
     llist_apply(aWorld->entities, (LinkedListApplier_t)&_removeEntityFromWorld, aWorld);
+    aWorld->staticEntity->cpBody = NULL;
     world_removeEntity(aWorld, aWorld->staticEntity);
     cpSpaceFree(aWorld->cpSpace), aWorld->cpSpace = NULL;
-    obj_release(aWorld->entities);
-    obj_release(aWorld->staticEntity);
+    obj_release(aWorld->entities), aWorld->entities = NULL;
+    obj_release(aWorld->staticEntity), aWorld->staticEntity = NULL;
 }
 
 void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity)
@@ -99,6 +100,7 @@ void world_addEntity(World_t *aWorld, WorldEntity_t *aEntity)
 void world_removeEntity(World_t *aWorld, WorldEntity_t *aEntity)
 {
     llist_apply(aEntity->shapes, (LinkedListApplier_t)&_removeShapeFromSpace, aWorld);
+    aEntity->world = NULL;
     llist_deleteValue(aWorld->entities, aEntity);
 }
 
@@ -152,7 +154,7 @@ WorldEntity_t *worldEnt_create(World_t *aWorld, Obj_t *aOwner, GLMFloat aMass, G
 
 void worldEnt_destroy(WorldEntity_t *aEntity)
 {
-    if(aEntity != aEntity->world->staticEntity)
+    if(aEntity->cpBody)
         cpBodyFree(aEntity->cpBody);
     obj_release(aEntity->shapes);
 }
@@ -370,9 +372,9 @@ static void _removeShapeFromSpace(WorldShape_t *aShape, World_t *aWorld)
 }
 static void _removeEntityFromWorld(WorldEntity_t *aEntity, World_t *aWorld)
 {
-    world_removeEntity(aWorld, aEntity);
     if(aEntity != aWorld->staticEntity)
         cpSpaceRemoveBody(aWorld->cpSpace, aEntity->cpBody);
+    world_removeEntity(aWorld, aEntity);
 }
 
 static void _callEntityUpdateCallback(WorldEntity_t *aEntity, World_t *aWorld)

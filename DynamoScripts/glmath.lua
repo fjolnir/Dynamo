@@ -396,7 +396,6 @@ bezier_t = ffi.metatype("bezier_t",
             end
         end,
         getFirstDerivative = C._bezier_firstDerivative,
-        
     }
 })
 
