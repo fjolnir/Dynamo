@@ -276,7 +276,6 @@ void bgm_unload(BackgroundMusic_t *aBGM)
 
 static void bgm_destroy(BackgroundMusic_t *aBGM)
 {
-    bgm_unload(aBGM);
     obj_release(aBGM->soundEffect);
 }
 
