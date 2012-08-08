@@ -97,7 +97,7 @@ bool luaCtx_pcall(LuaContext_t *aCtx, int nargs, int nresults, int errfunc)
         return false;
     }
     return true;
-}
+}   
 
 bool luaCtx_executeFile(LuaContext_t *aCtx, const char *aPath)
 {

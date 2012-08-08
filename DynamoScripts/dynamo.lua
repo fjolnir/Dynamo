@@ -362,7 +362,7 @@ ffi.metatype("Sprite_t", {
     __index = {
         step = lib.sprite_step,
         currentFrame = function(self)
-            return self.animation[self.activeAnimation].currentFrame
+            return self.animations[self.activeAnimation].currentFrame
         end
     },
     __newindex = function(self, key, val)
