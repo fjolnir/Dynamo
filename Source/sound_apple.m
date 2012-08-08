@@ -151,12 +151,12 @@ SoundEffect_t *sfx_load(const char *aFilename)
 
 void sfx_unload(SoundEffect_t *aSound)
 {
-    if(alIsBuffer(aSound->buffer)) {
-        alSourceUnqueueBuffers(aSound->source, 1, &aSound->buffer);
-        alDeleteBuffers(1, &aSound->buffer);
+    if(aSound->buffer != UINT_MAX && alIsBuffer(aSound->buffer)) {
+        alSourceUnqueueBuffers(aSound->source, 1, &aSound->buffer), aSound->buffer = UINT_MAX;
+        alDeleteBuffers(1, &aSound->buffer), aSound->buffer = UINT_MAX;
     }
-    if(alIsSource(aSound->source))
-        alDeleteSources(1, &aSound->source);
+    if(aSound->source != UINT_MAX && alIsSource(aSound->source))
+        alDeleteSources(1, &aSound->source), aSound->source = UINT_MAX;
 }
 
 void sfx_destroy(SoundEffect_t *aSound)
@@ -230,7 +230,7 @@ void bgm_unload(BackgroundMusic_t *aBGM)
 {
     if(aBGM->player) {
         bgm_stop(aBGM);
-        [(id)aBGM->player release], aBGM->player = NULL;
+        [(id)aBGM->player release], aBGM->player = nil;
     }
 }
 
