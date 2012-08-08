@@ -40,9 +40,9 @@ NSString *kDynamoViewportChangeMessage = @"viewportSize";
     luaCtx_getfield(GlobalLuaContext, -1, "cleanup");
     luaCtx_pcall(GlobalLuaContext, 0, 0, 0);
     luaCtx_pop(GlobalLuaContext, 1);
-    
+
     luaCtx_teardown();
-    
+
     if([EAGLContext currentContext] == _context)
         [EAGLContext setCurrentContext:nil];
     [_context release], _context = nil;
@@ -55,7 +55,7 @@ NSString *kDynamoViewportChangeMessage = @"viewportSize";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.view.multipleTouchEnabled = YES;
 
     _context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -85,12 +85,12 @@ NSString *kDynamoViewportChangeMessage = @"viewportSize";
     // Apply retina scale, if any
     float scaleFactor = self.view.contentScaleFactor;
     aLoc.y = self.view.bounds.size.height - aLoc.y;
-    
+
     // Scale the coordinates to match the game's viewport size
     CGSize viewSize = [self.view bounds].size;
     if(CGSizeEqualToSize(_viewportSize, (CGSize){-1,-1}))
         _viewportSize = viewSize;
-    CGSize viewportRatio = (CGSize) { _viewportSize.width / viewSize.width, _viewportSize.height / viewSize.height };
+    CGSize viewportRatio = (CGSize) { _viewportSize.width / viewSize.width / scaleFactor, _viewportSize.height / viewSize.height / scaleFactor };
     aLoc = (CGPoint){ viewportRatio.width * aLoc.x, viewportRatio.height * aLoc.y };
 
     luaCtx_getglobal(GlobalLuaContext, "dynamo");
@@ -121,7 +121,7 @@ NSString *kDynamoViewportChangeMessage = @"viewportSize";
     [self prepareLuaContext];
 
     dynamo_assert(luaCtx_executeFile(GlobalLuaContext, [_bootScriptPath fileSystemRepresentation]), "Lua error");
-    
+
     [self bootScriptDidExecute];
 }
 
@@ -140,7 +140,7 @@ NSString *kDynamoViewportChangeMessage = @"viewportSize";
     // We queue the messages up and send them all once dynamo.cycle has finished executing
     // (Necessary in case a quit message is sent; in which case the lua context is deallocated)
     NSMutableArray *messages = [NSMutableArray array];
-    
+
     luaCtx_getglobal(GlobalLuaContext, "dynamo");
     luaCtx_getfield(GlobalLuaContext, -1, "cycle");
     luaCtx_pcall(GlobalLuaContext, 0, 1, 0);
@@ -163,7 +163,7 @@ NSString *kDynamoViewportChangeMessage = @"viewportSize";
         }
     }
     luaCtx_pop(GlobalLuaContext, 2);
-    
+
     for(NSDictionary *message in messages) {
         if([message objectForKey:kDynamoViewportChangeMessage])
             _viewportSize = CGSizeFromString([message objectForKey:kDynamoViewportChangeMessage]);
