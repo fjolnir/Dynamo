@@ -34,6 +34,7 @@ struct _SoundEffect {
     unsigned int format;
 };
 struct _BackgroundMusic {
+    OBJ_GUTS
     void *player;
 };
 struct _SoundManager {
