@@ -89,7 +89,7 @@ NSString *kDynamoViewportChangeMessage = @"viewportSize";
     // Scale the coordinates to match the game's viewport size
     CGSize viewSize = [self.view bounds].size;
     if(CGSizeEqualToSize(_viewportSize, (CGSize){-1,-1}))
-        _viewportSize = viewSize;
+        _viewportSize = (CGSize){ viewSize.width * scaleFactor, viewSize.height * scaleFactor };
     CGSize viewportRatio = (CGSize) { _viewportSize.width / viewSize.width / scaleFactor, _viewportSize.height / viewSize.height / scaleFactor };
     aLoc = (CGPoint){ viewportRatio.width * aLoc.x, viewportRatio.height * aLoc.y };
 
