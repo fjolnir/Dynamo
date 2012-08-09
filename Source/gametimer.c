@@ -27,7 +27,7 @@ GameTimer_t *gameTimer_create(GLMFloat aFps, GameTimer_updateCallback_t aUpdateC
     out->updateCallback = aUpdateCallback;
     out->scheduledCallbacks = obj_retain(llist_create(NULL, &free));
     out->luaUpdateCallback = -1;
-    out->resetAt = 0;
+    out->resetAt = dynamo_time();
     out->status = kGameTimerStatusNormal;
 
     return out;
